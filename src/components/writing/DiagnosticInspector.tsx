@@ -185,14 +185,11 @@ export function DiagnosticInspector({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-              Examiner Inspector
+              Inspector
               <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
                 {totalItems}
               </span>
             </h3>
-            <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
-              Pop down sentences to view examiner feedback
-            </p>
           </div>
 
           {/* Filter buttons */}

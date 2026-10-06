@@ -60,18 +60,22 @@ export async function analyzeWritingWithGemini(
   promptText: string,
   essayText: string,
   taskType: 'task1_academic' | 'task1_general' | 'task2',
-  apiKey?: string
+  apiKey?: string,
+  imageBase64?: string,
+  imageMimeType?: string
 ): Promise<WritingAnalysisResult> {
   const key = apiKey || process.env.GEMINI_API_KEY;
 
   if (!key) {
-    return generateMockWritingAnalysis(promptText, essayText, taskType);
+    return generateMockWritingAnalysis(promptText, essayText, taskType, imageBase64);
   }
 
   const wordCount = essayText.trim().split(/\s+/).filter(Boolean).length;
+  const hasImage = Boolean(imageBase64);
   const userPrompt = `
 Task Type: ${taskType}
 Exam Prompt: """${promptText}"""
+${hasImage ? 'A graph, chart, table, or diagram image has been uploaded for this Task 1 visual report. Cross-reference the candidate\'s statements, overview, and specific data points directly against the visual features in the image.' : ''}
 Candidate Essay (Word count: ${wordCount}):
 """${essayText}"""
 
@@ -165,6 +169,25 @@ Only output the JSON object without markdown fences if possible.
 `;
 
   try {
+    const userParts: any[] = [{ text: userPrompt }];
+
+    if (imageBase64) {
+      const cleanData = imageBase64.includes(',') ? imageBase64.split(',')[1] : imageBase64;
+      const detectedMime = imageMimeType || (
+        imageBase64.startsWith('data:image/png')
+          ? 'image/png'
+          : imageBase64.startsWith('data:image/webp')
+          ? 'image/webp'
+          : 'image/jpeg'
+      );
+      userParts.push({
+        inlineData: {
+          mimeType: detectedMime,
+          data: cleanData
+        }
+      });
+    }
+
     const payloadBody = JSON.stringify({
       systemInstruction: {
         parts: [{ text: IELTS_WRITING_EXAMINER_SYSTEM_PROMPT }]
@@ -172,7 +195,7 @@ Only output the JSON object without markdown fences if possible.
       contents: [
         {
           role: 'user',
-          parts: [{ text: userPrompt }]
+          parts: userParts
         }
       ],
       generationConfig: {
@@ -198,13 +221,13 @@ Only output the JSON object without markdown fences if possible.
 
     if (!res.ok) {
       console.warn('Gemini API calls failed, falling back to mock examiner', await res.text());
-      return generateMockWritingAnalysis(promptText, essayText, taskType);
+      return generateMockWritingAnalysis(promptText, essayText, taskType, imageBase64);
     }
 
     const data = await res.json();
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!rawText) {
-      return generateMockWritingAnalysis(promptText, essayText, taskType);
+      return generateMockWritingAnalysis(promptText, essayText, taskType, imageBase64);
     }
 
     const parsed = JSON.parse(rawText) as WritingAnalysisResult;
@@ -219,7 +242,7 @@ Only output the JSON object without markdown fences if possible.
     return parsed;
   } catch (err) {
     console.error('Error invoking Gemini for writing:', err);
-    return generateMockWritingAnalysis(promptText, essayText, taskType);
+    return generateMockWritingAnalysis(promptText, essayText, taskType, imageBase64);
   }
 }
 
@@ -394,7 +417,12 @@ function cleanRepeatedWords(text: string): string {
   return cleaned;
 }
 
-function generateMockWritingAnalysis(prompt: string, rawEssay: string, taskType: string): WritingAnalysisResult {
+function generateMockWritingAnalysis(
+  prompt: string,
+  rawEssay: string,
+  taskType: string,
+  imageBase64?: string
+): WritingAnalysisResult {
   const essay = cleanRepeatedWords(rawEssay);
   const words = essay.trim().split(/\s+/).filter(Boolean);
   const wordCount = words.length;
@@ -629,13 +657,21 @@ function generateMockWritingAnalysis(prompt: string, rawEssay: string, taskType:
           ? 'Band 8.0 (Thorough Topic Exploration)'
           : 'Band 7.0 (Good Development)',
         feedback: isPenalty
-          ? `Your response has ${wordCount} words, below the required ${targetMin} words. An official examiner will penalize underlength responses.`
+          ? `Your response has ${wordCount} words, below the required ${targetMin} words. Underlength responses will be penalized.`
+          : imageBase64
+          ? 'Accurately reports the key visual trends, milestones, and data groups from the uploaded graph with a coherent overview.'
           : isFullyUpgraded
           ? 'Exceptional topic progression with fully developed arguments, precise real-world examples, and consistent evaluative stance.'
           : 'Addresses all key components of the prompt with clear arguments and relevant supporting examples.',
-        strengths: ['Directly answers the main topic prompt', 'Position is consistently stated throughout'],
-        weaknesses: isPenalty ? ['Did not reach the required minimum word count'] : isFullyUpgraded ? [] : ['Some secondary arguments could be extended further'],
-        keyRecommendations: isFullyUpgraded ? ['Maintain this level of analytical rigor on exam day.'] : ['Ensure every main paragraph has at least one concrete illustration.']
+        strengths: imageBase64
+          ? ['Overview effectively summarizes visual data', 'Highlights key data points from the uploaded chart']
+          : ['Directly answers the main topic prompt', 'Position is consistently stated throughout'],
+        weaknesses: isPenalty ? ['Did not reach the required minimum word count'] : isFullyUpgraded ? [] : ['Some secondary points could be extended further with specific figures'],
+        keyRecommendations: imageBase64
+          ? ['Ensure every specific numerical milestone cited directly aligns with the axes of the chart.']
+          : isFullyUpgraded
+          ? ['Maintain this level of analytical rigor on exam day.']
+          : ['Ensure every main paragraph has at least one concrete illustration.']
       },
       coherenceCohesion: {
         score: ccScore,

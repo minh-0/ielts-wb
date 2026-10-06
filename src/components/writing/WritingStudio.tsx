@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   PenTool,
   Clock,
@@ -15,6 +15,8 @@ import {
   Edit3,
   Highlighter,
   RotateCcw,
+  Upload,
+  X as XIcon,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
 import { WritingAnalysisResult, TaskType, ReplacedWordItem } from "@/types/ielts";
@@ -32,6 +34,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [selectedPrompt, setSelectedPrompt] = useState<WritingPrompt>(WRITING_PROMPTS[0]);
   const [customPrompt, setCustomPrompt] = useState("");
   const [useCustomPrompt, setUseCustomPrompt] = useState(false);
+  const [customImage, setCustomImage] = useState<string | null>(null);
+  const [customImageName, setCustomImageName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [essayContent, setEssayContent] = useState("");
 
   // Timer state
@@ -164,6 +169,29 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     setTimerRunning(false);
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please upload an image file (PNG, JPG, WEBP).");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setCustomImage(reader.result as string);
+      setCustomImageName(file.name);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setCustomImage(null);
+    setCustomImageName(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const handleAnalyze = async () => {
     if (!essayContent.trim()) return;
 
@@ -185,6 +213,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           essayText: essayContent,
           taskType: selectedTaskType,
           apiKey: apiKey || undefined,
+          imageBase64: customImage || undefined,
         }),
       });
 
@@ -404,13 +433,76 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
         {/* Prompt selector & question card */}
         <div className="space-y-2 pt-0.5">
           {useCustomPrompt ? (
-            <textarea
-              value={customPrompt}
-              onChange={(e) => setCustomPrompt(e.target.value)}
-              placeholder="Paste custom IELTS writing question..."
-              rows={2}
-              className="w-full p-3 text-xs sm:text-sm rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-normal"
-            />
+            <div className="space-y-2">
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder={
+                  selectedTaskType.startsWith("task1")
+                    ? "Paste custom Task 1 question (e.g. The graph below displays...)"
+                    : "Paste custom IELTS writing question..."
+                }
+                rows={2}
+                className="w-full p-3 text-xs sm:text-sm rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-normal"
+              />
+
+              {/* Upload image / graph button & preview */}
+              <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/png,image/jpeg,image/webp,image/jpg"
+                  className="hidden"
+                />
+
+                {!customImage ? (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload graph / image</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-xs">
+                    <img
+                      src={customImage}
+                      alt="Uploaded graph"
+                      className="w-8 h-8 object-cover rounded border border-neutral-200 dark:border-neutral-800"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 max-w-[200px] truncate">
+                        {customImageName || "graph.png"}
+                      </span>
+                      <span className="text-[10px] font-mono text-neutral-400">
+                        Attached
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="p-1 text-neutral-400 hover:text-red-500 transition-colors cursor-pointer ml-1"
+                      title="Remove image"
+                    >
+                      <XIcon className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Graph preview when image uploaded */}
+              {customImage && (
+                <div className="pt-1">
+                  <img
+                    src={customImage}
+                    alt="Uploaded graph reference"
+                    className="max-h-52 w-auto max-w-full rounded-lg border border-neutral-200 dark:border-neutral-800 object-contain bg-neutral-50/30 dark:bg-neutral-900/30 p-1"
+                  />
+                </div>
+              )}
+            </div>
           ) : (
             <div className="relative">
               <select

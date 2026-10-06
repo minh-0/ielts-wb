@@ -4,7 +4,7 @@ import { analyzeWritingWithGemini } from '@/lib/gemini';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { promptText, essayText, taskType, apiKey } = body;
+    const { promptText, essayText, taskType, apiKey, imageBase64, imageMimeType } = body;
 
     if (!promptText || !essayText) {
       return NextResponse.json(
@@ -17,7 +17,9 @@ export async function POST(req: NextRequest) {
       promptText,
       essayText,
       taskType || 'task2',
-      apiKey
+      apiKey,
+      imageBase64,
+      imageMimeType
     );
 
     return NextResponse.json(result);
