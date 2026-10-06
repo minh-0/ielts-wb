@@ -15,6 +15,7 @@ import {
   Timer,
   ChevronDown,
   AlertCircle,
+  Key,
 } from "lucide-react";
 import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
 import { SpeakingAnalysisResult, SpeakingPart, SpeakingMode } from "@/types/ielts";
@@ -23,9 +24,10 @@ import { ScorecardModal } from "../ScorecardModal";
 
 interface SpeakingStudioProps {
   apiKey: string;
+  onOpenApiKeyModal?: () => void;
 }
 
-export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
+export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProps) {
   const [speakingMode, setSpeakingMode] = useState<SpeakingMode>("practice");
   const [selectedPart, setSelectedPart] = useState<SpeakingPart>("part2_cuecard");
   const [selectedPrompt, setSelectedPrompt] = useState<SpeakingPrompt>(SPEAKING_PROMPTS[0]);
@@ -48,6 +50,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
   const recognitionRef = useRef<any>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerIntervalRef = useRef<any>(null);
+
+  // Robust recording & recognition lifecycle refs
+  const isRecordingRef = useRef<boolean>(false);
+  const recordedMimeRef = useRef<string>("audio/webm");
+  const transcriptRef = useRef<string>("");
+  const persistedTranscriptRef = useRef<string>("");
 
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analysisResult, setAnalysisResult] = useState<SpeakingAnalysisResult | null>(null);
@@ -94,10 +102,33 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       setTranscriptFallback("");
       setAudioUrl(null);
       setAudioBase64(null);
+      transcriptRef.current = "";
+      persistedTranscriptRef.current = "";
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+
+      // Determine supported audio MIME type across browsers (Chrome, Edge, Firefox, Safari)
+      let chosenMime = "audio/webm";
+      let recorderOptions: MediaRecorderOptions = {};
+      if (typeof MediaRecorder !== "undefined") {
+        if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+          chosenMime = "audio/webm";
+          recorderOptions = { mimeType: "audio/webm;codecs=opus" };
+        } else if (MediaRecorder.isTypeSupported("audio/webm")) {
+          chosenMime = "audio/webm";
+          recorderOptions = { mimeType: "audio/webm" };
+        } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+          chosenMime = "audio/mp4";
+          recorderOptions = { mimeType: "audio/mp4" };
+        } else if (MediaRecorder.isTypeSupported("audio/ogg")) {
+          chosenMime = "audio/ogg";
+          recorderOptions = { mimeType: "audio/ogg" };
+        }
+      }
+      recordedMimeRef.current = chosenMime;
+
+      const mediaRecorder = new MediaRecorder(stream, recorderOptions);
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -106,7 +137,9 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       };
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: mediaRecorder.mimeType || chosenMime,
+        });
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
 
@@ -123,6 +156,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
       mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start(250);
+      isRecordingRef.current = true;
       setIsRecording(true);
       setRecordSeconds(0);
 
@@ -134,7 +168,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         recognitionRef.current = null;
       }
 
-      // Initialize real-time Web Speech Recognition in browser
+      // Initialize real-time Web Speech Recognition in browser with continuous restart
       const SpeechRecognition =
         typeof window !== "undefined"
           ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -146,38 +180,57 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           recognition.continuous = true;
           recognition.interimResults = true;
           recognition.lang = "en-US";
+          recognition.maxAlternatives = 1;
 
           recognition.onstart = () => {
             setIsListeningSpeech(true);
             setSpeechNotice(null);
           };
 
-          let accumulatedWords = "";
           recognition.onresult = (event: any) => {
-            let interim = "";
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
+            let sessionFinal = "";
+            let sessionInterim = "";
+            for (let i = 0; i < event.results.length; ++i) {
               if (event.results[i].isFinal) {
-                accumulatedWords += event.results[i][0].transcript + " ";
+                sessionFinal += event.results[i][0].transcript + " ";
               } else {
-                interim += event.results[i][0].transcript;
+                sessionInterim += event.results[i][0].transcript;
               }
             }
-            const recognized = (accumulatedWords + interim).trim();
-            if (recognized) {
-              setTranscriptFallback(recognized);
+            const fullTranscript = (
+              (persistedTranscriptRef.current ? persistedTranscriptRef.current + " " : "") +
+              sessionFinal +
+              sessionInterim
+            ).trim();
+
+            if (fullTranscript) {
+              setTranscriptFallback(fullTranscript);
+              transcriptRef.current = fullTranscript;
             }
           };
 
           recognition.onerror = (e: any) => {
-            console.warn("Browser speech recognition notice:", e.error);
+            console.warn("Browser speech recognition event:", e.error);
             if (e.error === "network") {
-              setSpeechNotice("Browser speech-to-text encountered a network limit. Type or paste your spoken words in the transcript box below so the examiner can evaluate your exact speech.");
+              setSpeechNotice(
+                "Browser speech-to-text encountered a network limit. Don't worry — your voice is being recorded in high definition! Gemini 3.8 Flash can listen directly to your audio."
+              );
             } else if (e.error !== "no-speech") {
-              setSpeechNotice(`Live speech notice: ${e.error}. You can type or edit your words below.`);
+              setSpeechNotice(`Speech notice (${e.error}): Your voice recording is active.`);
             }
           };
 
           recognition.onend = () => {
+            // If the user is still recording, automatically restart recognition across pauses
+            if (isRecordingRef.current) {
+              persistedTranscriptRef.current = transcriptRef.current;
+              try {
+                recognition.start();
+                return;
+              } catch (e) {
+                // Ignore if already active
+              }
+            }
             setIsListeningSpeech(false);
           };
 
@@ -185,7 +238,9 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           recognitionRef.current = recognition;
         } catch (recognitionErr) {
           console.warn("SpeechRecognition start failed:", recognitionErr);
-          setSpeechNotice("Live speech-to-text unavailable in this browser. Please type or paste your spoken response in the box below.");
+          setSpeechNotice(
+            "Live browser speech-to-text unavailable in this environment. Your audio recording will be sent directly to Gemini 3.8 Flash."
+          );
         }
       }
 
@@ -204,11 +259,14 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       }, 1000);
     } catch (err) {
       console.warn("Microphone access denied or unsupported", err);
-      setSpeechNotice("Microphone access denied or unsupported. Please check browser microphone permissions.");
+      setSpeechNotice(
+        "Microphone access denied or unsupported. Please allow microphone permissions in your browser."
+      );
     }
   };
 
   const stopRecording = () => {
+    isRecordingRef.current = false;
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
@@ -229,6 +287,9 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
   const resetRecording = () => {
     stopRecording();
+    isRecordingRef.current = false;
+    persistedTranscriptRef.current = "";
+    transcriptRef.current = "";
     setAudioUrl(null);
     setAudioBase64(null);
     setRecordSeconds(0);
@@ -256,6 +317,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           transcript: cleanTranscript || undefined,
           durationSeconds: recordSeconds || 0,
           speakingPart: selectedPart,
+          mimeType: recordedMimeRef.current || "audio/webm",
           apiKey: apiKey || undefined,
         }),
       });
@@ -266,6 +328,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
       const data: SpeakingAnalysisResult = await res.json();
       setAnalysisResult(data);
+
+      // If Gemini transcribed the speech directly from the audio, sync it to the transcript box!
+      if (data.transcript && !data.transcript.startsWith("[")) {
+        setTranscriptFallback(data.transcript);
+        transcriptRef.current = data.transcript;
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -553,13 +621,43 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
             </div>
           )}
 
-          {audioUrl && !transcriptFallback.trim() && !isRecording && (
-            <div className="p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 text-xs text-neutral-800 dark:text-neutral-200 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
-              <div>
-                <strong>Audio captured ({formatTime(recordSeconds)}):</strong> If live speech-to-text did not capture your speech, please type or paste what you said in the box above so the examiner can evaluate your exact words.
+          {audioUrl && !isRecording && (
+            apiKey ? (
+              <div className="p-3.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 text-xs text-emerald-950 dark:text-emerald-200 flex items-start gap-2.5">
+                <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-emerald-900 dark:text-emerald-300">
+                    Gemini 3.8 Flash Direct Audio Listening Ready ({formatTime(recordSeconds)})
+                  </div>
+                  <div className="text-[11px] text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
+                    Gemini will listen directly to your audio waveform. It will transcribe your spoken words and score pronunciation, word stress, intonation, and fluency directly from your voice.
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="p-3.5 rounded-xl border border-violet-500/25 bg-violet-500/5 text-xs text-violet-950 dark:text-violet-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-2.5">
+                  <Sparkles className="w-4 h-4 text-violet-600 dark:text-violet-400 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <div className="font-semibold text-violet-900 dark:text-violet-300">
+                      Voice Recording Captured ({formatTime(recordSeconds)})
+                    </div>
+                    <div className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Want Gemini to listen directly to your voice instead of relying on browser speech-to-text? Connect a free Gemini key.
+                    </div>
+                  </div>
+                </div>
+                {onOpenApiKeyModal && (
+                  <button
+                    onClick={onOpenApiKeyModal}
+                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-violet-600 hover:bg-violet-700 text-white cursor-pointer shrink-0 transition-colors shadow-xs"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                    Connect Free Key
+                  </button>
+                )}
+              </div>
+            )
           )}
         </div>
 
@@ -571,12 +669,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           {isAnalyzing ? (
             <>
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              Evaluating speaking...
+              Listening & Evaluating Audio...
             </>
           ) : (
             <>
               <Sparkles className="w-3.5 h-3.5" />
-              Analyze Speaking
+              {audioBase64 ? "Analyze Speaking (Listen to Voice)" : "Analyze Speaking"}
             </>
           )}
         </button>

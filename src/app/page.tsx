@@ -76,7 +76,12 @@ export default function Home() {
 
         {/* Tab Content */}
         {activeTab === "writing" && <WritingStudio apiKey={apiKey} />}
-        {activeTab === "speaking" && <SpeakingStudio apiKey={apiKey} />}
+        {activeTab === "speaking" && (
+          <SpeakingStudio
+            apiKey={apiKey}
+            onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+          />
+        )}
         {activeTab === "rubric" && <RubricViewer />}
       </main>
 

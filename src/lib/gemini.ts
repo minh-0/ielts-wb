@@ -270,11 +270,14 @@ export async function analyzeSpeakingWithGemini(
     return generateMockSpeakingAnalysis(promptTopic, textTranscript, durationSeconds, speakingPart);
   }
 
+  // Clean MIME type to standard audio MIME type without codec parameters (e.g. 'audio/webm' instead of 'audio/webm;codecs=opus')
+  const cleanMimeType = (mimeType || 'audio/webm').split(';')[0].trim();
+
   const partsPayload: any[] = [];
   if (audioData) {
     partsPayload.push({
       inlineData: {
-        mimeType: mimeType || 'audio/webm',
+        mimeType: cleanMimeType,
         data: audioData
       }
     });
@@ -285,7 +288,19 @@ export async function analyzeSpeakingWithGemini(
     promptInstruction += `Recognized Candidate Transcript: """${textTranscript}"""\n`;
   }
   if (audioData) {
-    promptInstruction += `Listen to the attached audio recording carefully. Transcribe the candidate's exact words into the "transcript" field. Verify against any recognized text. Do not invent words the candidate never spoke.\n`;
+    promptInstruction += `DIRECT CANDIDATE AUDIO LISTENING MODE:
+1. Listen directly to the candidate's attached audio recording from start to finish.
+2. Transcribe EVERY word spoken by the candidate verbatim into the "transcript" field. Do not invent or hallucinate words not spoken.
+3. If the audio recording is silent, inaudible, or only contains static noise, write "[Silence / Inaudible]" in "transcript" and assign Band 2.0.
+4. If candidate spoke only 1-10 words (e.g. "hello", "hi there", or brief greeting):
+   - Output exact utterance in "transcript" (e.g. "hello").
+   - Follow INSUFFICIENT LANGUAGE SAMPLE rule: overallBand must be 2.0 or 2.5, spokenGrammarErrors: [], idiomAndPhrasalVerbUpgrades: [].
+5. For sustained candidate speech:
+   - Evaluate PRONUNCIATION (PR) directly from voice: assess phonetic clarity, word stress, rhythm, and sentence intonation.
+   - Calculate wordsPerMinute based on actual spoken words and duration (${durationSeconds > 0 ? durationSeconds : 30}s).
+   - Tally audible conversational filler words ('um', 'uh', 'like', 'you know') in "fillerWords".
+   - Highlight genuine spoken grammar slips and suggest natural idiomatic phrase upgrades matching what was said.
+`;
   } else {
     promptInstruction += `Evaluate this transcript strictly against official Cambridge IELTS Speaking Band Descriptors.\n`;
   }
@@ -698,61 +713,84 @@ function generateMockSpeakingAnalysis(
 
   // CASE 1: No transcript provided (speech recognition failed or user did not type transcript)
   if (!transcript) {
+    const hasAudio = durationSeconds > 0;
     return {
       overallBand: 2.0,
-      transcript: '[No Spoken Words Transcribed]',
+      transcript: hasAudio
+        ? `[Audio Recorded (${duration}s) • Connect Gemini Key for Direct Audio Listening]`
+        : '[No Spoken Words Transcribed]',
       speechDurationSeconds: duration,
       wordsPerMinute: 0,
       pacingAssessment: 'too_slow',
       fillerWords: {
         totalCount: 0,
         breakdown: [],
-        frequencyAnalysis: 'No speech text was available to detect conversational fillers.'
+        frequencyAnalysis: hasAudio
+          ? 'Direct audio listening is powered by Gemini 3.8 Flash. Connect your free Gemini API key to evaluate voice recordings directly.'
+          : 'No speech text was available to detect conversational fillers.'
       },
       criteria: {
         fluencyCoherence: {
           score: 2.0,
-          bandLabel: 'Band 2.0 (Unintelligible / Missing Transcript)',
-          feedback: `Audio was recorded (${duration}s), but no spoken words were transcribed. Under official Cambridge IELTS criteria, an intelligible spoken transcript is required to evaluate fluency and coherence.`,
-          strengths: [],
-          weaknesses: ['No transcribed spoken language detected'],
-          keyRecommendations: ['Speak clearly into the microphone or verify/edit your words in the transcript box before clicking Analyze.']
+          bandLabel: hasAudio ? 'Band 2.0 (Gemini AI Key Required for Direct Audio)' : 'Band 2.0 (Missing Transcript)',
+          feedback: hasAudio
+            ? `Your audio recording (${duration}s) was captured successfully! To have AI listen directly to your voice without browser speech-to-text, connect your free Google Gemini API key. You can also type or paste your spoken words in the transcript box.`
+            : `No spoken words were detected. Under official Cambridge IELTS criteria, an intelligible spoken transcript or direct audio stream is required to evaluate fluency.`,
+          strengths: hasAudio ? [`Audio recording captured (${duration}s)`] : [],
+          weaknesses: [hasAudio ? 'Gemini AI API key required to process raw voice audio directly' : 'No transcribed spoken language detected'],
+          keyRecommendations: [
+            hasAudio
+              ? 'Click the key icon at the top to add your free Gemini API key so Gemini 3.8 Flash can listen directly to your audio.'
+              : 'Speak clearly into the microphone or verify/edit your words in the transcript box before clicking Analyze.'
+          ]
         },
         lexicalResource: {
           score: 2.0,
-          bandLabel: 'Band 2.0 (No Vocabulary Produced)',
-          feedback: 'No transcribed vocabulary was provided to assess lexical flexibility or range.',
+          bandLabel: 'Band 2.0 (No Vocabulary Extracted)',
+          feedback: hasAudio
+            ? 'Connect your Gemini API key so the AI can transcribe and analyze your exact vocabulary choices directly from your voice.'
+            : 'No transcribed vocabulary was provided to assess lexical flexibility or range.',
           strengths: [],
-          weaknesses: ['Zero lexical items provided'],
-          keyRecommendations: ['Type or verify your spoken answer in the transcript box to receive personalized vocabulary upgrades.']
+          weaknesses: ['Zero lexical items extracted'],
+          keyRecommendations: ['Connect Gemini API key or verify your spoken answer in the transcript box.']
         },
         grammaticalRange: {
           score: 2.0,
-          bandLabel: 'Band 2.0 (No Sentence Structures)',
-          feedback: 'No grammatical structures were detected in the submission.',
+          bandLabel: 'Band 2.0 (No Grammatical Structures Extracted)',
+          feedback: hasAudio
+            ? 'Connect your Gemini API key to enable acoustic speech-to-text grammar checking directly from audio.'
+            : 'No grammatical structures were detected in the submission.',
           strengths: [],
-          weaknesses: ['No sentence clauses present'],
-          keyRecommendations: ['Answer in full sentences to receive grammatical analysis.']
+          weaknesses: ['No sentence clauses extracted'],
+          keyRecommendations: ['Connect Gemini API key or type full sentences in the transcript box.']
         },
         pronunciation: {
           score: 2.5,
-          bandLabel: 'Band 2.5 (Unverified Audio Sample)',
-          feedback: `Detected ${duration}s of audio, but speech recognition could not transcribe words.`,
-          strengths: [],
-          weaknesses: ['Speech intelligibility could not be validated without transcription'],
-          keyRecommendations: ['Ensure microphone volume is adequate and speak in complete phrases.']
+          bandLabel: hasAudio ? 'Band 2.5 (Acoustic Sample Captured)' : 'Band 2.5 (Unverified Audio Sample)',
+          feedback: hasAudio
+            ? `Detected ${duration}s of audio recording. Connect your Gemini API key so Gemini 3.8 Flash can evaluate pronunciation, word stress, and rhythm directly from your voice.`
+            : `Detected ${duration}s of audio, but speech recognition could not transcribe words.`,
+          strengths: hasAudio ? [`Voice recording duration: ${duration}s`] : [],
+          weaknesses: ['Acoustic model requires Gemini API key for phonological evaluation'],
+          keyRecommendations: ['Connect your free Gemini API key in the top navigation to activate direct voice analysis.']
         }
       },
       idiomAndPhrasalVerbUpgrades: [],
       spokenGrammarErrors: [],
       pronunciationNotes: {
-        phoneticIssue: 'Unable to evaluate pronunciation without transcribed speech',
+        phoneticIssue: hasAudio
+          ? 'Connect Gemini API key to evaluate phonological features directly from voice waveform'
+          : 'Unable to evaluate pronunciation without transcribed speech',
         wordsAffected: [],
-        intonationFeedback: 'Speak audibly and check that words appear in the transcript box.'
+        intonationFeedback: 'Connect your free Gemini API key in the top navigation bar to enable direct voice listening by Gemini 3.8 Flash.'
       },
-      examinerSummary: `Unverified speech sample: Audio was recorded for ${duration}s, but no spoken transcript was received. In official IELTS Speaking tests, examiners must hear intelligible speech to award credit. Please ensure your words appear in the transcript box below your recording (or type/paste your speech) before analyzing.`,
+      examinerSummary: hasAudio
+        ? `Voice recording captured (${duration}s). To enable Gemini 3.8 Flash to listen directly to your voice and grade your pronunciation, fluency, and answers without speech-to-text, connect your free Gemini API key using the key button in the top navigation.`
+        : 'No speech text was available to evaluate your speaking submission. Please speak into the mic or enter your response.',
       sampleBand9Response: getModelResponseForTopic(topic, part),
-      primaryBottleneck: 'No transcribed speech received. Type or verify your transcript before analysis.'
+      primaryBottleneck: hasAudio
+        ? 'Connect free Gemini API key to activate direct audio listening by Gemini 3.8 Flash.'
+        : 'Please provide a spoken answer or transcript to generate diagnostic feedback.'
     };
   }
 
