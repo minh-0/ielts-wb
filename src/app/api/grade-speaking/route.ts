@@ -4,7 +4,7 @@ import { analyzeSpeakingWithGemini } from '@/lib/gemini';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { promptTopic, audioData, transcript, speakingPart, mimeType, apiKey } = body;
+    const { promptTopic, audioData, transcript, durationSeconds, speakingPart, mimeType, apiKey } = body;
 
     if (!promptTopic) {
       return NextResponse.json(
@@ -20,13 +20,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const payload = audioData
-      ? { type: 'audio' as const, data: audioData, mimeType: mimeType || 'audio/webm' }
-      : { type: 'transcript' as const, data: transcript };
-
     const result = await analyzeSpeakingWithGemini(
       promptTopic,
-      payload,
+      {
+        audioData: audioData || undefined,
+        transcript: transcript || undefined,
+        durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : undefined,
+        mimeType: mimeType || 'audio/webm'
+      },
       speakingPart || 'part2_cuecard',
       apiKey
     );

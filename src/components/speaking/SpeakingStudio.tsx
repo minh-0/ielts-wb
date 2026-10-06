@@ -40,15 +40,16 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
   const [transcriptFallback, setTranscriptFallback] = useState<string>("");
-  const [useTextMode, setUseTextMode] = useState<boolean>(false);
+  const [isListeningSpeech, setIsListeningSpeech] = useState<boolean>(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<any>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerIntervalRef = useRef<any>(null);
 
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analysisResult, setAnalysisResult] = useState<SpeakingAnalysisResult | null>(null);
-  const [activeTab, setActiveTab] = useState<"criteria" | "spoken_idioms" | "speech_metrics" | "model_answer">("criteria");
+  const [activeTab, setActiveTab] = useState<"criteria" | "spoken_grammar" | "spoken_idioms" | "speech_metrics" | "model_answer">("criteria");
   const [showScorecard, setShowScorecard] = useState<boolean>(false);
 
   const handlePartChange = (part: SpeakingPart) => {
@@ -116,6 +117,54 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       setIsRecording(true);
       setRecordSeconds(0);
 
+      // Initialize real-time Web Speech Recognition in browser
+      const SpeechRecognition =
+        typeof window !== "undefined"
+          ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+          : null;
+
+      if (SpeechRecognition) {
+        try {
+          const recognition = new SpeechRecognition();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = "en-US";
+
+          recognition.onstart = () => {
+            setIsListeningSpeech(true);
+          };
+
+          recognition.onresult = (event: any) => {
+            let interim = "";
+            let final = "";
+            for (let i = 0; i < event.results.length; ++i) {
+              if (event.results[i].isFinal) {
+                final += event.results[i][0].transcript + " ";
+              } else {
+                interim += event.results[i][0].transcript;
+              }
+            }
+            const recognized = (final + interim).trim();
+            if (recognized) {
+              setTranscriptFallback(recognized);
+            }
+          };
+
+          recognition.onerror = (e: any) => {
+            console.warn("Browser speech recognition warning:", e.error);
+          };
+
+          recognition.onend = () => {
+            setIsListeningSpeech(false);
+          };
+
+          recognition.start();
+          recognitionRef.current = recognition;
+        } catch (recognitionErr) {
+          console.warn("SpeechRecognition start failed:", recognitionErr);
+        }
+      }
+
       timerIntervalRef.current = setInterval(() => {
         setRecordSeconds((prev) => {
           if (speakingMode === "official_exam" && selectedPart === "part2_cuecard" && prev >= 120) {
@@ -130,8 +179,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         });
       }, 1000);
     } catch (err) {
-      console.warn("Microphone access denied or unsupported, enabling transcript fallback", err);
-      setUseTextMode(true);
+      console.warn("Microphone access denied or unsupported", err);
     }
   };
 
@@ -139,6 +187,15 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        // ignore
+      }
+      recognitionRef.current = null;
+    }
+    setIsListeningSpeech(false);
     setIsRecording(false);
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
@@ -152,10 +209,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
     setRecordSeconds(0);
     setIsPrepping(false);
     setPrepSecondsRemaining(60);
+    setTranscriptFallback("");
   };
 
   const handleAnalyze = async () => {
-    if (!audioBase64 && !transcriptFallback.trim()) return;
+    const cleanTranscript = transcriptFallback.trim();
+    if (!audioBase64 && !cleanTranscript) return;
 
     setIsAnalyzing(true);
     setAnalysisResult(null);
@@ -167,7 +226,8 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         body: JSON.stringify({
           promptTopic: `${selectedPrompt.topic}: ${selectedPrompt.question}`,
           audioData: audioBase64 || undefined,
-          transcript: transcriptFallback || undefined,
+          transcript: cleanTranscript || undefined,
+          durationSeconds: recordSeconds || 0,
           speakingPart: selectedPart,
           apiKey: apiKey || undefined,
         }),
@@ -190,7 +250,6 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
     setTranscriptFallback(
       "Well, to be totally candid, I would like to talk about my high school literature teacher, Mr. David. He was truly an inspirational mentor who changed how I view critical thinking. What set him apart was his unorthodox teaching style. Instead of lecturing for hours, he encouraged debate and challenged us to look at poetry from multiple angles. Even now, whenever I face complex decisions, I recall his advice to always look past surface-level assumptions."
     );
-    setUseTextMode(true);
   };
 
   return (
@@ -419,25 +478,46 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           </div>
         )}
 
-        {/* Transcript Fallback */}
-        <div className="w-full max-w-md pt-3 border-t border-black/10 dark:border-white/10 text-center">
-          <button
-            onClick={() => setUseTextMode(!useTextMode)}
-            className="text-xs text-neutral-500 hover:text-black dark:hover:text-white cursor-pointer"
-          >
-            {useTextMode ? "Hide transcript" : "Or paste transcript directly"}
-          </button>
-          {useTextMode && (
-            <div className="mt-2 text-left">
-              <textarea
-                value={transcriptFallback}
-                onChange={(e) => setTranscriptFallback(e.target.value)}
-                placeholder="Paste spoken transcript..."
-                rows={3}
-                className="w-full p-2.5 text-xs rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-black dark:text-white focus:outline-none"
-              />
-            </div>
-          )}
+        {/* Real-time Spoken Transcript Box */}
+        <div className="w-full max-w-xl text-left space-y-2 pt-3 border-t border-black/10 dark:border-white/10">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 font-semibold flex items-center gap-1.5">
+              <Volume2 className="w-3.5 h-3.5 text-neutral-400" />
+              Candidate Spoken Transcript
+            </span>
+            {isRecording && (
+              <span className="flex items-center gap-1.5 text-red-500 dark:text-red-400 text-[11px] font-mono animate-pulse font-medium">
+                <span className="w-2 h-2 rounded-full bg-red-500" />
+                {isListeningSpeech ? "Listening & transcribing..." : "Recording active..."}
+              </span>
+            )}
+          </div>
+          <textarea
+            value={transcriptFallback}
+            onChange={(e) => setTranscriptFallback(e.target.value)}
+            placeholder={
+              isRecording
+                ? "Speak into your mic — your words will be transcribed here in real time..."
+                : "Spoken transcript will appear here. You can also edit or paste directly before analyzing..."
+            }
+            rows={3}
+            className="w-full p-3 text-xs font-mono rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-black dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-black/30 dark:focus:border-white/30"
+          />
+          <div className="flex items-center justify-between text-[11px] text-neutral-500">
+            <span>
+              {transcriptFallback.trim()
+                ? `${transcriptFallback.trim().split(/\s+/).filter(Boolean).length} words captured`
+                : "Ready to record speech"}
+            </span>
+            {transcriptFallback.trim() && (
+              <button
+                onClick={() => setTranscriptFallback("")}
+                className="text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer font-medium"
+              >
+                Clear text
+              </button>
+            )}
+          </div>
         </div>
 
         <button
@@ -461,7 +541,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
       {/* Section 4: Results View */}
       {analysisResult && (
-        <div className="pt-8 border-t border-black/10 dark:border-white/10 space-y-8 animate-in fade-in duration-200">
+        <div className="pt-8 border-t border-black/10 dark:border-white/10 space-y-6 animate-in fade-in duration-200">
           <div className="p-6 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
               <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
@@ -503,6 +583,31 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
             </div>
           </div>
 
+          {/* Prominent Transcribed Candidate Speech Card */}
+          <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Volume2 className="w-4 h-4 text-neutral-400" />
+                <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 font-semibold">
+                  Transcribed Candidate Speech
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-mono text-neutral-500">
+                  {analysisResult.speechDurationSeconds}s spoken • {analysisResult.wordsPerMinute} WPM
+                </span>
+                {analysisResult.overallBand <= 3.0 && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                    Insufficient Language Sample (Band {analysisResult.overallBand.toFixed(1)})
+                  </span>
+                )}
+              </div>
+            </div>
+            <p className="text-sm font-mono text-neutral-800 dark:text-neutral-200 bg-black/[0.02] dark:bg-white/[0.02] p-3.5 rounded-lg border border-black/5 dark:border-white/10 italic">
+              "{analysisResult.transcript}"
+            </p>
+          </div>
+
           {/* Detailed Tabs */}
           <div className="flex flex-wrap items-center gap-1 border-b border-black/10 dark:border-white/10 pb-2">
             <button
@@ -516,14 +621,14 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
               Criteria Breakdown
             </button>
             <button
-              onClick={() => setActiveTab("speech_metrics")}
+              onClick={() => setActiveTab("spoken_grammar")}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                activeTab === "speech_metrics"
+                activeTab === "spoken_grammar"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              Pacing ({analysisResult.wordsPerMinute} WPM)
+              Spoken Grammar ({analysisResult.spokenGrammarErrors?.length || 0})
             </button>
             <button
               onClick={() => setActiveTab("spoken_idioms")}
@@ -533,7 +638,17 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              Spoken Idioms
+              Spoken Idioms ({analysisResult.idiomAndPhrasalVerbUpgrades?.length || 0})
+            </button>
+            <button
+              onClick={() => setActiveTab("speech_metrics")}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                activeTab === "speech_metrics"
+                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+              }`}
+            >
+              Pacing ({analysisResult.wordsPerMinute} WPM)
             </button>
             <button
               onClick={() => setActiveTab("model_answer")}
@@ -583,6 +698,77 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
             </div>
           )}
 
+          {activeTab === "spoken_grammar" && (
+            <div className="space-y-3">
+              {analysisResult.spokenGrammarErrors && analysisResult.spokenGrammarErrors.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {analysisResult.spokenGrammarErrors.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2"
+                    >
+                      <div className="text-xs text-neutral-400 line-through font-mono">
+                        "{item.spokenSnippet}"
+                      </div>
+                      <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 font-mono">
+                        "{item.correctedSnippet}"
+                      </div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.rule}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-center space-y-1">
+                  <div className="text-xs font-semibold text-black dark:text-white">
+                    No Spoken Grammar Slips Detected
+                  </div>
+                  <p className="text-xs text-neutral-500">
+                    {analysisResult.overallBand <= 3.0
+                      ? "Sample too brief to evaluate grammatical clause structures or tense inflections."
+                      : "Candidate demonstrated clear spoken grammatical control without slips."}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "spoken_idioms" && (
+            <div className="space-y-3">
+              {analysisResult.idiomAndPhrasalVerbUpgrades && analysisResult.idiomAndPhrasalVerbUpgrades.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {analysisResult.idiomAndPhrasalVerbUpgrades.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-neutral-400 line-through">{item.originalPhrase}</span>
+                        <span className="font-mono text-[10px] uppercase text-neutral-500">
+                          {item.type.replace("_", " ")}
+                        </span>
+                      </div>
+                      <div className="text-sm font-semibold text-black dark:text-white">
+                        {item.suggestedUpgrade}
+                      </div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.explanation}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-center space-y-1">
+                  <div className="text-xs font-semibold text-black dark:text-white">
+                    No Spoken Idiom Upgrades
+                  </div>
+                  <p className="text-xs text-neutral-500">
+                    {analysisResult.overallBand <= 3.0
+                      ? "Produce sustained continuous speech (60–120 seconds) to receive tailored conversational idiom suggestions."
+                      : "No specific phrase upgrades needed for this speech snippet."}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {activeTab === "speech_metrics" && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -611,28 +797,6 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
                   "{analysisResult.transcript}"
                 </p>
               </div>
-            </div>
-          )}
-
-          {activeTab === "spoken_idioms" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {analysisResult.idiomAndPhrasalVerbUpgrades.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-neutral-400 line-through">{item.originalPhrase}</span>
-                    <span className="font-mono text-[10px] uppercase text-neutral-500">
-                      {item.type.replace("_", " ")}
-                    </span>
-                  </div>
-                  <div className="text-sm font-semibold text-black dark:text-white">
-                    {item.suggestedUpgrade}
-                  </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.explanation}</p>
-                </div>
-              ))}
             </div>
           )}
 
