@@ -11,9 +11,9 @@ interface RadarChartProps {
   accentColor?: string;
 }
 
-export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: RadarChartProps) {
+export function RadarChart({ scores, size = 200 }: RadarChartProps) {
   const center = size / 2;
-  const radius = (size / 2) - 40;
+  const radius = (size / 2) - 36;
   const maxScore = 9;
   const count = scores.length;
 
@@ -37,7 +37,7 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
   return (
     <div className="relative flex flex-col items-center justify-center">
       <svg width={size} height={size} className="overflow-visible">
-        {/* Background Grids */}
+        {/* Grids */}
         {gridLevels.map((level) => {
           const points = scores
             .map((_, idx) => {
@@ -52,16 +52,16 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
                 points={points}
                 fill="none"
                 stroke="currentColor"
-                strokeOpacity={0.25}
-                strokeWidth={1.5}
-                className="text-gray-900 dark:text-gray-600"
+                strokeOpacity={0.15}
+                strokeWidth={1}
+                className="text-neutral-400 dark:text-neutral-600"
               />
               <text
                 x={center}
                 y={center - (level / maxScore) * radius - 2}
                 textAnchor="middle"
-                fontSize={8}
-                className="fill-gray-700 dark:fill-gray-400 font-mono font-bold"
+                fontSize={7}
+                className="fill-neutral-400 font-mono"
               >
                 {level}
               </text>
@@ -80,45 +80,40 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
               x2={x}
               y2={y}
               stroke="currentColor"
-              strokeOpacity={0.25}
-              strokeWidth={1.5}
-              className="text-gray-900 dark:text-gray-600"
+              strokeOpacity={0.15}
+              strokeWidth={1}
+              className="text-neutral-400 dark:text-neutral-600"
             />
           );
         })}
 
-        {/* User Data Polygon */}
+        {/* User Data Polygon: Monochrome */}
         <polygon
           points={scorePolygonPoints}
-          fill={accentColor}
-          fillOpacity={0.25}
-          stroke={accentColor}
-          strokeWidth={3}
-          strokeLinejoin="miter"
-          className="transition-all duration-300"
+          fill="currentColor"
+          fillOpacity={0.1}
+          stroke="currentColor"
+          strokeWidth={1.5}
+          className="text-black dark:text-white transition-all duration-300"
         />
 
-        {/* Square Data Point Markers */}
+        {/* Data Markers */}
         {scores.map((item, idx) => {
           const { x, y } = getCoordinates(item.score, idx);
           return (
-            <g key={idx}>
-              <rect
-                x={x - 4}
-                y={y - 4}
-                width={8}
-                height={8}
-                fill="#ffffff"
-                stroke={accentColor}
-                strokeWidth={2.5}
-              />
-            </g>
+            <circle
+              key={idx}
+              cx={x}
+              cy={y}
+              r={3}
+              className="fill-black dark:fill-white stroke-white dark:stroke-black stroke-1"
+            />
           );
         })}
 
-        {/* Outer Axis Labels */}
+        {/* Axis Labels */}
         {scores.map((item, idx) => {
-          const labelDist = radius + 22;
+          const labelDist = radius + 18;
           const angle = (Math.PI * 2 / count) * idx - Math.PI / 2;
           const lx = center + labelDist * Math.cos(angle);
           const ly = center + labelDist * Math.sin(angle);
@@ -130,10 +125,10 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
               y={ly}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="fill-gray-950 dark:fill-gray-100 font-black text-[10px] uppercase tracking-wider"
+              className="fill-neutral-600 dark:fill-neutral-300 font-medium text-[9px] uppercase tracking-wider"
             >
-              <tspan x={lx} dy="-0.3em">{item.label}</tspan>
-              <tspan x={lx} dy="1.2em" fill={accentColor} fontWeight="900" fontSize="12px">
+              <tspan x={lx} dy="-0.2em">{item.label}</tspan>
+              <tspan x={lx} dy="1.1em" className="fill-black dark:fill-white font-mono font-bold text-[10px]">
                 {item.score.toFixed(1)}
               </tspan>
             </text>

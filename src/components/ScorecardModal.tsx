@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Download, X, Check, Award, Sparkles } from "lucide-react";
+import { Download, X, Check, Share2 } from "lucide-react";
 import { RadarChart } from "./RadarChart";
 
 interface ScorecardModalProps {
@@ -39,119 +39,103 @@ export function ScorecardModal({
       if (!ctx) return;
 
       const width = 1080;
-      const height = 1350; // 4:5 Instagram & Facebook optimal portrait
+      const height = 1350;
       canvas.width = width;
       canvas.height = height;
 
-      // Dark background with sharp high contrast
-      ctx.fillStyle = "#090d16";
+      // Pure pitch black background
+      ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, width, height);
 
-      // Top Red Brand Accent bar
-      ctx.fillStyle = "#e01a22";
-      ctx.fillRect(0, 0, width, 24);
+      // Thin border around the card canvas
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(40, 40, width - 80, height - 80);
 
-      // Card Header
+      // Header Tag
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 44px sans-serif";
-      ctx.fillText("IELTS DIAGNOSTIC SCORECARD", 80, 110);
+      ctx.font = "bold 18px monospace";
+      ctx.fillText(`IELTS / ${type.toUpperCase()} DIAGNOSTIC`, 80, 110);
 
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "24px sans-serif";
-      ctx.fillText(`Cambridge & IDP Criteria Evaluation • ${type} Test`, 80, 155);
+      // Candidate Score Hero
+      ctx.fillStyle = "#888888";
+      ctx.font = "20px sans-serif";
+      ctx.fillText("ESTIMATED OVERALL BAND", 80, 200);
 
-      // Sharp Red Badge for Type
-      ctx.fillStyle = "#e01a22";
-      ctx.fillRect(width - 240, 75, 160, 48);
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 22px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(type.toUpperCase(), width - 160, 107);
-      ctx.textAlign = "left";
-
-      // Overall Score Box
-      ctx.fillStyle = "#111827";
-      ctx.fillRect(80, 200, width - 160, 240);
-      ctx.strokeStyle = "#e01a22";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(80, 200, width - 160, 240);
-
-      // Band score number
-      ctx.fillStyle = "#e01a22";
       ctx.font = "bold 130px sans-serif";
-      ctx.fillText(overallBand.toFixed(1), 130, 370);
+      ctx.fillText(`Band ${overallBand.toFixed(1)}`, 80, 330);
 
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 36px sans-serif";
-      ctx.fillText("PREDICTED OVERALL BAND", 420, 290);
+      // Horizontal Divider
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(80, 380);
+      ctx.lineTo(width - 80, 380);
+      ctx.stroke();
 
-      ctx.fillStyle = "#cbd5e1";
-      ctx.font = "24px sans-serif";
-      const statusText = overallBand >= 7.5 ? "Good User (C1 Academic Mastery)" : overallBand >= 6.5 ? "Competent User (Meets University Criteria)" : "Developing User (Needs Targeted Refinement)";
-      ctx.fillText(statusText, 420, 340);
-
-      // 4 Criteria Grid Boxes
-      const boxW = 215;
-      const boxH = 150;
-      const startY = 480;
+      // 4 Criteria Grid
+      const boxW = 210;
+      const boxH = 130;
+      const startY = 430;
 
       scores.forEach((s, idx) => {
         const x = 80 + idx * (boxW + 20);
-        ctx.fillStyle = "#1e293b";
+        ctx.fillStyle = "#0a0a0a";
         ctx.fillRect(x, startY, boxW, boxH);
-        ctx.strokeStyle = "#334155";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+        ctx.lineWidth = 1;
         ctx.strokeRect(x, startY, boxW, boxH);
 
-        ctx.fillStyle = "#94a3b8";
-        ctx.font = "bold 18px sans-serif";
-        ctx.fillText(s.label.toUpperCase(), x + 20, startY + 45);
+        ctx.fillStyle = "#888888";
+        ctx.font = "14px monospace";
+        ctx.fillText(s.label.toUpperCase(), x + 20, startY + 40);
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 56px sans-serif";
-        ctx.fillText(s.score.toFixed(1), x + 20, startY + 115);
+        ctx.font = "bold 48px sans-serif";
+        ctx.fillText(s.score.toFixed(1), x + 20, startY + 100);
       });
 
-      // Primary Bottleneck Box
-      ctx.fillStyle = "#1e293b";
-      ctx.fillRect(80, 670, width - 160, 220);
-      ctx.strokeStyle = "#e01a22";
-      ctx.lineWidth = 3;
-      ctx.strokeRect(80, 670, width - 160, 220);
+      // Primary Bottleneck Section
+      ctx.fillStyle = "#0a0a0a";
+      ctx.fillRect(80, 610, width - 160, 200);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(80, 610, width - 160, 200);
 
-      ctx.fillStyle = "#f43f5e";
-      ctx.font = "bold 26px sans-serif";
-      ctx.fillText("🚨 #1 EXAMINER BOTTLENECK HOLDING YOU BACK:", 120, 730);
+      ctx.fillStyle = "#888888";
+      ctx.font = "16px monospace";
+      ctx.fillText("PRIMARY EXAMINER BOTTLENECK", 110, 660);
 
-      ctx.fillStyle = "#f8fafc";
+      ctx.fillStyle = "#ffffff";
       ctx.font = "24px sans-serif";
-      ctx.fillText(primaryBottleneck.slice(0, 85), 120, 785);
-      if (primaryBottleneck.length > 85) {
-        ctx.fillText(primaryBottleneck.slice(85, 170), 120, 825);
+      ctx.fillText(primaryBottleneck.slice(0, 75), 110, 715);
+      if (primaryBottleneck.length > 75) {
+        ctx.fillText(primaryBottleneck.slice(75, 150), 110, 755);
       }
 
-      // Examiner Highlight Box
-      ctx.fillStyle = "#0f172a";
-      ctx.fillRect(80, 920, width - 160, 240);
-      ctx.strokeStyle = "#334155";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(80, 920, width - 160, 240);
+      // Examiner Advice Section
+      ctx.fillStyle = "#0a0a0a";
+      ctx.fillRect(80, 850, width - 160, 260);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(80, 850, width - 160, 260);
 
-      ctx.fillStyle = "#38bdf8";
-      ctx.font = "bold 26px sans-serif";
-      ctx.fillText("💡 EXAMINER ADVICE & UPGRADE:", 120, 980);
+      ctx.fillStyle = "#888888";
+      ctx.font = "16px monospace";
+      ctx.fillText("HIGH-BAND RECOMMENDATION", 110, 900);
 
-      ctx.fillStyle = "#cbd5e1";
-      ctx.font = "italic 24px sans-serif";
-      ctx.fillText(`"${examinerHighlight.slice(0, 80)}"`, 120, 1035);
-      if (examinerHighlight.length > 80) {
-        ctx.fillText(`"${examinerHighlight.slice(80, 160)}"`, 120, 1075);
+      ctx.fillStyle = "#dddddd";
+      ctx.font = "italic 22px sans-serif";
+      ctx.fillText(`"${examinerHighlight.slice(0, 70)}"`, 110, 960);
+      if (examinerHighlight.length > 70) {
+        ctx.fillText(`"${examinerHighlight.slice(70, 140)}"`, 110, 1000);
       }
 
-      // Footer Branding
-      ctx.fillStyle = "#64748b";
-      ctx.font = "bold 22px sans-serif";
-      ctx.fillText("Tested with IELTS Diagnostic AI  •  #IELTSChallenge  •  VibeCoding 2026", 80, 1260);
+      // Footer
+      ctx.fillStyle = "#555555";
+      ctx.font = "18px monospace";
+      ctx.fillText("IELTS BandBoost • Official Criteria Evaluation", 80, 1260);
 
       const dataUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");
@@ -169,101 +153,81 @@ export function ScorecardModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs overflow-y-auto">
-      <div className="relative w-full max-w-xl my-8 bg-white dark:bg-gray-950 text-gray-950 dark:text-white border-3 border-gray-900 dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.3)]">
-        {/* Top Bar */}
-        <div className="h-2 bg-red-600 w-full" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
+      <div className="relative w-full max-w-lg my-8 bg-white dark:bg-black text-black dark:text-white border border-black/15 dark:border-white/20 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-1 text-gray-500 hover:text-black dark:hover:text-white cursor-pointer"
+          className="absolute top-5 right-5 p-1 text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        <div ref={cardRef} className="p-6 md:p-8 space-y-6">
-          {/* Header */}
-          <div className="flex items-start justify-between pr-8 border-b-2 border-gray-900 dark:border-gray-800 pb-4">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-black uppercase bg-red-600 text-white tracking-wider mb-2">
-                <Award className="w-3.5 h-3.5" /> OFFICIAL DIAGNOSTIC
-              </div>
-              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight">{title}</h3>
-              <p className="text-xs text-gray-500 font-medium">Cambridge & IDP Criteria Evaluation</p>
-            </div>
-            <div>
-              <span className="inline-block px-3 py-1 font-black text-xs uppercase bg-gray-900 dark:bg-white text-white dark:text-gray-950">
-                {type}
-              </span>
-            </div>
-          </div>
+        {/* Header */}
+        <div className="space-y-1 pr-6 pb-4 border-b border-black/10 dark:border-white/10">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+            {type} Test Evaluation
+          </span>
+          <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+        </div>
 
-          {/* Hero Overall Band Banner */}
-          <div className="flex items-center justify-between p-5 border-2 border-red-600 bg-red-50 dark:bg-red-950/20">
-            <div>
-              <div className="text-xs font-black uppercase text-gray-600 dark:text-gray-400 tracking-wider">
-                Predicted Overall Band
-              </div>
-              <div className="text-5xl font-black tracking-tight mt-1 flex items-baseline gap-2">
-                <span className="text-red-600">{overallBand.toFixed(1)}</span>
-                <span className="text-sm font-bold text-gray-500">/ 9.0</span>
-              </div>
-            </div>
-            <div className="hidden sm:block">
-              <RadarChart scores={scores} size={150} />
+        {/* Hero Score Box */}
+        <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-mono text-neutral-500 uppercase">Predicted Overall</div>
+            <div className="text-4xl font-semibold tracking-tight mt-0.5">
+              Band {overallBand.toFixed(1)}
             </div>
           </div>
+          <RadarChart scores={scores} size={130} accentColor="#ffffff" />
+        </div>
 
-          {/* 4 Criteria Chips */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            {scores.map((s, idx) => (
-              <div key={idx} className="p-3 border-2 border-gray-900 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-center">
-                <div className="text-[10px] font-black uppercase text-gray-500 truncate">{s.label}</div>
-                <div className="text-2xl font-black mt-0.5">{s.score.toFixed(1)}</div>
-              </div>
-            ))}
-          </div>
+        {/* 4 Chips */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {scores.map((s, idx) => (
+            <div key={idx} className="p-2.5 rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-center">
+              <div className="text-[10px] font-mono text-neutral-500 uppercase">{s.label}</div>
+              <div className="text-lg font-semibold mt-0.5">{s.score.toFixed(1)}</div>
+            </div>
+          ))}
+        </div>
 
-          {/* Bottleneck Warning */}
-          <div className="p-4 border-2 border-red-600 bg-red-50 dark:bg-red-950/30 text-xs">
-            <span className="font-black text-red-600 uppercase block mb-1">🚨 #1 Bottleneck Holding You Back:</span>
-            <p className="text-gray-800 dark:text-gray-200 font-medium">{primaryBottleneck}</p>
-          </div>
+        {/* Primary Bottleneck */}
+        <div className="p-3.5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs space-y-1">
+          <span className="font-mono text-[10px] uppercase text-neutral-500 block">Primary Bottleneck:</span>
+          <p className="text-neutral-700 dark:text-neutral-300">{primaryBottleneck}</p>
+        </div>
 
-          {/* Examiner Quote */}
-          <div className="p-4 border-2 border-gray-900 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs">
-            <span className="font-black text-sky-600 dark:text-sky-400 flex items-center gap-1.5 mb-1 uppercase">
-              <Sparkles className="w-3.5 h-3.5" /> High-Band Examiner Advice:
-            </span>
-            <p className="text-gray-800 dark:text-gray-200 italic font-medium">"{examinerHighlight}"</p>
-          </div>
+        {/* Advice */}
+        <div className="p-3.5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs space-y-1">
+          <span className="font-mono text-[10px] uppercase text-neutral-500 block">Examiner Note:</span>
+          <p className="text-neutral-700 dark:text-neutral-300 italic">"{examinerHighlight}"</p>
+        </div>
 
-          {/* Action buttons */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleDownload}
-              disabled={downloading}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 font-black text-xs uppercase bg-red-600 hover:bg-red-700 text-white border-2 border-red-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
-            >
-              {downloaded ? (
-                <>
-                  <Check className="w-4 h-4" /> Downloaded!
-                </>
-              ) : downloading ? (
-                "Generating High-Res PNG..."
-              ) : (
-                <>
-                  <Download className="w-4 h-4" /> Download Scorecard for Facebook
-                </>
-              )}
-            </button>
-            <button
-              onClick={onClose}
-              className="px-5 py-3 font-black text-xs uppercase border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 cursor-pointer"
-            >
-              Close
-            </button>
-          </div>
+        {/* Actions */}
+        <div className="flex gap-2.5 pt-2">
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 cursor-pointer shadow-xs"
+          >
+            {downloaded ? (
+              <>
+                <Check className="w-3.5 h-3.5" /> Downloaded
+              </>
+            ) : downloading ? (
+              "Generating..."
+            ) : (
+              <>
+                <Download className="w-3.5 h-3.5" /> Export Scorecard PNG
+              </>
+            )}
+          </button>
+          <button
+            onClick={onClose}
+            className="px-4 py-2.5 rounded-lg border border-black/10 dark:border-white/15 text-xs text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

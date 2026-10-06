@@ -6,7 +6,7 @@ import { WritingStudio } from "@/components/writing/WritingStudio";
 import { SpeakingStudio } from "@/components/speaking/SpeakingStudio";
 import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
-import { ShieldCheck, Award, Sparkles, Share2 } from "lucide-react";
+import { ShieldCheck, Sparkles, Share2 } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"writing" | "speaking" | "rubric">("writing");
@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-neutral-200 dark:selection:bg-neutral-800">
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -29,41 +29,35 @@ export default function Home() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Hero Section: Sharp academic style with thick lines */}
-        <div className="relative border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)]">
-          {/* Top thick red stripe */}
-          <div className="h-1.5 bg-red-600 w-full" />
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-10 space-y-10">
+        {/* Hero Section: Open, linear, no heavy box, thin divider line below */}
+        <div className="pb-8 border-b border-black/10 dark:border-white/10 space-y-4">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-black/10 dark:border-white/15 text-[11px] font-mono text-neutral-600 dark:text-neutral-400">
+            <span>OFFICIAL CAMBRIDGE & IDP DESCRIPTORS</span>
+          </div>
 
-          <div className="p-6 sm:p-10 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-black uppercase bg-red-600 text-white tracking-wider border border-red-700">
-              <Award className="w-3.5 h-3.5" /> OFFICIAL EXAMINER STANDARD
+          <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-black dark:text-white leading-tight">
+            IELTS Diagnostic & Practice Suite
+          </h1>
+
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+            Automated Writing and Speaking evaluation graded strictly against official band criteria. Line-by-line diffs, lexical upgrades, and dual-mode speaking timers.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
+              <span>4 Assessment Criteria</span>
             </div>
-
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-gray-950 dark:text-white leading-tight">
-              Master IELTS with{" "}
-              <span className="text-red-600 dark:text-red-500 underline decoration-4 underline-offset-6">
-                Examiner-Grade Precision
-              </span>
-            </h1>
-
-            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed max-w-3xl font-medium">
-              No generic chatbot fluff. Get line-by-line examiner diffs, band-boosting C1/C2 vocabulary suggestions, and dual-mode Speaking test simulations with audio pacing analytics grounded in official Cambridge & IDP band descriptors.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-6 pt-2 text-xs font-bold uppercase tracking-wider text-gray-800 dark:text-gray-300 border-t-2 border-gray-100 dark:border-gray-800 pt-4">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-red-600" />
-                <span>4 Official Criteria Graded</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-red-600" />
-                <span>Word & Idiom Upgrades</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Share2 className="w-4 h-4 text-red-600" />
-                <span>Downloadable Scorecards for Facebook</span>
-              </div>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
+              <span>Lexical Upgrades</span>
+            </div>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
+            <div className="flex items-center gap-1.5">
+              <Share2 className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
+              <span>Shareable Scorecard</span>
             </div>
           </div>
         </div>
@@ -74,16 +68,11 @@ export default function Home() {
         {activeTab === "rubric" && <RubricViewer />}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-gray-900 dark:border-gray-800 py-8 bg-white dark:bg-gray-950 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-600 dark:text-gray-400">
-          <div className="flex items-center gap-2">
-            <span className="font-black text-red-600 dark:text-red-500 uppercase">IELTS BandBoost AI</span>
-            <span>• Built for Vibe Coding Contest 2026</span>
-          </div>
-          <div>
-            Grounded in the Public Band Descriptors owned by British Council, IDP: IELTS Australia, and Cambridge English.
-          </div>
+      {/* Footer: Simple thin line */}
+      <footer className="border-t border-black/10 dark:border-white/10 py-8 bg-transparent mt-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-500">
+          <div>IELTS BandBoost • Vibe Coding Contest 2026</div>
+          <div>Grounded in British Council, IDP, and Cambridge English public descriptors.</div>
         </div>
       </footer>
 

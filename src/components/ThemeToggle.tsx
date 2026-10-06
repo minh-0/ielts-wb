@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Check saved theme or default to light for clean academic readability
     const saved = localStorage.getItem("theme") as "light" | "dark" | null;
-    const initial = saved || "light";
+    const initial = saved || "dark";
     setTheme(initial);
     if (initial === "dark") {
       document.documentElement.classList.add("dark");
@@ -33,7 +32,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-9 h-9 border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-900" />
+      <div className="w-8 h-8 rounded-lg border border-black/10 dark:border-white/15 bg-transparent" />
     );
   }
 
@@ -41,13 +40,13 @@ export function ThemeToggle() {
     <button
       onClick={toggleTheme}
       aria-label="Toggle color theme"
-      className="relative flex items-center justify-center w-9 h-9 border-2 border-gray-900 dark:border-gray-600 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors cursor-pointer shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)]"
+      className="relative flex items-center justify-center w-8 h-8 rounded-lg border border-black/10 dark:border-white/15 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 transition-colors cursor-pointer"
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
       {theme === "dark" ? (
-        <Sun className="w-4 h-4 text-amber-400" />
+        <Sun className="w-3.5 h-3.5 text-neutral-300" />
       ) : (
-        <Moon className="w-4 h-4 text-gray-900" />
+        <Moon className="w-3.5 h-3.5 text-neutral-700" />
       )}
     </button>
   );
