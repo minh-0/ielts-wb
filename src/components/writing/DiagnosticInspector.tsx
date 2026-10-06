@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { SentenceFeedback, VocabularySuggestion } from "@/types/ielts";
+import { SentenceFeedback, VocabularySuggestion, ReplacedWordItem } from "@/types/ielts";
 import {
   AlertTriangle,
   Sparkles,
@@ -11,30 +11,36 @@ import {
   BookOpen,
   CheckCircle2,
   Filter,
+  RotateCcw,
+  Award,
 } from "lucide-react";
 
 interface DiagnosticInspectorProps {
   errors: SentenceFeedback[];
   suggestions: VocabularySuggestion[];
+  replacedItems?: ReplacedWordItem[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
-  onApplyFix: (original: string, replacement: string) => void;
+  onApplyFix: (original: string, replacement: string, meta?: any) => void;
+  onRevertFix?: (replacedText: string, originalText: string) => void;
   taskType: string;
 }
 
 export function DiagnosticInspector({
   errors,
   suggestions,
+  replacedItems = [],
   selectedId,
   onSelect,
   onApplyFix,
+  onRevertFix,
   taskType,
 }: DiagnosticInspectorProps) {
-  const [filter, setFilter] = useState<"all" | "errors" | "suggestions">("all");
-  const [appliedId, setAppliedId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "errors" | "suggestions" | "replaced">("all");
   const cardRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const totalItems = errors.length + suggestions.length;
+  const replacedCount = replacedItems.length;
 
   // Auto-scroll to selected card when selectedId changes from paragraph click
   useEffect(() => {
@@ -46,11 +52,20 @@ export function DiagnosticInspector({
     }
   }, [selectedId]);
 
-  const handleApply = (id: string, original: string, replacement: string, e: React.MouseEvent) => {
+  const handleApply = (item: any, original: string, replacement: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    onApplyFix(original, replacement);
-    setAppliedId(id);
-    setTimeout(() => setAppliedId(null), 2500);
+    onApplyFix(original, replacement, {
+      id: item.id,
+      higherRatedWordExplanation: item.higherRatedWordExplanation,
+      higherRatedWords: item.higherRatedWords,
+    });
+  };
+
+  const handleRevert = (original: string, replacement: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRevertFix) {
+      onRevertFix(replacement, original);
+    }
   };
 
   // If no feedback items exist yet, show examiner guidelines
@@ -65,36 +80,43 @@ export function DiagnosticInspector({
             </h3>
           </div>
 
-          <div className="pt-4 space-y-3.5 text-xs text-neutral-600 dark:text-neutral-400">
+          <div className="pt-4 space-y-3 text-xs text-neutral-600 dark:text-neutral-400">
             <p className="leading-relaxed">
               When you submit your response, this inspector highlights mistakes directly in the
-              paragraph and provides Cambridge-standard corrections.
+              paragraph, explains higher-rated words, and lets you swap replacements with one click.
             </p>
 
-            <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1.5">
-              <span className="font-semibold text-black dark:text-white block">
+            <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1">
+              <span className="font-semibold text-red-600 dark:text-red-400 block text-[11px]">
                 🔴 In-Text Mistakes (Red Wavy)
               </span>
               <p className="text-[11px] leading-relaxed text-neutral-500">
-                Punctuation errors, comma splices, mechanical linkers, and subject-verb slips that dock
-                Grammar and Cohesion scores.
+                Punctuation errors, comma splices, mechanical linkers, and subject-verb slips.
               </p>
             </div>
 
-            <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1.5">
-              <span className="font-semibold text-black dark:text-white block">
+            <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1">
+              <span className="font-semibold text-violet-600 dark:text-violet-400 block text-[11px]">
                 🟣 Vocabulary Upgrades (Violet Dashed)
               </span>
               <p className="text-[11px] leading-relaxed text-neutral-500">
-                Natural C1/C2 collocations, academic idioms, and high-register reporting verbs to lift
-                Lexical Resource to Band 8+.
+                Natural C1/C2 collocations, academic idioms, and high-register reporting verbs.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1">
+              <span className="font-semibold text-emerald-700 dark:text-emerald-300 block text-[11px]">
+                🟢 Replaced Words (Emerald Solid)
+              </span>
+              <p className="text-[11px] leading-relaxed text-emerald-900/80 dark:text-emerald-300/80">
+                Directly replaced in your essay with full examiner rationale on why that word rates higher.
               </p>
             </div>
           </div>
         </div>
 
         <div className="p-3 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-[11px] text-neutral-500">
-          <span className="font-semibold text-black dark:text-white block mb-1">
+          <span className="font-semibold text-black dark:text-white block mb-0.5">
             Target Length:
           </span>
           {taskType === "task2" ? "250+ words (Task 2)" : "150+ words (Task 1)"}
@@ -123,7 +145,7 @@ export function DiagnosticInspector({
         <div className="inline-flex items-center p-0.5 rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-[11px]">
           <button
             onClick={() => setFilter("all")}
-            className={`px-2.5 py-1 rounded-md transition-colors ${
+            className={`px-2 py-1 rounded-md transition-colors ${
               filter === "all"
                 ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                 : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -133,7 +155,7 @@ export function DiagnosticInspector({
           </button>
           <button
             onClick={() => setFilter("errors")}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center gap-1 ${
+            className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 ${
               filter === "errors"
                 ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                 : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -144,7 +166,7 @@ export function DiagnosticInspector({
           </button>
           <button
             onClick={() => setFilter("suggestions")}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center gap-1 ${
+            className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 ${
               filter === "suggestions"
                 ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                 : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -153,17 +175,34 @@ export function DiagnosticInspector({
             <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
             Vocab ({suggestions.length})
           </button>
+          {replacedCount > 0 && (
+            <button
+              onClick={() => setFilter("replaced")}
+              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 ${
+                filter === "replaced"
+                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
+                  : "text-emerald-600 dark:text-emerald-400 hover:text-black dark:hover:text-white"
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Replaced ({replacedCount})
+            </button>
+          )}
         </div>
       </div>
 
       {/* Cards Scroll Container */}
       <div className="space-y-3 max-h-[620px] overflow-y-auto pr-1">
         {/* Render Errors */}
-        {(filter === "all" || filter === "errors") &&
+        {(filter === "all" || filter === "errors" || filter === "replaced") &&
           errors.map((err, idx) => {
             const id = err.id || `err-${idx + 1}`;
             const isSelected = selectedId === id;
-            const isApplied = appliedId === id;
+            const isReplaced = replacedItems.some(
+              (r) => r.originalText === err.original || r.replacedText === err.rewritten
+            );
+
+            if (filter === "replaced" && !isReplaced) return null;
 
             return (
               <div
@@ -173,16 +212,28 @@ export function DiagnosticInspector({
                 }}
                 onClick={() => onSelect(isSelected ? null : id)}
                 className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2.5 text-xs ${
-                  isSelected
+                  isReplaced
+                    ? "border-emerald-500/40 bg-emerald-500/[0.03]"
+                    : isSelected
                     ? "border-red-500/80 bg-red-500/5 ring-2 ring-red-500/30"
                     : "border-black/10 dark:border-white/15 bg-white dark:bg-black hover:border-black/25 dark:hover:border-white/30"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-red-500" />
-                    <span className="font-mono text-[10px] uppercase font-semibold text-red-600 dark:text-red-400">
-                      {err.issueType.replace("_", " ")} Mistake
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        isReplaced ? "bg-emerald-500" : "bg-red-500"
+                      }`}
+                    />
+                    <span
+                      className={`font-mono text-[10px] uppercase font-semibold ${
+                        isReplaced
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
+                      {isReplaced ? "Replaced in Essay" : `${err.issueType.replace("_", " ")} Mistake`}
                     </span>
                   </div>
                   <button
@@ -207,6 +258,36 @@ export function DiagnosticInspector({
                   </div>
                 </div>
 
+                {/* Small explanation of that higher rated word */}
+                {err.higherRatedWordExplanation && (
+                  <div className="p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1.5">
+                    <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
+                      <Award className="w-3 h-3" />
+                      <span>Why This Rates Higher:</span>
+                    </div>
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                      {err.higherRatedWordExplanation}
+                    </p>
+                    {err.higherRatedWords && (
+                      <div className="pt-1 space-y-1">
+                        {err.higherRatedWords.map((hw, i) => (
+                          <div key={i} className="text-[10px] flex items-baseline gap-1 text-neutral-600 dark:text-neutral-400">
+                            <span className="font-semibold text-emerald-700 dark:text-emerald-300 font-mono">
+                              {hw.word}
+                            </span>
+                            {hw.level && (
+                              <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                                {hw.level}
+                              </span>
+                            )}
+                            <span>— {hw.explanation}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
                   {err.explanation}
                 </p>
@@ -218,33 +299,38 @@ export function DiagnosticInspector({
                 )}
 
                 <div className="pt-1 flex items-center justify-end">
-                  <button
-                    onClick={(e) => handleApply(id, err.original, err.rewritten, e)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-                  >
-                    {isApplied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        Applied
-                      </>
-                    ) : (
-                      <>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                        Apply Fix
-                      </>
-                    )}
-                  </button>
+                  {isReplaced ? (
+                    <button
+                      onClick={(e) => handleRevert(err.original, err.rewritten, e)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors cursor-pointer shadow-xs"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Revert Word
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => handleApply(err, err.original, err.rewritten, e)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                    >
+                      <ArrowRight className="w-3.5 h-3.5" />
+                      Apply Higher-Rated Fix
+                    </button>
+                  )}
                 </div>
               </div>
             );
           })}
 
         {/* Render Vocabulary Suggestions */}
-        {(filter === "all" || filter === "suggestions") &&
+        {(filter === "all" || filter === "suggestions" || filter === "replaced") &&
           suggestions.map((sug, idx) => {
             const id = sug.id || `sug-${idx + 1}`;
             const isSelected = selectedId === id;
-            const isApplied = appliedId === id;
+            const isReplaced = replacedItems.some(
+              (r) => r.originalText === sug.originalPhrase || r.replacedText === sug.suggestedUpgrade
+            );
+
+            if (filter === "replaced" && !isReplaced) return null;
 
             return (
               <div
@@ -254,16 +340,28 @@ export function DiagnosticInspector({
                 }}
                 onClick={() => onSelect(isSelected ? null : id)}
                 className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2.5 text-xs ${
-                  isSelected
+                  isReplaced
+                    ? "border-emerald-500/40 bg-emerald-500/[0.03]"
+                    : isSelected
                     ? "border-violet-500/80 bg-violet-500/5 ring-2 ring-violet-500/30"
                     : "border-black/10 dark:border-white/15 bg-white dark:bg-black hover:border-black/25 dark:hover:border-white/30"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-violet-500" />
-                    <span className="font-mono text-[10px] uppercase font-semibold text-violet-600 dark:text-violet-400">
-                      {sug.type.replace("_", " ")} Upgrade
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        isReplaced ? "bg-emerald-500" : "bg-violet-500"
+                      }`}
+                    />
+                    <span
+                      className={`font-mono text-[10px] uppercase font-semibold ${
+                        isReplaced
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-violet-600 dark:text-violet-400"
+                      }`}
+                    >
+                      {isReplaced ? "Replaced in Essay" : `${sug.type.replace("_", " ")} Upgrade`}
                     </span>
                   </div>
                   <button
@@ -288,6 +386,36 @@ export function DiagnosticInspector({
                   </div>
                 </div>
 
+                {/* Small explanation of that higher rated word */}
+                {sug.higherRatedWordExplanation && (
+                  <div className="p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1.5">
+                    <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
+                      <Award className="w-3 h-3" />
+                      <span>Why This Word Rates Higher (Band 8+):</span>
+                    </div>
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                      {sug.higherRatedWordExplanation}
+                    </p>
+                    {sug.higherRatedWords && (
+                      <div className="pt-1 space-y-1">
+                        {sug.higherRatedWords.map((hw, i) => (
+                          <div key={i} className="text-[10px] flex items-baseline gap-1 text-neutral-600 dark:text-neutral-400">
+                            <span className="font-semibold text-emerald-700 dark:text-emerald-300 font-mono">
+                              {hw.word}
+                            </span>
+                            {hw.level && (
+                              <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                                {hw.level}
+                              </span>
+                            )}
+                            <span>— {hw.explanation}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
                   {sug.explanation}
                 </p>
@@ -299,22 +427,23 @@ export function DiagnosticInspector({
                 )}
 
                 <div className="pt-1 flex items-center justify-end">
-                  <button
-                    onClick={(e) => handleApply(id, sug.originalPhrase, sug.suggestedUpgrade, e)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-                  >
-                    {isApplied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        Applied
-                      </>
-                    ) : (
-                      <>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                        Apply Upgrade
-                      </>
-                    )}
-                  </button>
+                  {isReplaced ? (
+                    <button
+                      onClick={(e) => handleRevert(sug.originalPhrase, sug.suggestedUpgrade, e)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors cursor-pointer shadow-xs"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Revert Word
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => handleApply(sug, sug.originalPhrase, sug.suggestedUpgrade, e)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                    >
+                      <ArrowRight className="w-3.5 h-3.5" />
+                      Apply Higher-Rated Word
+                    </button>
+                  )}
                 </div>
               </div>
             );

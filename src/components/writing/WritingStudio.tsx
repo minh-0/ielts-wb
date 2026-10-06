@@ -14,9 +14,10 @@ import {
   ChevronDown,
   Edit3,
   Highlighter,
+  RotateCcw,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
-import { WritingAnalysisResult, TaskType } from "@/types/ielts";
+import { WritingAnalysisResult, TaskType, ReplacedWordItem } from "@/types/ielts";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
 import { AnnotatedParagraph } from "./AnnotatedParagraph";
@@ -46,6 +47,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   // In-text annotation & view state
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"annotated" | "edit">("edit");
+  const [replacedItems, setReplacedItems] = useState<ReplacedWordItem[]>([]);
 
   // Word count
   const words = essayContent.trim().split(/\s+/).filter(Boolean);
@@ -88,6 +90,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     setIsAnalyzing(true);
     setAnalysisResult(null);
     setSelectedAnnotationId(null);
+    setReplacedItems([]);
 
     const activePromptText = useCustomPrompt
       ? customPrompt
@@ -119,13 +122,96 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     }
   };
 
-  const handleApplyFix = (original: string, replacement: string) => {
+  const handleApplyFix = (original: string, replacement: string, meta?: any) => {
     setEssayContent((prev) => {
       if (prev.includes(original)) {
         return prev.replace(original, replacement);
       }
       return prev;
     });
+
+    setReplacedItems((prev) => {
+      const filtered = prev.filter(
+        (r) => r.originalText !== original && r.replacedText !== replacement
+      );
+      return [
+        ...filtered,
+        {
+          id: meta?.id || `rep-${Date.now()}`,
+          originalText: original,
+          replacedText: replacement,
+          higherRatedWordExplanation:
+            meta?.higherRatedWordExplanation ||
+            "Upgrades phrasing to formal C1/C2 academic register favored by examiners.",
+          higherRatedWords: meta?.higherRatedWords || [],
+        },
+      ];
+    });
+  };
+
+  const handleRevertFix = (replacedText: string, originalText: string) => {
+    setEssayContent((prev) => {
+      if (prev.includes(replacedText)) {
+        return prev.replace(replacedText, originalText);
+      }
+      return prev;
+    });
+
+    setReplacedItems((prev) => prev.filter((r) => r.replacedText !== replacedText));
+  };
+
+  const handleApplyAllUpgrades = () => {
+    if (!analysisResult) return;
+    let updated = essayContent;
+    const newReplaced = [...replacedItems];
+
+    analysisResult.vocabularySuggestions.forEach((sug) => {
+      if (updated.includes(sug.originalPhrase)) {
+        updated = updated.replace(sug.originalPhrase, sug.suggestedUpgrade);
+        if (!newReplaced.some((r) => r.replacedText === sug.suggestedUpgrade)) {
+          newReplaced.push({
+            id: sug.id || `rep-${Date.now()}-${Math.random()}`,
+            originalText: sug.originalPhrase,
+            replacedText: sug.suggestedUpgrade,
+            higherRatedWordExplanation:
+              sug.higherRatedWordExplanation ||
+              "Elevated academic phrasing demonstrating high lexical precision.",
+            higherRatedWords: sug.higherRatedWords,
+          });
+        }
+      }
+    });
+
+    analysisResult.sentenceFeedbacks.forEach((err) => {
+      if (updated.includes(err.original)) {
+        updated = updated.replace(err.original, err.rewritten);
+        if (!newReplaced.some((r) => r.replacedText === err.rewritten)) {
+          newReplaced.push({
+            id: err.id || `rep-${Date.now()}-${Math.random()}`,
+            originalText: err.original,
+            replacedText: err.rewritten,
+            higherRatedWordExplanation:
+              err.higherRatedWordExplanation ||
+              "Syntactically varied and grammatically advanced structure.",
+            higherRatedWords: err.higherRatedWords,
+          });
+        }
+      }
+    });
+
+    setEssayContent(updated);
+    setReplacedItems(newReplaced);
+  };
+
+  const handleRevertAllUpgrades = () => {
+    let restored = essayContent;
+    replacedItems.forEach((item) => {
+      if (restored.includes(item.replacedText)) {
+        restored = restored.replace(item.replacedText, item.originalText);
+      }
+    });
+    setEssayContent(restored);
+    setReplacedItems([]);
   };
 
   const handleLoadSampleEssay = () => {
@@ -133,6 +219,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
       `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.\n\nConversely, skeptics caution that unregulated artificial intelligence could exacerbate socioeconomic disparities and induce severe structural unemployment. If machines replace entry-level cognitive tasks, young graduates may encounter unprecedented barriers to workplace integration. In addition, privacy concerns have become increasingly prominent.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`
     );
     setViewMode("edit");
+    setReplacedItems([]);
   };
 
   return (
@@ -262,29 +349,52 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
               {/* Toggle View Mode when analysis exists */}
               {analysisResult && (
-                <div className="inline-flex items-center p-0.5 rounded-md border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-[11px]">
-                  <button
-                    onClick={() => setViewMode("annotated")}
-                    className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
-                      viewMode === "annotated"
-                        ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                        : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
-                    }`}
-                  >
-                    <Highlighter className="w-3 h-3" />
-                    Annotated
-                  </button>
-                  <button
-                    onClick={() => setViewMode("edit")}
-                    className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
-                      viewMode === "edit"
-                        ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                        : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
-                    }`}
-                  >
-                    <Edit3 className="w-3 h-3" />
-                    Edit
-                  </button>
+                <div className="flex items-center gap-2">
+                  <div className="inline-flex items-center p-0.5 rounded-md border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-[11px]">
+                    <button
+                      onClick={() => setViewMode("annotated")}
+                      className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
+                        viewMode === "annotated"
+                          ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                      }`}
+                    >
+                      <Highlighter className="w-3 h-3" />
+                      Annotated
+                    </button>
+                    <button
+                      onClick={() => setViewMode("edit")}
+                      className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
+                        viewMode === "edit"
+                          ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                      }`}
+                    >
+                      <Edit3 className="w-3 h-3" />
+                      Edit
+                    </button>
+                  </div>
+
+                  {/* Apply All / Revert All Upgrade Toggle */}
+                  {replacedItems.length > 0 ? (
+                    <button
+                      onClick={handleRevertAllUpgrades}
+                      className="px-2 py-0.5 rounded text-[11px] border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
+                      title="Revert all replacements back to original draft"
+                    >
+                      <RotateCcw className="w-3 h-3" />
+                      Revert All ({replacedItems.length})
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleApplyAllUpgrades}
+                      className="px-2 py-0.5 rounded text-[11px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-500/20 flex items-center gap-1 cursor-pointer font-medium transition-colors"
+                      title="Apply all recommended higher-rated words to preview elevated essay"
+                    >
+                      <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                      Apply All Upgrades
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -319,9 +429,11 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               content={essayContent}
               errors={analysisResult.sentenceFeedbacks}
               suggestions={analysisResult.vocabularySuggestions}
+              replacedItems={replacedItems}
               selectedId={selectedAnnotationId}
               onSelect={setSelectedAnnotationId}
               onApplyFix={handleApplyFix}
+              onRevertFix={handleRevertFix}
             />
           ) : (
             <textarea
@@ -366,9 +478,11 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           <DiagnosticInspector
             errors={analysisResult?.sentenceFeedbacks || []}
             suggestions={analysisResult?.vocabularySuggestions || []}
+            replacedItems={replacedItems}
             selectedId={selectedAnnotationId}
             onSelect={setSelectedAnnotationId}
             onApplyFix={handleApplyFix}
+            onRevertFix={handleRevertFix}
             taskType={selectedTaskType}
           />
         </div>

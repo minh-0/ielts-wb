@@ -1,21 +1,23 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { SentenceFeedback, VocabularySuggestion } from "@/types/ielts";
-import { AlertCircle, Sparkles, Check, ArrowRight, X } from "lucide-react";
+import { SentenceFeedback, VocabularySuggestion, ReplacedWordItem } from "@/types/ielts";
+import { AlertCircle, Sparkles, Check, ArrowRight, X, RotateCcw, Award } from "lucide-react";
 
 interface AnnotatedParagraphProps {
   content: string;
   errors: SentenceFeedback[];
   suggestions: VocabularySuggestion[];
+  replacedItems?: ReplacedWordItem[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
-  onApplyFix: (original: string, replacement: string) => void;
+  onApplyFix: (original: string, replacement: string, meta?: any) => void;
+  onRevertFix?: (replacedText: string, originalText: string) => void;
 }
 
 interface SpanMatch {
   id: string;
-  kind: "error" | "suggestion";
+  kind: "error" | "suggestion" | "replaced";
   start: number;
   end: number;
   original: string;
@@ -24,24 +26,55 @@ interface SpanMatch {
   explanation: string;
   tip?: string;
   subType?: string;
+  higherRatedWordExplanation?: string;
+  higherRatedWords?: {
+    word: string;
+    level?: string;
+    explanation: string;
+  }[];
 }
 
 export function AnnotatedParagraph({
   content,
   errors,
   suggestions,
+  replacedItems = [],
   selectedId,
   onSelect,
   onApplyFix,
+  onRevertFix,
 }: AnnotatedParagraphProps) {
   const [activeTooltip, setActiveTooltip] = useState<SpanMatch | null>(null);
   const [justAppliedId, setJustAppliedId] = useState<string | null>(null);
 
-  // Compute non-overlapping matches
+  // Compute non-overlapping matches across Replaced Words, Errors, and Suggestions
   const { segments, allMatches } = useMemo(() => {
     const rawMatches: SpanMatch[] = [];
 
-    // 1. Collect error matches
+    // 1. First collect directly replaced words in the content
+    replacedItems.forEach((rep, idx) => {
+      if (!rep.replacedText || !content.includes(rep.replacedText)) return;
+      let startIdx = 0;
+      while ((startIdx = content.indexOf(rep.replacedText, startIdx)) !== -1) {
+        rawMatches.push({
+          id: rep.id || `rep-${idx + 1}`,
+          kind: "replaced",
+          start: startIdx,
+          end: startIdx + rep.replacedText.length,
+          original: rep.originalText,
+          replacement: rep.replacedText,
+          label: "HIGHER-RATED REPLACEMENT",
+          explanation: rep.higherRatedWordExplanation || "Directly replaced with higher-band academic vocabulary.",
+          higherRatedWordExplanation: rep.higherRatedWordExplanation,
+          higherRatedWords: rep.higherRatedWords,
+          subType: "applied_upgrade",
+        });
+        startIdx += rep.replacedText.length;
+        break;
+      }
+    });
+
+    // 2. Collect error matches (only if original is currently present)
     errors.forEach((err, idx) => {
       if (!err.original || !content.includes(err.original)) return;
       let startIdx = 0;
@@ -57,13 +90,15 @@ export function AnnotatedParagraph({
           explanation: err.explanation,
           tip: err.bandUpgradeTip,
           subType: err.issueType,
+          higherRatedWordExplanation: err.higherRatedWordExplanation,
+          higherRatedWords: err.higherRatedWords,
         });
         startIdx += err.original.length;
-        break; // target first occurrence for stability
+        break;
       }
     });
 
-    // 2. Collect vocabulary suggestions matches
+    // 3. Collect vocabulary suggestions matches
     suggestions.forEach((sug, idx) => {
       if (!sug.originalPhrase || !content.includes(sug.originalPhrase)) return;
       let startIdx = 0;
@@ -79,20 +114,23 @@ export function AnnotatedParagraph({
           explanation: sug.explanation,
           tip: sug.exampleInSentence,
           subType: sug.type,
+          higherRatedWordExplanation: sug.higherRatedWordExplanation,
+          higherRatedWords: sug.higherRatedWords,
         });
         startIdx += sug.originalPhrase.length;
         break;
       }
     });
 
-    // 3. Sort matches by start position. Prioritize longer intervals or errors if starting at same point
+    // 4. Sort matches by start position. Prioritize replaced words, then errors, then suggestions
     rawMatches.sort((a, b) => {
       if (a.start !== b.start) return a.start - b.start;
-      if (a.kind !== b.kind) return a.kind === "error" ? -1 : 1;
+      const rank = { replaced: 0, error: 1, suggestion: 2 };
+      if (a.kind !== b.kind) return rank[a.kind] - rank[b.kind];
       return (b.end - b.start) - (a.end - a.start);
     });
 
-    // 4. Eliminate overlapping intervals
+    // 5. Eliminate overlapping intervals
     const nonOverlapping: SpanMatch[] = [];
     let lastEnd = 0;
     for (const m of rawMatches) {
@@ -102,7 +140,7 @@ export function AnnotatedParagraph({
       }
     }
 
-    // 5. Partition content into text & span segments
+    // 6. Partition content into text & span segments
     const segs: Array<{ type: "text"; text: string } | { type: "span"; match: SpanMatch }> = [];
     let cur = 0;
     for (const m of nonOverlapping) {
@@ -117,42 +155,69 @@ export function AnnotatedParagraph({
     }
 
     return { segments: segs, allMatches: nonOverlapping };
-  }, [content, errors, suggestions]);
+  }, [content, errors, suggestions, replacedItems]);
 
   const handleApply = (span: SpanMatch, e: React.MouseEvent) => {
     e.stopPropagation();
-    onApplyFix(span.original, span.replacement);
+    onApplyFix(span.original, span.replacement, {
+      id: span.id,
+      higherRatedWordExplanation: span.higherRatedWordExplanation,
+      higherRatedWords: span.higherRatedWords,
+    });
     setJustAppliedId(span.id);
     setActiveTooltip(null);
     setTimeout(() => setJustAppliedId(null), 2500);
   };
 
+  const handleRevert = (span: SpanMatch, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRevertFix) {
+      onRevertFix(span.replacement, span.original);
+    }
+    setActiveTooltip(null);
+  };
+
   const selectedMatch = allMatches.find((m) => m.id === selectedId) || activeTooltip;
+
+  const replacedCount = allMatches.filter((m) => m.kind === "replaced").length;
+  const errorCount = allMatches.filter((m) => m.kind === "error").length;
+  const suggestionCount = allMatches.filter((m) => m.kind === "suggestion").length;
 
   return (
     <div className="space-y-3">
-      {/* Visual Legend */}
+      {/* 3-Category Visual Legend */}
       <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+          {/* 1. Red Wavy: Mistakes */}
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-500/20" />
             <span className="underline decoration-wavy decoration-red-500 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Mistakes & Grammar
+              Grammar Mistakes
             </span>
-            <span className="text-[11px] text-neutral-400 font-mono">({errors.length})</span>
+            <span className="text-[11px] text-neutral-400 font-mono">({errorCount})</span>
           </div>
 
+          {/* 2. Violet Dashed: Upgrades */}
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-violet-500 ring-2 ring-violet-500/20" />
             <span className="underline decoration-dashed decoration-violet-500 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Vocabulary & Idioms
+              Vocabulary Upgrades
             </span>
-            <span className="text-[11px] text-neutral-400 font-mono">({suggestions.length})</span>
+            <span className="text-[11px] text-neutral-400 font-mono">({suggestionCount})</span>
+          </div>
+
+          {/* 3. Emerald Solid: Directly Replaced Words */}
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" />
+            <span className="underline decoration-solid decoration-emerald-500 underline-offset-4 font-semibold text-emerald-800 dark:text-emerald-300">
+              Replaced Higher-Rated Words
+            </span>
+            <span className="text-[11px] text-neutral-400 font-mono">({replacedCount})</span>
           </div>
         </div>
 
-        <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden sm:inline">
-          Click any underlined phrase to inspect
+        <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden lg:inline">
+          Click any word for examiner rationale
         </span>
       </div>
 
@@ -165,7 +230,24 @@ export function AnnotatedParagraph({
 
           const span = seg.match;
           const isSelected = selectedId === span.id;
-          const isError = span.kind === "error";
+
+          let badgeStyle = "";
+          if (span.kind === "replaced") {
+            // Emerald solid underline & highlight for replaced higher-rated words
+            badgeStyle = isSelected
+              ? "bg-emerald-500/25 text-emerald-950 dark:text-emerald-100 underline decoration-solid decoration-emerald-500 underline-offset-4 ring-2 ring-emerald-500 border-b-2 border-emerald-500"
+              : "bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-900 dark:text-emerald-200 underline decoration-solid decoration-emerald-500 underline-offset-4 border-b-2 border-emerald-500";
+          } else if (span.kind === "error") {
+            // Red wavy underline for errors
+            badgeStyle = isSelected
+              ? "bg-red-500/25 text-red-950 dark:text-red-100 underline decoration-wavy decoration-red-500 underline-offset-4 ring-2 ring-red-500"
+              : "bg-red-500/10 hover:bg-red-500/20 text-red-900 dark:text-red-200 underline decoration-wavy decoration-red-500 underline-offset-4";
+          } else {
+            // Violet dashed underline for vocabulary suggestions
+            badgeStyle = isSelected
+              ? "bg-violet-500/25 text-violet-950 dark:text-violet-100 underline decoration-dashed decoration-violet-500 underline-offset-4 ring-2 ring-violet-500"
+              : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-900 dark:text-violet-200 underline decoration-dashed decoration-violet-500 underline-offset-4";
+          }
 
           return (
             <mark
@@ -174,39 +256,39 @@ export function AnnotatedParagraph({
                 onSelect(isSelected ? null : span.id);
                 setActiveTooltip(isSelected ? null : span);
               }}
-              className={`relative inline cursor-pointer font-medium rounded-xs px-0.5 py-0.5 transition-all duration-150 ${
-                isError
-                  ? isSelected
-                    ? "bg-red-500/25 text-red-950 dark:text-red-100 underline decoration-wavy decoration-red-500 underline-offset-4 ring-2 ring-red-500"
-                    : "bg-red-500/10 hover:bg-red-500/20 text-red-900 dark:text-red-200 underline decoration-wavy decoration-red-500 underline-offset-4"
-                  : isSelected
-                  ? "bg-violet-500/25 text-violet-950 dark:text-violet-100 underline decoration-dashed decoration-violet-500 underline-offset-4 ring-2 ring-violet-500"
-                  : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-900 dark:text-violet-200 underline decoration-dashed decoration-violet-500 underline-offset-4"
-              }`}
-              title={`${span.label}: Click to inspect`}
+              className={`relative inline cursor-pointer font-medium rounded-xs px-1 py-0.5 transition-all duration-150 ${badgeStyle}`}
+              title={`${span.label}: Click for examiner rating explanation`}
             >
-              {seg.match.original}
+              {span.kind === "replaced" ? span.replacement : span.original}
             </mark>
           );
         })}
       </div>
 
-      {/* Quick Interactive Popover when a span is active */}
+      {/* Quick Interactive Popover with Small Explanation of the Higher-Rated Word */}
       {selectedMatch && (
-        <div className="p-4 rounded-xl border border-black/10 dark:border-white/20 bg-neutral-50 dark:bg-neutral-950 shadow-md space-y-2.5 animate-in fade-in duration-150">
+        <div className="p-4 rounded-xl border border-black/10 dark:border-white/20 bg-neutral-50 dark:bg-neutral-950 shadow-md space-y-3 animate-in fade-in duration-150">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span
                 className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
-                  selectedMatch.kind === "error"
+                  selectedMatch.kind === "replaced"
+                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40"
+                    : selectedMatch.kind === "error"
                     ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30"
                     : "bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/30"
                 }`}
               >
-                {selectedMatch.label}
+                {selectedMatch.kind === "replaced"
+                  ? "✨ Replaced Higher-Rated Word"
+                  : selectedMatch.label}
               </span>
               <span className="text-xs text-neutral-500 font-mono">
-                {selectedMatch.kind === "error" ? "Direct Mistake" : "Band 8+ Upgrade"}
+                {selectedMatch.kind === "replaced"
+                  ? "Applied to Essay"
+                  : selectedMatch.kind === "error"
+                  ? "Direct Mistake"
+                  : "Band 8+ Opportunity"}
               </span>
             </div>
 
@@ -221,46 +303,90 @@ export function AnnotatedParagraph({
             </button>
           </div>
 
+          {/* Before & After Words Comparison */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <div className="p-2.5 rounded-lg border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
-              <span className="font-mono text-[10px] text-neutral-400 block mb-0.5">ORIGINAL:</span>
+              <span className="font-mono text-[10px] text-neutral-400 block mb-0.5">
+                ORIGINAL WORD(S):
+              </span>
               <span className="line-through text-neutral-500">{selectedMatch.original}</span>
             </div>
-            <div className="p-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/5 text-emerald-900 dark:text-emerald-200">
+            <div className="p-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-950 dark:text-emerald-200">
               <span className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 block mb-0.5">
-                EXAMINER RECOMMENDATION:
+                HIGHER-RATED REPLACEMENT:
               </span>
-              <span className="font-semibold">{selectedMatch.replacement}</span>
+              <span className="font-bold">{selectedMatch.replacement}</span>
             </div>
           </div>
 
-          <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-            {selectedMatch.explanation}
-          </p>
+          {/* Small Explanation of that Higher-Rated Word */}
+          <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-2">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+              <Award className="w-3.5 h-3.5" />
+              <span>Why This Word Rates Higher (Examiner Insight):</span>
+            </div>
+            <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              {selectedMatch.higherRatedWordExplanation ||
+                selectedMatch.explanation ||
+                "Replaces common conversational vocabulary with formal academic phrasing favored under IELTS Band 8.0+ descriptors."}
+            </p>
 
+            {/* Micro Word-Level Breakdown if available */}
+            {selectedMatch.higherRatedWords && selectedMatch.higherRatedWords.length > 0 && (
+              <div className="pt-1.5 border-t border-emerald-500/15 space-y-1">
+                {selectedMatch.higherRatedWords.map((hw, i) => (
+                  <div key={i} className="text-[11px] flex flex-wrap items-baseline gap-1.5">
+                    <span className="font-semibold text-emerald-700 dark:text-emerald-300 font-mono">
+                      {hw.word}
+                    </span>
+                    {hw.level && (
+                      <span className="px-1 py-0.2 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                        {hw.level}
+                      </span>
+                    )}
+                    <span className="text-neutral-600 dark:text-neutral-400">
+                      — {hw.explanation}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Action Row */}
           <div className="flex items-center justify-between pt-1">
             {selectedMatch.tip ? (
-              <span className="text-[11px] text-neutral-500 italic max-w-sm truncate">
+              <span className="text-[11px] text-neutral-500 italic max-w-sm truncate hidden sm:inline">
                 💡 {selectedMatch.tip}
               </span>
             ) : <span />}
 
-            <button
-              onClick={(e) => handleApply(selectedMatch, e)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-            >
-              {justAppliedId === selectedMatch.id ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  Applied!
-                </>
-              ) : (
-                <>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                  Apply Fix to Essay
-                </>
-              )}
-            </button>
+            {selectedMatch.kind === "replaced" ? (
+              <button
+                onClick={(e) => handleRevert(selectedMatch, e)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-black/15 dark:border-white/20 bg-white dark:bg-black text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer shadow-xs"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Revert to Original Word
+              </button>
+            ) : (
+              <button
+                onClick={(e) => handleApply(selectedMatch, e)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+              >
+                {justAppliedId === selectedMatch.id ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    Applied!
+                  </>
+                ) : (
+                  <>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                    Apply Higher-Rated Word
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       )}

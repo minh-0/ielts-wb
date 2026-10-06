@@ -16,6 +16,12 @@ export interface SentenceFeedback {
   issueType: 'grammar' | 'vocabulary' | 'cohesion' | 'task_response' | 'praise';
   explanation: string;
   bandUpgradeTip?: string;
+  higherRatedWordExplanation?: string;
+  higherRatedWords?: {
+    word: string;
+    level?: string;
+    explanation: string;
+  }[];
 }
 
 export interface VocabularySuggestion {
@@ -25,6 +31,24 @@ export interface VocabularySuggestion {
   type: 'collocation' | 'academic_c1_c2' | 'idiom' | 'phrasal_verb';
   explanation: string;
   exampleInSentence: string;
+  higherRatedWordExplanation?: string;
+  higherRatedWords?: {
+    word: string;
+    level?: string;
+    explanation: string;
+  }[];
+}
+
+export interface ReplacedWordItem {
+  id: string;
+  originalText: string;
+  replacedText: string;
+  higherRatedWordExplanation: string;
+  higherRatedWords?: {
+    word: string;
+    level?: string;
+    explanation: string;
+  }[];
 }
 
 export interface WritingAnalysisResult {

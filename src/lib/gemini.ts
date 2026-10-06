@@ -106,7 +106,15 @@ Analyze this essay and output valid JSON with this exact structure:
       "rewritten": string,
       "issueType": "grammar" | "vocabulary" | "cohesion" | "task_response" | "praise",
       "explanation": string,
-      "bandUpgradeTip": string
+      "bandUpgradeTip": string,
+      "higherRatedWordExplanation": string,
+      "higherRatedWords": [
+        {
+          "word": string,
+          "level": string,
+          "explanation": string
+        }
+      ]
     }
   ],
   "vocabularySuggestions": [
@@ -115,7 +123,15 @@ Analyze this essay and output valid JSON with this exact structure:
       "suggestedUpgrade": string,
       "type": "collocation" | "academic_c1_c2" | "idiom",
       "explanation": string,
-      "exampleInSentence": string
+      "exampleInSentence": string,
+      "higherRatedWordExplanation": string,
+      "higherRatedWords": [
+        {
+          "word": string,
+          "level": string,
+          "explanation": string
+        }
+      ]
     }
   ],
   "cohesionAnalysis": {
@@ -128,8 +144,8 @@ Analyze this essay and output valid JSON with this exact structure:
   "primaryBottleneck": string
 }
 CRITICAL INSTRUCTION FOR IN-TEXT UNDERLINE & HIGHLIGHTING:
-- In "sentenceFeedbacks": each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, or cohesion issue). Do not alter capitalization or punctuation of "original".
-- In "vocabularySuggestions": each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms.
+- In "sentenceFeedbacks": each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
+- In "vocabularySuggestions": each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms. Include "higherRatedWordExplanation" and "higherRatedWords" with CEFR levels (C1/C2) and concise explanations.
 
 Only output the JSON object without markdown fences if possible.
 `;
@@ -279,7 +295,12 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
       rewritten: "Beyond workforce displacement, algorithmic privacy infringements have intensified into a paramount societal concern.",
       issueType: "cohesion" as const,
       explanation: "Using mechanical additive transitions ('In addition') limits Cohesion to Band 6.5. Connect ideas thematically.",
-      bandUpgradeTip: "Replace generic linkers with context-specific participial transitions (Band 8+ standard)."
+      bandUpgradeTip: "Replace generic linkers with context-specific participial transitions (Band 8+ standard).",
+      higherRatedWordExplanation: "'Paramount' (C2) and 'infringements' (C1) replace generic words, elevating lexical density while eliminating mechanical linkers.",
+      higherRatedWords: [
+        { word: "paramount", level: "C2 Adjective", explanation: "Signifies utmost importance; preferred by IELTS examiners over common 'very important'." },
+        { word: "infringements", level: "C1 Noun", explanation: "Precise formal term for privacy violations that demonstrates advanced register." }
+      ]
     });
   } else if (rawSentences.length > 1) {
     sentenceFeedbacks.push({
@@ -288,7 +309,11 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
       rewritten: `Furthermore, ${rawSentences[1].charAt(0).toLowerCase() + rawSentences[1].slice(1).replace(/is /g, 'undeniably proves to be ')}`,
       issueType: "grammar" as const,
       explanation: "Sentence structure lacks syntactic variety. Introducing a fronted adverbial or cleft clause elevates Grammatical Range.",
-      bandUpgradeTip: "Use inverted conditionals or cleft sentences to demonstrate sophisticated grammatical structures."
+      bandUpgradeTip: "Use inverted conditionals or cleft sentences to demonstrate sophisticated grammatical structures.",
+      higherRatedWordExplanation: "'Undeniably proves to be' introduces academic certainty and emphatic qualification.",
+      higherRatedWords: [
+        { word: "undeniably", level: "C1 Adverb", explanation: "Provides assertive academic stance without informal emotional language." }
+      ]
     });
   }
 
@@ -299,7 +324,12 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
       rewritten: "Concurrently, enhanced computational efficiency streamlines commercial logistics while catalyzing international scientific synergy.",
       issueType: "grammar" as const,
       explanation: "Upgrades a basic coordinate sentence into a dynamic participial construction with elevated vocabulary.",
-      bandUpgradeTip: "Band 8+ grammar relies on non-finite clauses ('while catalyzing...') rather than basic 'and' conjunctions."
+      bandUpgradeTip: "Band 8+ grammar relies on non-finite clauses ('while catalyzing...') rather than basic 'and' conjunctions.",
+      higherRatedWordExplanation: "'Catalyzing' (C1) and 'synergy' (C2) replace conversational verbs with high-band academic terminology.",
+      higherRatedWords: [
+        { word: "synergy", level: "C2 Noun", explanation: "Formal lexical term for cooperative interaction yielding greater collective effect." },
+        { word: "catalyzing", level: "C1 Verb", explanation: "Active causative verb denoting rapid acceleration of progress." }
+      ]
     });
   } else if (rawSentences.length > 2) {
     sentenceFeedbacks.push({
@@ -308,7 +338,11 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
       rewritten: `On balance, it is evident that ${rawSentences[rawSentences.length - 1].charAt(0).toLowerCase() + rawSentences[rawSentences.length - 1].slice(1)}`,
       issueType: "cohesion" as const,
       explanation: "Concluding statement can be strengthened by clearly restating your thesis with academic qualification.",
-      bandUpgradeTip: "Ensure your final sentence provides a definitive evaluative stance rather than abrupt closure."
+      bandUpgradeTip: "Ensure your final sentence provides a definitive evaluative stance rather than abrupt closure.",
+      higherRatedWordExplanation: "'Evident' introduces academic deduction and objective evaluation.",
+      higherRatedWords: [
+        { word: "evident", level: "B2/C1 Adjective", explanation: "Standard scholarly reporting adjective that builds authoritative objective tone." }
+      ]
     });
   }
 
@@ -319,21 +353,36 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
       upgrade: "emancipating the workforce from routine drudgery",
       type: "academic_c1_c2" as const,
       explanation: "Replaces conversational phrasing with elevated C2 academic register.",
-      example: "Automation transforms society by emancipating the workforce from routine drudgery."
+      example: "Automation transforms society by emancipating the workforce from routine drudgery.",
+      higherRatedWordExplanation: "'Emancipating' (C2) and 'drudgery' (C1) replace informal conversational phrases with sophisticated Band 8.5+ academic terminology.",
+      higherRatedWords: [
+        { word: "emancipating", level: "C2 Verb", explanation: "Denotes liberating individuals from oppressive constraints; superior to basic 'freeing'." },
+        { word: "drudgery", level: "C1 Noun", explanation: "Formal noun describing hard, monotonous labor; prized by Cambridge examiners." }
+      ]
     },
     {
       phrase: "remarkable advantages and complex ethical quandaries",
       upgrade: "a double-edged sword characterized by multifaceted moral dilemmas",
       type: "idiom" as const,
       explanation: "Controlled natural idiomatic phrase highly favored by IELTS examiners over simple adjectives.",
-      example: "The digital transition represents a double-edged sword characterized by multifaceted moral dilemmas."
+      example: "The digital transition represents a double-edged sword characterized by multifaceted moral dilemmas.",
+      higherRatedWordExplanation: "'Double-edged sword' is a natural native idiom, complemented by 'multifaceted' (C1) and 'dilemmas' (C1) to demonstrate subtle critical thinking.",
+      higherRatedWords: [
+        { word: "double-edged sword", level: "Band 8+ Idiom", explanation: "Natural idiomatic metaphor demonstrating authentic native command." },
+        { word: "multifaceted", level: "C1 Adjective", explanation: "Replaces generic 'complex' with multi-dimensional analytical nuance." }
+      ]
     },
     {
       phrase: "young graduates may encounter unprecedented barriers",
       upgrade: "novice entrants face formidable impediments",
       type: "collocation" as const,
       explanation: "Precise academic collocations boost Lexical Resource from Band 6.5 to Band 8.0.",
-      example: "Without comprehensive mentoring, novice entrants face formidable impediments upon workforce entry."
+      example: "Without comprehensive mentoring, novice entrants face formidable impediments upon workforce entry.",
+      higherRatedWordExplanation: "'Formidable impediments' is a natural C2 collocation that avoids clichés like 'problems' or 'barriers'.",
+      higherRatedWords: [
+        { word: "formidable", level: "C2 Adjective", explanation: "Conveys inspiring respect or challenge through being powerful/intense." },
+        { word: "impediments", level: "C1 Noun", explanation: "Formal barrier synonym directly rewarded under Lexical Resource Band 8+." }
+      ]
     }
   ];
 
@@ -346,7 +395,9 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
         suggestedUpgrade: item.upgrade,
         type: item.type,
         explanation: item.explanation,
-        exampleInSentence: item.example
+        exampleInSentence: item.example,
+        higherRatedWordExplanation: item.higherRatedWordExplanation,
+        higherRatedWords: item.higherRatedWords
       });
     }
   }
@@ -354,12 +405,73 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
   // If no known phrases matched, dynamically find common upgradeable words in the essay
   if (vocabularySuggestions.length === 0) {
     const commonWordUpgrades = [
-      { find: /\bimportant\b/i, original: "important", upgrade: "pivotal / paramount", type: "academic_c1_c2" as const, explanation: "Generic adjective. 'Pivotal' or 'paramount' demonstrates formal precision." },
-      { find: /\bproblem\b/i, original: "problem", upgrade: "predicament / pressing dilemma", type: "collocation" as const, explanation: "Standardizes repetitive noun usage with high-band academic synonyms." },
-      { find: /\bvery\b/i, original: "very", upgrade: "substantially / markedly", type: "academic_c1_c2" as const, explanation: "Avoid conversational intensifier 'very' in academic writing." },
-      { find: /\bgood\b/i, original: "good", upgrade: "beneficial / advantageous", type: "collocation" as const, explanation: "Academic essays require specific evaluative adjectives rather than 'good'." },
-      { find: /\ba lot of\b/i, original: "a lot of", upgrade: "a substantial proportion of / myriad", type: "academic_c1_c2" as const, explanation: "Conversational quantifier unacceptable in formal IELTS Task 2." },
-      { find: /\bthink\b/i, original: "think", upgrade: "contend / maintain that", type: "academic_c1_c2" as const, explanation: "Use academic reporting verbs to present arguments objectively." }
+      {
+        find: /\bimportant\b/i,
+        original: "important",
+        upgrade: "pivotal / paramount",
+        type: "academic_c1_c2" as const,
+        explanation: "Generic adjective. 'Pivotal' or 'paramount' demonstrates formal precision.",
+        higherRatedWordExplanation: "'Paramount' (C2) and 'pivotal' (C1) denote crucial centrality, eliminating informal 'important'.",
+        higherRatedWords: [
+          { word: "paramount", level: "C2 Adjective", explanation: "More important than anything else; supreme." },
+          { word: "pivotal", level: "C1 Adjective", explanation: "Of crucial importance to the success of an initiative." }
+        ]
+      },
+      {
+        find: /\bproblem\b/i,
+        original: "problem",
+        upgrade: "predicament / pressing dilemma",
+        type: "collocation" as const,
+        explanation: "Standardizes repetitive noun usage with high-band academic synonyms.",
+        higherRatedWordExplanation: "'Predicament' (C1) elevates common noun 'problem' to formal academic discourse.",
+        higherRatedWords: [
+          { word: "predicament", level: "C1 Noun", explanation: "A difficult, unpleasant, or complex situation requiring strategic solution." }
+        ]
+      },
+      {
+        find: /\bvery\b/i,
+        original: "very",
+        upgrade: "substantially / markedly",
+        type: "academic_c1_c2" as const,
+        explanation: "Avoid conversational intensifier 'very' in academic writing.",
+        higherRatedWordExplanation: "'Markedly' (C1) provides precise academic qualification rather than conversational 'very'.",
+        higherRatedWords: [
+          { word: "markedly", level: "C1 Adverb", explanation: "To an extent that is clearly noticeable; distinctly." }
+        ]
+      },
+      {
+        find: /\bgood\b/i,
+        original: "good",
+        upgrade: "beneficial / advantageous",
+        type: "collocation" as const,
+        explanation: "Academic essays require specific evaluative adjectives rather than 'good'.",
+        higherRatedWordExplanation: "'Advantageous' (C1) replaces casual 'good' with formal evaluative precision.",
+        higherRatedWords: [
+          { word: "advantageous", level: "C1 Adjective", explanation: "Involving or creating favourable circumstances." }
+        ]
+      },
+      {
+        find: /\ba lot of\b/i,
+        original: "a lot of",
+        upgrade: "a substantial proportion of / myriad",
+        type: "academic_c1_c2" as const,
+        explanation: "Conversational quantifier unacceptable in formal IELTS Task 2.",
+        higherRatedWordExplanation: "'Myriad' (C2) demonstrates extensive lexical breadth.",
+        higherRatedWords: [
+          { word: "myriad", level: "C2 Adjective", explanation: "Countless or extremely great in number." }
+        ]
+      },
+      {
+        find: /\bthink\b/i,
+        original: "think",
+        upgrade: "contend / maintain that",
+        type: "academic_c1_c2" as const,
+        explanation: "Use academic reporting verbs to present arguments objectively.",
+        higherRatedWordExplanation: "'Contend' (C1) is a formal reporting verb favored for objective academic neutrality.",
+        higherRatedWords: [
+          { word: "contend", level: "C1 Verb", explanation: "Assert something as a position in an argument." }
+        ]
+      }
     ];
 
     for (const rule of commonWordUpgrades) {
@@ -370,7 +482,9 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
           suggestedUpgrade: rule.upgrade,
           type: rule.type,
           explanation: rule.explanation,
-          exampleInSentence: `Scholars ${rule.upgrade} the issue requires immediate intervention.`
+          exampleInSentence: `Scholars ${rule.upgrade} the issue requires immediate intervention.`,
+          higherRatedWordExplanation: rule.higherRatedWordExplanation,
+          higherRatedWords: rule.higherRatedWords
         });
       }
     }
@@ -384,7 +498,11 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
       rewritten: `It is widely recognized that ${rawSentences[0].charAt(0).toLowerCase() + rawSentences[0].slice(1)}`,
       issueType: "grammar" as const,
       explanation: "Adding an objective passive framing construct strengthens Task Response and academic tone.",
-      bandUpgradeTip: "Use impersonal passive constructions ('It is widely acknowledged that...')."
+      bandUpgradeTip: "Use impersonal passive constructions ('It is widely acknowledged that...').",
+      higherRatedWordExplanation: "'Widely recognized' adds impersonal academic objectivity.",
+      higherRatedWords: [
+        { word: "widely recognized", level: "C1 Collocation", explanation: "Impersonal reporting construction that eliminates first-person bias." }
+      ]
     });
   }
 
