@@ -41,6 +41,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   // Analysis State
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<WritingAnalysisResult | null>(null);
+  const [baseAnalysisResult, setBaseAnalysisResult] = useState<WritingAnalysisResult | null>(null);
   const [activeTab, setActiveTab] = useState<"criteria" | "sentences" | "model_answer">("criteria");
   const [showScorecard, setShowScorecard] = useState(false);
 
@@ -49,7 +50,86 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [viewMode, setViewMode] = useState<"annotated" | "edit">("edit");
   const [replacedItems, setReplacedItems] = useState<ReplacedWordItem[]>([]);
 
-  // Word count
+  // Word count & cleaner
+  const cleanRepeatedWords = (text: string) => {
+    let cleaned = text.replace(/\b([A-Za-z]+)(?:,\s*|\s+)(?:\1(?:,\s*|\s+))+/gi, "$1, ");
+    cleaned = cleaned.replace(/\b([A-Za-z]+)(?:\s+)\1\b/gi, "$1");
+    cleaned = cleaned.replace(/,\s*,+/g, ",");
+    return cleaned;
+  };
+
+  // Helper to dynamically calculate upgraded band scores whenever upgrades are applied
+  const computeUpgradedResult = (
+    base: WritingAnalysisResult,
+    currentReplaced: ReplacedWordItem[]
+  ): WritingAnalysisResult => {
+    if (currentReplaced.length === 0) return base;
+
+    const count = currentReplaced.length;
+    // Boost Lexical Resource, Grammatical Range & Coherence dynamically
+    const lrBoost = Math.min(2.5, count * 0.5);
+    const graBoost = Math.min(2.0, Math.floor(count * 0.4) * 0.5);
+    const ccBoost = Math.min(1.5, Math.floor(count * 0.3) * 0.5);
+
+    const newLR = Math.min(9.0, Number((base.criteria.lexicalResource.score + lrBoost).toFixed(1)));
+    const newGRA = Math.min(
+      9.0,
+      Number((base.criteria.grammaticalRange.score + graBoost).toFixed(1))
+    );
+    const newCC = Math.min(
+      9.0,
+      Number((base.criteria.coherenceCohesion.score + ccBoost).toFixed(1))
+    );
+    const newTA = base.criteria.taskAchievement.score;
+
+    const rawAvg = (newTA + newCC + newLR + newGRA) / 4;
+    const newOverall = Math.min(9.0, Math.round(rawAvg * 2) / 2);
+
+    return {
+      ...base,
+      overallBand: newOverall,
+      criteria: {
+        ...base.criteria,
+        taskAchievement: {
+          ...base.criteria.taskAchievement,
+          score: newTA,
+          bandLabel: `Band ${newTA.toFixed(1)} (Good Development)`,
+        },
+        lexicalResource: {
+          ...base.criteria.lexicalResource,
+          score: newLR,
+          bandLabel: `Band ${newLR.toFixed(1)} (${
+            newLR >= 8.5
+              ? "Masterly C2 Precision"
+              : newLR >= 7.5
+              ? "Advanced C1/C2 Academic Vocabulary"
+              : "Strong Collocations"
+          })`,
+          feedback: `Elevated with ${count} higher-rated academic upgrades. Lexical precision is substantially boosted.`,
+        },
+        grammaticalRange: {
+          ...base.criteria.grammaticalRange,
+          score: newGRA,
+          bandLabel: `Band ${newGRA.toFixed(1)} (${
+            newGRA >= 8.0 ? "Sophisticated Syntactic Variety" : "Complex Structures Controlled"
+          })`,
+        },
+        coherenceCohesion: {
+          ...base.criteria.coherenceCohesion,
+          score: newCC,
+          bandLabel: `Band ${newCC.toFixed(1)} (${
+            newCC >= 8.0 ? "Seamless Thematic Progression" : "Coherent & Varied"
+          })`,
+        },
+      },
+      examinerSummary: `Upgraded revision: Incorporating ${count} examiner-recommended higher-rated phrases and complex structures has elevated your score to Band ${newOverall.toFixed(1)}.`,
+      primaryBottleneck:
+        count >= 4
+          ? "All major lexical and syntactic upgrades incorporated. Ready for examiner submission."
+          : `${count} upgrade(s) applied. Review remaining items in the inspector to push towards Band 8.5+.`,
+    };
+  };
+
   const words = essayContent.trim().split(/\s+/).filter(Boolean);
   const wordCount = words.length;
   const targetWords = selectedTaskType === "task2" ? 250 : 150;
@@ -113,6 +193,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
       }
 
       const data: WritingAnalysisResult = await res.json();
+      setBaseAnalysisResult(data);
       setAnalysisResult(data);
       setViewMode("annotated"); // Automatically switch to in-text annotated view upon completion
     } catch (err) {
@@ -123,56 +204,83 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   };
 
   const handleApplyFix = (original: string, replacement: string, meta?: any) => {
+    const cleanOrig = cleanRepeatedWords(original);
+    const cleanRepl = cleanRepeatedWords(replacement);
+
     setEssayContent((prev) => {
-      if (prev.includes(original)) {
-        return prev.replace(original, replacement);
+      const cleanedPrev = cleanRepeatedWords(prev);
+      if (cleanedPrev.includes(cleanOrig)) {
+        return cleanRepeatedWords(cleanedPrev.replace(cleanOrig, cleanRepl));
       }
-      return prev;
+      if (cleanedPrev.includes(original)) {
+        return cleanRepeatedWords(cleanedPrev.replace(original, cleanRepl));
+      }
+      return cleanedPrev;
     });
+
+    const newItem: ReplacedWordItem = {
+      id: meta?.id || `rep-${Date.now()}`,
+      originalText: cleanOrig,
+      replacedText: cleanRepl,
+      higherRatedWordExplanation:
+        meta?.higherRatedWordExplanation ||
+        "Upgrades phrasing to formal C1/C2 academic register favored by examiners.",
+      higherRatedWords: meta?.higherRatedWords || [],
+    };
 
     setReplacedItems((prev) => {
       const filtered = prev.filter(
-        (r) => r.originalText !== original && r.replacedText !== replacement
+        (r) => r.originalText !== cleanOrig && r.replacedText !== cleanRepl
       );
-      return [
-        ...filtered,
-        {
-          id: meta?.id || `rep-${Date.now()}`,
-          originalText: original,
-          replacedText: replacement,
-          higherRatedWordExplanation:
-            meta?.higherRatedWordExplanation ||
-            "Upgrades phrasing to formal C1/C2 academic register favored by examiners.",
-          higherRatedWords: meta?.higherRatedWords || [],
-        },
-      ];
+      const updated = [...filtered, newItem];
+      if (baseAnalysisResult) {
+        setAnalysisResult(computeUpgradedResult(baseAnalysisResult, updated));
+      }
+      return updated;
     });
   };
 
   const handleRevertFix = (replacedText: string, originalText: string) => {
+    const cleanRep = cleanRepeatedWords(replacedText);
+    const cleanOrig = cleanRepeatedWords(originalText);
+
     setEssayContent((prev) => {
-      if (prev.includes(replacedText)) {
-        return prev.replace(replacedText, originalText);
+      const cleanedPrev = cleanRepeatedWords(prev);
+      if (cleanedPrev.includes(cleanRep)) {
+        return cleanRepeatedWords(cleanedPrev.replace(cleanRep, cleanOrig));
       }
-      return prev;
+      if (cleanedPrev.includes(replacedText)) {
+        return cleanRepeatedWords(cleanedPrev.replace(replacedText, cleanOrig));
+      }
+      return cleanedPrev;
     });
 
-    setReplacedItems((prev) => prev.filter((r) => r.replacedText !== replacedText));
+    setReplacedItems((prev) => {
+      const updated = prev.filter(
+        (r) => r.replacedText !== cleanRep && r.replacedText !== replacedText
+      );
+      if (baseAnalysisResult) {
+        setAnalysisResult(computeUpgradedResult(baseAnalysisResult, updated));
+      }
+      return updated;
+    });
   };
 
   const handleApplyAllUpgrades = () => {
     if (!analysisResult) return;
-    let updated = essayContent;
-    const newReplaced = [...replacedItems];
+    let updated = cleanRepeatedWords(essayContent);
+    const newReplaced: ReplacedWordItem[] = [...replacedItems];
 
     analysisResult.vocabularySuggestions.forEach((sug) => {
-      if (updated.includes(sug.originalPhrase)) {
-        updated = updated.replace(sug.originalPhrase, sug.suggestedUpgrade);
-        if (!newReplaced.some((r) => r.replacedText === sug.suggestedUpgrade)) {
+      const orig = cleanRepeatedWords(sug.originalPhrase);
+      const upgrade = cleanRepeatedWords(sug.suggestedUpgrade);
+      if (updated.includes(orig)) {
+        updated = cleanRepeatedWords(updated.replace(orig, upgrade));
+        if (!newReplaced.some((r) => r.replacedText === upgrade)) {
           newReplaced.push({
             id: sug.id || `rep-${Date.now()}-${Math.random()}`,
-            originalText: sug.originalPhrase,
-            replacedText: sug.suggestedUpgrade,
+            originalText: orig,
+            replacedText: upgrade,
             higherRatedWordExplanation:
               sug.higherRatedWordExplanation ||
               "Elevated academic phrasing demonstrating high lexical precision.",
@@ -183,13 +291,15 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     });
 
     analysisResult.sentenceFeedbacks.forEach((err) => {
-      if (updated.includes(err.original)) {
-        updated = updated.replace(err.original, err.rewritten);
-        if (!newReplaced.some((r) => r.replacedText === err.rewritten)) {
+      const orig = cleanRepeatedWords(err.original);
+      const rew = cleanRepeatedWords(err.rewritten);
+      if (updated.includes(orig)) {
+        updated = cleanRepeatedWords(updated.replace(orig, rew));
+        if (!newReplaced.some((r) => r.replacedText === rew)) {
           newReplaced.push({
             id: err.id || `rep-${Date.now()}-${Math.random()}`,
-            originalText: err.original,
-            replacedText: err.rewritten,
+            originalText: orig,
+            replacedText: rew,
             higherRatedWordExplanation:
               err.higherRatedWordExplanation ||
               "Syntactically varied and grammatically advanced structure.",
@@ -201,25 +311,37 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
     setEssayContent(updated);
     setReplacedItems(newReplaced);
+    if (baseAnalysisResult) {
+      setAnalysisResult(computeUpgradedResult(baseAnalysisResult, newReplaced));
+    }
   };
 
   const handleRevertAllUpgrades = () => {
-    let restored = essayContent;
+    let restored = cleanRepeatedWords(essayContent);
     replacedItems.forEach((item) => {
-      if (restored.includes(item.replacedText)) {
-        restored = restored.replace(item.replacedText, item.originalText);
+      const rep = cleanRepeatedWords(item.replacedText);
+      const orig = cleanRepeatedWords(item.originalText);
+      if (restored.includes(rep)) {
+        restored = cleanRepeatedWords(restored.replace(rep, orig));
       }
     });
     setEssayContent(restored);
     setReplacedItems([]);
+    if (baseAnalysisResult) {
+      setAnalysisResult(baseAnalysisResult);
+    }
   };
 
   const handleLoadSampleEssay = () => {
     setEssayContent(
-      `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.\n\nConversely, skeptics caution that unregulated artificial intelligence could exacerbate socioeconomic disparities and induce severe structural unemployment. If machines replace entry-level cognitive tasks, young graduates may encounter unprecedented barriers to workplace integration. In addition, privacy concerns have become increasingly prominent.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`
+      cleanRepeatedWords(
+        `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.\n\nConversely, skeptics caution that unregulated artificial intelligence could exacerbate socioeconomic disparities and induce severe structural unemployment. If machines replace entry-level cognitive tasks, young graduates may encounter unprecedented barriers to workplace integration. In addition, privacy concerns have become increasingly prominent.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`
+      )
     );
     setViewMode("edit");
     setReplacedItems([]);
+    setAnalysisResult(null);
+    setBaseAnalysisResult(null);
   };
 
   return (

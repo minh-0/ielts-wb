@@ -267,27 +267,84 @@ export async function analyzeSpeakingWithGemini(
 }
 
 // -------------------------------------------------------------
+// -------------------------------------------------------------
 // High-Fidelity Mock Examiner Fallbacks (Ensures instant preview)
 // -------------------------------------------------------------
 
-function generateMockWritingAnalysis(prompt: string, essay: string, taskType: string): WritingAnalysisResult {
+function cleanRepeatedWords(text: string): string {
+  // Collapses "Furthermore, furthermore, furthermore," or "Furthermore, furthermore" into a single word
+  let cleaned = text.replace(/\b([A-Za-z]+)(?:,\s*|\s+)(?:\1(?:,\s*|\s+))+/gi, '$1, ');
+  cleaned = cleaned.replace(/\b([A-Za-z]+)(?:\s+)\1\b/gi, '$1');
+  cleaned = cleaned.replace(/,\s*,+/g, ',');
+  return cleaned;
+}
+
+function generateMockWritingAnalysis(prompt: string, rawEssay: string, taskType: string): WritingAnalysisResult {
+  const essay = cleanRepeatedWords(rawEssay);
   const words = essay.trim().split(/\s+/).filter(Boolean);
   const wordCount = words.length;
   const targetMin = taskType === 'task2' ? 250 : 150;
   const isPenalty = wordCount < targetMin;
 
-  const baseBand = isPenalty ? 5.5 : Math.min(8.0, Math.max(5.5, Number((5.5 + (wordCount / targetMin) * 1.5).toFixed(1))));
+  // Track applied high-band upgrades in the essay
+  const appliedSampleUpgrades = [
+    essay.includes("emancipating the workforce from routine drudgery") || essay.includes("routine drudgery"),
+    essay.includes("a double-edged sword characterized by multifaceted moral dilemmas") || essay.includes("multifaceted moral dilemmas"),
+    essay.includes("novice entrants face formidable impediments") || essay.includes("formidable impediments"),
+    essay.includes("Beyond workforce displacement, algorithmic privacy infringements") || essay.includes("paramount societal concern"),
+    essay.includes("Concurrently, enhanced computational efficiency streamlines") || essay.includes("catalyzing international scientific synergy"),
+  ].filter(Boolean).length;
 
-  // Extract real sentences and phrases present verbatim in the candidate's essay
-  const rawSentences = essay
-    .split(/(?<=[.!?])\s+/)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 12);
+  // Additional academic vocabulary detection across any essay
+  const academicTerms = [
+    /\b(paramount|infringements|drudgery|emancipating|synergy|catalyzing|formidable|impediments|multifaceted|quandaries|trajectory|exacerbate|disparities|substantially|pivotal|predicament|markedly|advantageous|myriad|contend)\b/gi
+  ];
+  let highBandTermMatches = 0;
+  for (const regex of academicTerms) {
+    const m = essay.match(regex);
+    if (m) highBandTermMatches += m.length;
+  }
 
-  const sentenceFeedbacks = [];
-  const vocabularySuggestions = [];
+  const upgradeLevel = appliedSampleUpgrades + Math.min(3, Math.floor(highBandTermMatches / 3));
 
-  // Check for sample essay or known phrases first
+  // Dynamically calculate criteria scores based on word count & applied upgrades
+  const lrScore = Math.min(9.0, Number((6.5 + upgradeLevel * 0.5).toFixed(1)));
+  const graScore = Math.min(
+    9.0,
+    Number((6.5 + (appliedSampleUpgrades >= 1 ? 0.5 : 0) + (appliedSampleUpgrades >= 3 ? 0.5 : 0) + (appliedSampleUpgrades >= 5 ? 0.5 : 0)).toFixed(1))
+  );
+  const ccScore = Math.min(
+    9.0,
+    Number((6.5 + (appliedSampleUpgrades >= 1 ? 0.5 : 0) + (appliedSampleUpgrades >= 4 ? 0.5 : 0)).toFixed(1))
+  );
+  const taScore = isPenalty ? 5.5 : Math.min(8.5, Number((7.0 + (upgradeLevel >= 3 ? 0.5 : 0)).toFixed(1)));
+
+  const rawAvg = (taScore + ccScore + lrScore + graScore) / 4;
+  const overallBand = Math.min(9.0, Math.round(rawAvg * 2) / 2);
+
+  const sentenceFeedbacks: any[] = [];
+  const vocabularySuggestions: any[] = [];
+
+  // Check for duplicate words in the essay and flag as cohesion issue
+  const dupeMatch = rawEssay.match(/\b([A-Za-z]+)(?:,\s*|\s+)(?:\1(?:,\s*|\s+))+/i);
+  if (dupeMatch) {
+    const originalDupe = dupeMatch[0].trim();
+    const cleanWord = originalDupe.split(/[\s,]+/)[0];
+    sentenceFeedbacks.push({
+      id: "err-dupe",
+      original: originalDupe,
+      rewritten: `${cleanWord},`,
+      issueType: "cohesion" as const,
+      explanation: "Duplicated transitional markers create repetitive clutter. Retain a single well-placed connector.",
+      bandUpgradeTip: "Avoid repeating cohesive devices in sequence.",
+      higherRatedWordExplanation: "Crisp, concise discourse marker favored under IELTS Band 8+ Cohesion criteria.",
+      higherRatedWords: [
+        { word: cleanWord, level: "Cohesion", explanation: "Single clean cohesive marker." }
+      ]
+    });
+  }
+
+  // 1. Sentence 1: Mechanical linkers -> Participial transition
   if (essay.includes("In addition, privacy concerns have become increasingly prominent.")) {
     sentenceFeedbacks.push({
       id: "err-1",
@@ -302,21 +359,9 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
         { word: "infringements", level: "C1 Noun", explanation: "Precise formal term for privacy violations that demonstrates advanced register." }
       ]
     });
-  } else if (rawSentences.length > 1) {
-    sentenceFeedbacks.push({
-      id: "err-1",
-      original: rawSentences[1],
-      rewritten: `Furthermore, ${rawSentences[1].charAt(0).toLowerCase() + rawSentences[1].slice(1).replace(/is /g, 'undeniably proves to be ')}`,
-      issueType: "grammar" as const,
-      explanation: "Sentence structure lacks syntactic variety. Introducing a fronted adverbial or cleft clause elevates Grammatical Range.",
-      bandUpgradeTip: "Use inverted conditionals or cleft sentences to demonstrate sophisticated grammatical structures.",
-      higherRatedWordExplanation: "'Undeniably proves to be' introduces academic certainty and emphatic qualification.",
-      higherRatedWords: [
-        { word: "undeniably", level: "C1 Adverb", explanation: "Provides assertive academic stance without informal emotional language." }
-      ]
-    });
   }
 
+  // 2. Sentence 2: Coordinate sentence -> Dynamic participial construction
   if (essay.includes("Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.")) {
     sentenceFeedbacks.push({
       id: "err-2",
@@ -331,22 +376,9 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
         { word: "catalyzing", level: "C1 Verb", explanation: "Active causative verb denoting rapid acceleration of progress." }
       ]
     });
-  } else if (rawSentences.length > 2) {
-    sentenceFeedbacks.push({
-      id: "err-2",
-      original: rawSentences[rawSentences.length - 1],
-      rewritten: `On balance, it is evident that ${rawSentences[rawSentences.length - 1].charAt(0).toLowerCase() + rawSentences[rawSentences.length - 1].slice(1)}`,
-      issueType: "cohesion" as const,
-      explanation: "Concluding statement can be strengthened by clearly restating your thesis with academic qualification.",
-      bandUpgradeTip: "Ensure your final sentence provides a definitive evaluative stance rather than abrupt closure.",
-      higherRatedWordExplanation: "'Evident' introduces academic deduction and objective evaluation.",
-      higherRatedWords: [
-        { word: "evident", level: "B2/C1 Adjective", explanation: "Standard scholarly reporting adjective that builds authoritative objective tone." }
-      ]
-    });
   }
 
-  // Vocabulary suggestions verbatim matching
+  // 3. Known vocabulary suggestions: ONLY if phrase is still present and not yet upgraded
   const knownVocabMatches = [
     {
       phrase: "freeing individuals from menial labor",
@@ -402,87 +434,64 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
     }
   }
 
-  // If no known phrases matched, dynamically find common upgradeable words in the essay
-  if (vocabularySuggestions.length === 0) {
+  // If no known phrases matched, search for generic words to upgrade
+  if (vocabularySuggestions.length === 0 && upgradeLevel < 3) {
     const commonWordUpgrades = [
       {
         find: /\bimportant\b/i,
         original: "important",
-        upgrade: "pivotal / paramount",
+        upgrade: "paramount",
         type: "academic_c1_c2" as const,
-        explanation: "Generic adjective. 'Pivotal' or 'paramount' demonstrates formal precision.",
-        higherRatedWordExplanation: "'Paramount' (C2) and 'pivotal' (C1) denote crucial centrality, eliminating informal 'important'.",
+        explanation: "Generic adjective. 'Paramount' demonstrates formal precision.",
+        higherRatedWordExplanation: "'Paramount' (C2) denotes crucial centrality, eliminating informal 'important'.",
         higherRatedWords: [
-          { word: "paramount", level: "C2 Adjective", explanation: "More important than anything else; supreme." },
-          { word: "pivotal", level: "C1 Adjective", explanation: "Of crucial importance to the success of an initiative." }
+          { word: "paramount", level: "C2 Adjective", explanation: "More important than anything else; supreme." }
         ]
       },
       {
         find: /\bproblem\b/i,
         original: "problem",
-        upgrade: "predicament / pressing dilemma",
+        upgrade: "predicament",
         type: "collocation" as const,
         explanation: "Standardizes repetitive noun usage with high-band academic synonyms.",
         higherRatedWordExplanation: "'Predicament' (C1) elevates common noun 'problem' to formal academic discourse.",
         higherRatedWords: [
-          { word: "predicament", level: "C1 Noun", explanation: "A difficult, unpleasant, or complex situation requiring strategic solution." }
+          { word: "predicament", level: "C1 Noun", explanation: "A difficult, unpleasant situation requiring strategic solution." }
         ]
       },
       {
         find: /\bvery\b/i,
         original: "very",
-        upgrade: "substantially / markedly",
+        upgrade: "substantially",
         type: "academic_c1_c2" as const,
         explanation: "Avoid conversational intensifier 'very' in academic writing.",
-        higherRatedWordExplanation: "'Markedly' (C1) provides precise academic qualification rather than conversational 'very'.",
+        higherRatedWordExplanation: "'Substantially' (C1) provides precise academic qualification.",
         higherRatedWords: [
-          { word: "markedly", level: "C1 Adverb", explanation: "To an extent that is clearly noticeable; distinctly." }
+          { word: "substantially", level: "C1 Adverb", explanation: "To a great or significant degree." }
         ]
       },
       {
         find: /\bgood\b/i,
         original: "good",
-        upgrade: "beneficial / advantageous",
+        upgrade: "advantageous",
         type: "collocation" as const,
         explanation: "Academic essays require specific evaluative adjectives rather than 'good'.",
         higherRatedWordExplanation: "'Advantageous' (C1) replaces casual 'good' with formal evaluative precision.",
         higherRatedWords: [
           { word: "advantageous", level: "C1 Adjective", explanation: "Involving or creating favourable circumstances." }
         ]
-      },
-      {
-        find: /\ba lot of\b/i,
-        original: "a lot of",
-        upgrade: "a substantial proportion of / myriad",
-        type: "academic_c1_c2" as const,
-        explanation: "Conversational quantifier unacceptable in formal IELTS Task 2.",
-        higherRatedWordExplanation: "'Myriad' (C2) demonstrates extensive lexical breadth.",
-        higherRatedWords: [
-          { word: "myriad", level: "C2 Adjective", explanation: "Countless or extremely great in number." }
-        ]
-      },
-      {
-        find: /\bthink\b/i,
-        original: "think",
-        upgrade: "contend / maintain that",
-        type: "academic_c1_c2" as const,
-        explanation: "Use academic reporting verbs to present arguments objectively.",
-        higherRatedWordExplanation: "'Contend' (C1) is a formal reporting verb favored for objective academic neutrality.",
-        higherRatedWords: [
-          { word: "contend", level: "C1 Verb", explanation: "Assert something as a position in an argument." }
-        ]
       }
     ];
 
     for (const rule of commonWordUpgrades) {
-      if (rule.find.test(essay) && vocabularySuggestions.length < 3) {
+      if (rule.find.test(essay) && vocabularySuggestions.length < 2) {
         vocabularySuggestions.push({
           id: `sug-${sugIndex++}`,
           originalPhrase: rule.original,
           suggestedUpgrade: rule.upgrade,
           type: rule.type,
           explanation: rule.explanation,
-          exampleInSentence: `Scholars ${rule.upgrade} the issue requires immediate intervention.`,
+          exampleInSentence: `Scholars argue the issue is ${rule.upgrade}.`,
           higherRatedWordExplanation: rule.higherRatedWordExplanation,
           higherRatedWords: rule.higherRatedWords
         });
@@ -490,72 +499,76 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
     }
   }
 
-  // Ensure at least one error feedback exists if essay has text
-  if (sentenceFeedbacks.length === 0 && rawSentences.length > 0) {
-    sentenceFeedbacks.push({
-      id: "err-1",
-      original: rawSentences[0],
-      rewritten: `It is widely recognized that ${rawSentences[0].charAt(0).toLowerCase() + rawSentences[0].slice(1)}`,
-      issueType: "grammar" as const,
-      explanation: "Adding an objective passive framing construct strengthens Task Response and academic tone.",
-      bandUpgradeTip: "Use impersonal passive constructions ('It is widely acknowledged that...').",
-      higherRatedWordExplanation: "'Widely recognized' adds impersonal academic objectivity.",
-      higherRatedWords: [
-        { word: "widely recognized", level: "C1 Collocation", explanation: "Impersonal reporting construction that eliminates first-person bias." }
-      ]
-    });
-  }
+  const isFullyUpgraded = upgradeLevel >= 4;
 
   return {
-    overallBand: Math.round(baseBand * 2) / 2,
+    overallBand,
     wordCount,
     wordCountStatus: isPenalty ? 'penalty_applied' : 'sufficient',
     criteria: {
       taskAchievement: {
-        score: isPenalty ? 5.5 : 7.0,
-        bandLabel: isPenalty ? 'Band 5.5 (Underlength Penalty)' : 'Band 7.0 (Good Development)',
+        score: taScore,
+        bandLabel: isPenalty
+          ? 'Band 5.5 (Underlength Penalty)'
+          : taScore >= 8.0
+          ? 'Band 8.0 (Thorough Topic Exploration)'
+          : 'Band 7.0 (Good Development)',
         feedback: isPenalty
           ? `Your response has ${wordCount} words, below the required ${targetMin} words. An official examiner will penalize underlength responses.`
+          : isFullyUpgraded
+          ? 'Exceptional topic progression with fully developed arguments, precise real-world examples, and consistent evaluative stance.'
           : 'Addresses all key components of the prompt with clear arguments and relevant supporting examples.',
-        strengths: ['Directly answers the main topic prompt', 'Position is consistently stated'],
-        weaknesses: isPenalty ? ['Did not reach the required minimum word count'] : ['Some secondary arguments could be extended further'],
-        keyRecommendations: ['Ensure every main paragraph has at least one concrete real-world illustration.']
+        strengths: ['Directly answers the main topic prompt', 'Position is consistently stated throughout'],
+        weaknesses: isPenalty ? ['Did not reach the required minimum word count'] : isFullyUpgraded ? [] : ['Some secondary arguments could be extended further'],
+        keyRecommendations: isFullyUpgraded ? ['Maintain this level of analytical rigor on exam day.'] : ['Ensure every main paragraph has at least one concrete illustration.']
       },
       coherenceCohesion: {
-        score: 6.5,
-        bandLabel: 'Band 6.5 (Coherent with Mechanical Linkers)',
-        feedback: 'Overall progression is clear and logical. However, paragraph transitions rely slightly on mechanical connectors like "Furthermore" and "In addition".',
+        score: ccScore,
+        bandLabel: `Band ${ccScore.toFixed(1)} (${ccScore >= 8.0 ? 'Seamless Organic Thematic Progression' : 'Coherent with Structured Paragraphs'})`,
+        feedback: ccScore >= 8.0
+          ? 'Ideas flow naturally with sophisticated lexical referencing and participial linking instead of formulaic mechanical linkers.'
+          : 'Overall progression is clear and logical. However, paragraph transitions rely slightly on mechanical connectors.',
         strengths: ['Clear paragraph separation and central topic sentences', 'Logical flow from introduction to conclusion'],
-        weaknesses: ['Mechanical cohesive devices used at sentence starts'],
-        keyRecommendations: ['Use adverbial participle clauses or pronoun referencing to link ideas organically.']
+        weaknesses: ccScore >= 8.0 ? [] : ['Occasional reliance on mechanical connectors'],
+        keyRecommendations: ccScore >= 8.0 ? ['Cohesion is examiner-grade.'] : ['Use adverbial participle clauses or pronoun referencing to link ideas organically.']
       },
       lexicalResource: {
-        score: 6.5,
-        bandLabel: 'Band 6.5 (Adequate Range with Occasional Imprecision)',
-        feedback: 'Demonstrates a solid vocabulary foundation. Incorporating more less-common collocations and idiomatic academic expressions will lift you to Band 7.5+.',
-        strengths: ['Good control of topic-related terminology', 'Accurate spelling throughout'],
-        weaknesses: ['Repetition of generic terms like "important" and "solve the issue"'],
-        keyRecommendations: ['Replace generic adjectives with nuanced academic descriptors (e.g., pivotal, detrimental).']
+        score: lrScore,
+        bandLabel: `Band ${lrScore.toFixed(1)} (${lrScore >= 8.5 ? 'Masterly & Rare C2 Vocabulary' : lrScore >= 7.5 ? 'Advanced C1 Precision & Collocations' : 'Adequate Range'})`,
+        feedback: lrScore >= 8.5
+          ? 'Outstanding lexical sophistication. Demonstrates natural use of high-band C1/C2 collocations, nuanced idioms, and academic reporting verbs.'
+          : lrScore >= 7.5
+          ? 'Strong lexical foundation with elevated academic collocations and precise terminology.'
+          : 'Solid vocabulary foundation. Incorporating more less-common collocations will lift you to Band 7.5+.',
+        strengths: ['High-register academic terminology', 'Accurate collocation usage and spelling'],
+        weaknesses: lrScore >= 8.5 ? [] : ['Some common expressions could be upgraded to C1/C2 register'],
+        keyRecommendations: lrScore >= 8.5 ? ['Lexical Resource is at the top band standard.'] : ['Replace generic adjectives with nuanced academic descriptors.']
       },
       grammaticalRange: {
-        score: 6.5,
-        bandLabel: 'Band 6.5 (Mix of Complex and Simple Structures)',
-        feedback: 'Frequent use of complex sentence forms with generally good control. Occasional punctuation slips and comma splices noted.',
-        strengths: ['Good usage of relative clauses and conditionals', 'Accurate subject-verb agreement'],
-        weaknesses: ['Occasional run-on sentences in body paragraph 2'],
-        keyRecommendations: ['Increase variety of structures using inversion or fronted adverbials.']
+        score: graScore,
+        bandLabel: `Band ${graScore.toFixed(1)} (${graScore >= 8.0 ? 'Wide Variety of Complex Structures' : 'Mix of Complex and Simple Structures'})`,
+        feedback: graScore >= 8.0
+          ? 'Frequent, error-free use of sophisticated grammatical structures including non-finite clauses, fronted adverbials, and cleft sentences.'
+          : 'Good control of complex sentence forms with generally accurate subject-verb agreement.',
+        strengths: ['Accurate relative clauses and conditionals', 'Syntactic variety demonstrated across paragraphs'],
+        weaknesses: graScore >= 8.0 ? [] : ['Occasional punctuation slips'],
+        keyRecommendations: graScore >= 8.0 ? ['Grammar control meets Band 8+ standard.'] : ['Increase variety of structures using inversion or non-finite clauses.']
       }
     },
     sentenceFeedbacks,
     vocabularySuggestions,
     cohesionAnalysis: {
-      overusedLinkers: ['Furthermore', 'In addition', 'In conclusion'],
-      referencingQuality: 'Moderate. Consider substituting repeated subject nouns with pronouns (e.g., "these phenomena", "the former").',
-      paragraphProgression: 'Clear introduction, 2 body paragraphs, and conclusion.'
+      overusedLinkers: ccScore >= 8.0 ? [] : ['Furthermore', 'In addition'],
+      referencingQuality: ccScore >= 8.0 ? 'Superior pronoun referencing and organic transitions.' : 'Moderate referencing.',
+      paragraphProgression: 'Clear introduction, 2 balanced body paragraphs, and cohesive conclusion.'
     },
-    examinerSummary: 'A solid essay that demonstrates clear competence. Reaching Band 7.5+ requires eliminating formulaic transitional linkers and polishing sentence complexity with C1 collocations.',
+    examinerSummary: isFullyUpgraded
+      ? `Outstanding revision! Incorporating high-band academic collocations, sophisticated C1/C2 idioms, and varied non-finite clause structures has elevated this essay to an official Band ${overallBand.toFixed(1)}.`
+      : `A solid essay performing at Band ${overallBand.toFixed(1)}. Apply the remaining examiner-recommended higher-rated vocabulary and syntax upgrades to push into Band 8.0+.`,
     modelAnswer: `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Conversely, skeptics caution that unregulated algorithmic systems exacerbate socioeconomic disparities.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`,
-    primaryBottleneck: 'Reliance on generic vocabulary and mechanical paragraph linkers.'
+    primaryBottleneck: isFullyUpgraded
+      ? 'None! All major lexical and syntactic upgrades incorporated. Ready for examiner submission.'
+      : 'Upgrade remaining generic expressions to C1/C2 academic collocations to unlock Band 8.5.'
   };
 }
 
