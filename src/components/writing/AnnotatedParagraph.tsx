@@ -222,7 +222,7 @@ export function AnnotatedParagraph({
       </div>
 
       {/* Main Annotated Text Container */}
-      <div className="relative p-5 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black min-h-[340px] text-sm leading-relaxed text-neutral-900 dark:text-neutral-100 font-sans whitespace-pre-wrap select-text">
+      <div className="relative p-6 sm:p-7 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black min-h-[420px] text-[15px] sm:text-base leading-8 text-neutral-900 dark:text-neutral-100 font-sans whitespace-pre-wrap select-text">
         {segments.map((seg, i) => {
           if (seg.type === "text") {
             return <span key={i}>{seg.text}</span>;

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PenTool, Mic, BookOpen, Key } from "lucide-react";
+import { PenTool, Mic, BookOpen, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
@@ -14,22 +14,22 @@ interface NavbarProps {
 export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-md">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        {/* Brand / Logo: Minimalist Monospace & Clean Sans */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 h-14 flex items-center justify-between">
+        {/* Brand / Logo */}
         <div className="flex items-center gap-2.5">
           <span className="font-mono font-bold text-xs tracking-wider px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5 text-black dark:text-white">
             IELTS
           </span>
-          <span className="font-medium text-sm tracking-tight text-neutral-900 dark:text-neutral-100">
+          <span className="font-semibold text-sm tracking-tight text-neutral-900 dark:text-neutral-100">
             BandBoost
           </span>
         </div>
 
-        {/* Tab Navigation: Minimalist Pill segmented control */}
+        {/* Tab Navigation: Segmented tabs */}
         <nav className="flex items-center gap-1 p-0.5 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs font-medium">
           <button
             onClick={() => onTabChange("writing")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeTab === "writing"
                 ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
                 : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -41,7 +41,7 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
           <button
             onClick={() => onTabChange("speaking")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeTab === "speaking"
                 ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
                 : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -53,7 +53,7 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
           <button
             onClick={() => onTabChange("rubric")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors hidden md:flex ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-colors cursor-pointer hidden md:flex ${
               activeTab === "rubric"
                 ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
                 : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -65,19 +65,25 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          {/* AI Mode Selector Button */}
           <button
             onClick={onOpenApiKeyModal}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
               hasApiKey
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                : "border-black/10 dark:border-white/15 text-neutral-600 dark:text-neutral-400 hover:border-black/30 dark:hover:border-white/30"
+                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                : "border-black/10 dark:border-white/15 text-neutral-600 dark:text-neutral-400 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
             }`}
-            title="Configure Gemini API Key"
+            title="Configure Live Gemini AI or use free practice engine"
           >
-            <Key className="w-3 h-3" />
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                hasApiKey ? "bg-emerald-500 animate-pulse" : "bg-neutral-400"
+              }`}
+            />
+            <Sparkles className="w-3 h-3 text-neutral-400" />
             <span className="hidden sm:inline">
-              {hasApiKey ? "Key active" : "API Key"}
+              {hasApiKey ? "Live AI Active" : "AI Mode (Free)"}
             </span>
           </button>
 

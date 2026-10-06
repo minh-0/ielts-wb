@@ -442,8 +442,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               placeholder={`Type your IELTS ${
                 selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"
               } here... Organize into clear paragraphs.`}
-              rows={15}
-              className="w-full p-4 text-sm leading-relaxed rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-black/30 dark:focus:border-white/30 font-sans"
+              rows={16}
+              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-black/30 dark:focus:border-white/30 font-sans min-h-[420px]"
             />
           )}
 
@@ -488,24 +488,26 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
         </div>
       </div>
 
-      {/* Section 3: Diagnostic Results (The rest remains at the bottom as requested) */}
+      {/* Section 3: Diagnostic Results (Spacious layout across wide screen) */}
       {analysisResult && (
-        <div className="pt-8 border-t border-black/10 dark:border-white/10 space-y-8 animate-in fade-in duration-200">
-          {/* Header Score Overview: Minimalist */}
-          <div className="p-6 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center md:text-left">
+        <div className="pt-10 border-t border-black/10 dark:border-white/10 space-y-10 animate-in fade-in duration-200">
+          {/* Header Score Overview: Expansive 3-column dashboard */}
+          <div className="p-6 sm:p-8 rounded-2xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Panel 1: Band Score & Summary */}
+            <div className="lg:col-span-5 space-y-2.5 text-center lg:text-left">
               <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
-                Predicted Overall Score
+                Official Predicted Overall Score
               </div>
-              <div className="text-5xl font-semibold tracking-tight text-black dark:text-white">
+              <div className="text-5xl sm:text-6xl font-semibold tracking-tight text-black dark:text-white">
                 Band {analysisResult.overallBand.toFixed(1)}
               </div>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md">
+              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed pt-1 max-w-lg">
                 {analysisResult.examinerSummary}
               </p>
             </div>
 
-            <div className="flex flex-col items-center">
+            {/* Panel 2: Center Radar Chart */}
+            <div className="lg:col-span-3 flex flex-col items-center justify-center">
               <RadarChart
                 scores={[
                   { label: "Task Resp.", score: analysisResult.criteria.taskAchievement.score },
@@ -513,41 +515,47 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   { label: "Lexical", score: analysisResult.criteria.lexicalResource.score },
                   { label: "Grammar", score: analysisResult.criteria.grammaticalRange.score },
                 ]}
-                size={200}
+                size={220}
                 accentColor="#ffffff"
               />
             </div>
 
-            <div className="flex flex-col gap-2 w-full md:w-auto">
+            {/* Panel 3: Bottleneck & Share Card Action */}
+            <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
+              <div className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-xs leading-relaxed space-y-1">
+                <span className="font-semibold text-black dark:text-white block text-[11px] uppercase tracking-wide">
+                  Primary Score Bottleneck:
+                </span>
+                <p className="text-neutral-600 dark:text-neutral-400">
+                  {analysisResult.primaryBottleneck}
+                </p>
+              </div>
+
               <button
                 onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-black/15 dark:border-white/20 bg-black dark:bg-white text-white dark:text-black font-semibold text-xs hover:opacity-90 transition-opacity cursor-pointer"
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-black/15 dark:border-white/20 bg-black dark:bg-white text-white dark:text-black font-semibold text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
               >
-                <Share2 className="w-3.5 h-3.5" />
-                Export Share Card
+                <Share2 className="w-4 h-4" />
+                Export Share Card (Story / 4:5)
               </button>
-              <div className="p-3 rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-[11px] text-neutral-600 dark:text-neutral-400">
-                <span className="font-semibold text-black dark:text-white block mb-0.5">Primary Bottleneck:</span>
-                {analysisResult.primaryBottleneck}
-              </div>
             </div>
           </div>
 
           {/* Tab Navigation for Detailed Feedback */}
-          <div className="flex flex-wrap items-center gap-1 border-b border-black/10 dark:border-white/10 pb-2">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-black/10 dark:border-white/10 pb-3">
             <button
               onClick={() => setActiveTab("criteria")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "criteria"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              Criteria Breakdown
+              Criteria Breakdown (4 Categories)
             </button>
             <button
               onClick={() => setActiveTab("sentences")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "sentences"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -557,32 +565,34 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             </button>
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "model_answer"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              Model Essay
+              Band 8.5+ Model Essay
             </button>
           </div>
 
-          {/* TAB 1: Criteria */}
+          {/* TAB 1: Criteria (Spacious 4-column layout on wide screens) */}
           {activeTab === "criteria" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-black dark:text-white">Task Achievement</span>
-                  <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                    Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
-                  </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
+                    <span className="text-xs font-bold text-black dark:text-white">Task Response</span>
+                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                      Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {analysisResult.criteria.taskAchievement.feedback}
+                  </p>
                 </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  {analysisResult.criteria.taskAchievement.feedback}
-                </p>
-                <div className="pt-1 text-xs space-y-1 text-neutral-500 dark:text-neutral-400">
-                  <div className="font-medium text-black dark:text-white">Examiner advice:</div>
-                  <ul className="list-disc list-inside space-y-0.5">
+                <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-black/5 dark:border-white/10">
+                  <div className="font-semibold text-black dark:text-white text-[11px]">Examiner Advice:</div>
+                  <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                     {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
                       <li key={i}>{r}</li>
                     ))}
@@ -590,45 +600,57 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-black dark:text-white">Coherence & Cohesion</span>
-                  <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                    Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
-                  </span>
-                </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  {analysisResult.criteria.coherenceCohesion.feedback}
-                </p>
-                {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
-                  <p className="text-[11px] text-amber-600 dark:text-amber-400">
-                    Overused linkers: {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
+              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
+                    <span className="text-xs font-bold text-black dark:text-white">Coherence & Cohesion</span>
+                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                      Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {analysisResult.criteria.coherenceCohesion.feedback}
                   </p>
+                </div>
+                {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
+                  <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-700 dark:text-amber-400">
+                    Overused linkers: {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
+                  </div>
                 )}
               </div>
 
-              <div className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-black dark:text-white">Lexical Resource</span>
-                  <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                    Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
-                  </span>
+              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
+                    <span className="text-xs font-bold text-black dark:text-white">Lexical Resource</span>
+                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                      Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {analysisResult.criteria.lexicalResource.feedback}
+                  </p>
                 </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  {analysisResult.criteria.lexicalResource.feedback}
-                </p>
+                <div className="pt-2 text-xs text-neutral-500 border-t border-black/5 dark:border-white/10">
+                  <span className="text-[11px] text-neutral-400">Focus on C1/C2 collocations & precision</span>
+                </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-black dark:text-white">Grammatical Range & Accuracy</span>
-                  <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
-                    Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
-                  </span>
+              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
+                    <span className="text-xs font-bold text-black dark:text-white">Grammatical Range</span>
+                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                      Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                    {analysisResult.criteria.grammaticalRange.feedback}
+                  </p>
                 </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                  {analysisResult.criteria.grammaticalRange.feedback}
-                </p>
+                <div className="pt-2 text-xs text-neutral-500 border-t border-black/5 dark:border-white/10">
+                  <span className="text-[11px] text-neutral-400">Incorporate complex & non-finite clauses</span>
+                </div>
               </div>
             </div>
           )}
