@@ -29,6 +29,16 @@ export function ScorecardModal({
   const [downloading, setDownloading] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleDownload = async () => {
@@ -153,8 +163,14 @@ export function ScorecardModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
-      <div className="relative w-full max-w-lg my-8 bg-white dark:bg-black text-black dark:text-white border border-black/15 dark:border-white/20 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg my-8 bg-white dark:bg-black text-black dark:text-white border border-black/15 dark:border-white/20 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 cursor-default"
+      >
         <button
           onClick={onClose}
           className="absolute top-5 right-5 p-1 text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"

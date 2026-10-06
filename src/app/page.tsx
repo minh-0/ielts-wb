@@ -6,7 +6,8 @@ import { WritingStudio } from "@/components/writing/WritingStudio";
 import { SpeakingStudio } from "@/components/speaking/SpeakingStudio";
 import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
-import { ShieldCheck, Sparkles, Share2, Headphones, CheckCircle2 } from "lucide-react";
+import { SelectionToolbar } from "@/components/SelectionToolbar";
+import { ShieldCheck, Sparkles, Share2, Headphones, CheckCircle2, BookOpen } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"writing" | "speaking" | "rubric">("writing");
@@ -67,9 +68,9 @@ export default function Home() {
               <span>Dual-Mode Speaking Exam Timers</span>
             </div>
             <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <div className="flex items-center gap-1.5">
-              <Share2 className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
-              <span>Shareable Band Scorecards</span>
+            <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Oxford Learner's Dictionary & Study Highlighter</span>
             </div>
           </div>
         </div>
@@ -99,6 +100,9 @@ export default function Home() {
         onClose={() => setIsApiKeyModalOpen(false)}
         onKeySaved={setApiKey}
       />
+
+      {/* Text Selection Toolbar (Oxford Dictionary + Cursor Highlighter) */}
+      <SelectionToolbar />
     </div>
   );
 }
