@@ -7,14 +7,12 @@ import {
   CheckCircle,
   AlertTriangle,
   Sparkles,
-  ArrowRight,
   BookOpen,
   Share2,
   RefreshCw,
   Lightbulb,
   Award,
   Layers,
-  Check,
   ChevronDown,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
@@ -32,7 +30,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [customPrompt, setCustomPrompt] = useState("");
   const [useCustomPrompt, setUseCustomPrompt] = useState(false);
   const [essayContent, setEssayContent] = useState("");
-  
+
   // Timer state
   const [timerRunning, setTimerRunning] = useState(false);
   const [secondsRemaining, setSecondsRemaining] = useState(40 * 60);
@@ -120,71 +118,73 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Banner / Mode Controls */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xs">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-gray-100 dark:border-gray-800">
+      <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.1)]">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b-2 border-gray-900 dark:border-gray-800">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 mb-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-black uppercase bg-red-600 text-white tracking-wider mb-2">
               <PenTool className="w-3 h-3" /> OFFICIAL RUBRIC GRADER
             </div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">IELTS Writing Studio</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Evaluated strictly on Task Response, Coherence & Cohesion, Lexical Resource, and GRA.
+            <h2 className="text-2xl font-black text-gray-950 dark:text-white uppercase tracking-tight">
+              IELTS Writing Studio
+            </h2>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-0.5">
+              Strictly evaluated on Task Response, Coherence & Cohesion, Lexical Resource, and GRA.
             </p>
           </div>
 
-          {/* Task Type Switcher */}
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-semibold">
+          {/* Task Type Switcher: Sharp Segmented */}
+          <div className="flex items-center border-2 border-gray-900 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-xs font-bold">
             <button
               onClick={() => handleTaskTypeChange("task2")}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
+              className={`px-3.5 py-2 transition-all ${
                 selectedTaskType === "task2"
-                  ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
-              Task 2 (Essay - 250w)
+              Task 2 (Essay • 250w)
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_academic")}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
+              className={`px-3.5 py-2 border-l-2 border-gray-900 dark:border-gray-700 transition-all ${
                 selectedTaskType === "task1_academic"
-                  ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
-              Task 1 (Academic - 150w)
+              Task 1 (Academic • 150w)
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_general")}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
+              className={`px-3.5 py-2 border-l-2 border-gray-900 dark:border-gray-700 transition-all ${
                 selectedTaskType === "task1_general"
-                  ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
-              Task 1 (General - 150w)
+              Task 1 (General • 150w)
             </button>
           </div>
         </div>
 
         {/* Prompt Selection */}
-        <div className="pt-4 space-y-3">
+        <div className="pt-5 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-              Exam Question / Prompt
+            <span className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-gray-200">
+              Exam Question / Topic
             </span>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setUseCustomPrompt(!useCustomPrompt)}
-                className="text-xs text-red-600 dark:text-red-400 font-medium hover:underline"
+                className="text-xs text-red-600 dark:text-red-400 font-bold hover:underline cursor-pointer"
               >
-                {useCustomPrompt ? "Use Cambridge Prompt Bank" : "+ Paste Custom Topic"}
+                {useCustomPrompt ? "← Cambridge Topic Bank" : "+ Custom Topic"}
               </button>
               <button
                 onClick={handleLoadSampleEssay}
-                className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 underline"
+                className="text-xs text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white font-bold underline cursor-pointer"
               >
                 Load Sample Draft
               </button>
@@ -197,7 +197,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Paste your IELTS essay prompt here..."
               rows={2}
-              className="w-full p-3 text-sm rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="w-full p-3 text-sm border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:ring-0 focus:border-red-600 font-medium"
             />
           ) : (
             <div className="relative">
@@ -207,7 +207,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   const p = WRITING_PROMPTS.find((x) => x.id === e.target.value);
                   if (p) setSelectedPrompt(p);
                 }}
-                className="w-full p-3 pr-10 text-sm rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+                className="w-full p-3 pr-10 text-sm border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white appearance-none focus:outline-none focus:border-red-600 font-bold"
               >
                 {WRITING_PROMPTS.filter((p) => p.type === selectedTaskType).map((p) => (
                   <option key={p.id} value={p.id}>
@@ -215,13 +215,15 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-900 dark:text-gray-100 pointer-events-none" />
             </div>
           )}
 
           {!useCustomPrompt && (
-            <div className="p-3.5 rounded-xl bg-red-500/5 dark:bg-red-500/10 border border-red-500/20 text-xs text-gray-700 dark:text-gray-300">
-              <span className="font-semibold text-red-600 dark:text-red-400">Prompt: </span>
+            <div className="p-4 border-l-4 border-red-600 bg-gray-50 dark:bg-gray-800/80 border-t border-r border-b border-gray-200 dark:border-gray-700 text-xs text-gray-800 dark:text-gray-200 leading-relaxed">
+              <span className="font-black text-red-600 dark:text-red-400 uppercase tracking-wider block mb-1">
+                Official Task:
+              </span>
               {selectedPrompt.prompt}
             </div>
           )}
@@ -229,49 +231,49 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
       </div>
 
       {/* Essay Input & Live Word Counter / Timer */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xs space-y-4">
+      <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.1)] space-y-4">
         {/* Editor Toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-gray-100 dark:border-gray-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-gray-900 dark:border-gray-800">
           <div className="flex items-center gap-3">
             {/* Word count meter */}
             <div
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-black uppercase tracking-wider border-2 ${
                 isWordCountMet
-                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                  ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
+                  : "border-amber-600 bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300"
               }`}
             >
               {isWordCountMet ? <CheckCircle className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
               <span>
-                {wordCount} / {targetWords} words
+                {wordCount} / {targetWords} WORDS
               </span>
             </div>
 
             {!isWordCountMet && (
-              <span className="text-[11px] text-amber-600 dark:text-amber-400 hidden sm:inline">
+              <span className="text-xs font-bold text-amber-700 dark:text-amber-400 hidden sm:inline uppercase tracking-tight">
                 ⚠️ Underlength penalty applies if &lt; {targetWords} words
               </span>
             )}
           </div>
 
           {/* Exam Timer Controls */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-xs font-mono font-bold text-gray-700 dark:text-gray-300">
-              <Clock className="w-3.5 h-3.5 text-red-500" />
+          <div className="flex items-center border-2 border-gray-900 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 font-mono font-black text-gray-900 dark:text-white">
+              <Clock className="w-3.5 h-3.5 text-red-600" />
               <span>{formatTimer(secondsRemaining)}</span>
             </div>
             <button
               onClick={() => setTimerRunning(!timerRunning)}
-              className="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="px-3 py-1.5 font-bold border-l-2 border-gray-900 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white cursor-pointer"
             >
-              {timerRunning ? "Pause" : "Start Timer"}
+              {timerRunning ? "PAUSE" : "START"}
             </button>
             <button
               onClick={() => {
                 setSecondsRemaining(selectedTaskType === "task2" ? 40 * 60 : 20 * 60);
                 setTimerRunning(false);
               }}
-              className="p-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              className="p-1.5 border-l-2 border-gray-900 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 cursor-pointer"
               title="Reset timer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -284,30 +286,30 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           value={essayContent}
           onChange={(e) => setEssayContent(e.target.value)}
           placeholder={`Begin typing your IELTS ${selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"} here... Aim for distinct paragraphing (Introduction, Body Paragraphs, Conclusion).`}
-          rows={12}
-          className="w-full p-4 text-sm leading-relaxed rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 font-sans"
+          rows={14}
+          className="w-full p-4 text-sm leading-relaxed border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-950 dark:text-gray-50 focus:outline-none focus:border-red-600 font-sans"
         />
 
         {/* Action Button */}
-        <div className="flex items-center justify-between pt-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {apiKey ? "Live evaluation via Gemini Flash" : "Demo Examiner Mode (Free instant analysis)"}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
+          <p className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+            {apiKey ? "Mode: Live Gemini Flash API Evaluation" : "Mode: Built-in High-Fidelity Examiner Engine"}
           </p>
 
           <button
             onClick={handleAnalyze}
             disabled={isAnalyzing || !essayContent.trim()}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white transition-all shadow-md hover:shadow-red-600/30 cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 font-black text-xs uppercase tracking-wider bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white transition-all border-2 border-red-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
           >
             {isAnalyzing ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                Examiner Grading in Progress...
+                EXAMINER GRADING IN PROGRESS...
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                Analyze Essay with IELTS Rubric
+                ANALYZE ESSAY WITH IELTS RUBRIC
               </>
             )}
           </button>
@@ -316,18 +318,18 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
       {/* Analysis Results View */}
       {analysisResult && (
-        <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg space-y-8 animate-in fade-in duration-300">
+        <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] space-y-8 animate-in fade-in duration-200">
           {/* Header Score Overview */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 p-6 rounded-2xl bg-gradient-to-r from-red-500/10 via-transparent to-red-500/5 border border-red-500/20">
+          <div className="border-2 border-gray-900 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 p-6 flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center lg:text-left">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-600 text-white shadow-xs">
-                <Award className="w-3.5 h-3.5" /> OFFICIAL ESTIMATED BAND
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-black uppercase bg-red-600 text-white tracking-wider">
+                <Award className="w-3.5 h-3.5" /> ESTIMATED OVERALL BAND
               </div>
-              <div className="text-6xl font-black text-gray-900 dark:text-white tracking-tight flex items-baseline justify-center lg:justify-start gap-2">
+              <div className="text-6xl font-black text-gray-950 dark:text-white tracking-tight flex items-baseline justify-center lg:justify-start gap-2">
                 <span className="text-red-600 dark:text-red-500">{analysisResult.overallBand.toFixed(1)}</span>
-                <span className="text-lg text-gray-400 font-normal">/ 9.0</span>
+                <span className="text-lg text-gray-500 font-bold">/ 9.0</span>
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-300 max-w-md">
+              <p className="text-xs font-medium text-gray-700 dark:text-gray-300 max-w-md">
                 {analysisResult.examinerSummary}
               </p>
             </div>
@@ -341,34 +343,34 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   { label: "Lexical Res.", score: analysisResult.criteria.lexicalResource.score },
                   { label: "Grammar", score: analysisResult.criteria.grammaticalRange.score },
                 ]}
-                size={230}
+                size={220}
               />
             </div>
 
             {/* Share Card Trigger */}
-            <div className="flex flex-col gap-2 w-full lg:w-auto">
+            <div className="flex flex-col gap-2.5 w-full lg:w-auto">
               <button
                 onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-xs bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-md cursor-pointer"
+                className="flex items-center justify-center gap-2 px-5 py-3 font-black text-xs uppercase tracking-wider border-2 border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-gray-950 hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white hover:border-red-600 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
               >
-                <Share2 className="w-4 h-4 text-red-500" />
-                Generate Scorecard for Facebook
+                <Share2 className="w-4 h-4" />
+                GENERATE FACEBOOK SCORECARD
               </button>
-              <div className="p-3 rounded-xl bg-red-950/20 border border-red-800/30 text-[11px] text-red-600 dark:text-red-400">
-                <span className="font-bold block">Primary Bottleneck:</span>
+              <div className="p-3 border-2 border-red-600 bg-red-50 dark:bg-red-950/40 text-xs text-red-900 dark:text-red-300">
+                <span className="font-black uppercase block mb-0.5">Primary Bottleneck:</span>
                 {analysisResult.primaryBottleneck}
               </div>
             </div>
           </div>
 
-          {/* Results Navigation Tabs */}
-          <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+          {/* Results Navigation Tabs: Sharp segmented */}
+          <div className="flex flex-wrap items-center border-b-2 border-gray-900 dark:border-gray-800 pb-px gap-1">
             <button
               onClick={() => setActiveTab("criteria")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "criteria"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -377,22 +379,22 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
             <button
               onClick={() => setActiveTab("vocab_studio")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "vocab_studio"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <Sparkles className="w-3.5 h-3.5" />
               Word & Idiom Upgrades ({analysisResult.vocabularySuggestions.length})
             </button>
 
             <button
               onClick={() => setActiveTab("sentences")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "sentences"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
               <PenTool className="w-3.5 h-3.5" />
@@ -401,42 +403,42 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "model_answer"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
-              Examiner Model Answer
+              Band 8.5 Model Essay
             </button>
           </div>
 
           {/* TAB 1: 4 Criteria Breakdown */}
           {activeTab === "criteria" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Task Achievement / Response */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              {/* Task Achievement */}
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     1. Task Achievement / Response
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.taskAchievement.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.taskAchievement.feedback}
                 </p>
                 <div className="space-y-1.5 pt-1 text-xs">
-                  <div className="text-emerald-600 dark:text-emerald-400 font-semibold">Strengths:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-emerald-700 dark:text-emerald-400 font-black uppercase tracking-wider">Strengths:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.taskAchievement.strengths.map((s, idx) => (
                       <li key={idx}>{s}</li>
                     ))}
                   </ul>
-                  <div className="text-amber-600 dark:text-amber-400 font-semibold pt-1">Examiner Advice:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-amber-700 dark:text-amber-400 font-black uppercase tracking-wider pt-2">Examiner Advice:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, idx) => (
                       <li key={idx}>{r}</li>
                     ))}
@@ -445,51 +447,51 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               </div>
 
               {/* Coherence & Cohesion */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     2. Coherence & Cohesion
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.coherenceCohesion.feedback}
                 </p>
                 {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
-                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-700 dark:text-amber-300">
-                    <span className="font-bold">Overused Mechanical Linkers: </span>
+                  <div className="p-2.5 border-2 border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-xs text-amber-900 dark:text-amber-200">
+                    <span className="font-black uppercase">Overused Linkers: </span>
                     {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
                   </div>
                 )}
-                <div className="space-y-1 text-xs text-gray-600 dark:text-gray-300">
-                  <p><strong>Referencing:</strong> {analysisResult.cohesionAnalysis.referencingQuality}</p>
+                <div className="space-y-1 text-xs text-gray-700 dark:text-gray-300">
+                  <p><strong>Referencing & Substitution:</strong> {analysisResult.cohesionAnalysis.referencingQuality}</p>
                 </div>
               </div>
 
               {/* Lexical Resource */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     3. Lexical Resource
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.lexicalResource.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.lexicalResource.feedback}
                 </p>
                 <div className="space-y-1.5 pt-1 text-xs">
-                  <div className="text-emerald-600 dark:text-emerald-400 font-semibold">Strengths:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-emerald-700 dark:text-emerald-400 font-black uppercase tracking-wider">Strengths:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.lexicalResource.strengths.map((s, idx) => (
                       <li key={idx}>{s}</li>
                     ))}
                   </ul>
-                  <div className="text-amber-600 dark:text-amber-400 font-semibold pt-1">Recommended Upgrades:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-amber-700 dark:text-amber-400 font-black uppercase tracking-wider pt-2">Recommended Upgrades:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.lexicalResource.keyRecommendations.map((r, idx) => (
                       <li key={idx}>{r}</li>
                     ))}
@@ -498,27 +500,27 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               </div>
 
               {/* Grammatical Range & Accuracy */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     4. Grammatical Range & Accuracy
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.grammaticalRange.feedback}
                 </p>
                 <div className="space-y-1.5 pt-1 text-xs">
-                  <div className="text-emerald-600 dark:text-emerald-400 font-semibold">Sentence Strengths:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-emerald-700 dark:text-emerald-400 font-black uppercase tracking-wider">Sentence Mastery:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.grammaticalRange.strengths.map((s, idx) => (
                       <li key={idx}>{s}</li>
                     ))}
                   </ul>
-                  <div className="text-amber-600 dark:text-amber-400 font-semibold pt-1">Target Areas:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-amber-700 dark:text-amber-400 font-black uppercase tracking-wider pt-2">Target Areas:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.grammaticalRange.keyRecommendations.map((r, idx) => (
                       <li key={idx}>{r}</li>
                     ))}
@@ -531,11 +533,11 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           {/* TAB 2: Word Suggestions & Idiom Studio */}
           {activeTab === "vocab_studio" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2.5">
-                <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <div className="p-4 border-2 border-gray-900 dark:border-gray-700 bg-amber-50 dark:bg-amber-950/40 text-xs text-amber-950 dark:text-amber-200 flex items-start gap-2.5">
+                <Lightbulb className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold">Band 7.5+ Lexical Strategy: </span>
-                  IELTS examiners look for "uncommon lexical items with some awareness of style and collocation" and natural idiomatic structures that convey precise meanings without sounding artificial.
+                  <span className="font-black uppercase">Official Band 7.5+ Lexical Requirement: </span>
+                  Cambridge examiners reward candidates who deploy "uncommon lexical items with some awareness of style and collocation" and contextual idiomatic phrases that convey precise meaning without sounding forced.
                 </div>
               </div>
 
@@ -543,25 +545,25 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 {analysisResult.vocabularySuggestions.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 space-y-3"
+                    className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 line-through">
+                      <span className="text-xs font-bold text-gray-500 line-through">
                         {item.originalPhrase}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                      <span className="px-2 py-0.5 text-[10px] font-black uppercase bg-red-600 text-white">
                         {item.type.replace("_", " ")}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-base font-bold text-red-600 dark:text-red-400">
+                    <div className="flex items-center gap-2 text-base font-black text-red-600 dark:text-red-400">
                       <Sparkles className="w-4 h-4" />
                       <span>{item.suggestedUpgrade}</span>
                     </div>
 
-                    <p className="text-xs text-gray-600 dark:text-gray-300">{item.explanation}</p>
+                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{item.explanation}</p>
 
-                    <div className="p-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-700/80 text-xs text-gray-700 dark:text-gray-300 italic">
+                    <div className="p-3 border-l-4 border-gray-900 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-xs text-gray-900 dark:text-gray-100 font-medium italic">
                       "{item.exampleInSentence}"
                     </div>
                   </div>
@@ -576,40 +578,32 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               {analysisResult.sentenceFeedbacks.map((s, idx) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3"
+                  className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center justify-between pb-2 border-b-2 border-gray-100 dark:border-gray-800">
+                    <span className="text-xs font-black uppercase text-gray-900 dark:text-gray-300">
                       Sentence #{idx + 1}
                     </span>
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                        s.issueType === "grammar"
-                          ? "bg-red-500/10 text-red-600 border border-red-500/20"
-                          : s.issueType === "vocabulary"
-                          ? "bg-amber-500/10 text-amber-600 border border-amber-500/20"
-                          : "bg-blue-500/10 text-blue-600 border border-blue-500/20"
-                      }`}
-                    >
+                    <span className="px-2 py-0.5 text-[10px] font-black uppercase bg-gray-900 dark:bg-white text-white dark:text-gray-900">
                       {s.issueType}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                    <div className="p-3.5 rounded-xl bg-white dark:bg-gray-900 border border-red-500/20 text-gray-700 dark:text-gray-300">
-                      <span className="font-bold text-red-500 block mb-1">Original Draft:</span>
+                    <div className="p-3.5 border-2 border-red-600 bg-red-50/50 dark:bg-red-950/20 text-gray-900 dark:text-gray-200">
+                      <span className="font-black text-red-600 uppercase block mb-1">Original Draft:</span>
                       "{s.original}"
                     </div>
-                    <div className="p-3.5 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/30 text-gray-800 dark:text-gray-200">
-                      <span className="font-bold text-emerald-600 dark:text-emerald-400 block mb-1">
+                    <div className="p-3.5 border-2 border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20 text-gray-900 dark:text-gray-200">
+                      <span className="font-black text-emerald-700 dark:text-emerald-400 uppercase block mb-1">
                         Band 8.5 Polished Rewrite:
                       </span>
                       "{s.rewritten}"
                     </div>
                   </div>
 
-                  <div className="text-xs text-gray-600 dark:text-gray-300 pt-1">
-                    <span className="font-semibold text-gray-900 dark:text-white">Examiner Note: </span>
+                  <div className="text-xs text-gray-700 dark:text-gray-300 font-medium pt-1">
+                    <span className="font-bold text-gray-950 dark:text-white uppercase">Examiner Note: </span>
                     {s.explanation}
                   </div>
                 </div>
@@ -619,12 +613,12 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
           {/* TAB 4: Model Answer */}
           {activeTab === "model_answer" && (
-            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-4">
-              <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
-                <Award className="w-4 h-4 text-red-500" />
+            <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-6 space-y-4">
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                <Award className="w-4 h-4 text-red-600" />
                 Examiner Band 8.5+ Model Response
               </div>
-              <div className="p-5 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 text-sm leading-relaxed text-gray-800 dark:text-gray-200 font-serif whitespace-pre-line">
+              <div className="p-5 border-2 border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-sm leading-relaxed text-gray-900 dark:text-gray-100 font-serif whitespace-pre-line">
                 {analysisResult.modelAnswer}
               </div>
             </div>

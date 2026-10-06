@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Download, Share2, X, Check, Award, Sparkles } from "lucide-react";
+import { Download, X, Check, Award, Sparkles } from "lucide-react";
 import { RadarChart } from "./RadarChart";
 
 interface ScorecardModalProps {
@@ -34,7 +34,6 @@ export function ScorecardModal({
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      // Use client-side canvas rendering for the share card
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
@@ -44,16 +43,13 @@ export function ScorecardModal({
       canvas.width = width;
       canvas.height = height;
 
-      // Dark background with gradient
-      const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-      bgGrad.addColorStop(0, "#090d16");
-      bgGrad.addColorStop(1, "#151c2e");
-      ctx.fillStyle = bgGrad;
+      // Dark background with sharp high contrast
+      ctx.fillStyle = "#090d16";
       ctx.fillRect(0, 0, width, height);
 
       // Top Red Brand Accent bar
       ctx.fillStyle = "#e01a22";
-      ctx.fillRect(0, 0, width, 16);
+      ctx.fillRect(0, 0, width, 24);
 
       // Card Header
       ctx.fillStyle = "#ffffff";
@@ -62,30 +58,23 @@ export function ScorecardModal({
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "24px sans-serif";
-      ctx.fillText(`Automated Cambridge & IDP Rubric Evaluation • ${type} Test`, 80, 155);
+      ctx.fillText(`Cambridge & IDP Criteria Evaluation • ${type} Test`, 80, 155);
 
-      // Decorative Red Pill for Type
+      // Sharp Red Badge for Type
       ctx.fillStyle = "#e01a22";
-      ctx.beginPath();
-      ctx.roundRect(width - 240, 75, 160, 48, 24);
-      ctx.fill();
+      ctx.fillRect(width - 240, 75, 160, 48);
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 22px sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(type.toUpperCase(), width - 160, 107);
       ctx.textAlign = "left";
 
-      // Overall Score Hero Box
-      const heroGrad = ctx.createLinearGradient(80, 200, width - 80, 440);
-      heroGrad.addColorStop(0, "rgba(224, 26, 34, 0.15)");
-      heroGrad.addColorStop(1, "rgba(255, 255, 255, 0.05)");
-      ctx.fillStyle = heroGrad;
-      ctx.beginPath();
-      ctx.roundRect(80, 200, width - 160, 240, 32);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(224, 26, 34, 0.4)";
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      // Overall Score Box
+      ctx.fillStyle = "#111827";
+      ctx.fillRect(80, 200, width - 160, 240);
+      ctx.strokeStyle = "#e01a22";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(80, 200, width - 160, 240);
 
       // Band score number
       ctx.fillStyle = "#e01a22";
@@ -97,7 +86,7 @@ export function ScorecardModal({
       ctx.fillText("PREDICTED OVERALL BAND", 420, 290);
 
       ctx.fillStyle = "#cbd5e1";
-      ctx.font = "26px sans-serif";
+      ctx.font = "24px sans-serif";
       const statusText = overallBand >= 7.5 ? "Good User (C1 Academic Mastery)" : overallBand >= 6.5 ? "Competent User (Meets University Criteria)" : "Developing User (Needs Targeted Refinement)";
       ctx.fillText(statusText, 420, 340);
 
@@ -109,12 +98,10 @@ export function ScorecardModal({
       scores.forEach((s, idx) => {
         const x = 80 + idx * (boxW + 20);
         ctx.fillStyle = "#1e293b";
-        ctx.beginPath();
-        ctx.roundRect(x, startY, boxW, boxH, 20);
-        ctx.fill();
+        ctx.fillRect(x, startY, boxW, boxH);
         ctx.strokeStyle = "#334155";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, startY, boxW, boxH);
 
         ctx.fillStyle = "#94a3b8";
         ctx.font = "bold 18px sans-serif";
@@ -127,12 +114,10 @@ export function ScorecardModal({
 
       // Primary Bottleneck Box
       ctx.fillStyle = "#1e293b";
-      ctx.beginPath();
-      ctx.roundRect(80, 670, width - 160, 220, 24);
-      ctx.fill();
-      ctx.strokeStyle = "#f43f5e";
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      ctx.fillRect(80, 670, width - 160, 220);
+      ctx.strokeStyle = "#e01a22";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(80, 670, width - 160, 220);
 
       ctx.fillStyle = "#f43f5e";
       ctx.font = "bold 26px sans-serif";
@@ -145,18 +130,16 @@ export function ScorecardModal({
         ctx.fillText(primaryBottleneck.slice(85, 170), 120, 825);
       }
 
-      // Examiner Highlight Quote Box
-      ctx.fillStyle = "rgba(15, 23, 42, 0.7)";
-      ctx.beginPath();
-      ctx.roundRect(80, 920, width - 160, 240, 24);
-      ctx.fill();
+      // Examiner Highlight Box
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(80, 920, width - 160, 240);
       ctx.strokeStyle = "#334155";
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      ctx.lineWidth = 2;
+      ctx.strokeRect(80, 920, width - 160, 240);
 
       ctx.fillStyle = "#38bdf8";
       ctx.font = "bold 26px sans-serif";
-      ctx.fillText("💡 EXAMINER RECOMMENDATION & UPGRADE:", 120, 980);
+      ctx.fillText("💡 EXAMINER ADVICE & UPGRADE:", 120, 980);
 
       ctx.fillStyle = "#cbd5e1";
       ctx.font = "italic 24px sans-serif";
@@ -170,7 +153,6 @@ export function ScorecardModal({
       ctx.font = "bold 22px sans-serif";
       ctx.fillText("Tested with IELTS Diagnostic AI  •  #IELTSChallenge  •  VibeCoding 2026", 80, 1260);
 
-      // Trigger download
       const dataUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");
       a.href = dataUrl;
@@ -187,44 +169,44 @@ export function ScorecardModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-xl my-8 bg-gray-900 text-white border border-gray-800 rounded-3xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs overflow-y-auto">
+      <div className="relative w-full max-w-xl my-8 bg-white dark:bg-gray-950 text-gray-950 dark:text-white border-3 border-gray-900 dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.3)]">
         {/* Top Bar */}
         <div className="h-2 bg-red-600 w-full" />
 
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-1 text-gray-400 hover:text-white rounded-lg transition-colors"
+          className="absolute top-5 right-5 p-1 text-gray-500 hover:text-black dark:hover:text-white cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         <div ref={cardRef} className="p-6 md:p-8 space-y-6">
           {/* Header */}
-          <div className="flex items-start justify-between pr-8">
+          <div className="flex items-start justify-between pr-8 border-b-2 border-gray-900 dark:border-gray-800 pb-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 mb-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-black uppercase bg-red-600 text-white tracking-wider mb-2">
                 <Award className="w-3.5 h-3.5" /> OFFICIAL DIAGNOSTIC
               </div>
-              <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white">{title}</h3>
-              <p className="text-xs text-gray-400">Evaluated against Cambridge & IDP Criteria</p>
+              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight">{title}</h3>
+              <p className="text-xs text-gray-500 font-medium">Cambridge & IDP Criteria Evaluation</p>
             </div>
-            <div className="text-right">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-gray-800 text-gray-300">
+            <div>
+              <span className="inline-block px-3 py-1 font-black text-xs uppercase bg-gray-900 dark:bg-white text-white dark:text-gray-950">
                 {type}
               </span>
             </div>
           </div>
 
           {/* Hero Overall Band Banner */}
-          <div className="flex items-center justify-between p-5 rounded-2xl bg-gradient-to-r from-red-600/20 via-red-950/20 to-gray-800/40 border border-red-600/40">
+          <div className="flex items-center justify-between p-5 border-2 border-red-600 bg-red-50 dark:bg-red-950/20">
             <div>
-              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <div className="text-xs font-black uppercase text-gray-600 dark:text-gray-400 tracking-wider">
                 Predicted Overall Band
               </div>
-              <div className="text-5xl font-black text-white tracking-tight mt-1 flex items-baseline gap-2">
-                <span className="text-red-500">{overallBand.toFixed(1)}</span>
-                <span className="text-sm font-normal text-gray-400">/ 9.0</span>
+              <div className="text-5xl font-black tracking-tight mt-1 flex items-baseline gap-2">
+                <span className="text-red-600">{overallBand.toFixed(1)}</span>
+                <span className="text-sm font-bold text-gray-500">/ 9.0</span>
               </div>
             </div>
             <div className="hidden sm:block">
@@ -235,25 +217,25 @@ export function ScorecardModal({
           {/* 4 Criteria Chips */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {scores.map((s, idx) => (
-              <div key={idx} className="p-3 rounded-xl bg-gray-800/80 border border-gray-700/60 text-center">
-                <div className="text-[10px] font-bold text-gray-400 uppercase truncate">{s.label}</div>
-                <div className="text-2xl font-black text-white mt-0.5">{s.score.toFixed(1)}</div>
+              <div key={idx} className="p-3 border-2 border-gray-900 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-center">
+                <div className="text-[10px] font-black uppercase text-gray-500 truncate">{s.label}</div>
+                <div className="text-2xl font-black mt-0.5">{s.score.toFixed(1)}</div>
               </div>
             ))}
           </div>
 
           {/* Bottleneck Warning */}
-          <div className="p-4 rounded-xl bg-red-950/30 border border-red-800/40 text-xs">
-            <span className="font-bold text-red-400 block mb-1">🚨 #1 Bottleneck Holding You Back:</span>
-            <p className="text-gray-300">{primaryBottleneck}</p>
+          <div className="p-4 border-2 border-red-600 bg-red-50 dark:bg-red-950/30 text-xs">
+            <span className="font-black text-red-600 uppercase block mb-1">🚨 #1 Bottleneck Holding You Back:</span>
+            <p className="text-gray-800 dark:text-gray-200 font-medium">{primaryBottleneck}</p>
           </div>
 
           {/* Examiner Quote */}
-          <div className="p-4 rounded-xl bg-gray-800/50 border border-gray-700/50 text-xs">
-            <span className="font-bold text-sky-400 flex items-center gap-1.5 mb-1">
-              <Sparkles className="w-3.5 h-3.5" /> High-Band Advice:
+          <div className="p-4 border-2 border-gray-900 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs">
+            <span className="font-black text-sky-600 dark:text-sky-400 flex items-center gap-1.5 mb-1 uppercase">
+              <Sparkles className="w-3.5 h-3.5" /> High-Band Examiner Advice:
             </span>
-            <p className="text-gray-300 italic">"{examinerHighlight}"</p>
+            <p className="text-gray-800 dark:text-gray-200 italic font-medium">"{examinerHighlight}"</p>
           </div>
 
           {/* Action buttons */}
@@ -261,7 +243,7 @@ export function ScorecardModal({
             <button
               onClick={handleDownload}
               disabled={downloading}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm bg-red-600 hover:bg-red-700 text-white transition-all shadow-lg hover:shadow-red-600/30 cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 font-black text-xs uppercase bg-red-600 hover:bg-red-700 text-white border-2 border-red-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
             >
               {downloaded ? (
                 <>
@@ -277,15 +259,11 @@ export function ScorecardModal({
             </button>
             <button
               onClick={onClose}
-              className="px-5 py-3 rounded-xl font-medium text-sm bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors"
+              className="px-5 py-3 font-black text-xs uppercase border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-100 cursor-pointer"
             >
               Close
             </button>
           </div>
-
-          <p className="text-[11px] text-center text-gray-500">
-            Post this on Facebook with #IELTSChallenge to compare with your friends!
-          </p>
         </div>
       </div>
     </div>

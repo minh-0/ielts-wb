@@ -3,20 +3,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Mic,
-  MicOff,
   Clock,
-  Play,
   Square,
   Sparkles,
   Award,
   Layers,
   Volume2,
-  AlertCircle,
   Share2,
   RefreshCw,
   Sliders,
   Timer,
-  CheckCircle,
   ChevronDown,
 } from "lucide-react";
 import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
@@ -92,7 +88,6 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       }, 1000);
     } else if (isPrepping && prepSecondsRemaining === 0) {
       setIsPrepping(false);
-      // Automatically prompt to record
     }
     return () => clearInterval(interval);
   }, [isPrepping, prepSecondsRemaining]);
@@ -115,17 +110,14 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
 
-        // Convert blob to base64 for API
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
         reader.onloadend = () => {
           const base64String = reader.result as string;
-          // Strip out data URL prefix
           const base64Clean = base64String.split(",")[1];
           setAudioBase64(base64Clean);
         };
 
-        // Stop all audio tracks
         stream.getTracks().forEach((track) => track.stop());
       };
 
@@ -134,15 +126,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       setIsRecording(true);
       setRecordSeconds(0);
 
-      // Start recording timer
       timerIntervalRef.current = setInterval(() => {
         setRecordSeconds((prev) => {
-          // If in Official Exam Part 2 mode, cap at 120s
           if (speakingMode === "official_exam" && selectedPart === "part2_cuecard" && prev >= 120) {
             stopRecording();
             return 120;
           }
-          // If custom timer is set in practice mode
           if (speakingMode === "practice" && customTimerSeconds > 0 && prev >= customTimerSeconds) {
             stopRecording();
             return customTimerSeconds;
@@ -215,35 +204,37 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Banner / Mode Controls */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xs">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-gray-100 dark:border-gray-800">
+      <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.1)]">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b-2 border-gray-900 dark:border-gray-800">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 mb-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-black uppercase bg-red-600 text-white tracking-wider mb-2">
               <Mic className="w-3 h-3" /> OFFICIAL SPEAKING SIMULATOR
             </div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">IELTS Speaking Studio</h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Evaluated on Fluency & Coherence, Lexical Resource, Spoken Grammar, and Pronunciation.
+            <h2 className="text-2xl font-black text-gray-950 dark:text-white uppercase tracking-tight">
+              IELTS Speaking Studio
+            </h2>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-0.5">
+              Evaluated strictly on Fluency & Coherence, Lexical Resource, Spoken Grammar, and Pronunciation.
             </p>
           </div>
 
-          {/* Mode Selector: Practice vs Official Exam */}
-          <div className="flex items-center gap-2 p-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-bold">
+          {/* Mode Selector: Sharp Segments */}
+          <div className="flex items-center border-2 border-gray-900 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-xs font-bold">
             <button
               onClick={() => {
                 setSpeakingMode("practice");
                 resetRecording();
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 transition-all ${
                 speakingMode === "practice"
-                  ? "bg-white dark:bg-gray-900 text-emerald-600 dark:text-emerald-400 shadow-xs"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
               <Sliders className="w-3.5 h-3.5" />
-              Practice Mode (Untimed/Custom)
+              PRACTICE (UNTIMED / CUSTOM)
             </button>
 
             <button
@@ -251,64 +242,61 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
                 setSpeakingMode("official_exam");
                 resetRecording();
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 border-l-2 border-gray-900 dark:border-gray-700 transition-all ${
                 speakingMode === "official_exam"
-                  ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
-              <Timer className="w-3.5 h-3.5 text-red-500" />
-              Official Exam Mode (Real Timers)
+              <Timer className="w-3.5 h-3.5" />
+              OFFICIAL EXAM (REAL TIMERS)
             </button>
           </div>
         </div>
 
         {/* IELTS Speaking Part Selector */}
-        <div className="pt-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mr-1">
-              Part:
-            </span>
+        <div className="pt-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center border-2 border-gray-900 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-xs font-bold">
             <button
               onClick={() => handlePartChange("part1")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 transition-all ${
                 selectedPart === "part1"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200"
               }`}
             >
               Part 1 (Short Q&A)
             </button>
             <button
               onClick={() => handlePartChange("part2_cuecard")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 border-l-2 border-gray-900 dark:border-gray-700 transition-all ${
                 selectedPart === "part2_cuecard"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200"
               }`}
             >
               Part 2 (Cue Card • 2 Mins)
             </button>
             <button
               onClick={() => handlePartChange("part3")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 border-l-2 border-gray-900 dark:border-gray-700 transition-all ${
                 selectedPart === "part3"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  ? "bg-red-600 text-white font-black"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-200"
               }`}
             >
               Part 3 (Discussion)
             </button>
           </div>
 
-          {/* Practice Custom Timer Slider */}
+          {/* Practice Custom Timer */}
           {speakingMode === "practice" && (
-            <div className="flex items-center gap-3 text-xs bg-gray-50 dark:bg-gray-800/80 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700">
-              <span className="font-semibold text-gray-700 dark:text-gray-300">Practice Timer:</span>
+            <div className="flex items-center gap-2 text-xs border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1.5 font-bold">
+              <span className="text-gray-700 dark:text-gray-300 uppercase">Timer:</span>
               <select
                 value={customTimerSeconds}
                 onChange={(e) => setCustomTimerSeconds(Number(e.target.value))}
-                className="bg-transparent font-bold text-red-600 dark:text-red-400 focus:outline-none"
+                className="bg-transparent font-black text-red-600 dark:text-red-400 focus:outline-none"
               >
                 <option value={0}>No Timer (Unlimited)</option>
                 <option value={30}>30 Seconds</option>
@@ -321,34 +309,34 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         </div>
       </div>
 
-      {/* Selected Topic & Cue Card View */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">
+      {/* Selected Topic & Authentic Cue Card View */}
+      <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.1)] space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b-2 border-gray-900 dark:border-gray-800">
+          <span className="text-xs font-black text-red-600 dark:text-red-400 uppercase tracking-widest">
             {selectedPrompt.topic}
           </span>
           <button
             onClick={handleLoadSampleTranscript}
-            className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 underline"
+            className="text-xs text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white font-bold underline cursor-pointer"
           >
             Load Sample Spoken Answer
           </button>
         </div>
 
-        <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white leading-snug">
+        <h3 className="text-lg font-black text-gray-950 dark:text-white leading-snug">
           {selectedPrompt.question}
         </h3>
 
         {/* If Part 2 Cue Card: display bullet prompts */}
         {selectedPrompt.bulletPoints && selectedPrompt.bulletPoints.length > 0 && (
-          <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 text-xs space-y-1.5 text-gray-700 dark:text-gray-300">
-            <span className="font-bold text-gray-900 dark:text-white block mb-1">
-              You should say:
+          <div className="p-4 border-l-4 border-red-600 bg-gray-50 dark:bg-gray-800/80 border-t border-r border-b border-gray-200 dark:border-gray-700 text-xs space-y-2 text-gray-800 dark:text-gray-200">
+            <span className="font-black text-gray-950 dark:text-white uppercase tracking-wider block">
+              Candidate Instructions — You should say:
             </span>
             {selectedPrompt.bulletPoints.map((b, idx) => (
               <div key={idx} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-                <span>{b}</span>
+                <span className="w-2 h-2 bg-red-600 shrink-0" />
+                <span className="font-medium">{b}</span>
               </div>
             ))}
           </div>
@@ -356,12 +344,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
         {/* Mode 2 Cue Card 1-Minute Prep Countdown & Scratchpad */}
         {speakingMode === "official_exam" && selectedPart === "part2_cuecard" && (
-          <div className="p-4 rounded-xl bg-red-500/5 dark:bg-red-500/10 border border-red-500/20 space-y-3">
+          <div className="p-4 border-2 border-red-600 bg-red-50/50 dark:bg-red-950/20 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-red-500" />
-                <span className="text-xs font-bold text-gray-900 dark:text-white">
-                  Official 1-Minute Preparation Countdown:
+                <Clock className="w-4 h-4 text-red-600" />
+                <span className="text-xs font-black uppercase tracking-wider text-gray-950 dark:text-white">
+                  Official 1-Minute Prep Countdown:
                 </span>
                 <span className="font-mono text-sm font-black text-red-600 dark:text-red-400">
                   {formatTime(prepSecondsRemaining)}
@@ -371,7 +359,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
               {!isPrepping && prepSecondsRemaining === 60 && (
                 <button
                   onClick={handleStartPrep}
-                  className="px-3 py-1 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-700 text-white"
+                  className="px-3 py-1 text-xs font-black uppercase bg-red-600 hover:bg-red-700 text-white cursor-pointer"
                 >
                   Start 1-Min Prep
                 </button>
@@ -381,71 +369,70 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
             <textarea
               value={prepNotes}
               onChange={(e) => setPrepNotes(e.target.value)}
-              placeholder="Scratchpad for quick bullet notes during your 1-minute prep (Keywords, vocabulary ideas)..."
+              placeholder="Candidate Scratchpad: Jot down keywords and collocations during your 1-minute preparation..."
               rows={2}
-              className="w-full p-2.5 text-xs rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-red-500"
+              className="w-full p-2.5 text-xs border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-red-600 font-medium"
             />
           </div>
         )}
       </div>
 
       {/* Audio Recorder & Controls */}
-      <div className="p-8 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xs flex flex-col items-center justify-center space-y-6">
+      <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-8 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.1)] flex flex-col items-center justify-center space-y-6 text-center">
         {/* Live Audio Visualizer / Timer Display */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className="text-4xl md:text-5xl font-mono font-black text-gray-900 dark:text-white tracking-wider">
+        <div className="space-y-1">
+          <div className="text-5xl font-mono font-black text-gray-950 dark:text-white tracking-widest">
             {formatTime(recordSeconds)}
           </div>
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
             {isRecording
-              ? "Recording in progress... Speak clearly into your microphone"
+              ? "Recording active... Speak clearly into your microphone"
               : audioUrl
-              ? "Recording captured! Ready for examiner analysis"
-              : "Click the red microphone to begin recording"}
+              ? "Audio captured! Ready for evaluation"
+              : "Click the red microphone to record"}
           </span>
         </div>
 
         {/* Animated Waveform when recording */}
         {isRecording && (
-          <div className="flex items-center gap-1.5 h-12">
-            {[40, 65, 85, 45, 95, 70, 50, 90, 60, 80, 45, 75, 90, 60].map((h, i) => (
+          <div className="flex items-center gap-1.5 h-10">
+            {[40, 70, 95, 45, 100, 75, 50, 90, 60, 85, 45, 80, 95, 60].map((h, i) => (
               <div
                 key={i}
-                className="w-1.5 rounded-full bg-red-500 animate-pulse"
+                className="w-1.5 bg-red-600 animate-pulse"
                 style={{
                   height: `${h}%`,
-                  animationDelay: `${(i % 5) * 0.15}s`,
+                  animationDelay: `${(i % 5) * 0.12}s`,
                 }}
               />
             ))}
           </div>
         )}
 
-        {/* Main Mic Button */}
+        {/* Main Mic Button: Sharp style */}
         <div className="flex items-center gap-4">
           {!isRecording ? (
             <button
               onClick={startRecording}
-              className="relative flex items-center justify-center w-20 h-20 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-xl hover:shadow-red-600/40 transition-all transform hover:scale-105 cursor-pointer"
+              className="flex items-center justify-center w-20 h-20 border-3 border-gray-900 dark:border-white bg-red-600 hover:bg-red-700 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.3)] transition-all cursor-pointer"
               title="Start recording"
             >
               <Mic className="w-8 h-8" />
-              <span className="absolute -inset-1 rounded-full border-2 border-red-500/40 animate-ping pointer-events-none" />
             </button>
           ) : (
             <button
               onClick={stopRecording}
-              className="flex items-center justify-center w-20 h-20 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 shadow-xl transition-all transform hover:scale-105 cursor-pointer"
+              className="flex items-center justify-center w-20 h-20 border-3 border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all cursor-pointer"
               title="Stop recording"
             >
-              <Square className="w-7 h-7" />
+              <Square className="w-8 h-8" />
             </button>
           )}
 
           {audioUrl && !isRecording && (
             <button
               onClick={resetRecording}
-              className="p-3 text-xs font-medium text-gray-500 hover:text-red-500 rounded-full border border-gray-200 dark:border-gray-700"
+              className="p-3 border-2 border-gray-900 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:text-red-600 cursor-pointer"
               title="Retake recording"
             >
               <RefreshCw className="w-4 h-4" />
@@ -456,15 +443,15 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         {/* Audio Player playback if recorded */}
         {audioUrl && (
           <div className="w-full max-w-md pt-2">
-            <audio src={audioUrl} controls className="w-full h-10 rounded-xl" />
+            <audio src={audioUrl} controls className="w-full h-10 border border-gray-300 dark:border-gray-700" />
           </div>
         )}
 
-        {/* Text Transcript Fallback (Optional) */}
-        <div className="w-full max-w-xl pt-4 border-t border-gray-100 dark:border-gray-800 text-center">
+        {/* Text Transcript Fallback */}
+        <div className="w-full max-w-xl pt-4 border-t-2 border-gray-100 dark:border-gray-800 text-center">
           <button
             onClick={() => setUseTextMode(!useTextMode)}
-            className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-500 underline"
+            className="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-red-600 underline cursor-pointer"
           >
             {useTextMode ? "Hide transcript input" : "Or type / paste spoken transcript directly"}
           </button>
@@ -474,9 +461,9 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
               <textarea
                 value={transcriptFallback}
                 onChange={(e) => setTranscriptFallback(e.target.value)}
-                placeholder="Paste what was said in spoken conversational English..."
+                placeholder="Paste what was spoken here..."
                 rows={3}
-                className="w-full p-3 text-xs rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-red-500"
+                className="w-full p-3 text-xs border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-red-600"
               />
             </div>
           )}
@@ -486,17 +473,17 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
         <button
           onClick={handleAnalyze}
           disabled={isAnalyzing || (!audioBase64 && !transcriptFallback.trim())}
-          className="flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white transition-all shadow-md hover:shadow-red-600/30 cursor-pointer"
+          className="flex items-center gap-2 px-7 py-3.5 font-black text-xs uppercase tracking-wider bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white transition-all border-2 border-red-700 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
         >
           {isAnalyzing ? (
             <>
               <RefreshCw className="w-4 h-4 animate-spin" />
-              Evaluating Speaking Response...
+              EVALUATING SPEAKING RESPONSE...
             </>
           ) : (
             <>
               <Sparkles className="w-4 h-4" />
-              Analyze Speaking with Official Rubric
+              ANALYZE SPEAKING WITH OFFICIAL RUBRIC
             </>
           )}
         </button>
@@ -504,18 +491,18 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
       {/* Analysis Results View */}
       {analysisResult && (
-        <div className="p-6 md:p-8 rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg space-y-8 animate-in fade-in duration-300">
+        <div className="border-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 md:p-8 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.15)] space-y-8 animate-in fade-in duration-200">
           {/* Header Score Overview */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 p-6 rounded-2xl bg-gradient-to-r from-red-500/10 via-transparent to-red-500/5 border border-red-500/20">
+          <div className="border-2 border-gray-900 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 p-6 flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center lg:text-left">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-600 text-white shadow-xs">
-                <Award className="w-3.5 h-3.5" /> OFFICIAL ESTIMATED SPEAKING BAND
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-black uppercase bg-red-600 text-white tracking-wider">
+                <Award className="w-3.5 h-3.5" /> ESTIMATED SPEAKING BAND
               </div>
-              <div className="text-6xl font-black text-gray-900 dark:text-white tracking-tight flex items-baseline justify-center lg:justify-start gap-2">
+              <div className="text-6xl font-black text-gray-950 dark:text-white tracking-tight flex items-baseline justify-center lg:justify-start gap-2">
                 <span className="text-red-600 dark:text-red-500">{analysisResult.overallBand.toFixed(1)}</span>
-                <span className="text-lg text-gray-400 font-normal">/ 9.0</span>
+                <span className="text-lg text-gray-500 font-bold">/ 9.0</span>
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-300 max-w-md">
+              <p className="text-xs font-medium text-gray-700 dark:text-gray-300 max-w-md">
                 {analysisResult.examinerSummary}
               </p>
             </div>
@@ -524,39 +511,39 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
             <div className="flex flex-col items-center">
               <RadarChart
                 scores={[
-                  { label: "Fluency & Coh.", score: analysisResult.criteria.fluencyCoherence.score },
+                  { label: "Fluency/Coh.", score: analysisResult.criteria.fluencyCoherence.score },
                   { label: "Spoken Vocab", score: analysisResult.criteria.lexicalResource.score },
                   { label: "Grammar Range", score: analysisResult.criteria.grammaticalRange.score },
                   { label: "Pronunciation", score: analysisResult.criteria.pronunciation.score },
                 ]}
-                size={230}
+                size={220}
               />
             </div>
 
             {/* Share Card Trigger */}
-            <div className="flex flex-col gap-2 w-full lg:w-auto">
+            <div className="flex flex-col gap-2.5 w-full lg:w-auto">
               <button
                 onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-xs bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-md cursor-pointer"
+                className="flex items-center justify-center gap-2 px-5 py-3 font-black text-xs uppercase tracking-wider border-2 border-gray-900 dark:border-white bg-gray-900 dark:bg-white text-white dark:text-gray-950 hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white hover:border-red-600 transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
               >
-                <Share2 className="w-4 h-4 text-red-500" />
-                Generate Scorecard for Facebook
+                <Share2 className="w-4 h-4" />
+                GENERATE FACEBOOK SCORECARD
               </button>
-              <div className="p-3 rounded-xl bg-red-950/20 border border-red-800/30 text-[11px] text-red-600 dark:text-red-400">
-                <span className="font-bold block">Primary Bottleneck:</span>
+              <div className="p-3 border-2 border-red-600 bg-red-50 dark:bg-red-950/40 text-xs text-red-900 dark:text-red-300">
+                <span className="font-black uppercase block mb-0.5">Primary Bottleneck:</span>
                 {analysisResult.primaryBottleneck}
               </div>
             </div>
           </div>
 
           {/* Results Navigation Tabs */}
-          <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 dark:border-gray-800 pb-3">
+          <div className="flex flex-wrap items-center border-b-2 border-gray-900 dark:border-gray-800 pb-px gap-1">
             <button
               onClick={() => setActiveTab("criteria")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "criteria"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -565,10 +552,10 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
             <button
               onClick={() => setActiveTab("speech_metrics")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "speech_metrics"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
               <Volume2 className="w-3.5 h-3.5" />
@@ -577,22 +564,22 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
             <button
               onClick={() => setActiveTab("spoken_idioms")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "spoken_idioms"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <Sparkles className="w-3.5 h-3.5" />
               Spoken Idioms & Phrasal Verbs
             </button>
 
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-black uppercase tracking-wider border-2 transition-all ${
                 activeTab === "model_answer"
-                  ? "bg-red-600 text-white shadow-xs"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                  ? "border-red-600 bg-red-600 text-white"
+                  : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-100"
               }`}
             >
               <Award className="w-3.5 h-3.5" />
@@ -604,27 +591,27 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           {activeTab === "criteria" && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Fluency & Coherence */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     1. Fluency & Coherence
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.fluencyCoherence.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.fluencyCoherence.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.fluencyCoherence.feedback}
                 </p>
                 <div className="space-y-1.5 pt-1 text-xs">
-                  <div className="text-emerald-600 dark:text-emerald-400 font-semibold">Strengths:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-emerald-700 dark:text-emerald-400 font-black uppercase tracking-wider">Strengths:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.fluencyCoherence.strengths.map((s, idx) => (
                       <li key={idx}>{s}</li>
                     ))}
                   </ul>
-                  <div className="text-amber-600 dark:text-amber-400 font-semibold pt-1">Examiner Advice:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-amber-700 dark:text-amber-400 font-black uppercase tracking-wider pt-2">Examiner Advice:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.fluencyCoherence.keyRecommendations.map((r, idx) => (
                       <li key={idx}>{r}</li>
                     ))}
@@ -633,27 +620,27 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
               </div>
 
               {/* Lexical Resource */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     2. Lexical Resource (Spoken)
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.lexicalResource.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.lexicalResource.feedback}
                 </p>
                 <div className="space-y-1.5 pt-1 text-xs">
-                  <div className="text-emerald-600 dark:text-emerald-400 font-semibold">Strengths:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-emerald-700 dark:text-emerald-400 font-black uppercase tracking-wider">Strengths:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.lexicalResource.strengths.map((s, idx) => (
                       <li key={idx}>{s}</li>
                     ))}
                   </ul>
-                  <div className="text-amber-600 dark:text-amber-400 font-semibold pt-1">Examiner Advice:</div>
-                  <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-0.5 pl-1">
+                  <div className="text-amber-700 dark:text-amber-400 font-black uppercase tracking-wider pt-2">Examiner Advice:</div>
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-0.5 pl-1">
                     {analysisResult.criteria.lexicalResource.keyRecommendations.map((r, idx) => (
                       <li key={idx}>{r}</li>
                     ))}
@@ -661,52 +648,52 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
                 </div>
               </div>
 
-              {/* Grammatical Range & Accuracy */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              {/* Grammatical Range */}
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     3. Grammatical Range & Accuracy
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.grammaticalRange.feedback}
                 </p>
                 {analysisResult.spokenGrammarErrors.length > 0 && (
-                  <div className="space-y-1.5 pt-1 text-xs">
-                    <span className="font-semibold text-red-500">Spoken Grammar Slips Flagged:</span>
+                  <div className="space-y-2 pt-1 text-xs">
+                    <span className="font-black text-red-600 uppercase">Spoken Grammar Slips Flagged:</span>
                     {analysisResult.spokenGrammarErrors.map((err, idx) => (
-                      <div key={idx} className="p-2 rounded-lg bg-red-500/10 text-gray-700 dark:text-gray-300">
-                        <span className="line-through text-red-500">{err.spokenSnippet}</span> →{" "}
-                        <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      <div key={idx} className="p-2.5 border-2 border-red-600 bg-red-50 dark:bg-red-950/40 text-gray-900 dark:text-gray-100">
+                        <span className="line-through text-red-600">{err.spokenSnippet}</span> →{" "}
+                        <span className="font-black text-emerald-700 dark:text-emerald-400">
                           {err.correctedSnippet}
                         </span>
-                        <p className="text-[10px] text-gray-500 mt-0.5">{err.rule}</p>
+                        <p className="text-[10px] text-gray-600 dark:text-gray-400 mt-0.5 font-medium">{err.rule}</p>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Pronunciation & Intelligibility */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">
+              {/* Pronunciation */}
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white">
                     4. Pronunciation & Intelligibility
                   </h4>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600 text-white">
-                    Band {analysisResult.criteria.pronunciation.score.toFixed(1)}
+                  <span className="px-2 py-0.5 text-xs font-black bg-red-600 text-white">
+                    BAND {analysisResult.criteria.pronunciation.score.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
                   {analysisResult.criteria.pronunciation.feedback}
                 </p>
-                <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-xs space-y-1 text-sky-800 dark:text-sky-300">
+                <div className="p-3 border-2 border-sky-600 bg-sky-50 dark:bg-sky-950/40 text-xs space-y-1 text-sky-950 dark:text-sky-200">
                   <p><strong>Phonetic Focus:</strong> {analysisResult.pronunciationNotes.phoneticIssue}</p>
                   <p><strong>Words to check:</strong> {analysisResult.pronunciationNotes.wordsAffected.join(", ")}</p>
-                  <p className="text-[11px] text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-[11px] text-gray-600 dark:text-gray-400 mt-1 font-medium">
                     {analysisResult.pronunciationNotes.intonationFeedback}
                   </p>
                 </div>
@@ -718,59 +705,59 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           {activeTab === "speech_metrics" && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 text-center">
-                  <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">Words Per Minute</div>
-                  <div className="text-4xl font-black text-gray-900 dark:text-white mt-1">
+                <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 text-center">
+                  <div className="text-xs font-black uppercase text-gray-500">Words Per Minute</div>
+                  <div className="text-4xl font-black text-gray-950 dark:text-white mt-1">
                     {analysisResult.wordsPerMinute}
                   </div>
-                  <div className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 mt-1 uppercase">
+                  <div className="text-[11px] font-black text-emerald-700 dark:text-emerald-400 mt-1 uppercase">
                     {analysisResult.pacingAssessment === "ideal" ? "Optimal Pacing (120-150)" : analysisResult.pacingAssessment}
                   </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 text-center">
-                  <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">Total Filler Words</div>
-                  <div className="text-4xl font-black text-gray-900 dark:text-white mt-1">
+                <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 text-center">
+                  <div className="text-xs font-black uppercase text-gray-500">Total Filler Words</div>
+                  <div className="text-4xl font-black text-gray-950 dark:text-white mt-1">
                     {analysisResult.fillerWords.totalCount}
                   </div>
-                  <div className="text-[11px] text-gray-500 mt-1">"um", "uh", "like", "you know"</div>
+                  <div className="text-[11px] font-medium text-gray-500 mt-1">"um", "uh", "like", "you know"</div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 text-center">
-                  <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">Speech Duration</div>
-                  <div className="text-4xl font-black text-gray-900 dark:text-white mt-1">
+                <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 text-center">
+                  <div className="text-xs font-black uppercase text-gray-500">Speech Duration</div>
+                  <div className="text-4xl font-black text-gray-950 dark:text-white mt-1">
                     {analysisResult.speechDurationSeconds}s
                   </div>
-                  <div className="text-[11px] text-gray-500 mt-1">Target: ~120s for Part 2</div>
+                  <div className="text-[11px] font-medium text-gray-500 mt-1">Target: ~120s for Part 2</div>
                 </div>
               </div>
 
               {/* Filler words breakdown */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3">
+                <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white pb-2 border-b-2 border-gray-900 dark:border-gray-700">
                   Hesitation & Filler Words Breakdown
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {analysisResult.fillerWords.breakdown.map((item, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1.5 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-800 dark:text-gray-200"
+                      className="px-3 py-1.5 border-2 border-gray-900 dark:border-gray-700 text-xs font-black text-gray-900 dark:text-gray-100"
                     >
-                      "{item.word}": <span className="text-red-500">{item.count} times</span>
+                      "{item.word}": <span className="text-red-600">{item.count} times</span>
                     </span>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 pt-1">
+                <p className="text-xs text-gray-600 dark:text-gray-400 pt-1 font-medium">
                   {analysisResult.fillerWords.frequencyAnalysis}
                 </p>
               </div>
 
               {/* Transcript */}
-              <div className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+              <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-2">
+                <h4 className="text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white pb-2 border-b-2 border-gray-900 dark:border-gray-700">
                   Transcribed Candidate Speech
                 </h4>
-                <p className="text-xs leading-relaxed text-gray-800 dark:text-gray-200 font-mono italic">
+                <p className="text-xs leading-relaxed text-gray-900 dark:text-gray-100 font-mono italic">
                   "{analysisResult.transcript}"
                 </p>
               </div>
@@ -784,25 +771,25 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
                 {analysisResult.idiomAndPhrasalVerbUpgrades.map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700/80 space-y-3"
+                    className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-5 space-y-3"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 line-through">
+                      <span className="text-xs font-bold text-gray-500 line-through">
                         {item.originalPhrase}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                      <span className="px-2 py-0.5 text-[10px] font-black uppercase bg-red-600 text-white">
                         {item.type.replace("_", " ")}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-base font-bold text-red-600 dark:text-red-400">
+                    <div className="flex items-center gap-2 text-base font-black text-red-600 dark:text-red-400">
                       <Sparkles className="w-4 h-4" />
                       <span>{item.suggestedUpgrade}</span>
                     </div>
 
-                    <p className="text-xs text-gray-600 dark:text-gray-300">{item.explanation}</p>
+                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{item.explanation}</p>
 
-                    <div className="p-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200/80 dark:border-gray-700/80 text-xs text-gray-700 dark:text-gray-300 italic">
+                    <div className="p-3 border-l-4 border-gray-900 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-xs text-gray-900 dark:text-gray-100 font-medium italic">
                       "{item.exampleInSentence}"
                     </div>
                   </div>
@@ -813,12 +800,12 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
           {/* TAB 4: Band 9 Model Response */}
           {activeTab === "model_answer" && (
-            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/60 space-y-4">
-              <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white">
-                <Award className="w-4 h-4 text-red-500" />
+            <div className="border-2 border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-950 p-6 space-y-4">
+              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-900 dark:text-white pb-2 border-b-2 border-gray-900 dark:border-gray-700">
+                <Award className="w-4 h-4 text-red-600" />
                 Examiner Band 9.0 Spoken Model Transcript
               </div>
-              <div className="p-5 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/80 text-sm leading-relaxed text-gray-800 dark:text-gray-200 font-serif whitespace-pre-line italic">
+              <div className="p-5 border-2 border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-sm leading-relaxed text-gray-900 dark:text-gray-100 font-serif whitespace-pre-line italic">
                 "{analysisResult.sampleBand9Response}"
               </div>
             </div>

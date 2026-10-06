@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PenTool, Mic, BookOpen, Key, Sparkles } from "lucide-react";
+import { PenTool, Mic, BookOpen, Key } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
@@ -13,64 +13,64 @@ interface NavbarProps {
 
 export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b-2 border-gray-900 dark:border-gray-800 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center h-9 px-2.5 rounded-lg bg-red-600 text-white font-black text-lg tracking-wider shadow-sm">
+          <div className="flex items-center justify-center h-8 px-2 bg-red-600 text-white font-black text-base tracking-widest border border-red-700">
             IELTS
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-base tracking-tight text-gray-900 dark:text-white">
+              <span className="font-black text-base tracking-tight text-gray-900 dark:text-white uppercase">
                 BandBoost
               </span>
-              <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+              <span className="px-1.5 py-0.2 text-[10px] font-black uppercase bg-red-600 text-white">
                 AI
               </span>
             </div>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 hidden sm:block">
-              Cambridge & IDP Standard Diagnostic
+            <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 hidden sm:block uppercase tracking-wider">
+              Cambridge & IDP Criteria Engine
             </p>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <nav className="flex items-center gap-1 p-1 rounded-xl bg-gray-100 dark:bg-gray-800/60 border border-gray-200/60 dark:border-gray-700/60 text-xs font-semibold">
+        <nav className="flex items-center border-2 border-gray-900 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-xs font-bold">
           <button
             onClick={() => onTabChange("writing")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 transition-all ${
               activeTab === "writing"
-                ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                ? "bg-red-600 text-white font-black"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
             }`}
           >
             <PenTool className="w-3.5 h-3.5" />
-            <span>Writing</span>
+            <span>WRITING</span>
           </button>
 
           <button
             onClick={() => onTabChange("speaking")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 border-l-2 border-gray-900 dark:border-gray-700 transition-all ${
               activeTab === "speaking"
-                ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                ? "bg-red-600 text-white font-black"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
             }`}
           >
             <Mic className="w-3.5 h-3.5" />
-            <span>Speaking</span>
+            <span>SPEAKING</span>
           </button>
 
           <button
             onClick={() => onTabChange("rubric")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all hidden md:flex ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 border-l-2 border-gray-900 dark:border-gray-700 transition-all hidden md:flex ${
               activeTab === "rubric"
-                ? "bg-white dark:bg-gray-900 text-red-600 dark:text-red-400 shadow-xs"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                ? "bg-red-600 text-white font-black"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800"
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Band Descriptors</span>
+            <span>RUBRIC</span>
           </button>
         </nav>
 
@@ -78,16 +78,16 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenApiKeyModal}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-xl border transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border-2 transition-all cursor-pointer ${
               hasApiKey
-                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                : "border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:border-gray-300"
+                ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300"
+                : "border-gray-900 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100"
             }`}
             title="Configure Gemini API Key"
           >
             <Key className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">
-              {hasApiKey ? "Custom Key Active" : "API Key"}
+              {hasApiKey ? "KEY ACTIVE" : "API KEY"}
             </span>
           </button>
 

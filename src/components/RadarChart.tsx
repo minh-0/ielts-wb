@@ -17,7 +17,6 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
   const maxScore = 9;
   const count = scores.length;
 
-  // Compute coordinates for concentric polygons (grids at Band 3, 5, 7, 9)
   const gridLevels = [3, 5, 7, 9];
 
   const getCoordinates = (value: number, index: number) => {
@@ -28,7 +27,6 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
     return { x, y };
   };
 
-  // Generate points for the user score polygon
   const scorePolygonPoints = scores
     .map((item, idx) => {
       const { x, y } = getCoordinates(item.score, idx);
@@ -54,18 +52,16 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
                 points={points}
                 fill="none"
                 stroke="currentColor"
-                strokeOpacity={0.15}
-                strokeWidth={1}
-                strokeDasharray={level === 9 ? "none" : "2 2"}
-                className="text-gray-400 dark:text-gray-600"
+                strokeOpacity={0.25}
+                strokeWidth={1.5}
+                className="text-gray-900 dark:text-gray-600"
               />
-              {/* Level indicator */}
               <text
                 x={center}
                 y={center - (level / maxScore) * radius - 2}
                 textAnchor="middle"
                 fontSize={8}
-                className="fill-gray-400 dark:fill-gray-500 font-mono"
+                className="fill-gray-700 dark:fill-gray-400 font-mono font-bold"
               >
                 {level}
               </text>
@@ -84,9 +80,9 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
               x2={x}
               y2={y}
               stroke="currentColor"
-              strokeOpacity={0.15}
-              strokeWidth={1}
-              className="text-gray-400 dark:text-gray-600"
+              strokeOpacity={0.25}
+              strokeWidth={1.5}
+              className="text-gray-900 dark:text-gray-600"
             />
           );
         })}
@@ -97,24 +93,24 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
           fill={accentColor}
           fillOpacity={0.25}
           stroke={accentColor}
-          strokeWidth={2.5}
-          strokeLinejoin="round"
-          className="transition-all duration-500 ease-out"
+          strokeWidth={3}
+          strokeLinejoin="miter"
+          className="transition-all duration-300"
         />
 
-        {/* Data Point Markers */}
+        {/* Square Data Point Markers */}
         {scores.map((item, idx) => {
           const { x, y } = getCoordinates(item.score, idx);
           return (
             <g key={idx}>
-              <circle
-                cx={x}
-                cy={y}
-                r={4.5}
+              <rect
+                x={x - 4}
+                y={y - 4}
+                width={8}
+                height={8}
                 fill="#ffffff"
                 stroke={accentColor}
                 strokeWidth={2.5}
-                className="transition-all duration-500"
               />
             </g>
           );
@@ -134,10 +130,10 @@ export function RadarChart({ scores, size = 260, accentColor = "#e01a22" }: Rada
               y={ly}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="fill-gray-700 dark:fill-gray-200 font-semibold text-[10px] tracking-tight"
+              className="fill-gray-950 dark:fill-gray-100 font-black text-[10px] uppercase tracking-wider"
             >
               <tspan x={lx} dy="-0.3em">{item.label}</tspan>
-              <tspan x={lx} dy="1.2em" fill={accentColor} fontWeight="bold" fontSize="11px">
+              <tspan x={lx} dy="1.2em" fill={accentColor} fontWeight="900" fontSize="12px">
                 {item.score.toFixed(1)}
               </tspan>
             </text>
