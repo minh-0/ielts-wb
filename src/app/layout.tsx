@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IELTSlayer666 — Examiner-Grade Diagnostic & Practice Suite",
+  title: "slayer6767",
   description:
     "Evaluate your IELTS Writing (Task 1 & 2) and Speaking (Parts 1-3) with official Cambridge & IDP band descriptors. Line-by-line diffs, band-boosting idioms, and downloadable scorecards.",
 };

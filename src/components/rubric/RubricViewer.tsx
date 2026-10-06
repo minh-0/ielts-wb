@@ -10,7 +10,6 @@ import {
 
 export function RubricViewer() {
   const [selectedRubricKey, setSelectedRubricKey] = useState<"task2" | "task1" | "speaking">("task2");
-  const [bandFilter, setBandFilter] = useState<string>("all");
 
   const currentRubric: RubricDefinition =
     selectedRubricKey === "task2"
@@ -19,21 +18,13 @@ export function RubricViewer() {
       ? WRITING_TASK_1_RUBRIC
       : SPEAKING_RUBRIC;
 
-  const filteredRows =
-    bandFilter === "all"
-      ? currentRubric.rows
-      : currentRubric.rows.filter((r) => r.band === bandFilter);
-
   return (
     <div className="space-y-6">
       {/* Top Header & Task Switcher */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-neutral-200 dark:border-neutral-800">
         <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs">
           <button
-            onClick={() => {
-              setSelectedRubricKey("task2");
-              setBandFilter("all");
-            }}
+            onClick={() => setSelectedRubricKey("task2")}
             className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
               selectedRubricKey === "task2"
                 ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
@@ -43,10 +34,7 @@ export function RubricViewer() {
             Writing Task 2
           </button>
           <button
-            onClick={() => {
-              setSelectedRubricKey("task1");
-              setBandFilter("all");
-            }}
+            onClick={() => setSelectedRubricKey("task1")}
             className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
               selectedRubricKey === "task1"
                 ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
@@ -56,10 +44,7 @@ export function RubricViewer() {
             Writing Task 1
           </button>
           <button
-            onClick={() => {
-              setSelectedRubricKey("speaking");
-              setBandFilter("all");
-            }}
+            onClick={() => setSelectedRubricKey("speaking")}
             className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
               selectedRubricKey === "speaking"
                 ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
@@ -70,25 +55,9 @@ export function RubricViewer() {
           </button>
         </div>
 
-        {/* Quick Band Filter Pills */}
-        <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-1 sm:pb-0">
-          <span className="text-[11px] font-mono text-neutral-400 mr-1 hidden md:inline">
-            Jump to:
-          </span>
-          {["all", "9", "8", "7", "6", "5", "4"].map((b) => (
-            <button
-              key={b}
-              onClick={() => setBandFilter(b)}
-              className={`px-2 py-0.5 rounded text-[11px] font-mono font-medium transition-colors cursor-pointer ${
-                bandFilter === b
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "bg-neutral-100/80 dark:bg-neutral-900/80 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 border border-neutral-200/60 dark:border-neutral-800/60"
-              }`}
-            >
-              {b === "all" ? "All Bands (9 - 0)" : `Band ${b}`}
-            </button>
-          ))}
-        </div>
+        <span className="text-xs text-neutral-400 font-mono hidden sm:inline">
+          Official Cambridge, British Council & IDP Descriptors
+        </span>
       </div>
 
       {/* Main Rubric Table Container */}
@@ -98,7 +67,7 @@ export function RubricViewer() {
             {currentRubric.title}
           </span>
           <span className="font-mono text-[11px] text-neutral-400">
-            Showing {filteredRows.length} descriptor levels
+            Bands 9 – 0 (Full Public Version)
           </span>
         </div>
 
@@ -113,7 +82,7 @@ export function RubricViewer() {
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60 text-neutral-700 dark:text-neutral-300">
-            {filteredRows.map((row) => {
+            {currentRubric.rows.map((row) => {
               const isBand9 = row.band === "9";
               return (
                 <tr
