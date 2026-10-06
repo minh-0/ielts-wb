@@ -66,7 +66,7 @@ export default function Home() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">studio</span>
+            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">IELTSlayer666</span>
           </div>
           <div className="text-[11px]">
             Examiner-grounded diagnostic feedback & language analytics

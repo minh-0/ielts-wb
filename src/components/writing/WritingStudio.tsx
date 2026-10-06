@@ -797,7 +797,10 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
           {/* TAB 3: Model Answer */}
           {activeTab === "model_answer" && (
-            <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line">
+            <div
+              data-paragraph="true"
+              className="ielts-paragraph p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line"
+            >
               <span className="font-sans font-mono text-[11px] uppercase text-neutral-400 block">
                 Official Model Essay
               </span>

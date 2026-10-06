@@ -74,14 +74,30 @@ export function SelectionToolbar() {
       if (selection && !selection.isCollapsed && text.length >= 1 && text.length <= 120) {
         try {
           const range = selection.getRangeAt(0);
+
+          // STRICT CHECK: Only trigger selection & highlighting inside paragraph containers
+          const container = range.commonAncestorContainer;
+          const startEl =
+            container.nodeType === Node.ELEMENT_NODE
+              ? (container as HTMLElement)
+              : container.parentElement;
+
+          const paragraphContainer = startEl?.closest(
+            "[data-paragraph='true'], .ielts-paragraph, .ielts-essay-paragraph"
+          );
+
+          if (!paragraphContainer) {
+            // Selected outside of the paragraph: dismiss and ignore
+            setPosition(null);
+            setSelectedText("");
+            setActiveHighlightColor(null);
+            return;
+          }
+
           savedRangeRef.current = range.cloneRange();
           const rect = range.getBoundingClientRect();
 
           // Check if selection is already inside an existing highlight mark
-          const startEl =
-            range.startContainer.nodeType === Node.ELEMENT_NODE
-              ? (range.startContainer as HTMLElement)
-              : range.startContainer.parentElement;
           const existingMark = startEl?.closest(".ielts-user-highlight") as HTMLElement | null;
           if (existingMark && existingMark.dataset.colorId) {
             existingColor = existingMark.dataset.colorId as HighlightColorId;
@@ -104,34 +120,14 @@ export function SelectionToolbar() {
         }
       }
 
-      // Check if selection is inside an HTML textarea/input (e.g. Essay editor in Edit mode)
-      const activeEl = document.activeElement;
-      if (
-        !hasValidSelection &&
-        activeEl &&
-        (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT")
-      ) {
-        const input = activeEl as HTMLTextAreaElement | HTMLInputElement;
-        const start = input.selectionStart ?? 0;
-        const end = input.selectionEnd ?? 0;
-        if (end > start) {
-          const areaText = input.value.substring(start, end).trim();
-          if (areaText.length >= 1 && areaText.length <= 120) {
-            text = areaText;
-            targetTop = Math.max(12, Math.min(window.innerHeight - 60, lastMousePosRef.current.y - 52));
-            targetLeft = Math.max(
-              16,
-              Math.min(window.innerWidth - 340, lastMousePosRef.current.x - 140)
-            );
-            hasValidSelection = true;
-          }
-        }
-      }
-
       if (hasValidSelection && text) {
         setSelectedText(text);
         setPosition({ top: targetTop, left: targetLeft });
         setActiveHighlightColor(existingColor);
+      } else {
+        setPosition(null);
+        setSelectedText("");
+        setActiveHighlightColor(null);
       }
     };
 
@@ -142,13 +138,8 @@ export function SelectionToolbar() {
       setTimeout(() => {
         const selection = window.getSelection();
         const isCollapsed = !selection || selection.isCollapsed;
-        const activeEl = document.activeElement;
-        const isTextareaSelected =
-          activeEl &&
-          (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT") &&
-          (activeEl as HTMLTextAreaElement).selectionStart !== (activeEl as HTMLTextAreaElement).selectionEnd;
 
-        if (isCollapsed && !isTextareaSelected) {
+        if (isCollapsed) {
           setPosition(null);
           setSelectedText("");
           setActiveHighlightColor(null);
@@ -185,10 +176,15 @@ export function SelectionToolbar() {
       if (!range) return;
 
       // 1. Check if the selection is already inside an existing highlight mark
+      const container = range.commonAncestorContainer;
       const startEl =
-        range.startContainer.nodeType === Node.ELEMENT_NODE
-          ? (range.startContainer as HTMLElement)
-          : range.startContainer.parentElement;
+        container.nodeType === Node.ELEMENT_NODE
+          ? (container as HTMLElement)
+          : container.parentElement;
+
+      if (!startEl?.closest("[data-paragraph='true'], .ielts-paragraph, .ielts-essay-paragraph")) {
+        return;
+      }
 
       const existingMark = startEl?.closest(".ielts-user-highlight") as HTMLElement | null;
 

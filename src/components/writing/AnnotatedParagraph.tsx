@@ -222,7 +222,10 @@ export function AnnotatedParagraph({
       </div>
 
       {/* Main Annotated Text Container */}
-      <div className="relative p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 min-h-[420px] text-[15px] sm:text-base leading-8 text-neutral-900 dark:text-neutral-100 font-sans whitespace-pre-wrap select-text">
+      <div
+        data-paragraph="true"
+        className="ielts-paragraph ielts-essay-paragraph relative p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 min-h-[420px] text-[15px] sm:text-base leading-8 text-neutral-900 dark:text-neutral-100 font-sans whitespace-pre-wrap select-text"
+      >
         {segments.map((seg, i) => {
           if (seg.type === "text") {
             return <span key={i}>{seg.text}</span>;
