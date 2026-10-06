@@ -515,7 +515,7 @@ export function DiagnosticInspector({
                     <div className="p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1.5">
                       <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
                         <Award className="w-3 h-3" />
-                        <span>Why This Word Rates Higher (Band 8+):</span>
+                        <span>Why This Word Rates Higher (Examiner Insight):</span>
                       </div>
                       <p className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {sug.higherRatedWordExplanation}

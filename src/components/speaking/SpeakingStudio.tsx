@@ -16,6 +16,8 @@ import {
   ChevronDown,
   AlertCircle,
   Key,
+  Shuffle,
+  ChevronRight,
 } from "lucide-react";
 import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
 import { SpeakingAnalysisResult, SpeakingPart, SpeakingMode } from "@/types/ielts";
@@ -30,7 +32,11 @@ interface SpeakingStudioProps {
 export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProps) {
   const [speakingMode, setSpeakingMode] = useState<SpeakingMode>("practice");
   const [selectedPart, setSelectedPart] = useState<SpeakingPart>("part2_cuecard");
-  const [selectedPrompt, setSelectedPrompt] = useState<SpeakingPrompt>(SPEAKING_PROMPTS[0]);
+  const [selectedPrompt, setSelectedPrompt] = useState<SpeakingPrompt>(
+    SPEAKING_PROMPTS.find((p) => p.part === "part2_cuecard") || SPEAKING_PROMPTS[0]
+  );
+  const [useCustomPrompt, setUseCustomPrompt] = useState<boolean>(false);
+  const [customQuestion, setCustomQuestion] = useState<string>("");
 
   const [customTimerSeconds, setCustomTimerSeconds] = useState<number>(0);
 
@@ -62,12 +68,35 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
   const [activeTab, setActiveTab] = useState<"criteria" | "spoken_grammar" | "spoken_idioms" | "speech_metrics" | "model_answer">("criteria");
   const [showScorecard, setShowScorecard] = useState<boolean>(false);
 
+  const currentPartPrompts = SPEAKING_PROMPTS.filter((p) => p.part === selectedPart);
+  const currentPromptIndex = currentPartPrompts.findIndex((p) => p.id === selectedPrompt.id);
+
   const handlePartChange = (part: SpeakingPart) => {
     setSelectedPart(part);
     const available = SPEAKING_PROMPTS.filter((p) => p.part === part);
     if (available.length > 0) {
       setSelectedPrompt(available[0]);
     }
+    setUseCustomPrompt(false);
+    resetRecording();
+  };
+
+  const handleNextPrompt = () => {
+    if (currentPartPrompts.length === 0) return;
+    const nextIdx = (currentPromptIndex + 1) % currentPartPrompts.length;
+    setSelectedPrompt(currentPartPrompts[nextIdx]);
+    setUseCustomPrompt(false);
+    resetRecording();
+  };
+
+  const handleShufflePrompt = () => {
+    if (currentPartPrompts.length <= 1) return;
+    let randIdx = Math.floor(Math.random() * currentPartPrompts.length);
+    if (randIdx === currentPromptIndex) {
+      randIdx = (randIdx + 1) % currentPartPrompts.length;
+    }
+    setSelectedPrompt(currentPartPrompts[randIdx]);
+    setUseCustomPrompt(false);
     resetRecording();
   };
 
@@ -312,7 +341,9 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          promptTopic: `${selectedPrompt.topic}: ${selectedPrompt.question}`,
+          promptTopic: useCustomPrompt
+            ? (customQuestion.trim() || "Custom Speaking Topic")
+            : `${selectedPrompt.topic}: ${selectedPrompt.question}`,
           audioData: audioBase64 || undefined,
           transcript: cleanTranscript || undefined,
           durationSeconds: recordSeconds || 0,
@@ -449,37 +480,126 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
         </div>
       </div>
 
-      {/* Section 2: Cue Card Question Box (Thin outline rounded card) */}
-      <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3">
-        <div className="flex items-center justify-between text-xs">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
-            {selectedPrompt.topic}
-          </span>
-          <button
-            onClick={handleLoadSampleTranscript}
-            className="text-neutral-500 hover:text-black dark:hover:text-white cursor-pointer"
-          >
-            Load sample answer
-          </button>
+      {/* Section 2: Cue Card & Question Box with IELTS Online Tests Bank Selector */}
+      <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-4">
+        {/* Top Controls: Bank Selector Header & Quick Actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-black/10 dark:border-white/10 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 font-semibold">
+              IELTS Online Tests Collection
+            </span>
+            <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-black/5 dark:bg-white/10 text-neutral-600 dark:text-neutral-400">
+              {currentPromptIndex >= 0
+                ? `${currentPromptIndex + 1} of ${currentPartPrompts.length}`
+                : `${currentPartPrompts.length} questions`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => setUseCustomPrompt(!useCustomPrompt)}
+              className="text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer font-medium"
+            >
+              {useCustomPrompt ? "Choose from bank" : "+ Custom question"}
+            </button>
+            <span className="text-neutral-300 dark:text-neutral-700">|</span>
+            <button
+              onClick={handleShufflePrompt}
+              className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer font-medium"
+              title="Pick a random question from IELTS Online Tests"
+            >
+              <Shuffle className="w-3 h-3" />
+              <span>Random</span>
+            </button>
+            <button
+              onClick={handleNextPrompt}
+              className="flex items-center gap-1 px-2.5 py-1 rounded border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer font-medium text-neutral-700 dark:text-neutral-300"
+              title="Next question"
+            >
+              <span>Next</span>
+              <ChevronRight className="w-3 h-3" />
+            </button>
+            <span className="text-neutral-300 dark:text-neutral-700">|</span>
+            <button
+              onClick={handleLoadSampleTranscript}
+              className="text-neutral-500 hover:text-black dark:hover:text-white cursor-pointer"
+            >
+              Sample answer
+            </button>
+          </div>
         </div>
 
-        <h3 className="text-base font-semibold text-black dark:text-white">
-          {selectedPrompt.question}
-        </h3>
-
-        {selectedPrompt.bulletPoints && selectedPrompt.bulletPoints.length > 0 && (
-          <div className="p-3.5 rounded-lg border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300">
-            <span className="font-medium text-black dark:text-white block mb-1">
-              You should say:
-            </span>
-            {selectedPrompt.bulletPoints.map((b, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
-                <span>{b}</span>
-              </div>
-            ))}
+        {/* Dropdown Question Selector (when picking from IELTS Online Tests Bank) */}
+        {!useCustomPrompt && (
+          <div className="relative">
+            <select
+              value={selectedPrompt.id}
+              onChange={(e) => {
+                const found = SPEAKING_PROMPTS.find((p) => p.id === e.target.value);
+                if (found) {
+                  setSelectedPrompt(found);
+                  resetRecording();
+                }
+              }}
+              className="w-full p-2.5 pr-8 text-xs rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-black dark:text-white appearance-none cursor-pointer focus:outline-none focus:border-black/30 dark:focus:border-white/30 font-medium"
+            >
+              {currentPartPrompts.map((p, idx) => (
+                <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900 py-1">
+                  #{idx + 1}: [{p.topic}] {p.question.length > 95 ? p.question.substring(0, 95) + "..." : p.question}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
           </div>
         )}
+
+        {/* Custom Question Input */}
+        {useCustomPrompt && (
+          <div className="space-y-1">
+            <label className="text-[11px] font-mono text-neutral-500 uppercase">
+              Custom Speaking Question or Topic:
+            </label>
+            <textarea
+              value={customQuestion}
+              onChange={(e) => setCustomQuestion(e.target.value)}
+              placeholder="Paste or type your own IELTS speaking prompt or cue card here..."
+              rows={2}
+              className="w-full p-2.5 text-xs rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-black dark:text-white focus:outline-none focus:border-black/40 dark:focus:border-white/40"
+            />
+          </div>
+        )}
+
+        {/* Question Topic & Text Display */}
+        <div className="space-y-2 pt-1">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-black/5 dark:bg-white/10 text-neutral-700 dark:text-neutral-300">
+              {useCustomPrompt ? "Custom Topic" : selectedPrompt.topic}
+            </span>
+            <span className="text-[11px] text-neutral-400 font-mono">
+              Suggested: {selectedPart === "part2_cuecard" ? "2 mins" : selectedPart === "part1" ? "30 secs" : "1 min"}
+            </span>
+          </div>
+
+          <h3 className="text-base sm:text-lg font-semibold text-black dark:text-white leading-snug">
+            {useCustomPrompt
+              ? customQuestion.trim() || "Your Custom Speaking Topic"
+              : selectedPrompt.question}
+          </h3>
+
+          {!useCustomPrompt && selectedPrompt.bulletPoints && selectedPrompt.bulletPoints.length > 0 && (
+            <div className="p-3.5 rounded-lg border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300 mt-2">
+              <span className="font-medium text-black dark:text-white block mb-1">
+                You should say:
+              </span>
+              {selectedPrompt.bulletPoints.map((b, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
+                  <span>{b}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* 1-Minute Prep Countdown & Scratchpad */}
         {speakingMode === "official_exam" && selectedPart === "part2_cuecard" && (

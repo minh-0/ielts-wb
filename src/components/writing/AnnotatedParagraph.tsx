@@ -288,7 +288,7 @@ export function AnnotatedParagraph({
                   ? "Applied to Essay"
                   : selectedMatch.kind === "error"
                   ? "Direct Mistake"
-                  : "Band 8+ Opportunity"}
+                  : "Vocabulary Upgrade"}
               </span>
             </div>
 

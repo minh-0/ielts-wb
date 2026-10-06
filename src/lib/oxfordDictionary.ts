@@ -6,7 +6,6 @@ export interface OxfordDictionaryEntry {
   definition: string;
   example: string;
   collocations: string[];
-  band8Alternatives?: string[];
   oxfordUrl: string;
 }
 
@@ -19,7 +18,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "More important than anything else; having supreme rank or supreme significance.",
     example: "The safety of public health is of paramount importance during the pandemic.",
     collocations: ["of paramount importance", "paramount concern", "paramount priority"],
-    band8Alternatives: ["preeminent", "supreme", "cardinal", "overriding"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/paramount",
   },
   predicament: {
@@ -30,7 +28,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A difficult, unpleasant, or perplexing situation which is hard to escape.",
     example: "Young graduates find themselves in an acute financial predicament upon finishing university.",
     collocations: ["acute predicament", "financial predicament", "escape a predicament"],
-    band8Alternatives: ["quandary", "dilemma", "plight", "impasse"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/predicament",
   },
   formidable: {
@@ -41,7 +38,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Inspiring respect or wonder through being impressively large, powerful, or intense.",
     example: "Developing clean renewable energy remains a formidable challenge for industrial economies.",
     collocations: ["formidable challenge", "formidable impediment", "formidable task"],
-    band8Alternatives: ["daunting", "onerous", "herculean", "arduous"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/formidable",
   },
   impediment: {
@@ -52,7 +48,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Something that delays or stops the progress of something; an obstacle or hindrance.",
     example: "A lack of capital continues to act as a serious impediment to technological innovation.",
     collocations: ["serious impediment", "impediment to growth", "remove impediments"],
-    band8Alternatives: ["hindrance", "obstacle", "stumbling block", "barrier"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/impediment",
   },
   drudgery: {
@@ -63,7 +58,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Hard, boring work that has to be repeated without intellectual stimulation.",
     example: "Automated systems emancipate factory workers from tedious routine drudgery.",
     collocations: ["routine drudgery", "domestic drudgery", "escape the drudgery"],
-    band8Alternatives: ["monotony", "menial labor", "toil", "tedium"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/drudgery",
   },
   synergy: {
@@ -74,7 +68,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "The extra energy, power, or success that is achieved by two or more people or organizations working together.",
     example: "International research teams foster synergistic cooperation across biological sciences.",
     collocations: ["scientific synergy", "productive synergy", "create synergy"],
-    band8Alternatives: ["collaboration", "cohesion", "alliance", "symbiosis"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/synergy",
   },
   exacerbate: {
@@ -85,7 +78,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To make something that is already bad or unpleasant even worse.",
     example: "Unplanned urbanization will exacerbate existing socioeconomic inequalities.",
     collocations: ["exacerbate the problem", "exacerbate disparities", "exacerbate tensions"],
-    band8Alternatives: ["aggravate", "intensify", "worsen", "compound"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/exacerbate",
   },
   mitigate: {
@@ -96,7 +88,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To make something less harmful, serious, or severe; to alleviate.",
     example: "Strict emission controls help mitigate the catastrophic impacts of climate change.",
     collocations: ["mitigate the effects", "mitigate risks", "mitigate climate change"],
-    band8Alternatives: ["alleviate", "attenuate", "moderate", "palliate"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/mitigate",
   },
   quandary: {
@@ -107,7 +98,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A state of perplexity or uncertainty over what to do in a difficult situation.",
     example: "Policymakers face an ethical quandary when regulating artificial intelligence models.",
     collocations: ["ethical quandary", "moral quandary", "in a quandary"],
-    band8Alternatives: ["predicament", "dilemma", "perplexity", "conundrum"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/quandary",
   },
   substantially: {
@@ -118,7 +108,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To a great or significant degree; very considerably.",
     example: "Technological innovation substantially enhances productivity across global supply chains.",
     collocations: ["substantially enhance", "substantially reduce", "differ substantially"],
-    band8Alternatives: ["considerably", "significantly", "markedly", "exponentially"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/substantially",
   },
   pivotal: {
@@ -129,7 +118,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Of crucial importance in relation to the development or success of something else.",
     example: "Education plays a pivotal role in eradicating intergenerational poverty.",
     collocations: ["play a pivotal role", "pivotal moment", "pivotal factor"],
-    band8Alternatives: ["crucial", "instrumental", "cardinal", "monumental"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/pivotal",
   },
   unprecedented: {
@@ -140,7 +128,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Never having happened or existed in the past; exceptional and unparalleled.",
     example: "The rapid rollout of generative artificial intelligence represents an unprecedented transformation.",
     collocations: ["unprecedented transformation", "unprecedented scale", "unprecedented challenge"],
-    band8Alternatives: ["unparalleled", "novel", "groundbreaking", "peerless"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/unprecedented",
   },
   disparity: {
@@ -151,7 +138,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A notable difference or inequality, especially one connected with unfair treatment.",
     example: "Governments must address socioeconomic disparities between rural and metropolitan populations.",
     collocations: ["socioeconomic disparity", "growing disparity", "income disparity"],
-    band8Alternatives: ["inequality", "imbalance", "divergence", "discrepancy"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/disparity",
   },
   emancipate: {
@@ -162,7 +148,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To free somebody from legal, political, or social restrictions; to liberate from hardship.",
     example: "Modern technology has the potential to emancipate workers from perilous occupations.",
     collocations: ["emancipate the workforce", "emancipate from poverty", "socially emancipated"],
-    band8Alternatives: ["liberate", "unshackle", "extricate", "release"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/emancipate",
   },
   proponent: {
@@ -173,7 +158,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A person who supports or speaks in favor of an idea, theory, or course of action.",
     example: "Proponents contend that renewable energy will generate millions of green jobs.",
     collocations: ["proponents contend", "staunch proponent", "leading proponent"],
-    band8Alternatives: ["advocate", "champion", "exponent", "supporter"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/proponent",
   },
   contentious: {
@@ -184,7 +168,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Likely to cause argument, disagreement, or strong controversy between people.",
     example: "Animal testing remains a deeply contentious issue in contemporary biomedical ethics.",
     collocations: ["contentious issue", "contentious topic", "highly contentious"],
-    band8Alternatives: ["controversial", "disputed", "divisive", "debatable"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/contentious",
   },
   ubiquitous: {
@@ -195,7 +178,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Seeming to be seen everywhere; omnipresent.",
     example: "Smartphones have become ubiquitous across every demographic stratum.",
     collocations: ["ubiquitous presence", "become ubiquitous", "ubiquitous technology"],
-    band8Alternatives: ["omnipresent", "pervasive", "universal", "widespread"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/ubiquitous",
   },
   imperative: {
@@ -206,7 +188,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Extremely vital or urgent; something that cannot be neglected.",
     example: "It is an imperative duty of educators to cultivate rigorous independent analytical thinking.",
     collocations: ["moral imperative", "economic imperative", "categorically imperative"],
-    band8Alternatives: ["essential", "vital", "indispensable", "crucial"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/imperative",
   },
   advocate: {
@@ -217,7 +198,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To publicly recommend or support a particular policy or approach.",
     example: "Environmentalists advocate for substantial investments in public mass transit.",
     collocations: ["strongly advocate", "advocate reforms", "advocate policies"],
-    band8Alternatives: ["champion", "espouse", "endorse", "promote"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/advocate",
   },
   multifaceted: {
@@ -228,7 +208,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Having many different aspects, features, or dimensions.",
     example: "Climate migration represents a multifaceted dilemma encompassing economic and humanitarian dimensions.",
     collocations: ["multifaceted problem", "multifaceted dilemma", "multifaceted strategy"],
-    band8Alternatives: ["nuanced", "complex", "composite", "multi-dimensional"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/multifaceted",
   },
   scrutiny: {
@@ -239,7 +218,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Careful and thorough examination, inspection, or observation.",
     example: "Public expenditure on infrastructure must be subjected to rigorous democratic scrutiny.",
     collocations: ["close scrutiny", "come under scrutiny", "rigorous scrutiny"],
-    band8Alternatives: ["inspection", "surveillance", "examination", "audit"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/scrutiny",
   },
   ephemeral: {
@@ -250,7 +228,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Lasting or used for only a very short time; transient.",
     example: "Fads in digital entertainment are often ephemeral, dissipating within months.",
     collocations: ["ephemeral nature", "ephemeral trends", "ephemeral popularity"],
-    band8Alternatives: ["transient", "fleeting", "evanescent", "short-lived"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/ephemeral",
   },
   diminish: {
@@ -261,7 +238,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To become or make something become smaller, weaker, or less important.",
     example: "Inaction on pollution will diminish the quality of life for future generations.",
     collocations: ["diminish over time", "diminish the importance", "diminish rapidly"],
-    band8Alternatives: ["dwindle", "wane", "deplete", "curtail"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/diminish",
   },
   catalyze: {
@@ -272,7 +248,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To cause an action or process to begin, accelerate, or develop much more quickly.",
     example: "Government grants catalyzed groundbreaking advances in green battery storage.",
     collocations: ["catalyze change", "catalyze development", "catalyze economic growth"],
-    band8Alternatives: ["accelerate", "stimulate", "precipitate", "spark"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/catalyze",
   },
   integration: {
@@ -283,7 +258,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "The act or process of combining two or more things in an effective way, or the process of becoming part of a community.",
     example: "Successful economic integration requires harmonious cooperation between sovereign member states.",
     collocations: ["economic integration", "seamless integration", "social integration", "facilitate integration"],
-    band8Alternatives: ["incorporation", "assimilation", "amalgamation", "consolidation", "synthesis"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/integration",
   },
   barrier: {
@@ -294,7 +268,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A problem, rule, or situation that prevents somebody from doing something, or that makes something impossible.",
     example: "Language differences can present a formidable barrier to cross-cultural communication.",
     collocations: ["formidable barrier", "break down barriers", "trade barriers"],
-    band8Alternatives: ["impediment", "hindrance", "stumbling block", "hurdle"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/barrier",
   },
   important: {
@@ -305,7 +278,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Having a great effect on people or things; of great value or consequence.",
     example: "It is important that international environmental protocols are strictly enforced.",
     collocations: ["vitally important", "crucial factor", "important role"],
-    band8Alternatives: ["paramount", "pivotal", "cardinal", "indispensable", "momentous"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/important",
   },
   problem: {
@@ -316,7 +288,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A thing that is difficult to deal with, resolve, or understand.",
     example: "Overpopulation poses an acute problem for municipal urban infrastructure.",
     collocations: ["tackle a problem", "acute problem", "pressing problem"],
-    band8Alternatives: ["predicament", "dilemma", "quandary", "complication", "plight"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/problem",
   },
   change: {
@@ -327,7 +298,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "The process of becoming different, or the result of something becoming different.",
     example: "Technological innovation triggers far-reaching change across traditional manufacturing.",
     collocations: ["profound change", "catalyze change", "undergo change"],
-    band8Alternatives: ["transformation", "metamorphosis", "paradigm shift", "evolution"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/change",
   },
   increase: {
@@ -338,7 +308,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To become greater in amount, number, value, or degree.",
     example: "Renewable energy adoption continues to increase substantially across developing nations.",
     collocations: ["increase dramatically", "exponentially increase", "sharp increase"],
-    band8Alternatives: ["proliferate", "escalate", "surge", "amplify", "skyrocket"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/increase",
   },
   decrease: {
@@ -349,7 +318,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To become smaller in size, number, etc., or to make something do this.",
     example: "Carbon emissions must decrease markedly to forestall ecological tipping points.",
     collocations: ["decrease substantially", "gradual decrease", "decrease sharply"],
-    band8Alternatives: ["diminish", "dwindle", "plummet", "curtail", "wane"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/decrease",
   },
   advantage: {
@@ -360,7 +328,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A thing that helps you to be better or more successful than other people.",
     example: "Bilingualism confers a distinctive cognitive advantage in multitasking scenarios.",
     collocations: ["distinctive advantage", "confer an advantage", "outweigh advantages"],
-    band8Alternatives: ["merit", "virtue", "prerogative", "boon", "asset"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/advantage",
   },
   solution: {
@@ -371,7 +338,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "A way of solving a problem or dealing with a difficult situation.",
     example: "Forward-looking urban planning offers an enduring solution to traffic congestion.",
     collocations: ["viable solution", "propose a solution", "enduring solution"],
-    band8Alternatives: ["remedy", "panacea", "antidote", "resolution", "recourse"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/solution",
   },
   detrimental: {
@@ -382,7 +348,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Harmful or damaging to something or somebody.",
     example: "Sedentary lifestyle habits exert a deeply detrimental influence on metabolic health.",
     collocations: ["detrimental effect", "detrimental impact", "highly detrimental"],
-    band8Alternatives: ["pernicious", "deleterious", "adverse", "inimical"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/detrimental",
   },
   foster: {
@@ -393,7 +358,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To encourage something to develop; to promote the growth of something.",
     example: "Universities should foster inquisitive reasoning and intellectual autonomy.",
     collocations: ["foster innovation", "foster collaboration", "foster growth"],
-    band8Alternatives: ["cultivate", "nurture", "stimulate", "engender"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/foster",
   },
   crucial: {
@@ -404,7 +368,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Extremely important, because it will affect other things.",
     example: "Fiscal discipline is crucial to sustaining macroeconomic stability.",
     collocations: ["crucial factor", "play a crucial role", "crucial decision"],
-    band8Alternatives: ["pivotal", "paramount", "imperative", "indispensable"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/crucial",
   },
   enhance: {
@@ -415,7 +378,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "To increase or further improve the good quality, value, or status of somebody/something.",
     example: "Targeted professional training can substantially enhance workforce employability.",
     collocations: ["enhance productivity", "enhance performance", "greatly enhance"],
-    band8Alternatives: ["augment", "elevate", "heighten", "bolster", "enrich"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/enhance",
   },
   comprehensive: {
@@ -426,7 +388,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "Including all, or almost all, the items, details, facts, information, etc. that may be involved.",
     example: "A comprehensive policy reform is vital to overcome municipal waste crises.",
     collocations: ["comprehensive study", "comprehensive strategy", "comprehensive reform"],
-    band8Alternatives: ["exhaustive", "all-encompassing", "holistic", "panoramic"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/comprehensive",
   },
   inevitable: {
@@ -437,7 +398,6 @@ export const OXFORD_ACADEMIC_DICTIONARY: Record<string, OxfordDictionaryEntry> =
     definition: "That you cannot avoid or prevent.",
     example: "Technological disruptions make continuous lifelong upskilling inevitable.",
     collocations: ["inevitable consequence", "virtually inevitable", "inevitable outcome"],
-    band8Alternatives: ["inescapable", "inexorable", "unavoidable", "fated"],
     oxfordUrl: "https://www.oxfordlearnersdictionaries.com/definition/english/inevitable",
   },
 };
@@ -458,15 +418,13 @@ export function lookupOxfordWord(rawWord: string): OxfordDictionaryEntry {
     definition: `Academic and general English term. Click below to inspect comprehensive Oxford phonetic audios, grammar patterns, CEFR labels, and learner examples.`,
     example: `Demonstrating precise, varied usage of "${clean}" elevates your Lexical Resource score under official IELTS descriptors.`,
     collocations: [`academic use of ${clean}`, `natural context for ${clean}`],
-    // Only genuine alternatives from verified dictionary entries should be shown
-    band8Alternatives: undefined,
     oxfordUrl: `https://www.oxfordlearnersdictionaries.com/definition/english/${encodeURIComponent(clean || rawWord.trim())}`,
   };
 }
 
 export const HIGHLIGHT_COLORS = [
   { id: 'yellow', label: 'Key Idea', bg: 'rgba(250, 204, 21, 0.35)', border: '#facc15', text: '#854d0e', dot: '#eab308' },
-  { id: 'emerald', label: 'Band 8+ Lexis', bg: 'rgba(52, 211, 153, 0.35)', border: '#34d399', text: '#065f46', dot: '#10b981' },
+  { id: 'emerald', label: 'Academic Lexis', bg: 'rgba(52, 211, 153, 0.35)', border: '#34d399', text: '#065f46', dot: '#10b981' },
   { id: 'sky', label: 'Collocation', bg: 'rgba(56, 189, 248, 0.35)', border: '#38bdf8', text: '#0369a1', dot: '#0ea5e9' },
   { id: 'violet', label: 'Idiom / C2', bg: 'rgba(167, 139, 250, 0.35)', border: '#a78bfa', text: '#5b21b6', dot: '#8b5cf6' },
   { id: 'rose', label: 'Check / Review', bg: 'rgba(251, 113, 133, 0.35)', border: '#fb7185', text: '#9f1239', dot: '#f43f5e' },

@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   BookOpen,
   Volume2,
-  Sparkles,
   Eraser,
   Copy,
   Check,
@@ -48,7 +47,6 @@ export function SelectionToolbar() {
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [activeHighlightColor, setActiveHighlightColor] = useState<HighlightColorId | null>(null);
   const [oxfordWord, setOxfordWord] = useState<string | null>(null);
-  const [quickSynonyms, setQuickSynonyms] = useState<string[] | null>(null);
   const [copied, setCopied] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const savedRangeRef = useRef<Range | null>(null);
@@ -134,16 +132,6 @@ export function SelectionToolbar() {
         setSelectedText(text);
         setPosition({ top: targetTop, left: targetLeft });
         setActiveHighlightColor(existingColor);
-
-        const entry = lookupOxfordWord(text);
-        const validAlts = entry?.band8Alternatives?.filter(
-          (alt) => alt && !alt.toLowerCase().includes("advanced alternative")
-        );
-        if (validAlts && validAlts.length > 0) {
-          setQuickSynonyms(validAlts);
-        } else {
-          setQuickSynonyms(null);
-        }
       }
     };
 
@@ -164,7 +152,6 @@ export function SelectionToolbar() {
           setPosition(null);
           setSelectedText("");
           setActiveHighlightColor(null);
-          setQuickSynonyms(null);
         }
       }, 120);
     };
@@ -366,20 +353,6 @@ export function SelectionToolbar() {
               <Copy className="w-3.5 h-3.5" />
             )}
           </button>
-
-          {/* Quick Synonyms Preview Tooltip (if available) */}
-          {quickSynonyms && (
-            <div className="relative group">
-              <button
-                onClick={handleOpenOxford}
-                className="flex items-center gap-1 px-2 py-1 rounded-full bg-violet-500/10 text-violet-700 dark:text-purple-300/80 dark:bg-purple-950/40 border border-violet-500/20 dark:border-purple-800/40 hover:bg-violet-500/20 dark:hover:bg-purple-900/40 cursor-pointer font-medium text-[11px]"
-                title="View Band 8+ academic alternatives"
-              >
-                <Sparkles className="w-3 h-3 text-violet-500 dark:text-purple-400/80" />
-                <span>Band 8+</span>
-              </button>
-            </div>
-          )}
         </div>
       )}
 
