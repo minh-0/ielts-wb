@@ -7,7 +7,6 @@ import { SpeakingStudio } from "@/components/speaking/SpeakingStudio";
 import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
-import { ShieldCheck, Sparkles, Share2, Headphones, CheckCircle2, BookOpen } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"writing" | "speaking" | "rubric">("writing");
@@ -29,49 +28,25 @@ export default function Home() {
         hasApiKey={Boolean(apiKey)}
       />
 
-      {/* Main Expansive Container (1440px max width for wide screen layouts) */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-8 sm:py-10 space-y-10">
-        {/* Hero Section: Open, wide, linear with thin divider line */}
-        <div className="pb-8 border-b border-black/10 dark:border-white/10 space-y-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-black/10 dark:border-white/15 text-[11px] font-mono text-neutral-600 dark:text-neutral-400">
-              OFFICIAL CAMBRIDGE & IDP BAND DESCRIPTORS
-            </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-emerald-500/25 bg-emerald-500/5 text-[11px] font-mono text-emerald-700 dark:text-emerald-400">
-              <CheckCircle2 className="w-3 h-3 text-emerald-500" /> FREE PRACTICAL UTILITY
-            </span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-black dark:text-white leading-[1.1]">
-            IELTS Diagnostic & Practice Suite
-          </h1>
-
-          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
-            Automated Writing and Speaking evaluation strictly aligned with official public band criteria.
-            Identify exact in-text errors, discover high-scoring C1/C2 vocabulary replacements, and track
-            pronunciation pacing with real-time feedback.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-neutral-500 dark:text-neutral-400 font-medium">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
-              <span>4 Assessment Criteria</span>
-            </div>
-            <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
-              <span>In-Text Highlighting & Lexical Upgrades</span>
-            </div>
-            <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <div className="flex items-center gap-1.5">
-              <Headphones className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
-              <span>Dual-Mode Speaking Exam Timers</span>
-            </div>
-            <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Oxford Learner's Dictionary & Study Highlighter</span>
-            </div>
+      {/* Main Expansive Container */}
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-6 sm:py-8 space-y-8">
+        {/* Minimalist Studio Subheader */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-neutral-200 dark:border-neutral-800">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-neutral-900 dark:text-neutral-100">
+              {activeTab === "writing"
+                ? "Writing Studio"
+                : activeTab === "speaking"
+                ? "Speaking Studio"
+                : "Evaluation Rubric"}
+            </h1>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+              {activeTab === "writing"
+                ? "In-text error diagnostics, higher-rated vocabulary upgrades & examiner scoring"
+                : activeTab === "speaking"
+                ? "Live voice recording, transcription, speech rate & pronunciation analysis"
+                : "Official public band descriptors and performance level criteria"}
+            </p>
           </div>
         </div>
 
@@ -86,11 +61,16 @@ export default function Home() {
         {activeTab === "rubric" && <RubricViewer />}
       </main>
 
-      {/* Footer: Simple thin line, wide layout */}
-      <footer className="border-t border-black/10 dark:border-white/10 py-8 bg-transparent mt-16">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-500">
-          <div>IELTSlayer666</div>
-          <div>Grounded in British Council, IDP, and Cambridge English public band descriptors.</div>
+      {/* Footer: Simple, quiet line */}
+      <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-transparent mt-12 text-xs text-neutral-400 dark:text-neutral-600">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
+            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">studio</span>
+          </div>
+          <div className="text-[11px]">
+            Examiner-grounded diagnostic feedback & language analytics
+          </div>
         </div>
       </footer>
 

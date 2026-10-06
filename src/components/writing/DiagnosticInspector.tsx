@@ -85,11 +85,11 @@ export function DiagnosticInspector({
   // If no feedback items exist yet, show examiner guidelines
   if (totalItems === 0) {
     return (
-      <div className="h-full p-5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.01] dark:bg-white/[0.01] flex flex-col justify-between space-y-4">
+      <div className="h-full p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col justify-between space-y-4">
         <div>
-          <div className="flex items-center gap-2 pb-3 border-b border-black/10 dark:border-white/10">
+          <div className="flex items-center gap-2 pb-3 border-b border-neutral-100 dark:border-neutral-800/80">
             <BookOpen className="w-4 h-4 text-neutral-500" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
               Examiner Rubric Criteria
             </h3>
           </div>
@@ -100,8 +100,8 @@ export function DiagnosticInspector({
               paragraph, explains higher-rated words, and lets you swap replacements with one click.
             </p>
 
-            <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1">
-              <span className="font-semibold text-red-600 dark:text-rose-300/80 block text-[11px]">
+            <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-1">
+              <span className="font-semibold text-red-600 dark:text-rose-400/80 block text-[11px]">
                 🔴 In-Text Mistakes (Red Wavy)
               </span>
               <p className="text-[11px] leading-relaxed text-neutral-500">
@@ -109,8 +109,8 @@ export function DiagnosticInspector({
               </p>
             </div>
 
-            <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1">
-              <span className="font-semibold text-violet-600 dark:text-purple-300/80 block text-[11px]">
+            <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-1">
+              <span className="font-semibold text-violet-600 dark:text-purple-400/80 block text-[11px]">
                 🟣 Vocabulary Upgrades (Violet Dashed)
               </span>
               <p className="text-[11px] leading-relaxed text-neutral-500">
@@ -129,8 +129,8 @@ export function DiagnosticInspector({
           </div>
         </div>
 
-        <div className="p-3 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-[11px] text-neutral-500">
-          <span className="font-semibold text-black dark:text-white block mb-0.5">
+        <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-[11px] text-neutral-500">
+          <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-0.5">
             Target Length:
           </span>
           {taskType === "task2" ? "250+ words (Task 2)" : "150+ words (Task 1)"}
@@ -181,12 +181,12 @@ export function DiagnosticInspector({
   return (
     <div className="space-y-3">
       {/* Header and Filter Pills */}
-      <div className="space-y-2 pb-2 border-b border-black/10 dark:border-white/10">
+      <div className="space-y-2 pb-2 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
               Examiner Inspector
-              <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-black/5 dark:bg-white/10 text-neutral-700 dark:text-neutral-300">
+              <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
                 {totalItems}
               </span>
             </h3>
@@ -196,23 +196,23 @@ export function DiagnosticInspector({
           </div>
 
           {/* Filter buttons */}
-          <div className="inline-flex items-center p-0.5 rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-[11px]">
+          <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-[11px]">
             <button
               onClick={() => setFilter("all")}
-              className={`px-2 py-1 rounded-md transition-colors ${
+              className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${
                 filter === "all"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
               All ({totalItems})
             </button>
             <button
               onClick={() => setFilter("errors")}
-              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 ${
+              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
                 filter === "errors"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-rose-400/80" />
@@ -220,10 +220,10 @@ export function DiagnosticInspector({
             </button>
             <button
               onClick={() => setFilter("suggestions")}
-              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 ${
+              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
                 filter === "suggestions"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
@@ -232,10 +232,10 @@ export function DiagnosticInspector({
             {replacedCount > 0 && (
               <button
                 onClick={() => setFilter("replaced")}
-                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 ${
+                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
                   filter === "replaced"
-                    ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                    : "text-emerald-600 dark:text-emerald-400 hover:text-black dark:hover:text-white"
+                    ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                    : "text-emerald-600 dark:text-emerald-400 hover:text-neutral-900 dark:hover:text-neutral-100"
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -253,7 +253,7 @@ export function DiagnosticInspector({
           <button
             type="button"
             onClick={handleToggleExpandAll}
-            className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white underline underline-offset-2 transition-colors cursor-pointer"
+            className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 underline underline-offset-2 transition-colors cursor-pointer"
           >
             {allAreExpanded ? "Collapse all ↑" : "Expand all ↓"}
           </button>
@@ -286,13 +286,13 @@ export function DiagnosticInspector({
                   ? "border-emerald-500/40 bg-emerald-500/[0.03]"
                   : isSelected
                   ? "border-red-500/80 bg-red-500/5 ring-1 ring-red-500/30 dark:border-rose-500/40 dark:bg-rose-950/20 dark:ring-rose-500/20"
-                  : "border-black/10 dark:border-white/15 bg-white dark:bg-black hover:border-black/25 dark:hover:border-white/30"
+                  : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700"
               }`}
             >
               {/* Clickable Header Row: Always visible and compact */}
               <div
                 onClick={() => toggleCard(id)}
-                className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-neutral-50/70 dark:hover:bg-neutral-900/40 transition-colors"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
@@ -322,7 +322,7 @@ export function DiagnosticInspector({
                       onSelect(id);
                       setExpandedIds((prev) => ({ ...prev, [id]: true }));
                     }}
-                    className="text-[10px] text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 transition-colors"
+                    className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
                     title="Locate in paragraph"
                   >
                     <Eye className="w-3 h-3" />
@@ -340,10 +340,10 @@ export function DiagnosticInspector({
 
               {/* Popped-Down Details */}
               {isExpanded && (
-                <div className="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-black/5 dark:border-white/5 animate-in fade-in-50 duration-150">
+                <div className="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-neutral-100 dark:border-neutral-800/80 animate-in fade-in-50 duration-150">
                   {/* Before / After */}
                   <div className="space-y-1.5 pt-1">
-                    <div className="p-2 rounded-md bg-black/[0.03] dark:bg-white/[0.03] text-neutral-500 line-through">
+                    <div className="p-2 rounded-md bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-500 line-through">
                       "{err.original}"
                     </div>
                     <div className="p-2 rounded-md bg-emerald-500/5 border border-emerald-500/20 text-emerald-950 dark:text-emerald-200 font-medium">
@@ -445,13 +445,13 @@ export function DiagnosticInspector({
                   ? "border-emerald-500/40 bg-emerald-500/[0.03]"
                   : isSelected
                   ? "border-violet-500/80 bg-violet-500/5 ring-1 ring-violet-500/30 dark:border-purple-500/40 dark:bg-purple-950/20 dark:ring-purple-500/20"
-                  : "border-black/10 dark:border-white/15 bg-white dark:bg-black hover:border-black/25 dark:hover:border-white/30"
+                  : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700"
               }`}
             >
               {/* Clickable Header Row: Always visible and compact */}
               <div
                 onClick={() => toggleCard(id)}
-                className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-neutral-50/70 dark:hover:bg-neutral-900/40 transition-colors"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
@@ -481,7 +481,7 @@ export function DiagnosticInspector({
                       onSelect(id);
                       setExpandedIds((prev) => ({ ...prev, [id]: true }));
                     }}
-                    className="text-[10px] text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 transition-colors"
+                    className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
                     title="Locate in paragraph"
                   >
                     <Eye className="w-3 h-3" />
@@ -499,10 +499,10 @@ export function DiagnosticInspector({
 
               {/* Popped-Down Details */}
               {isExpanded && (
-                <div className="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-black/5 dark:border-white/5 animate-in fade-in-50 duration-150">
+                <div className="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-neutral-100 dark:border-neutral-800/80 animate-in fade-in-50 duration-150">
                   {/* Phrase Upgrade */}
                   <div className="space-y-1.5 pt-1">
-                    <div className="p-2 rounded-md bg-black/[0.03] dark:bg-white/[0.03] text-neutral-500 line-through">
+                    <div className="p-2 rounded-md bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-500 line-through">
                       "{sug.originalPhrase}"
                     </div>
                     <div className="p-2 rounded-md bg-violet-500/5 border border-violet-500/20 text-violet-950 dark:bg-purple-950/30 dark:border-purple-800/30 dark:text-purple-200/90 font-medium">

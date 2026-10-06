@@ -346,26 +346,17 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
   return (
     <div className="space-y-8">
-      {/* Section 1: Task Selector & Prompt (Linear open layout with thin divider) */}
-      <div className="space-y-4 pb-6 border-b border-black/10 dark:border-white/10">
+      {/* Section 1: Task Switcher & Prompt (Clean minimalist toolbar) */}
+      <div className="space-y-3 pb-5 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight text-black dark:text-white">
-              Writing Task
-            </h2>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Select your task and prompt to begin practice
-            </p>
-          </div>
-
           {/* Task Type Switcher: Minimalist tabs with thin outline */}
-          <div className="inline-flex items-center p-0.5 rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs">
+          <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs">
             <button
               onClick={() => handleTaskTypeChange("task2")}
               className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
                 selectedTaskType === "task2"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
               Task 2 (250w)
@@ -374,8 +365,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               onClick={() => handleTaskTypeChange("task1_academic")}
               className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
                 selectedTaskType === "task1_academic"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
               Task 1 Academic (150w)
@@ -384,44 +375,41 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               onClick={() => handleTaskTypeChange("task1_general")}
               className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
                 selectedTaskType === "task1_general"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
               Task 1 General (150w)
             </button>
           </div>
+
+          {/* Quick Actions */}
+          <div className="flex items-center gap-3 text-xs">
+            <button
+              onClick={() => setUseCustomPrompt(!useCustomPrompt)}
+              className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
+            >
+              {useCustomPrompt ? "Choose from bank" : "+ Custom topic"}
+            </button>
+            <span className="text-neutral-300 dark:text-neutral-700">|</span>
+            <button
+              onClick={handleLoadSampleEssay}
+              className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
+            >
+              Load sample
+            </button>
+          </div>
         </div>
 
-        {/* Prompt selector */}
-        <div className="space-y-2 pt-1">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-mono text-neutral-500 dark:text-neutral-400 uppercase text-[11px]">
-              Prompt Selection
-            </span>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setUseCustomPrompt(!useCustomPrompt)}
-                className="text-neutral-700 dark:text-neutral-300 hover:underline cursor-pointer font-medium"
-              >
-                {useCustomPrompt ? "Choose from bank" : "+ Custom topic"}
-              </button>
-              <button
-                onClick={handleLoadSampleEssay}
-                className="text-neutral-500 hover:text-black dark:hover:text-white cursor-pointer"
-              >
-                Load sample
-              </button>
-            </div>
-          </div>
-
+        {/* Prompt selector & question card */}
+        <div className="space-y-2 pt-0.5">
           {useCustomPrompt ? (
             <textarea
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
               placeholder="Paste custom IELTS writing question..."
               rows={2}
-              className="w-full p-3 text-sm rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-black dark:text-white focus:outline-none focus:border-black/40 dark:focus:border-white/40 font-normal"
+              className="w-full p-3 text-xs sm:text-sm rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-normal"
             />
           ) : (
             <div className="relative">
@@ -431,10 +419,10 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   const p = WRITING_PROMPTS.find((x) => x.id === e.target.value);
                   if (p) setSelectedPrompt(p);
                 }}
-                className="w-full p-2.5 pr-8 text-xs font-medium rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 appearance-none focus:outline-none cursor-pointer"
+                className="w-full p-2.5 pr-8 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 appearance-none focus:outline-none cursor-pointer hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
               >
                 {WRITING_PROMPTS.filter((p) => p.type === selectedTaskType).map((p) => (
-                  <option key={p.id} value={p.id} className="bg-white dark:bg-black text-black dark:text-white">
+                  <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">
                     [{p.category}] {p.title}
                   </option>
                 ))}
@@ -444,8 +432,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           )}
 
           {!useCustomPrompt && (
-            <div className="p-3.5 rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
-              <span className="font-semibold text-black dark:text-white mr-1.5">Question:</span>
+            <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">Question:</span>
               {selectedPrompt.prompt}
             </div>
           )}
@@ -463,7 +451,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 className={`font-mono px-2 py-0.5 rounded-md border text-[11px] font-medium ${
                   isWordCountMet
                     ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5"
-                    : "border-black/10 dark:border-white/15 text-neutral-600 dark:text-neutral-400"
+                    : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
                 }`}
               >
                 {wordCount} / {targetWords} words
@@ -472,13 +460,13 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               {/* Toggle View Mode when analysis exists */}
               {analysisResult && (
                 <div className="flex items-center gap-2">
-                  <div className="inline-flex items-center p-0.5 rounded-md border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-[11px]">
+                  <div className="inline-flex items-center p-0.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-[11px]">
                     <button
                       onClick={() => setViewMode("annotated")}
                       className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
                         viewMode === "annotated"
-                          ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                          : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                          ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
                       }`}
                     >
                       <Highlighter className="w-3 h-3" />
@@ -488,8 +476,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                       onClick={() => setViewMode("edit")}
                       className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
                         viewMode === "edit"
-                          ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                          : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                          ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
                       }`}
                     >
                       <Edit3 className="w-3 h-3" />
@@ -501,7 +489,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   {replacedItems.length > 0 ? (
                     <button
                       onClick={handleRevertAllUpgrades}
-                      className="px-2 py-0.5 rounded text-[11px] border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
+                      className="px-2 py-0.5 rounded text-[11px] border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 cursor-pointer transition-colors"
                       title="Revert all replacements back to original draft"
                     >
                       <RotateCcw className="w-3 h-3" />
@@ -528,7 +516,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               </span>
               <button
                 onClick={() => setTimerRunning(!timerRunning)}
-                className="px-2 py-0.5 rounded border border-black/10 dark:border-white/15 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
+                className="px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
               >
                 {timerRunning ? "Pause" : "Timer"}
               </button>
@@ -565,7 +553,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"
               } here... Organize into clear paragraphs.`}
               rows={16}
-              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-black/30 dark:focus:border-white/30 font-sans min-h-[420px]"
+              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px]"
             />
           )}
 
@@ -580,7 +568,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             <button
               onClick={handleAnalyze}
               disabled={isAnalyzing || !essayContent.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
             >
               {isAnalyzing ? (
                 <>
@@ -614,15 +602,15 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
       {/* Section 3: Diagnostic Results (Spacious layout across wide screen) */}
       {analysisResult && (
-        <div className="pt-10 border-t border-black/10 dark:border-white/10 space-y-10 animate-in fade-in duration-200">
+        <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-8 animate-in fade-in duration-200">
           {/* Header Score Overview: Expansive 3-column dashboard */}
-          <div className="p-6 sm:p-8 rounded-2xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Panel 1: Band Score & Summary */}
             <div className="lg:col-span-5 space-y-2.5 text-center lg:text-left">
               <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
                 Official Predicted Overall Score
               </div>
-              <div className="text-5xl sm:text-6xl font-semibold tracking-tight text-black dark:text-white">
+              <div className="text-5xl sm:text-6xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
                 Band {analysisResult.overallBand.toFixed(1)}
               </div>
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed pt-1 max-w-lg">
@@ -646,8 +634,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
             {/* Panel 3: Bottleneck & Share Card Action */}
             <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
-              <div className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-xs leading-relaxed space-y-1">
-                <span className="font-semibold text-black dark:text-white block text-[11px] uppercase tracking-wide">
+              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs leading-relaxed space-y-1">
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100 block text-[11px] uppercase tracking-wide">
                   Primary Score Bottleneck:
                 </span>
                 <p className="text-neutral-600 dark:text-neutral-400">
@@ -657,56 +645,56 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
               <button
                 onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-black/15 dark:border-white/20 bg-black dark:bg-white text-white dark:text-black font-semibold text-xs sm:text-sm hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-medium text-xs sm:text-sm hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs"
               >
                 <Share2 className="w-4 h-4" />
-                Export Share Card (Story / 4:5)
+                Export Share Card
               </button>
             </div>
           </div>
 
           {/* Tab Navigation for Detailed Feedback */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-black/10 dark:border-white/10 pb-3">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-neutral-200 dark:border-neutral-800 pb-3">
             <button
               onClick={() => setActiveTab("criteria")}
-              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "criteria"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
-              Criteria Breakdown (4 Categories)
+              Criteria Breakdown
             </button>
             <button
               onClick={() => setActiveTab("sentences")}
-              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "sentences"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
               Sentence Diff Archive ({analysisResult.sentenceFeedbacks.length})
             </button>
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "model_answer"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
-              Band 8.5+ Model Essay
+              Model Essay
             </button>
           </div>
 
           {/* TAB 1: Criteria (Spacious 4-column layout on wide screens) */}
           {activeTab === "criteria" && (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
-                    <span className="text-xs font-bold text-black dark:text-white">Task Response</span>
-                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
+                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
                     </span>
                   </div>
@@ -714,8 +702,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                     {analysisResult.criteria.taskAchievement.feedback}
                   </p>
                 </div>
-                <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-black/5 dark:border-white/10">
-                  <div className="font-semibold text-black dark:text-white text-[11px]">Examiner Advice:</div>
+                <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-100 dark:border-neutral-800/80">
+                  <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
                   <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                     {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
                       <li key={i}>{r}</li>
@@ -724,11 +712,11 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
-                    <span className="text-xs font-bold text-black dark:text-white">Coherence & Cohesion</span>
-                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Coherence & Cohesion</span>
+                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
                     </span>
                   </div>
@@ -743,11 +731,11 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 )}
               </div>
 
-              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
-                    <span className="text-xs font-bold text-black dark:text-white">Lexical Resource</span>
-                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
+                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
                     </span>
                   </div>
@@ -755,16 +743,16 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                     {analysisResult.criteria.lexicalResource.feedback}
                   </p>
                 </div>
-                <div className="pt-2 text-xs text-neutral-500 border-t border-black/5 dark:border-white/10">
+                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-100 dark:border-neutral-800/80">
                   <span className="text-[11px] text-neutral-400">Focus on C1/C2 collocations & precision</span>
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 flex flex-col justify-between">
+              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/10">
-                    <span className="text-xs font-bold text-black dark:text-white">Grammatical Range</span>
-                    <span className="font-mono text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range</span>
+                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
                     </span>
                   </div>
@@ -772,7 +760,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                     {analysisResult.criteria.grammaticalRange.feedback}
                   </p>
                 </div>
-                <div className="pt-2 text-xs text-neutral-500 border-t border-black/5 dark:border-white/10">
+                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-100 dark:border-neutral-800/80">
                   <span className="text-[11px] text-neutral-400">Incorporate complex & non-finite clauses</span>
                 </div>
               </div>
@@ -785,14 +773,14 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               {analysisResult.sentenceFeedbacks.map((s, idx) => (
                 <div
                   key={idx}
-                  className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2 text-xs"
+                  className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs"
                 >
                   <div className="flex items-center justify-between text-neutral-400 font-mono text-[11px]">
                     <span>Sentence {idx + 1}</span>
                     <span className="uppercase">{s.issueType}</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-neutral-700 dark:text-neutral-300">
+                    <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-neutral-700 dark:text-neutral-300">
                       <span className="font-mono text-[10px] text-neutral-400 block mb-1">ORIGINAL:</span>
                       "{s.original}"
                     </div>
@@ -809,7 +797,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
           {/* TAB 3: Model Answer */}
           {activeTab === "model_answer" && (
-            <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line">
+            <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line">
               <span className="font-sans font-mono text-[11px] uppercase text-neutral-400 block">
                 Official Model Essay
               </span>

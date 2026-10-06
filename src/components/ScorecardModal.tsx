@@ -145,7 +145,7 @@ export function ScorecardModal({
       // Footer
       ctx.fillStyle = "#555555";
       ctx.font = "18px monospace";
-      ctx.fillText("IELTSlayer666 • Official Criteria Evaluation", 80, 1260);
+      ctx.fillText("studio • diagnostic • official criteria evaluation", 80, 1260);
 
       const dataUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");
@@ -169,17 +169,17 @@ export function ScorecardModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg my-8 bg-white dark:bg-black text-black dark:text-white border border-black/15 dark:border-white/20 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 cursor-default"
+        className="relative w-full max-w-lg my-8 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 cursor-default"
       >
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-1 text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
+          className="absolute top-5 right-5 p-1 text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
-        <div className="space-y-1 pr-6 pb-4 border-b border-black/10 dark:border-white/10">
+        <div className="space-y-1 pr-6 pb-4 border-b border-neutral-100 dark:border-neutral-800/80">
           <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
             {type} Test Evaluation
           </span>
@@ -187,7 +187,7 @@ export function ScorecardModal({
         </div>
 
         {/* Hero Score Box */}
-        <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] flex items-center justify-between">
+        <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center justify-between">
           <div>
             <div className="text-[11px] font-mono text-neutral-500 uppercase">Predicted Overall</div>
             <div className="text-4xl font-semibold tracking-tight mt-0.5">
@@ -200,7 +200,7 @@ export function ScorecardModal({
         {/* 4 Chips */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {scores.map((s, idx) => (
-            <div key={idx} className="p-2.5 rounded-lg border border-black/10 dark:border-white/15 bg-white dark:bg-black text-center">
+            <div key={idx} className="p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center">
               <div className="text-[10px] font-mono text-neutral-500 uppercase">{s.label}</div>
               <div className="text-lg font-semibold mt-0.5">{s.score.toFixed(1)}</div>
             </div>
@@ -208,13 +208,13 @@ export function ScorecardModal({
         </div>
 
         {/* Primary Bottleneck */}
-        <div className="p-3.5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs space-y-1">
+        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
           <span className="font-mono text-[10px] uppercase text-neutral-500 block">Primary Bottleneck:</span>
           <p className="text-neutral-700 dark:text-neutral-300">{primaryBottleneck}</p>
         </div>
 
         {/* Advice */}
-        <div className="p-3.5 rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs space-y-1">
+        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
           <span className="font-mono text-[10px] uppercase text-neutral-500 block">Examiner Note:</span>
           <p className="text-neutral-700 dark:text-neutral-300 italic">"{examinerHighlight}"</p>
         </div>
@@ -224,7 +224,7 @@ export function ScorecardModal({
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 cursor-pointer shadow-xs"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 cursor-pointer shadow-xs transition-opacity"
           >
             {downloaded ? (
               <>
@@ -240,7 +240,7 @@ export function ScorecardModal({
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2.5 rounded-lg border border-black/10 dark:border-white/15 text-xs text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
+            className="px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer transition-colors"
           >
             Close
           </button>

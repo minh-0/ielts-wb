@@ -186,7 +186,7 @@ export function AnnotatedParagraph({
   return (
     <div className="space-y-3">
       {/* 3-Category Visual Legend */}
-      <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs">
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           {/* 1. Red Wavy: Mistakes */}
           <div className="flex items-center gap-1.5">
@@ -222,7 +222,7 @@ export function AnnotatedParagraph({
       </div>
 
       {/* Main Annotated Text Container */}
-      <div className="relative p-6 sm:p-7 rounded-2xl border border-black/10 dark:border-white/15 bg-white dark:bg-black min-h-[420px] text-[15px] sm:text-base leading-8 text-neutral-900 dark:text-neutral-100 font-sans whitespace-pre-wrap select-text">
+      <div className="relative p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 min-h-[420px] text-[15px] sm:text-base leading-8 text-neutral-900 dark:text-neutral-100 font-sans whitespace-pre-wrap select-text">
         {segments.map((seg, i) => {
           if (seg.type === "text") {
             return <span key={i}>{seg.text}</span>;
@@ -267,7 +267,7 @@ export function AnnotatedParagraph({
 
       {/* Quick Interactive Popover with Small Explanation of the Higher-Rated Word */}
       {selectedMatch && (
-        <div className="p-4 rounded-xl border border-black/10 dark:border-white/20 bg-neutral-50 dark:bg-neutral-950 shadow-md space-y-3 animate-in fade-in duration-150">
+        <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 shadow-md space-y-3 animate-in fade-in duration-150">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span

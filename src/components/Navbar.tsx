@@ -13,23 +13,27 @@ interface NavbarProps {
 
 export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-md">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 h-14 flex items-center justify-between">
-        {/* Brand / Logo */}
+    <header className="sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 backdrop-blur-md">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 h-13 flex items-center justify-between">
+        {/* Brand / Logo - Clean modern minimalist mark */}
         <div className="flex items-center gap-2">
-          <span className="font-mono font-bold text-sm tracking-tight text-black dark:text-white px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5">
-            IELTSlayer666
-          </span>
+          <div className="flex items-center gap-2 font-sans font-medium tracking-tight text-sm text-neutral-900 dark:text-neutral-100">
+            <span className="w-2 h-2 rounded-full bg-neutral-900 dark:bg-neutral-100 shrink-0" />
+            <span className="font-semibold">studio</span>
+            <span className="text-[10px] font-mono uppercase px-1.5 py-0.2 rounded border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400">
+              diagnostic
+            </span>
+          </div>
         </div>
 
-        {/* Tab Navigation: Segmented tabs */}
-        <nav className="flex items-center gap-1 p-0.5 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs font-medium">
+        {/* Tab Navigation: Minimalist segmented switcher */}
+        <nav className="flex items-center gap-1 p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 text-xs font-medium">
           <button
             onClick={() => onTabChange("writing")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all cursor-pointer ${
               activeTab === "writing"
-                ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
             }`}
           >
             <PenTool className="w-3 h-3" />
@@ -38,10 +42,10 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
           <button
             onClick={() => onTabChange("speaking")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all cursor-pointer ${
               activeTab === "speaking"
-                ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
             }`}
           >
             <Mic className="w-3 h-3" />
@@ -50,10 +54,10 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
           <button
             onClick={() => onTabChange("rubric")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-colors cursor-pointer hidden md:flex ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all cursor-pointer hidden md:flex ${
               activeTab === "rubric"
-                ? "bg-black text-white dark:bg-white dark:text-black font-semibold shadow-xs"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
             }`}
           >
             <BookOpen className="w-3 h-3" />
@@ -62,23 +66,22 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           {/* AI Mode Selector Button */}
           <button
             onClick={onOpenApiKeyModal}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
               hasApiKey
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                : "border-black/10 dark:border-white/15 text-neutral-600 dark:text-neutral-400 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
+                : "border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100"
             }`}
-            title="Configure Live Gemini AI or use free practice engine"
+            title="Configure Live Gemini AI or use free evaluation engine"
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${
-                hasApiKey ? "bg-emerald-500 animate-pulse" : "bg-neutral-400"
+                hasApiKey ? "bg-emerald-500" : "bg-neutral-400 dark:bg-neutral-600"
               }`}
             />
-            <Sparkles className="w-3 h-3 text-neutral-400" />
             <span className="hidden sm:inline">
               {hasApiKey ? "Live AI Active" : "AI Mode (Free)"}
             </span>
