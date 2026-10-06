@@ -101,7 +101,7 @@ export function DiagnosticInspector({
             </p>
 
             <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1">
-              <span className="font-semibold text-red-600 dark:text-red-400 block text-[11px]">
+              <span className="font-semibold text-red-600 dark:text-rose-300/80 block text-[11px]">
                 🔴 In-Text Mistakes (Red Wavy)
               </span>
               <p className="text-[11px] leading-relaxed text-neutral-500">
@@ -110,7 +110,7 @@ export function DiagnosticInspector({
             </div>
 
             <div className="p-3 rounded-lg border border-black/5 dark:border-white/10 bg-white dark:bg-black space-y-1">
-              <span className="font-semibold text-violet-600 dark:text-violet-400 block text-[11px]">
+              <span className="font-semibold text-violet-600 dark:text-purple-300/80 block text-[11px]">
                 🟣 Vocabulary Upgrades (Violet Dashed)
               </span>
               <p className="text-[11px] leading-relaxed text-neutral-500">
@@ -215,7 +215,7 @@ export function DiagnosticInspector({
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-rose-400/80" />
               Errors ({errors.length})
             </button>
             <button
@@ -226,7 +226,7 @@ export function DiagnosticInspector({
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
               Vocab ({suggestions.length})
             </button>
             {replacedCount > 0 && (
@@ -285,7 +285,7 @@ export function DiagnosticInspector({
                 isReplaced
                   ? "border-emerald-500/40 bg-emerald-500/[0.03]"
                   : isSelected
-                  ? "border-red-500/80 bg-red-500/5 ring-1 ring-red-500/30"
+                  ? "border-red-500/80 bg-red-500/5 ring-1 ring-red-500/30 dark:border-rose-500/40 dark:bg-rose-950/20 dark:ring-rose-500/20"
                   : "border-black/10 dark:border-white/15 bg-white dark:bg-black hover:border-black/25 dark:hover:border-white/30"
               }`}
             >
@@ -297,14 +297,14 @@ export function DiagnosticInspector({
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
                     className={`w-2 h-2 rounded-full shrink-0 ${
-                      isReplaced ? "bg-emerald-500" : "bg-red-500"
+                      isReplaced ? "bg-emerald-500" : "bg-red-500 dark:bg-rose-400/80"
                     }`}
                   />
                   <span
                     className={`font-mono text-[10px] uppercase font-semibold shrink-0 ${
                       isReplaced
                         ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400"
+                        : "text-red-600 dark:text-rose-300/80"
                     }`}
                   >
                     {issueLabel}
@@ -444,7 +444,7 @@ export function DiagnosticInspector({
                 isReplaced
                   ? "border-emerald-500/40 bg-emerald-500/[0.03]"
                   : isSelected
-                  ? "border-violet-500/80 bg-violet-500/5 ring-1 ring-violet-500/30"
+                  ? "border-violet-500/80 bg-violet-500/5 ring-1 ring-violet-500/30 dark:border-purple-500/40 dark:bg-purple-950/20 dark:ring-purple-500/20"
                   : "border-black/10 dark:border-white/15 bg-white dark:bg-black hover:border-black/25 dark:hover:border-white/30"
               }`}
             >
@@ -456,14 +456,14 @@ export function DiagnosticInspector({
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
                     className={`w-2 h-2 rounded-full shrink-0 ${
-                      isReplaced ? "bg-emerald-500" : "bg-violet-500"
+                      isReplaced ? "bg-emerald-500" : "bg-violet-500 dark:bg-purple-400/80"
                     }`}
                   />
                   <span
                     className={`font-mono text-[10px] uppercase font-semibold shrink-0 ${
                       isReplaced
                         ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-violet-600 dark:text-violet-400"
+                        : "text-violet-600 dark:text-purple-300/80"
                     }`}
                   >
                     {upgradeLabel}
@@ -505,7 +505,7 @@ export function DiagnosticInspector({
                     <div className="p-2 rounded-md bg-black/[0.03] dark:bg-white/[0.03] text-neutral-500 line-through">
                       "{sug.originalPhrase}"
                     </div>
-                    <div className="p-2 rounded-md bg-violet-500/5 border border-violet-500/20 text-violet-950 dark:text-violet-200 font-medium">
+                    <div className="p-2 rounded-md bg-violet-500/5 border border-violet-500/20 text-violet-950 dark:bg-purple-950/30 dark:border-purple-800/30 dark:text-purple-200/90 font-medium">
                       "{sug.suggestedUpgrade}"
                     </div>
                   </div>

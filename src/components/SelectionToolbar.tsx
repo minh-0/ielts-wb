@@ -136,8 +136,11 @@ export function SelectionToolbar() {
         setActiveHighlightColor(existingColor);
 
         const entry = lookupOxfordWord(text);
-        if (entry && entry.band8Alternatives && entry.band8Alternatives.length > 0) {
-          setQuickSynonyms(entry.band8Alternatives);
+        const validAlts = entry?.band8Alternatives?.filter(
+          (alt) => alt && !alt.toLowerCase().includes("advanced alternative")
+        );
+        if (validAlts && validAlts.length > 0) {
+          setQuickSynonyms(validAlts);
         } else {
           setQuickSynonyms(null);
         }
@@ -344,7 +347,7 @@ export function SelectionToolbar() {
             })}
             <button
               onClick={() => handleApplyHighlight("clear")}
-              className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-neutral-400 hover:text-red-500 cursor-pointer"
+              className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-neutral-400 hover:text-red-500 dark:hover:text-rose-400 cursor-pointer"
               title="Clear highlight"
             >
               <Eraser className="w-3 h-3" />
@@ -369,10 +372,10 @@ export function SelectionToolbar() {
             <div className="relative group">
               <button
                 onClick={handleOpenOxford}
-                className="flex items-center gap-1 px-2 py-1 rounded-full bg-violet-500/10 text-violet-700 dark:text-violet-300 border border-violet-500/20 hover:bg-violet-500/20 cursor-pointer font-medium text-[11px]"
+                className="flex items-center gap-1 px-2 py-1 rounded-full bg-violet-500/10 text-violet-700 dark:text-purple-300/80 dark:bg-purple-950/40 border border-violet-500/20 dark:border-purple-800/40 hover:bg-violet-500/20 dark:hover:bg-purple-900/40 cursor-pointer font-medium text-[11px]"
                 title="View Band 8+ academic alternatives"
               >
-                <Sparkles className="w-3 h-3 text-violet-500" />
+                <Sparkles className="w-3 h-3 text-violet-500 dark:text-purple-400/80" />
                 <span>Band 8+</span>
               </button>
             </div>

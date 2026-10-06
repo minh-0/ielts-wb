@@ -138,7 +138,7 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
             <span
               className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold ${
                 entry.cefrLevel === "C2"
-                  ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/25"
+                  ? "bg-purple-500/15 text-purple-700 dark:text-purple-300/80 dark:bg-purple-950/40 border border-purple-500/25 dark:border-purple-800/30"
                   : entry.cefrLevel === "C1"
                   ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25"
                   : "bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-500/25"
@@ -167,7 +167,7 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
                 }`}
                 title="Play British English pronunciation (IELTS Standard)"
               >
-                <Volume2 className="w-3 h-3 text-red-500" />
+                <Volume2 className="w-3 h-3 text-red-500 dark:text-rose-400/80" />
                 <span>UK (IELTS)</span>
               </button>
 
@@ -230,25 +230,32 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
           </div>
         )}
 
-        {/* Band 8+ Academic Alternatives */}
-        {entry.band8Alternatives && entry.band8Alternatives.length > 0 && (
-          <div className="space-y-1.5">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 font-semibold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-violet-500" />
-              Band 8+ Lexical Alternatives
+        {/* Band 8+ Academic Alternatives - Completely hidden if no genuine alternatives */}
+        {(() => {
+          const validAlternatives = entry.band8Alternatives?.filter(
+            (alt) => alt && !alt.toLowerCase().includes("advanced alternative")
+          );
+          if (!validAlternatives || validAlternatives.length === 0) return null;
+
+          return (
+            <div className="space-y-1.5">
+              <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 font-semibold flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-violet-500 dark:text-purple-400/80" />
+                Band 8+ Lexical Alternatives
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {validAlternatives.map((alt, i) => (
+                  <span
+                    key={i}
+                    className="px-2.5 py-1 rounded-md text-xs font-medium border border-violet-500/25 bg-violet-500/5 text-violet-800 dark:text-purple-300/80 dark:bg-purple-950/30 dark:border-purple-800/40 font-mono"
+                  >
+                    {alt}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-1.5">
-              {entry.band8Alternatives.map((alt, i) => (
-                <span
-                  key={i}
-                  className="px-2.5 py-1 rounded-md text-xs font-medium border border-violet-500/25 bg-violet-500/5 text-violet-800 dark:text-violet-300 font-mono"
-                >
-                  {alt}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Bottom Actions */}
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-black/10 dark:border-white/10">

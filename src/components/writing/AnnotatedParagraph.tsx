@@ -190,8 +190,8 @@ export function AnnotatedParagraph({
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           {/* 1. Red Wavy: Mistakes */}
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-500/20" />
-            <span className="underline decoration-wavy decoration-red-500 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 dark:bg-rose-400/80 ring-2 ring-red-500/20 dark:ring-rose-400/20" />
+            <span className="underline decoration-wavy decoration-red-500 dark:decoration-rose-400/50 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
               Grammar Mistakes
             </span>
             <span className="text-[11px] text-neutral-400 font-mono">({errorCount})</span>
@@ -199,8 +199,8 @@ export function AnnotatedParagraph({
 
           {/* 2. Violet Dashed: Upgrades */}
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-violet-500 ring-2 ring-violet-500/20" />
-            <span className="underline decoration-dashed decoration-violet-500 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
+            <span className="w-2.5 h-2.5 rounded-full bg-violet-500 dark:bg-purple-400/80 ring-2 ring-violet-500/20 dark:ring-purple-400/20" />
+            <span className="underline decoration-dashed decoration-violet-500 dark:decoration-purple-400/50 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
               Vocabulary Upgrades
             </span>
             <span className="text-[11px] text-neutral-400 font-mono">({suggestionCount})</span>
@@ -235,18 +235,18 @@ export function AnnotatedParagraph({
           if (span.kind === "replaced") {
             // Emerald solid underline & highlight for replaced higher-rated words
             badgeStyle = isSelected
-              ? "bg-emerald-500/25 text-emerald-950 dark:text-emerald-100 underline decoration-solid decoration-emerald-500 underline-offset-4 ring-2 ring-emerald-500 border-b-2 border-emerald-500"
-              : "bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-900 dark:text-emerald-200 underline decoration-solid decoration-emerald-500 underline-offset-4 border-b-2 border-emerald-500";
+              ? "bg-emerald-500/25 dark:bg-emerald-950/50 text-emerald-950 dark:text-neutral-100 underline decoration-solid decoration-emerald-500 dark:decoration-emerald-400/50 underline-offset-4 ring-2 ring-emerald-500 dark:ring-emerald-500/30 border-b-2 border-emerald-500"
+              : "bg-emerald-500/15 hover:bg-emerald-500/25 dark:bg-emerald-950/25 dark:hover:bg-emerald-950/40 text-emerald-900 dark:text-neutral-200 underline decoration-solid decoration-emerald-500 dark:decoration-emerald-400/40 underline-offset-4 border-b-2 border-emerald-500";
           } else if (span.kind === "error") {
-            // Red wavy underline for errors
+            // Red wavy underline for errors - softened in dark mode to prevent glare/eye strain
             badgeStyle = isSelected
-              ? "bg-red-500/25 text-red-950 dark:text-red-100 underline decoration-wavy decoration-red-500 underline-offset-4 ring-2 ring-red-500"
-              : "bg-red-500/10 hover:bg-red-500/20 text-red-900 dark:text-red-200 underline decoration-wavy decoration-red-500 underline-offset-4";
+              ? "bg-red-500/25 dark:bg-rose-950/40 text-red-950 dark:text-neutral-100 underline decoration-wavy decoration-red-500 dark:decoration-rose-400/50 underline-offset-4 ring-2 ring-red-500 dark:ring-rose-500/30"
+              : "bg-red-500/10 hover:bg-red-500/20 dark:bg-rose-950/20 dark:hover:bg-rose-950/35 text-red-900 dark:text-neutral-200 underline decoration-wavy decoration-red-500 dark:decoration-rose-400/40 underline-offset-4";
           } else {
-            // Violet dashed underline for vocabulary suggestions
+            // Violet dashed underline for vocabulary suggestions - softened in dark mode
             badgeStyle = isSelected
-              ? "bg-violet-500/25 text-violet-950 dark:text-violet-100 underline decoration-dashed decoration-violet-500 underline-offset-4 ring-2 ring-violet-500"
-              : "bg-violet-500/10 hover:bg-violet-500/20 text-violet-900 dark:text-violet-200 underline decoration-dashed decoration-violet-500 underline-offset-4";
+              ? "bg-violet-500/25 dark:bg-purple-950/40 text-violet-950 dark:text-neutral-100 underline decoration-dashed decoration-violet-500 dark:decoration-purple-400/50 underline-offset-4 ring-2 ring-violet-500 dark:ring-purple-500/30"
+              : "bg-violet-500/10 hover:bg-violet-500/20 dark:bg-purple-950/20 dark:hover:bg-purple-950/35 text-violet-900 dark:text-neutral-200 underline decoration-dashed decoration-violet-500 dark:decoration-purple-400/40 underline-offset-4";
           }
 
           return (
@@ -275,8 +275,8 @@ export function AnnotatedParagraph({
                   selectedMatch.kind === "replaced"
                     ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40"
                     : selectedMatch.kind === "error"
-                    ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30"
-                    : "bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/30"
+                    ? "bg-red-500/10 text-red-600 dark:text-rose-300/80 dark:bg-rose-950/30 border border-red-500/30 dark:border-rose-900/40"
+                    : "bg-violet-500/10 text-violet-600 dark:text-purple-300/80 dark:bg-purple-950/30 border border-violet-500/30 dark:border-purple-900/40"
                 }`}
               >
                 {selectedMatch.kind === "replaced"

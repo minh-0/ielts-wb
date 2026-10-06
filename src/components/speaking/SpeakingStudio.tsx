@@ -581,8 +581,8 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               Candidate Spoken Transcript
             </span>
             {isRecording && (
-              <span className="flex items-center gap-1.5 text-red-500 dark:text-red-400 text-[11px] font-mono animate-pulse font-medium">
-                <span className="w-2 h-2 rounded-full bg-red-500" />
+              <span className="flex items-center gap-1.5 text-red-500 dark:text-rose-400/80 text-[11px] font-mono animate-pulse font-medium">
+                <span className="w-2 h-2 rounded-full bg-red-500 dark:bg-rose-400/80" />
                 {isListeningSpeech ? "Listening & transcribing..." : "Recording active..."}
               </span>
             )}
@@ -635,11 +635,11 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 </div>
               </div>
             ) : (
-              <div className="p-3.5 rounded-xl border border-violet-500/25 bg-violet-500/5 text-xs text-violet-950 dark:text-violet-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="p-3.5 rounded-xl border border-violet-500/25 bg-violet-500/5 text-xs text-violet-950 dark:border-purple-800/30 dark:bg-purple-950/20 dark:text-purple-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-start gap-2.5">
-                  <Sparkles className="w-4 h-4 text-violet-600 dark:text-violet-400 shrink-0 mt-0.5" />
+                  <Sparkles className="w-4 h-4 text-violet-600 dark:text-purple-400/80 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
-                    <div className="font-semibold text-violet-900 dark:text-violet-300">
+                    <div className="font-semibold text-violet-900 dark:text-purple-300/85">
                       Voice Recording Captured ({formatTime(recordSeconds)})
                     </div>
                     <div className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -738,7 +738,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                   {analysisResult.speechDurationSeconds}s spoken • {analysisResult.wordsPerMinute} WPM
                 </span>
                 {analysisResult.overallBand <= 3.0 && (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-red-500/10 text-red-600 dark:text-rose-300/80 dark:bg-rose-950/40 border border-red-500/20 dark:border-rose-900/30">
                     Insufficient Language Sample (Band {analysisResult.overallBand.toFixed(1)})
                   </span>
                 )}
