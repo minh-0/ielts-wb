@@ -10,6 +10,7 @@ export interface CriterionScore {
 }
 
 export interface SentenceFeedback {
+  id?: string;
   original: string;
   rewritten: string;
   issueType: 'grammar' | 'vocabulary' | 'cohesion' | 'task_response' | 'praise';
@@ -18,6 +19,7 @@ export interface SentenceFeedback {
 }
 
 export interface VocabularySuggestion {
+  id?: string;
   originalPhrase: string;
   suggestedUpgrade: string;
   type: 'collocation' | 'academic_c1_c2' | 'idiom' | 'phrasal_verb';

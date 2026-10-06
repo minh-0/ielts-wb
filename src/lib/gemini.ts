@@ -127,6 +127,10 @@ Analyze this essay and output valid JSON with this exact structure:
   "modelAnswer": string,
   "primaryBottleneck": string
 }
+CRITICAL INSTRUCTION FOR IN-TEXT UNDERLINE & HIGHLIGHTING:
+- In "sentenceFeedbacks": each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, or cohesion issue). Do not alter capitalization or punctuation of "original".
+- In "vocabularySuggestions": each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms.
+
 Only output the JSON object without markdown fences if possible.
 `;
 
@@ -162,7 +166,16 @@ Only output the JSON object without markdown fences if possible.
       return generateMockWritingAnalysis(promptText, essayText, taskType);
     }
 
-    return JSON.parse(rawText) as WritingAnalysisResult;
+    const parsed = JSON.parse(rawText) as WritingAnalysisResult;
+    parsed.sentenceFeedbacks = (parsed.sentenceFeedbacks || []).map((s, idx) => ({
+      ...s,
+      id: s.id || `err-${idx + 1}`
+    }));
+    parsed.vocabularySuggestions = (parsed.vocabularySuggestions || []).map((v, idx) => ({
+      ...v,
+      id: v.id || `sug-${idx + 1}`
+    }));
+    return parsed;
   } catch (err) {
     console.error('Error invoking Gemini for writing:', err);
     return generateMockWritingAnalysis(promptText, essayText, taskType);
@@ -249,6 +262,132 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
 
   const baseBand = isPenalty ? 5.5 : Math.min(8.0, Math.max(5.5, Number((5.5 + (wordCount / targetMin) * 1.5).toFixed(1))));
 
+  // Extract real sentences and phrases present verbatim in the candidate's essay
+  const rawSentences = essay
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 12);
+
+  const sentenceFeedbacks = [];
+  const vocabularySuggestions = [];
+
+  // Check for sample essay or known phrases first
+  if (essay.includes("In addition, privacy concerns have become increasingly prominent.")) {
+    sentenceFeedbacks.push({
+      id: "err-1",
+      original: "In addition, privacy concerns have become increasingly prominent.",
+      rewritten: "Beyond workforce displacement, algorithmic privacy infringements have intensified into a paramount societal concern.",
+      issueType: "cohesion" as const,
+      explanation: "Using mechanical additive transitions ('In addition') limits Cohesion to Band 6.5. Connect ideas thematically.",
+      bandUpgradeTip: "Replace generic linkers with context-specific participial transitions (Band 8+ standard)."
+    });
+  } else if (rawSentences.length > 1) {
+    sentenceFeedbacks.push({
+      id: "err-1",
+      original: rawSentences[1],
+      rewritten: `Furthermore, ${rawSentences[1].charAt(0).toLowerCase() + rawSentences[1].slice(1).replace(/is /g, 'undeniably proves to be ')}`,
+      issueType: "grammar" as const,
+      explanation: "Sentence structure lacks syntactic variety. Introducing a fronted adverbial or cleft clause elevates Grammatical Range.",
+      bandUpgradeTip: "Use inverted conditionals or cleft sentences to demonstrate sophisticated grammatical structures."
+    });
+  }
+
+  if (essay.includes("Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.")) {
+    sentenceFeedbacks.push({
+      id: "err-2",
+      original: "Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.",
+      rewritten: "Concurrently, enhanced computational efficiency streamlines commercial logistics while catalyzing international scientific synergy.",
+      issueType: "grammar" as const,
+      explanation: "Upgrades a basic coordinate sentence into a dynamic participial construction with elevated vocabulary.",
+      bandUpgradeTip: "Band 8+ grammar relies on non-finite clauses ('while catalyzing...') rather than basic 'and' conjunctions."
+    });
+  } else if (rawSentences.length > 2) {
+    sentenceFeedbacks.push({
+      id: "err-2",
+      original: rawSentences[rawSentences.length - 1],
+      rewritten: `On balance, it is evident that ${rawSentences[rawSentences.length - 1].charAt(0).toLowerCase() + rawSentences[rawSentences.length - 1].slice(1)}`,
+      issueType: "cohesion" as const,
+      explanation: "Concluding statement can be strengthened by clearly restating your thesis with academic qualification.",
+      bandUpgradeTip: "Ensure your final sentence provides a definitive evaluative stance rather than abrupt closure."
+    });
+  }
+
+  // Vocabulary suggestions verbatim matching
+  const knownVocabMatches = [
+    {
+      phrase: "freeing individuals from menial labor",
+      upgrade: "emancipating the workforce from routine drudgery",
+      type: "academic_c1_c2" as const,
+      explanation: "Replaces conversational phrasing with elevated C2 academic register.",
+      example: "Automation transforms society by emancipating the workforce from routine drudgery."
+    },
+    {
+      phrase: "remarkable advantages and complex ethical quandaries",
+      upgrade: "a double-edged sword characterized by multifaceted moral dilemmas",
+      type: "idiom" as const,
+      explanation: "Controlled natural idiomatic phrase highly favored by IELTS examiners over simple adjectives.",
+      example: "The digital transition represents a double-edged sword characterized by multifaceted moral dilemmas."
+    },
+    {
+      phrase: "young graduates may encounter unprecedented barriers",
+      upgrade: "novice entrants face formidable impediments",
+      type: "collocation" as const,
+      explanation: "Precise academic collocations boost Lexical Resource from Band 6.5 to Band 8.0.",
+      example: "Without comprehensive mentoring, novice entrants face formidable impediments upon workforce entry."
+    }
+  ];
+
+  let sugIndex = 1;
+  for (const item of knownVocabMatches) {
+    if (essay.includes(item.phrase)) {
+      vocabularySuggestions.push({
+        id: `sug-${sugIndex++}`,
+        originalPhrase: item.phrase,
+        suggestedUpgrade: item.upgrade,
+        type: item.type,
+        explanation: item.explanation,
+        exampleInSentence: item.example
+      });
+    }
+  }
+
+  // If no known phrases matched, dynamically find common upgradeable words in the essay
+  if (vocabularySuggestions.length === 0) {
+    const commonWordUpgrades = [
+      { find: /\bimportant\b/i, original: "important", upgrade: "pivotal / paramount", type: "academic_c1_c2" as const, explanation: "Generic adjective. 'Pivotal' or 'paramount' demonstrates formal precision." },
+      { find: /\bproblem\b/i, original: "problem", upgrade: "predicament / pressing dilemma", type: "collocation" as const, explanation: "Standardizes repetitive noun usage with high-band academic synonyms." },
+      { find: /\bvery\b/i, original: "very", upgrade: "substantially / markedly", type: "academic_c1_c2" as const, explanation: "Avoid conversational intensifier 'very' in academic writing." },
+      { find: /\bgood\b/i, original: "good", upgrade: "beneficial / advantageous", type: "collocation" as const, explanation: "Academic essays require specific evaluative adjectives rather than 'good'." },
+      { find: /\ba lot of\b/i, original: "a lot of", upgrade: "a substantial proportion of / myriad", type: "academic_c1_c2" as const, explanation: "Conversational quantifier unacceptable in formal IELTS Task 2." },
+      { find: /\bthink\b/i, original: "think", upgrade: "contend / maintain that", type: "academic_c1_c2" as const, explanation: "Use academic reporting verbs to present arguments objectively." }
+    ];
+
+    for (const rule of commonWordUpgrades) {
+      if (rule.find.test(essay) && vocabularySuggestions.length < 3) {
+        vocabularySuggestions.push({
+          id: `sug-${sugIndex++}`,
+          originalPhrase: rule.original,
+          suggestedUpgrade: rule.upgrade,
+          type: rule.type,
+          explanation: rule.explanation,
+          exampleInSentence: `Scholars ${rule.upgrade} the issue requires immediate intervention.`
+        });
+      }
+    }
+  }
+
+  // Ensure at least one error feedback exists if essay has text
+  if (sentenceFeedbacks.length === 0 && rawSentences.length > 0) {
+    sentenceFeedbacks.push({
+      id: "err-1",
+      original: rawSentences[0],
+      rewritten: `It is widely recognized that ${rawSentences[0].charAt(0).toLowerCase() + rawSentences[0].slice(1)}`,
+      issueType: "grammar" as const,
+      explanation: "Adding an objective passive framing construct strengthens Task Response and academic tone.",
+      bandUpgradeTip: "Use impersonal passive constructions ('It is widely acknowledged that...')."
+    });
+  }
+
   return {
     overallBand: Math.round(baseBand * 2) / 2,
     wordCount,
@@ -289,45 +428,8 @@ function generateMockWritingAnalysis(prompt: string, essay: string, taskType: st
         keyRecommendations: ['Increase variety of structures using inversion or fronted adverbials.']
       }
     },
-    sentenceFeedbacks: [
-      {
-        original: words.slice(0, 15).join(' ') || 'The rapid development of technology has a big effect on human life.',
-        rewritten: 'The exponential proliferation of technological innovation exerts a profound influence on contemporary society.',
-        issueType: 'vocabulary',
-        explanation: 'Replacing "big effect" with the natural academic collocation "exerts a profound influence" elevates Lexical Resource.',
-        bandUpgradeTip: 'Band 8+ Collocation: "exert an influence", "herald an era of".'
-      },
-      {
-        original: 'People must solve this problem before it gets worse.',
-        rewritten: 'Governments and individuals alike must proactively mitigate these escalating ramifications.',
-        issueType: 'grammar',
-        explanation: 'Upgrades conversational modal phrase "must solve this problem" to formal academic discourse.',
-        bandUpgradeTip: 'Use "mitigate ramifications" instead of generic "solve problem".'
-      }
-    ],
-    vocabularySuggestions: [
-      {
-        originalPhrase: 'big effect / big impact',
-        suggestedUpgrade: 'exert a profound influence on',
-        type: 'collocation',
-        explanation: 'Standard C1 collocation favored by IELTS examiners over basic adjective "big".',
-        exampleInSentence: 'Social media exerts a profound influence on youth mental health.'
-      },
-      {
-        originalPhrase: 'good and bad sides',
-        suggestedUpgrade: 'a double-edged sword / nuanced dichotomies',
-        type: 'idiom',
-        explanation: 'Natural idiomatic expression appropriate for IELTS Task 2 discussions.',
-        exampleInSentence: 'While automated tools boost efficiency, they remain a double-edged sword.'
-      },
-      {
-        originalPhrase: 'a lot of people think',
-        suggestedUpgrade: 'it is widely contended that / proponents argue that',
-        type: 'academic_c1_c2',
-        explanation: 'Passive reporting structure that introduces academic objectivity.',
-        exampleInSentence: 'It is widely contended that universal healthcare should be a fundamental entitlement.'
-      }
-    ],
+    sentenceFeedbacks,
+    vocabularySuggestions,
     cohesionAnalysis: {
       overusedLinkers: ['Furthermore', 'In addition', 'In conclusion'],
       referencingQuality: 'Moderate. Consider substituting repeated subject nouns with pronouns (e.g., "these phenomena", "the former").',

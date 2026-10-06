@@ -12,11 +12,15 @@ import {
   Award,
   Layers,
   ChevronDown,
+  Edit3,
+  Highlighter,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
 import { WritingAnalysisResult, TaskType } from "@/types/ielts";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
+import { AnnotatedParagraph } from "./AnnotatedParagraph";
+import { DiagnosticInspector } from "./DiagnosticInspector";
 
 interface WritingStudioProps {
   apiKey: string;
@@ -36,8 +40,12 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   // Analysis State
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<WritingAnalysisResult | null>(null);
-  const [activeTab, setActiveTab] = useState<"criteria" | "sentences" | "vocab_studio" | "model_answer">("criteria");
+  const [activeTab, setActiveTab] = useState<"criteria" | "sentences" | "model_answer">("criteria");
   const [showScorecard, setShowScorecard] = useState(false);
+
+  // In-text annotation & view state
+  const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"annotated" | "edit">("edit");
 
   // Word count
   const words = essayContent.trim().split(/\s+/).filter(Boolean);
@@ -79,6 +87,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
     setIsAnalyzing(true);
     setAnalysisResult(null);
+    setSelectedAnnotationId(null);
 
     const activePromptText = useCustomPrompt
       ? customPrompt
@@ -102,6 +111,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
       const data: WritingAnalysisResult = await res.json();
       setAnalysisResult(data);
+      setViewMode("annotated"); // Automatically switch to in-text annotated view upon completion
     } catch (err) {
       console.error(err);
     } finally {
@@ -109,10 +119,20 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     }
   };
 
+  const handleApplyFix = (original: string, replacement: string) => {
+    setEssayContent((prev) => {
+      if (prev.includes(original)) {
+        return prev.replace(original, replacement);
+      }
+      return prev;
+    });
+  };
+
   const handleLoadSampleEssay = () => {
     setEssayContent(
       `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.\n\nConversely, skeptics caution that unregulated artificial intelligence could exacerbate socioeconomic disparities and induce severe structural unemployment. If machines replace entry-level cognitive tasks, young graduates may encounter unprecedented barriers to workplace integration. In addition, privacy concerns have become increasingly prominent.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`
     );
+    setViewMode("edit");
   };
 
   return (
@@ -133,9 +153,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           <div className="inline-flex items-center p-0.5 rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-xs">
             <button
               onClick={() => handleTaskTypeChange("task2")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
                 selectedTaskType === "task2"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
@@ -143,9 +163,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_academic")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
                 selectedTaskType === "task1_academic"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
@@ -153,9 +173,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_general")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
                 selectedTaskType === "task1_general"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
@@ -223,87 +243,138 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
         </div>
       </div>
 
-      {/* Section 2: Editor & Controls (Linear layout with thin white outline container) */}
-      <div className="space-y-3">
-        {/* Editor Toolbar */}
-        <div className="flex items-center justify-between text-xs pb-1">
-          <div className="flex items-center gap-3">
-            <span
-              className={`font-mono px-2 py-0.5 rounded-md border text-[11px] font-medium ${
-                isWordCountMet
-                  ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5"
-                  : "border-black/10 dark:border-white/15 text-neutral-600 dark:text-neutral-400"
-              }`}
-            >
-              {wordCount} / {targetWords} words
-            </span>
-            {!isWordCountMet && (
-              <span className="text-neutral-400 dark:text-neutral-500 text-[11px] hidden sm:inline">
-                Underlength penalty if &lt; {targetWords}
+      {/* Section 2: Split View (Paragraph Box on Left, Diagnostic Inspector on Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN: Paragraph Box (pushed to left, col-span-7) */}
+        <div className="lg:col-span-7 space-y-3">
+          {/* Editor / Review Toolbar */}
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs pb-1">
+            <div className="flex items-center gap-2">
+              <span
+                className={`font-mono px-2 py-0.5 rounded-md border text-[11px] font-medium ${
+                  isWordCountMet
+                    ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5"
+                    : "border-black/10 dark:border-white/15 text-neutral-600 dark:text-neutral-400"
+                }`}
+              >
+                {wordCount} / {targetWords} words
               </span>
-            )}
+
+              {/* Toggle View Mode when analysis exists */}
+              {analysisResult && (
+                <div className="inline-flex items-center p-0.5 rounded-md border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] text-[11px]">
+                  <button
+                    onClick={() => setViewMode("annotated")}
+                    className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
+                      viewMode === "annotated"
+                        ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
+                        : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    <Highlighter className="w-3 h-3" />
+                    Annotated
+                  </button>
+                  <button
+                    onClick={() => setViewMode("edit")}
+                    className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
+                      viewMode === "edit"
+                        ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
+                        : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    <Edit3 className="w-3 h-3" />
+                    Edit
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Timer */}
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-neutral-700 dark:text-neutral-300 font-medium">
+                {formatTimer(secondsRemaining)}
+              </span>
+              <button
+                onClick={() => setTimerRunning(!timerRunning)}
+                className="px-2 py-0.5 rounded border border-black/10 dark:border-white/15 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
+              >
+                {timerRunning ? "Pause" : "Timer"}
+              </button>
+              <button
+                onClick={() => {
+                  setSecondsRemaining(selectedTaskType === "task2" ? 40 * 60 : 20 * 60);
+                  setTimerRunning(false);
+                }}
+                className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer p-0.5"
+                title="Reset timer"
+              >
+                <RefreshCw className="w-3 h-3" />
+              </button>
+            </div>
           </div>
 
-          {/* Timer */}
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-neutral-700 dark:text-neutral-300 font-medium">
-              {formatTimer(secondsRemaining)}
+          {/* Conditional View: Annotated in-text highlighting vs Textarea */}
+          {analysisResult && viewMode === "annotated" ? (
+            <AnnotatedParagraph
+              content={essayContent}
+              errors={analysisResult.sentenceFeedbacks}
+              suggestions={analysisResult.vocabularySuggestions}
+              selectedId={selectedAnnotationId}
+              onSelect={setSelectedAnnotationId}
+              onApplyFix={handleApplyFix}
+            />
+          ) : (
+            <textarea
+              value={essayContent}
+              onChange={(e) => setEssayContent(e.target.value)}
+              placeholder={`Type your IELTS ${
+                selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"
+              } here... Organize into clear paragraphs.`}
+              rows={15}
+              className="w-full p-4 text-sm leading-relaxed rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-black/30 dark:focus:border-white/30 font-sans"
+            />
+          )}
+
+          {/* Submit Action */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
+            <span className="text-xs text-neutral-500 font-mono">
+              {apiKey ? "Live Gemini evaluation active" : "Built-in examiner engine ready"}
             </span>
+
             <button
-              onClick={() => setTimerRunning(!timerRunning)}
-              className="px-2 py-0.5 rounded border border-black/10 dark:border-white/15 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white cursor-pointer"
+              onClick={handleAnalyze}
+              disabled={isAnalyzing || !essayContent.trim()}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
             >
-              {timerRunning ? "Pause" : "Timer"}
-            </button>
-            <button
-              onClick={() => {
-                setSecondsRemaining(selectedTaskType === "task2" ? 40 * 60 : 20 * 60);
-                setTimerRunning(false);
-              }}
-              className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer"
-              title="Reset timer"
-            >
-              <RefreshCw className="w-3 h-3" />
+              {isAnalyzing ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  Analyzing mistakes...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5" />
+                  {analysisResult ? "Re-analyze with IELTS Rubric" : "Analyze with IELTS Rubric"}
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        {/* Textarea with thin outline */}
-        <textarea
-          value={essayContent}
-          onChange={(e) => setEssayContent(e.target.value)}
-          placeholder={`Type your IELTS ${selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"} here... Organize into clear paragraphs.`}
-          rows={14}
-          className="w-full p-4 text-sm leading-relaxed rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-black/30 dark:focus:border-white/30 font-sans"
-        />
-
-        {/* Submit Action */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
-          <span className="text-xs text-neutral-500 font-mono">
-            {apiKey ? "Live evaluation active" : "Standard engine mode"}
-          </span>
-
-          <button
-            onClick={handleAnalyze}
-            disabled={isAnalyzing || !essayContent.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
-          >
-            {isAnalyzing ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                Evaluating essay...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-3.5 h-3.5" />
-                Analyze with IELTS Rubric
-              </>
-            )}
-          </button>
+        {/* RIGHT COLUMN: Diagnostic Inspector (pushed to right, col-span-5) */}
+        <div className="lg:col-span-5 sticky top-24">
+          <DiagnosticInspector
+            errors={analysisResult?.sentenceFeedbacks || []}
+            suggestions={analysisResult?.vocabularySuggestions || []}
+            selectedId={selectedAnnotationId}
+            onSelect={setSelectedAnnotationId}
+            onApplyFix={handleApplyFix}
+            taskType={selectedTaskType}
+          />
         </div>
       </div>
 
-      {/* Section 3: Diagnostic Results */}
+      {/* Section 3: Diagnostic Results (The rest remains at the bottom as requested) */}
       {analysisResult && (
         <div className="pt-8 border-t border-black/10 dark:border-white/10 space-y-8 animate-in fade-in duration-200">
           {/* Header Score Overview: Minimalist */}
@@ -352,7 +423,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           <div className="flex flex-wrap items-center gap-1 border-b border-black/10 dark:border-white/10 pb-2">
             <button
               onClick={() => setActiveTab("criteria")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "criteria"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -361,28 +432,18 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               Criteria Breakdown
             </button>
             <button
-              onClick={() => setActiveTab("vocab_studio")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                activeTab === "vocab_studio"
-                  ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
-                  : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
-              }`}
-            >
-              Lexical Upgrades ({analysisResult.vocabularySuggestions.length})
-            </button>
-            <button
               onClick={() => setActiveTab("sentences")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "sentences"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
               }`}
             >
-              Sentence Diff ({analysisResult.sentenceFeedbacks.length})
+              Sentence Diff Archive ({analysisResult.sentenceFeedbacks.length})
             </button>
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "model_answer"
                   ? "bg-black text-white dark:bg-white dark:text-black font-semibold"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white"
@@ -458,33 +519,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             </div>
           )}
 
-          {/* TAB 2: Vocab Studio */}
-          {activeTab === "vocab_studio" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {analysisResult.vocabularySuggestions.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-neutral-400 line-through">{item.originalPhrase}</span>
-                    <span className="font-mono text-[10px] uppercase text-neutral-500">
-                      {item.type.replace("_", " ")}
-                    </span>
-                  </div>
-                  <div className="text-sm font-semibold text-black dark:text-white">
-                    {item.suggestedUpgrade}
-                  </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.explanation}</p>
-                  <div className="p-2.5 rounded-lg border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] text-xs text-neutral-700 dark:text-neutral-300 italic">
-                    "{item.exampleInSentence}"
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* TAB 3: Sentence Diff */}
+          {/* TAB 2: Sentence Diff */}
           {activeTab === "sentences" && (
             <div className="space-y-3">
               {analysisResult.sentenceFeedbacks.map((s, idx) => (
@@ -512,7 +547,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             </div>
           )}
 
-          {/* TAB 4: Model Answer */}
+          {/* TAB 3: Model Answer */}
           {activeTab === "model_answer" && (
             <div className="p-5 rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-black space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line">
               <span className="font-sans font-mono text-[11px] uppercase text-neutral-400 block">
