@@ -1,6 +1,6 @@
 import { WritingAnalysisResult, SpeakingAnalysisResult } from '@/types/ielts';
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 export const IELTS_WRITING_EXAMINER_SYSTEM_PROMPT = `
 You are a senior, certified British Council and IDP IELTS Examiner with over 15 years of experience.
