@@ -101,9 +101,6 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
                   Built-in
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-500 font-normal">
-                Official British Council & Cambridge English reference
-              </p>
             </div>
           </div>
 

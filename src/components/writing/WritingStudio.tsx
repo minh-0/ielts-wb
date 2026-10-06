@@ -608,7 +608,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             {/* Panel 1: Band Score & Summary */}
             <div className="lg:col-span-5 space-y-2.5 text-center lg:text-left">
               <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
-                Official Predicted Overall Score
+                Overall Band
               </div>
               <div className="text-5xl sm:text-6xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
                 Band {analysisResult.overallBand.toFixed(1)}
@@ -802,7 +802,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               className="ielts-paragraph p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line"
             >
               <span className="font-sans font-mono text-[11px] uppercase text-neutral-400 block">
-                Official Model Essay
+                Model Essay
               </span>
               {analysisResult.modelAnswer}
             </div>

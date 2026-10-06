@@ -145,7 +145,7 @@ export function ScorecardModal({
       // Footer
       ctx.fillStyle = "#555555";
       ctx.font = "18px monospace";
-      ctx.fillText("studio • diagnostic • official criteria evaluation", 80, 1260);
+      ctx.fillText("slayer6767", 80, 1260);
 
       const dataUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");

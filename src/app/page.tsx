@@ -29,27 +29,7 @@ export default function Home() {
       />
 
       {/* Main Expansive Container */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-6 sm:py-8 space-y-8">
-        {/* Minimalist Studio Subheader */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-neutral-200 dark:border-neutral-800">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-medium tracking-tight text-neutral-900 dark:text-neutral-100">
-              {activeTab === "writing"
-                ? "Writing Studio"
-                : activeTab === "speaking"
-                ? "Speaking Studio"
-                : "Evaluation Rubric"}
-            </h1>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-              {activeTab === "writing"
-                ? "In-text error diagnostics, higher-rated vocabulary upgrades & examiner scoring"
-                : activeTab === "speaking"
-                ? "Live voice recording, transcription, speech rate & pronunciation analysis"
-                : "Official public band descriptors and performance level criteria"}
-            </p>
-          </div>
-        </div>
-
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-5 sm:py-6">
         {/* Tab Content */}
         {activeTab === "writing" && <WritingStudio apiKey={apiKey} />}
         {activeTab === "speaking" && (
@@ -63,13 +43,10 @@ export default function Home() {
 
       {/* Footer: Simple, quiet line */}
       <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-transparent mt-12 text-xs text-neutral-400 dark:text-neutral-600">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">IELTSlayer666</span>
-          </div>
-          <div className="text-[11px]">
-            Examiner-grounded diagnostic feedback & language analytics
+            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">slayer6767</span>
           </div>
         </div>
       </footer>

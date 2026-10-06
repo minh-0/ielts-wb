@@ -446,11 +446,11 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               }`}
             >
               <Timer className="w-3 h-3" />
-              <span>Official Exam</span>
+              <span>Exam</span>
             </button>
           </div>
 
-          {speakingMode === "practice" && (
+          {speakingMode === "official_exam" ? null : (
             <div className="flex items-center gap-1.5 text-xs border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 px-2.5 py-1.5 rounded-lg">
               <span className="text-neutral-400 font-mono text-[11px]">Timer:</span>
               <select
@@ -461,7 +461,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 <option value={0} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">Unlimited</option>
                 <option value={30} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">30 seconds</option>
                 <option value={60} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">1 minute</option>
-                <option value={120} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">2 minutes (Official)</option>
+                <option value={120} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">2 minutes</option>
                 <option value={180} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">3 minutes</option>
               </select>
             </div>

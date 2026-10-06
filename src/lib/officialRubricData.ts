@@ -14,8 +14,8 @@ export interface RubricDefinition {
 }
 
 export const WRITING_TASK_2_RUBRIC: RubricDefinition = {
-  title: "IELTS Writing Task 2: Band Descriptors (Public Version)",
-  source: "British Council • IDP: IELTS Australia • Cambridge ESOL Examinations",
+  title: "Writing Task 2",
+  source: "",
   columns: [
     "Task Response",
     "Coherence and Cohesion",
@@ -206,8 +206,8 @@ export const WRITING_TASK_2_RUBRIC: RubricDefinition = {
 };
 
 export const WRITING_TASK_1_RUBRIC: RubricDefinition = {
-  title: "IELTS Writing Band Descriptors: Task 1 (Public Version)",
-  source: "British Council • IDP: IELTS Australia • Cambridge ESOL Examinations",
+  title: "Writing Task 1",
+  source: "",
   columns: [
     "Task Achievement",
     "Coherence and Cohesion",
@@ -392,8 +392,8 @@ export const WRITING_TASK_1_RUBRIC: RubricDefinition = {
 };
 
 export const SPEAKING_RUBRIC: RubricDefinition = {
-  title: "IELTS Speaking: Band Descriptors (Public Version)",
-  source: "British Council • IDP: IELTS Australia • Cambridge English Language Assessment",
+  title: "Speaking Test",
+  source: "",
   columns: [
     "Fluency and Coherence",
     "Lexical Resource",
