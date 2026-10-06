@@ -1,6 +1,10 @@
 import { WritingAnalysisResult, SpeakingAnalysisResult } from '@/types/ielts';
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
+const GEMINI_FALLBACK_MODEL = 'gemini-2.5-flash';
+
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_PRIMARY_MODEL}:generateContent`;
+const GEMINI_FALLBACK_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_FALLBACK_MODEL}:generateContent`;
 
 export const IELTS_WRITING_EXAMINER_SYSTEM_PROMPT = `
 You are a senior, certified British Council and IDP IELTS Examiner with over 15 years of experience.
@@ -151,28 +155,39 @@ Only output the JSON object without markdown fences if possible.
 `;
 
   try {
-    const res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
+    const payloadBody = JSON.stringify({
+      systemInstruction: {
+        parts: [{ text: IELTS_WRITING_EXAMINER_SYSTEM_PROMPT }]
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: userPrompt }]
+        }
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.2
+      }
+    });
+
+    let res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: IELTS_WRITING_EXAMINER_SYSTEM_PROMPT }]
-        },
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: userPrompt }]
-          }
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.2
-        }
-      })
+      body: payloadBody
     });
 
     if (!res.ok) {
-      console.warn('Gemini API call failed, falling back to mock examiner', await res.text());
+      console.warn(`Gemini 3.8 Flash call failed (${res.status}), trying fallback model ${GEMINI_FALLBACK_MODEL}...`);
+      res = await fetch(`${GEMINI_FALLBACK_API_URL}?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payloadBody
+      });
+    }
+
+    if (!res.ok) {
+      console.warn('Gemini API calls failed, falling back to mock examiner', await res.text());
       return generateMockWritingAnalysis(promptText, essayText, taskType);
     }
 
@@ -228,25 +243,36 @@ export async function analyzeSpeakingWithGemini(
   }
 
   try {
-    const res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
+    const payloadBody = JSON.stringify({
+      systemInstruction: {
+        parts: [{ text: IELTS_SPEAKING_EXAMINER_SYSTEM_PROMPT }]
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: partsPayload
+        }
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.2
+      }
+    });
+
+    let res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: IELTS_SPEAKING_EXAMINER_SYSTEM_PROMPT }]
-        },
-        contents: [
-          {
-            role: 'user',
-            parts: partsPayload
-          }
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.2
-        }
-      })
+      body: payloadBody
     });
+
+    if (!res.ok) {
+      console.warn(`Gemini 3.8 Flash speaking call failed (${res.status}), trying fallback model ${GEMINI_FALLBACK_MODEL}...`);
+      res = await fetch(`${GEMINI_FALLBACK_API_URL}?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payloadBody
+      });
+    }
 
     if (!res.ok) {
       console.warn('Gemini speaking call failed, using mock analysis');

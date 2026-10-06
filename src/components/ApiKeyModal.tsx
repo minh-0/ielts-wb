@@ -98,7 +98,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
           </div>
           <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
             Want dynamic, live AI evaluations for your own custom essay prompts? You can connect Google's
-            official <strong>Gemini 2.5 Flash</strong> model (Google's latest hybrid reasoning model). Google provides free Gemini keys with no credit
+            official <strong>Gemini 3.8 Flash</strong> model (Google's most intelligent Flash reasoning model). Google provides free Gemini keys with no credit
             card required.
           </p>
 
