@@ -14,6 +14,7 @@ import {
   Sliders,
   Timer,
   ChevronDown,
+  AlertCircle,
 } from "lucide-react";
 import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
 import { SpeakingAnalysisResult, SpeakingPart, SpeakingMode } from "@/types/ielts";
@@ -41,6 +42,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
   const [transcriptFallback, setTranscriptFallback] = useState<string>("");
   const [isListeningSpeech, setIsListeningSpeech] = useState<boolean>(false);
+  const [speechNotice, setSpeechNotice] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<any>(null);
@@ -86,6 +88,13 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
   const startRecording = async () => {
     try {
+      // Clear previous evaluations, audio and notices for clean fresh attempt
+      setAnalysisResult(null);
+      setSpeechNotice(null);
+      setTranscriptFallback("");
+      setAudioUrl(null);
+      setAudioBase64(null);
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
       const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
@@ -117,6 +126,14 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       setIsRecording(true);
       setRecordSeconds(0);
 
+      // Clean up any stale speech recognition instance
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {}
+        recognitionRef.current = null;
+      }
+
       // Initialize real-time Web Speech Recognition in browser
       const SpeechRecognition =
         typeof window !== "undefined"
@@ -132,26 +149,32 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
 
           recognition.onstart = () => {
             setIsListeningSpeech(true);
+            setSpeechNotice(null);
           };
 
+          let accumulatedWords = "";
           recognition.onresult = (event: any) => {
             let interim = "";
-            let final = "";
-            for (let i = 0; i < event.results.length; ++i) {
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
               if (event.results[i].isFinal) {
-                final += event.results[i][0].transcript + " ";
+                accumulatedWords += event.results[i][0].transcript + " ";
               } else {
                 interim += event.results[i][0].transcript;
               }
             }
-            const recognized = (final + interim).trim();
+            const recognized = (accumulatedWords + interim).trim();
             if (recognized) {
               setTranscriptFallback(recognized);
             }
           };
 
           recognition.onerror = (e: any) => {
-            console.warn("Browser speech recognition warning:", e.error);
+            console.warn("Browser speech recognition notice:", e.error);
+            if (e.error === "network") {
+              setSpeechNotice("Browser speech-to-text encountered a network limit. Type or paste your spoken words in the transcript box below so the examiner can evaluate your exact speech.");
+            } else if (e.error !== "no-speech") {
+              setSpeechNotice(`Live speech notice: ${e.error}. You can type or edit your words below.`);
+            }
           };
 
           recognition.onend = () => {
@@ -162,6 +185,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
           recognitionRef.current = recognition;
         } catch (recognitionErr) {
           console.warn("SpeechRecognition start failed:", recognitionErr);
+          setSpeechNotice("Live speech-to-text unavailable in this browser. Please type or paste your spoken response in the box below.");
         }
       }
 
@@ -180,6 +204,7 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
       }, 1000);
     } catch (err) {
       console.warn("Microphone access denied or unsupported", err);
+      setSpeechNotice("Microphone access denied or unsupported. Please check browser microphone permissions.");
     }
   };
 
@@ -210,6 +235,8 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
     setIsPrepping(false);
     setPrepSecondsRemaining(60);
     setTranscriptFallback("");
+    setAnalysisResult(null);
+    setSpeechNotice(null);
   };
 
   const handleAnalyze = async () => {
@@ -518,6 +545,22 @@ export function SpeakingStudio({ apiKey }: SpeakingStudioProps) {
               </button>
             )}
           </div>
+
+          {speechNotice && (
+            <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 text-xs text-amber-700 dark:text-amber-400 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <div>{speechNotice}</div>
+            </div>
+          )}
+
+          {audioUrl && !transcriptFallback.trim() && !isRecording && (
+            <div className="p-3 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 text-xs text-neutral-800 dark:text-neutral-200 flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
+              <div>
+                <strong>Audio captured ({formatTime(recordSeconds)}):</strong> If live speech-to-text did not capture your speech, please type or paste what you said in the box above so the examiner can evaluate your exact words.
+              </div>
+            </div>
+          )}
         </div>
 
         <button

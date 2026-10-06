@@ -693,24 +693,75 @@ function generateMockSpeakingAnalysis(
   part: string
 ): SpeakingAnalysisResult {
   // Never let base64 audio data be treated as speech text
-  let transcript = (isBase64AudioString(rawTranscript) ? '' : rawTranscript || '').trim();
+  const transcript = (isBase64AudioString(rawTranscript) ? '' : rawTranscript || '').trim();
+  const duration = Math.max(durationSeconds || 0, 2);
 
-  // If transcript is empty and duration was short, default to "hello" or short response
+  // CASE 1: No transcript provided (speech recognition failed or user did not type transcript)
   if (!transcript) {
-    if (durationSeconds <= 5) {
-      transcript = 'hello';
-    } else {
-      transcript = 'Well, to be honest, I think studying in the morning is much more productive for me because my mind is fresh and I can concentrate without distractions.';
-    }
+    return {
+      overallBand: 2.0,
+      transcript: '[No Spoken Words Transcribed]',
+      speechDurationSeconds: duration,
+      wordsPerMinute: 0,
+      pacingAssessment: 'too_slow',
+      fillerWords: {
+        totalCount: 0,
+        breakdown: [],
+        frequencyAnalysis: 'No speech text was available to detect conversational fillers.'
+      },
+      criteria: {
+        fluencyCoherence: {
+          score: 2.0,
+          bandLabel: 'Band 2.0 (Unintelligible / Missing Transcript)',
+          feedback: `Audio was recorded (${duration}s), but no spoken words were transcribed. Under official Cambridge IELTS criteria, an intelligible spoken transcript is required to evaluate fluency and coherence.`,
+          strengths: [],
+          weaknesses: ['No transcribed spoken language detected'],
+          keyRecommendations: ['Speak clearly into the microphone or verify/edit your words in the transcript box before clicking Analyze.']
+        },
+        lexicalResource: {
+          score: 2.0,
+          bandLabel: 'Band 2.0 (No Vocabulary Produced)',
+          feedback: 'No transcribed vocabulary was provided to assess lexical flexibility or range.',
+          strengths: [],
+          weaknesses: ['Zero lexical items provided'],
+          keyRecommendations: ['Type or verify your spoken answer in the transcript box to receive personalized vocabulary upgrades.']
+        },
+        grammaticalRange: {
+          score: 2.0,
+          bandLabel: 'Band 2.0 (No Sentence Structures)',
+          feedback: 'No grammatical structures were detected in the submission.',
+          strengths: [],
+          weaknesses: ['No sentence clauses present'],
+          keyRecommendations: ['Answer in full sentences to receive grammatical analysis.']
+        },
+        pronunciation: {
+          score: 2.5,
+          bandLabel: 'Band 2.5 (Unverified Audio Sample)',
+          feedback: `Detected ${duration}s of audio, but speech recognition could not transcribe words.`,
+          strengths: [],
+          weaknesses: ['Speech intelligibility could not be validated without transcription'],
+          keyRecommendations: ['Ensure microphone volume is adequate and speak in complete phrases.']
+        }
+      },
+      idiomAndPhrasalVerbUpgrades: [],
+      spokenGrammarErrors: [],
+      pronunciationNotes: {
+        phoneticIssue: 'Unable to evaluate pronunciation without transcribed speech',
+        wordsAffected: [],
+        intonationFeedback: 'Speak audibly and check that words appear in the transcript box.'
+      },
+      examinerSummary: `Unverified speech sample: Audio was recorded for ${duration}s, but no spoken transcript was received. In official IELTS Speaking tests, examiners must hear intelligible speech to award credit. Please ensure your words appear in the transcript box below your recording (or type/paste your speech) before analyzing.`,
+      sampleBand9Response: getModelResponseForTopic(topic, part),
+      primaryBottleneck: 'No transcribed speech received. Type or verify your transcript before analysis.'
+    };
   }
 
   const words = transcript.split(/\s+/).filter(Boolean);
   const wordCount = words.length;
-  const duration = Math.max(durationSeconds || 0, Math.max(2, Math.round(wordCount / 2.2)));
   const wpm = Math.min(240, Math.round((wordCount / Math.max(1, duration)) * 60));
 
-  // Check for insufficient language sample (under 12 words or under 6 seconds)
-  const isInsufficient = wordCount < 12 || duration < 6;
+  // CASE 2: Short utterance penalty (< 12 words or < 5 seconds)
+  const isInsufficient = wordCount < 12 || duration < 5;
 
   if (isInsufficient) {
     return {
@@ -771,8 +822,8 @@ function generateMockSpeakingAnalysis(
     };
   }
 
-  // If candidate spoke a realistic/developed response (>= 12 words):
-  // Detect real fillers
+  // CASE 3: Developed speech (>= 12 words)
+  // Tally real fillers present in the transcript
   const fillerMatches = [
     { word: 'um', count: (transcript.match(/\b(um|uh)\b/gi) || []).length },
     { word: 'like', count: (transcript.match(/\blike\b/gi) || []).length },
@@ -781,10 +832,90 @@ function generateMockSpeakingAnalysis(
   ].filter(f => f.count > 0);
   const totalFillers = fillerMatches.reduce((acc, curr) => acc + curr.count, 0);
 
-  // Determine scores based on length and quality
-  const isHighQuality = wordCount > 40;
+  // Dynamic idiom suggestions matched to words the candidate actually used
+  const transcriptLower = transcript.toLowerCase();
+  const potentialUpgrades = [
+    {
+      match: /\b(very important|really important|important)\b/i,
+      original: 'important',
+      upgrade: 'of paramount importance / a game-changer',
+      type: 'idiom' as const,
+      explanation: 'Replaces generic "important" with a high-band spoken collocation.',
+      example: 'Having clear goals is of paramount importance for long-term success.'
+    },
+    {
+      match: /\b(good|great|nice)\b/i,
+      original: 'good',
+      upgrade: 'first-rate / highly beneficial',
+      type: 'collocation' as const,
+      explanation: 'Replaces common evaluative adjectives with precise high-band spoken descriptors.',
+      example: 'It provided a first-rate learning experience.'
+    },
+    {
+      match: /\b(relax|rest|chill)\b/i,
+      original: 'relax',
+      upgrade: 'wind down / decompress',
+      type: 'phrasal_verb' as const,
+      explanation: 'Natural spoken phrasal verb favored in IELTS Speaking.',
+      example: 'I like to wind down by taking an evening walk.'
+    },
+    {
+      match: /\b(hard|difficult|tough)\b/i,
+      original: 'difficult',
+      upgrade: 'an uphill battle / demanding',
+      type: 'idiom' as const,
+      explanation: 'Natural conversational idiom expressing challenge.',
+      example: 'Mastering a new skill can be an uphill battle at first.'
+    },
+    {
+      match: /\b(think|believe|feel)\b/i,
+      original: 'think',
+      upgrade: 'am inclined to believe / hold the view that',
+      type: 'collocation' as const,
+      explanation: 'Elevates basic opinion verbs into Band 7.5+ discourse markers.',
+      example: 'I am inclined to believe that practical practice yields better results.'
+    },
+    {
+      match: /\b(like|love|enjoy)\b/i,
+      original: 'like',
+      upgrade: 'am particularly fond of / keen on',
+      type: 'phrasal_verb' as const,
+      explanation: 'Demonstrates authentic spoken idiomatic preferences.',
+      example: 'I am particularly fond of historical literature.'
+    },
+    {
+      match: /\b(rarely|seldom|not often)\b/i,
+      original: 'rarely',
+      upgrade: 'once in a blue moon',
+      type: 'idiom' as const,
+      explanation: 'Natural native idiom demonstrating casual idiomatic mastery.',
+      example: 'I only eat fast food once in a blue moon.'
+    }
+  ];
+
+  const matchedUpgrades = [];
+  for (const item of potentialUpgrades) {
+    if (item.match.test(transcriptLower) && matchedUpgrades.length < 2) {
+      matchedUpgrades.push({
+        originalPhrase: item.original,
+        suggestedUpgrade: item.upgrade,
+        type: item.type,
+        explanation: item.explanation,
+        exampleInSentence: item.example
+      });
+    }
+  }
+
+  // Multi-syllable words from actual transcript for pronunciation
+  const candidateMultiSyllableWords = words
+    .map(w => w.replace(/[^a-zA-Z]/g, '').toLowerCase())
+    .filter(w => w.length >= 7)
+    .slice(0, 2);
+
+  // Scores based on length & fluency
+  const isHighQuality = wordCount >= 40;
   const fcScore = isHighQuality ? (totalFillers > 5 ? 7.0 : 7.5) : 6.0;
-  const lrScore = isHighQuality ? 7.0 : 6.0;
+  const lrScore = isHighQuality ? (matchedUpgrades.length > 0 ? 7.5 : 7.0) : 6.0;
   const graScore = isHighQuality ? 7.0 : 6.0;
   const prScore = 7.0;
   const rawAvg = (fcScore + lrScore + graScore + prScore) / 4;
@@ -807,16 +938,16 @@ function generateMockSpeakingAnalysis(
       fluencyCoherence: {
         score: fcScore,
         bandLabel: `Band ${fcScore.toFixed(1)} (${fcScore >= 7.0 ? 'Speaks at Length with Coherence' : 'Willing to Speak at Length'})`,
-        feedback: `You spoke for ${duration}s at approximately ${wpm} words per minute. Ideas were developed with coherent progression.`,
-        strengths: ['Sustained speech with good momentum', 'Answer directly relates to the prompt'],
+        feedback: `You spoke for ${duration}s at approximately ${wpm} words per minute with ${wordCount} words produced. Progression is coherent.`,
+        strengths: ['Sustained speech with good momentum', 'Response directly addresses the cue card topic'],
         weaknesses: totalFillers > 3 ? ['Slight reliance on conversational filler words'] : [],
         keyRecommendations: ['Use natural discourse markers ("Having said that", "Consequently") to bridge ideas smoothly.']
       },
       lexicalResource: {
         score: lrScore,
         bandLabel: `Band ${lrScore.toFixed(1)} (${lrScore >= 7.0 ? 'Good Lexical Flexibility' : 'Adequate Range for Topic'})`,
-        feedback: 'Demonstrated good communicative vocabulary. Adding natural phrasal verbs and idiomatic expressions will push to Band 7.5+.',
-        strengths: ['Accurate word choice for the topic', 'Clear explanations without frequent word-searching'],
+        feedback: `Communicated ideas with clear word choices across ${wordCount} words. Integrating more idiomatic expressions will push to Band 7.5+.`,
+        strengths: ['Appropriate vocabulary choice for the topic', 'Clear expression without noticeable hesitation for words'],
         weaknesses: ['Opportunity to use more varied idiomatic phrasal verbs'],
         keyRecommendations: ['Incorporate natural spoken collocations and phrasal verbs into your speaking practice.']
       },
@@ -824,42 +955,27 @@ function generateMockSpeakingAnalysis(
         score: graScore,
         bandLabel: `Band ${graScore.toFixed(1)} (${graScore >= 7.0 ? 'Frequently Error-Free Complex Forms' : 'Mix of Simple & Complex Forms'})`,
         feedback: 'Good grammatical control with appropriate clause coordination and subordinate clauses.',
-        strengths: ['Clear sentence boundaries', 'Effective use of reason and concession clauses'],
-        weaknesses: ['Can include more hypothetical second/third conditionals'],
-        keyRecommendations: ['Practice hypothetical structures ("If I had the chance, I would definitely...") to show grammatical range.']
+        strengths: ['Clear sentence boundaries', 'Effective use of subordinate reason/concession clauses'],
+        weaknesses: ['Can include more hypothetical conditionals'],
+        keyRecommendations: ['Practice hypothetical structures ("If I had the chance, I would definitely...") to demonstrate range.']
       },
       pronunciation: {
         score: prScore,
         bandLabel: 'Band 7.0 (Easily Understood Throughout)',
         feedback: 'Speech is clear and easy to follow with natural rhythm and intelligible stress patterns.',
-        strengths: ['Clear articulation of keywords', 'Natural rhythm and pitch inflection'],
+        strengths: ['Clear articulation of key content words', 'Natural rhythm and pitch inflection'],
         weaknesses: ['Ensure crisp pronunciation of final consonant clusters'],
         keyRecommendations: ['Vary intonation when emphasizing key feelings or transitions.']
       }
     },
-    idiomAndPhrasalVerbUpgrades: [
-      {
-        originalPhrase: 'very important',
-        suggestedUpgrade: 'of paramount importance / a game changer',
-        type: 'idiom',
-        explanation: 'Natural spoken idiom that elevates spoken Lexical Resource to Band 7.5+.',
-        exampleInSentence: 'Having a great mentor was a total game changer for my personal growth.'
-      },
-      {
-        originalPhrase: 'relax after busy days',
-        suggestedUpgrade: 'wind down / decompress',
-        type: 'phrasal_verb',
-        explanation: 'Common, authentic spoken phrasal verb prized by native English examiners.',
-        exampleInSentence: 'I prefer to wind down by reading a novel or going for a run.'
-      }
-    ],
+    idiomAndPhrasalVerbUpgrades: matchedUpgrades,
     spokenGrammarErrors: [],
     pronunciationNotes: {
-      phoneticIssue: 'Consonant cluster articulation',
-      wordsAffected: ['productive', 'distractions'],
+      phoneticIssue: 'Consonant cluster articulation and sentence stress',
+      wordsAffected: candidateMultiSyllableWords.length > 0 ? candidateMultiSyllableWords : ['connected speech'],
       intonationFeedback: 'Maintain downward inflection at the end of statements to project confidence and certainty.'
     },
-    examinerSummary: `A solid, communicative response demonstrating Band ${overallBand.toFixed(1)} speaking ability. Speech was sustained and easy to follow. To advance to Band 7.5+, integrate more authentic spoken phrasal verbs and expand on complex grammar structures.`,
+    examinerSummary: `A solid, communicative response demonstrating Band ${overallBand.toFixed(1)} speaking ability (${wordCount} words in ${duration}s). Speech was sustained and easy to follow. To advance to higher bands, integrate more authentic spoken phrasal verbs and expand on complex grammar structures.`,
     sampleBand9Response: getModelResponseForTopic(topic, part),
     primaryBottleneck: 'Integrate natural spoken phrasal verbs and vary intonation on key points.'
   };
