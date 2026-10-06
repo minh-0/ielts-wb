@@ -135,7 +135,7 @@ export function ScorecardModal({
       // Footer
       ctx.fillStyle = "#555555";
       ctx.font = "18px monospace";
-      ctx.fillText("IELTS BandBoost • Official Criteria Evaluation", 80, 1260);
+      ctx.fillText("IELTSlayer666 • Official Criteria Evaluation", 80, 1260);
 
       const dataUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");

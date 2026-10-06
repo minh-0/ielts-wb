@@ -448,10 +448,12 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           )}
 
           {/* Submit Action */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1">
-            <span className="text-xs text-neutral-500 font-mono">
-              {apiKey ? "Live Gemini evaluation active" : "Built-in examiner engine ready"}
-            </span>
+          <div className={`flex flex-col sm:flex-row items-start sm:items-center ${apiKey ? "justify-between" : "justify-end"} gap-3 pt-1`}>
+            {apiKey && (
+              <span className="text-xs text-neutral-500 font-mono">
+                Live Gemini evaluation active
+              </span>
+            )}
 
             <button
               onClick={handleAnalyze}

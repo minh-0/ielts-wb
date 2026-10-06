@@ -16,12 +16,9 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
     <header className="sticky top-0 z-40 w-full border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-md">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 h-14 flex items-center justify-between">
         {/* Brand / Logo */}
-        <div className="flex items-center gap-2.5">
-          <span className="font-mono font-bold text-xs tracking-wider px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5 text-black dark:text-white">
-            IELTS
-          </span>
-          <span className="font-semibold text-sm tracking-tight text-neutral-900 dark:text-neutral-100">
-            BandBoost
+        <div className="flex items-center gap-2">
+          <span className="font-mono font-bold text-sm tracking-tight text-black dark:text-white px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5">
+            IELTSlayer666
           </span>
         </div>
 

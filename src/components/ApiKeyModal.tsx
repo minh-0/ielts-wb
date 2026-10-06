@@ -58,7 +58,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
               AI Evaluation Mode
             </h3>
             <p className="text-xs text-neutral-500 font-normal">
-              How BandBoost scores your writing and speaking
+              How IELTSlayer666 scores your writing and speaking
             </p>
           </div>
         </div>
@@ -77,7 +77,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
             </span>
           </div>
           <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
-            <strong>No setup or API key needed!</strong> You can practice anytime. BandBoost comes with
+            <strong>No setup or API key needed!</strong> You can practice anytime. IELTSlayer666 comes with
             realistic Cambridge IELTS scoring, line-by-line grammar mistake underlines (red), C1/C2
             vocabulary upgrades (violet), and speech pacing metrics completely free out of the box.
           </p>

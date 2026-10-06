@@ -83,7 +83,7 @@ export default function Home() {
       {/* Footer: Simple thin line, wide layout */}
       <footer className="border-t border-black/10 dark:border-white/10 py-8 bg-transparent mt-16">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-500 dark:text-neutral-500">
-          <div>IELTS BandBoost • Vibe Coding Contest 2026</div>
+          <div>IELTSlayer666</div>
           <div>Grounded in British Council, IDP, and Cambridge English public band descriptors.</div>
         </div>
       </footer>
