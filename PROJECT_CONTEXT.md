@@ -53,7 +53,7 @@
 - **Interactive Question Card & Question Picker Modal (`QuestionPickerModal.tsx`)**:
   - Replaced cramped native select dropdown with a sleek interactive Question Card showing topic badges, essay format pills, and Band 9.0 availability.
   - **Random Question Picker**: Dedicated "Random" button (`Shuffle` icon) to instantly rotate through the question bank.
-  - **Question Picker Modal (`QuestionPickerModal.tsx`)**: High-performance popup with live search, topic category pills, format pills, random button, question cards with active indicators, and Esc/backdrop dismiss.
+  - **Question Picker Modal (`QuestionPickerModal.tsx`)**: Minimalist Command-Palette style popup with live search, clean popout topic dropdown menu, popout format selector, random picker button, sleek scannable question items, and Esc/backdrop dismiss.
 - **Model Essay Tab & Cleaned Feedback Tabs**:
   - Removed redundant "Sentence Diff Archive" tab from post-analysis feedback.
   - Post-analysis tabs streamlined to 2 core views: **Criteria Breakdown** and **Model Essay**.

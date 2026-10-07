@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { WritingPrompt } from "@/lib/ieltsPromptBank";
-import { Search, Shuffle, Check, X, Sparkles, BookOpen } from "lucide-react";
+import { Search, Shuffle, Check, X, ChevronDown } from "lucide-react";
 
 interface QuestionPickerModalProps {
   isOpen: boolean;
@@ -22,17 +22,44 @@ export function QuestionPickerModal({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedEssayType, setSelectedEssayType] = useState<string>("All");
+  const [isTopicOpen, setIsTopicOpen] = useState(false);
+  const [isTypeOpen, setIsTypeOpen] = useState(false);
 
-  // Keyboard shortcut: Esc to close
+  const topicDropdownRef = useRef<HTMLDivElement>(null);
+  const typeDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (topicDropdownRef.current && !topicDropdownRef.current.contains(e.target as Node)) {
+        setIsTopicOpen(false);
+      }
+      if (typeDropdownRef.current && !typeDropdownRef.current.contains(e.target as Node)) {
+        setIsTypeOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Keyboard shortcut: Esc to close dropdowns or modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
+        if (isTopicOpen) {
+          setIsTopicOpen(false);
+          return;
+        }
+        if (isTypeOpen) {
+          setIsTypeOpen(false);
+          return;
+        }
         onClose();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, isTopicOpen, isTypeOpen, onClose]);
 
   // Extract unique categories
   const categories = useMemo(() => {
@@ -43,10 +70,17 @@ export function QuestionPickerModal({
     return ["All", ...Array.from(set)];
   }, [prompts]);
 
-  const essayTypes = ["All", "opinion", "discussion", "advantages_disadvantages", "problem_solution", "double_question"];
+  const essayTypes = [
+    "All",
+    "opinion",
+    "discussion",
+    "advantages_disadvantages",
+    "problem_solution",
+    "double_question",
+  ];
 
   const formatEssayType = (type?: string) => {
-    if (!type || type === "All") return "All Types";
+    if (!type || type === "All") return "All Formats";
     if (type === "opinion") return "Agree / Disagree";
     if (type === "discussion") return "Discuss Both Views";
     if (type === "advantages_disadvantages") return "Advantages & Disadv.";
@@ -79,128 +113,258 @@ export function QuestionPickerModal({
     onClose();
   };
 
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("All");
+    setSelectedEssayType("All");
+  };
+
+  const hasActiveFilters =
+    selectedCategory !== "All" || selectedEssayType !== "All" || searchQuery.trim().length > 0;
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 lg:p-6 animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col w-full h-[90vh] max-w-4xl overflow-hidden animate-in zoom-in-95 duration-150">
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 shrink-0">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-neutral-500" />
-              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                IELTS Essay Question Bank
-              </h3>
-              <span className="font-mono text-[11px] px-2 py-0.5 rounded-full bg-neutral-200/60 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium">
-                {prompts.length} Verified Topics
-              </span>
-            </div>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
-              Select any essay topic. Every prompt includes an official Band 9.0 model essay.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handlePickRandom}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors"
-              title="Pick a random question"
-            >
-              <Shuffle className="w-3.5 h-3.5 text-neutral-500" />
-              <span>Random</span>
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer transition-colors"
-              title="Close (Esc)"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* Search & Filter Controls */}
-        <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 shrink-0">
-          {/* Search bar */}
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+      <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col w-full max-w-3xl h-[82vh] overflow-hidden animate-in zoom-in-95 duration-150">
+        {/* Sleek Minimal Header */}
+        <div className="flex items-center gap-2 p-3 sm:px-4 sm:py-3 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 relative z-20 shrink-0">
+          {/* Search Input */}
+          <div className="relative flex-1 min-w-0">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by topic, keyword, or prompt text..."
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 transition-colors"
+              placeholder={`Search ${prompts.length} questions...`}
+              className="w-full pl-8 pr-7 py-1.5 text-xs rounded-lg border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 transition-colors"
+              autoFocus
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
-          {/* Category Filter Pills (Scrollable horizontally) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-thin">
-            <span className="text-neutral-400 text-[10px] uppercase font-mono shrink-0 mr-1">
-              Topic:
-            </span>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-2.5 py-1 rounded-lg shrink-0 transition-colors cursor-pointer font-medium ${
-                  selectedCategory === cat
-                    ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
-                    : "bg-neutral-100/70 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 border border-neutral-200/60 dark:border-neutral-800/60"
+          {/* Topic Selection Popout */}
+          <div className="relative" ref={topicDropdownRef}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsTopicOpen(!isTopicOpen);
+                setIsTypeOpen(false);
+              }}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
+                selectedCategory !== "All"
+                  ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 shadow-2xs"
+                  : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+              }`}
+              title="Filter by Topic"
+            >
+              <span className="max-w-[110px] sm:max-w-[140px] truncate text-[11px] sm:text-xs">
+                {selectedCategory === "All" ? "Topic" : selectedCategory}
+              </span>
+              <ChevronDown
+                className={`w-3 h-3 text-neutral-400 transition-transform ${
+                  isTopicOpen ? "rotate-180" : ""
                 }`}
-              >
-                {cat}
-              </button>
-            ))}
+              />
+            </button>
+
+            {/* Popout Dropdown Menu */}
+            {isTopicOpen && (
+              <div className="absolute right-0 sm:left-0 sm:right-auto top-full mt-1.5 w-60 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100 max-h-72 overflow-y-auto">
+                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
+                  Select Topic
+                </div>
+                {categories.map((cat) => {
+                  const count =
+                    cat === "All"
+                      ? prompts.length
+                      : prompts.filter((p) => p.category === cat).length;
+                  const isSelected = selectedCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setIsTopicOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs text-left text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                    >
+                      <span
+                        className={`truncate ${
+                          isSelected ? "font-semibold text-neutral-900 dark:text-neutral-100" : ""
+                        }`}
+                      >
+                        {cat}
+                      </span>
+                      <div className="flex items-center gap-2 shrink-0 ml-2">
+                        <span className="font-mono text-[10px] text-neutral-400">({count})</span>
+                        {isSelected && (
+                          <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {/* Essay Type Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-[11px] scrollbar-thin">
-            <span className="text-neutral-400 text-[10px] uppercase font-mono shrink-0 mr-1">
-              Format:
-            </span>
-            {essayTypes.map((type) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => setSelectedEssayType(type)}
-                className={`px-2.5 py-0.5 rounded-md shrink-0 transition-colors cursor-pointer text-[10px] ${
-                  selectedEssayType === type
-                    ? "bg-neutral-800 text-white dark:bg-neutral-200 dark:text-neutral-900 font-medium"
-                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+          {/* Essay Format Popout */}
+          <div className="relative" ref={typeDropdownRef}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsTypeOpen(!isTypeOpen);
+                setIsTopicOpen(false);
+              }}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
+                selectedEssayType !== "All"
+                  ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 shadow-2xs"
+                  : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+              }`}
+              title="Filter by Essay Format"
+            >
+              <span className="max-w-[90px] sm:max-w-[120px] truncate text-[11px] sm:text-xs">
+                {selectedEssayType === "All" ? "Format" : formatEssayType(selectedEssayType)}
+              </span>
+              <ChevronDown
+                className={`w-3 h-3 text-neutral-400 transition-transform ${
+                  isTypeOpen ? "rotate-180" : ""
                 }`}
-              >
-                {formatEssayType(type)}
-              </button>
-            ))}
+              />
+            </button>
+
+            {/* Popout Format Dropdown Menu */}
+            {isTypeOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
+                  Select Format
+                </div>
+                {essayTypes.map((type) => {
+                  const isSelected = selectedEssayType === type;
+                  return (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => {
+                        setSelectedEssayType(type);
+                        setIsTypeOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs text-left text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                    >
+                      <span
+                        className={`truncate ${
+                          isSelected ? "font-semibold text-neutral-900 dark:text-neutral-100" : ""
+                        }`}
+                      >
+                        {formatEssayType(type)}
+                      </span>
+                      {isSelected && (
+                        <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100 ml-2" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
+
+          {/* Random Quick Picker */}
+          <button
+            type="button"
+            onClick={handlePickRandom}
+            className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+            title="Pick a random question from list"
+          >
+            <Shuffle className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Close Button */}
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer"
+            title="Close (Esc)"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        {/* Questions Scroll List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-2.5 bg-neutral-50/30 dark:bg-neutral-900/10">
-          <div className="text-[11px] font-mono text-neutral-400 pb-1">
-            Showing {filteredPrompts.length} of {prompts.length} questions
+        {/* Minimal Active Filter Bar (shown only when filtering) */}
+        {hasActiveFilters && (
+          <div className="flex items-center justify-between px-4 py-1.5 bg-neutral-50/80 dark:bg-neutral-900/40 border-b border-neutral-100 dark:border-neutral-800/80 text-[11px] text-neutral-500 shrink-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[10px] uppercase font-mono text-neutral-400">Filtering:</span>
+              {selectedCategory !== "All" && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[10px] font-medium">
+                  {selectedCategory}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory("All")}
+                    className="hover:text-neutral-900 dark:hover:text-white cursor-pointer"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              )}
+              {selectedEssayType !== "All" && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[10px] font-medium">
+                  {formatEssayType(selectedEssayType)}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEssayType("All")}
+                    className="hover:text-neutral-900 dark:hover:text-white cursor-pointer"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              )}
+              {searchQuery.trim() && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[10px] font-medium">
+                  "{searchQuery}"
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="hover:text-neutral-900 dark:hover:text-white cursor-pointer"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="text-[10px] text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 underline cursor-pointer shrink-0 ml-2"
+            >
+              Reset
+            </button>
           </div>
+        )}
 
+        {/* Minimal Question Scroll List */}
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 bg-neutral-50/20 dark:bg-neutral-900/10">
           {filteredPrompts.length === 0 ? (
-            <div className="py-16 text-center space-y-2">
-              <p className="text-xs text-neutral-400">No questions found matching your filter.</p>
+            <div className="py-20 text-center space-y-2">
+              <p className="text-xs text-neutral-400">No questions match your criteria.</p>
               <button
                 type="button"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedCategory("All");
-                  setSelectedEssayType("All");
-                }}
-                className="text-xs text-neutral-700 dark:text-neutral-300 underline cursor-pointer"
+                onClick={handleResetFilters}
+                className="text-xs text-neutral-800 dark:text-neutral-200 underline cursor-pointer font-medium"
               >
                 Clear all filters
               </button>
@@ -215,59 +379,44 @@ export function QuestionPickerModal({
                     onSelectPrompt(p);
                     onClose();
                   }}
-                  className={`p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer group select-none ${
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer group select-none ${
                     isSelected
-                      ? "border-neutral-900 bg-white dark:border-neutral-100 dark:bg-neutral-900/90 ring-1 ring-neutral-900/20 dark:ring-neutral-100/20 shadow-xs"
-                      : "border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-xs"
+                      ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-2xs"
+                      : "border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50/60 dark:hover:bg-neutral-900/30"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-1.5 flex-1 min-w-0">
-                      {/* Tags */}
-                      <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
-                        <span className="font-mono px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-medium">
+                    <div className="space-y-1 flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-[10px] text-neutral-400">
                           #{idx + 1}
                         </span>
-                        <span className="px-1.5 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium">
-                          {p.category}
-                        </span>
-                        {p.essayType && (
-                          <span className="px-1.5 py-0.5 rounded font-mono text-[9px] uppercase tracking-wider bg-violet-500/10 text-violet-700 dark:text-purple-300 border border-violet-500/20 font-medium">
-                            {formatEssayType(p.essayType)}
+                        <h4 className="text-xs sm:text-[13px] font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-black dark:group-hover:text-white transition-colors">
+                          {p.title}
+                        </h4>
+                        <div className="flex items-center gap-1.5 text-[10px]">
+                          <span className="font-mono px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                            {p.category}
                           </span>
-                        )}
-                        {p.modelEssay && (
-                          <span className="px-1.5 py-0.5 rounded font-mono text-[9px] uppercase tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-medium flex items-center gap-0.5">
-                            <Sparkles className="w-2.5 h-2.5" />
-                            Band 9.0 Model
-                          </span>
-                        )}
+                          {p.essayType && (
+                            <span className="px-1.5 py-0.2 rounded font-mono text-[9px] uppercase tracking-wider bg-purple-500/10 text-purple-700 dark:text-purple-300">
+                              {formatEssayType(p.essayType)}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Title */}
-                      <h4 className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-black dark:group-hover:text-white transition-colors">
-                        {p.title}
-                      </h4>
-
-                      {/* Prompt */}
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed line-clamp-3">
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
                         {p.prompt}
                       </p>
                     </div>
 
-                    {/* Action badge */}
-                    <div className="shrink-0 pt-1">
-                      {isSelected ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900">
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Active</span>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-800 text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-colors">
-                          Select
-                        </span>
-                      )}
-                    </div>
+                    {isSelected && (
+                      <span className="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 mt-0.5">
+                        <Check className="w-3 h-3" />
+                        <span>Active</span>
+                      </span>
+                    )}
                   </div>
                 </div>
               );
@@ -275,18 +424,12 @@ export function QuestionPickerModal({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="px-5 py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 flex items-center justify-between text-xs shrink-0">
-          <span className="text-neutral-400 text-[11px]">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 font-mono text-[10px]">Esc</kbd> to exit
+        {/* Quiet Minimal Footer */}
+        <div className="px-4 py-2 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 flex items-center justify-between text-[11px] text-neutral-400 font-mono shrink-0">
+          <span>
+            {filteredPrompts.length} of {prompts.length} questions
           </span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-3.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer shadow-xs"
-          >
-            Close
-          </button>
+          <span>Esc to exit</span>
         </div>
       </div>
     </div>
