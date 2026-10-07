@@ -1,3 +1,5 @@
+import { TASK2_QUESTIONS_BANK } from "./task2QuestionsData";
+
 export interface WritingPrompt {
   id: string;
   type: 'task1_academic' | 'task1_general' | 'task2';
@@ -6,6 +8,8 @@ export interface WritingPrompt {
   prompt: string;
   suggestedTimeMinutes: number;
   minWordCount: number;
+  essayType?: 'opinion' | 'discussion' | 'advantages_disadvantages' | 'problem_solution' | 'double_question';
+  modelEssay?: string;
 }
 
 export interface SpeakingPrompt {
@@ -17,34 +21,7 @@ export interface SpeakingPrompt {
   suggestedDurationSeconds: number;
 }
 
-export const WRITING_PROMPTS: WritingPrompt[] = [
-  {
-    id: 't2-ai-jobs',
-    type: 'task2',
-    category: 'Technology & Employment',
-    title: 'Artificial Intelligence and Future Jobs',
-    prompt: 'Some people believe that artificial intelligence will replace most human jobs and create widespread unemployment, while others argue it will create new, higher-value opportunities. Discuss both views and give your own opinion.',
-    suggestedTimeMinutes: 40,
-    minWordCount: 250,
-  },
-  {
-    id: 't2-environment-responsibility',
-    type: 'task2',
-    category: 'Environment',
-    title: 'Individual vs Government Environmental Action',
-    prompt: 'Some people argue that individuals can do little to protect the environment and that only large corporations and governments can solve global environmental crises. To what extent do you agree or disagree?',
-    suggestedTimeMinutes: 40,
-    minWordCount: 250,
-  },
-  {
-    id: 't2-higher-education',
-    type: 'task2',
-    category: 'Education',
-    title: 'University Tuition & Free Higher Education',
-    prompt: 'Many governments provide free university education to all citizens, while others require students to pay high tuition fees. Discuss the advantages and disadvantages of free higher education.',
-    suggestedTimeMinutes: 40,
-    minWordCount: 250,
-  },
+export const TASK1_PROMPTS: WritingPrompt[] = [
   {
     id: 't1-acad-energy-consumption',
     type: 'task1_academic',
@@ -63,6 +40,11 @@ export const WRITING_PROMPTS: WritingPrompt[] = [
     suggestedTimeMinutes: 20,
     minWordCount: 150,
   },
+];
+
+export const WRITING_PROMPTS: WritingPrompt[] = [
+  ...TASK2_QUESTIONS_BANK,
+  ...TASK1_PROMPTS,
 ];
 
 export const SPEAKING_PROMPTS: SpeakingPrompt[] = [

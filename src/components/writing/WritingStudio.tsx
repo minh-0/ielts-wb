@@ -20,6 +20,7 @@ import {
   Maximize2,
   Bookmark,
   Check,
+  Shuffle,
   X as XIcon,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
@@ -29,6 +30,7 @@ import { ScorecardModal } from "../ScorecardModal";
 import { AnnotatedParagraph } from "./AnnotatedParagraph";
 import { DiagnosticInspector } from "./DiagnosticInspector";
 import { SavedEssaysModal } from "./SavedEssaysModal";
+import { QuestionPickerModal } from "./QuestionPickerModal";
 
 interface WritingStudioProps {
   apiKey: string;
@@ -52,8 +54,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<WritingAnalysisResult | null>(null);
   const [baseAnalysisResult, setBaseAnalysisResult] = useState<WritingAnalysisResult | null>(null);
-  const [activeTab, setActiveTab] = useState<"criteria" | "sentences" | "model_answer">("criteria");
+  const [activeTab, setActiveTab] = useState<"criteria" | "model_answer">("criteria");
   const [showScorecard, setShowScorecard] = useState(false);
+  const [isQuestionPickerOpen, setIsQuestionPickerOpen] = useState(false);
 
   // In-text annotation & view state
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
@@ -346,6 +349,30 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     }
     setSecondsRemaining(type === "task2" ? 40 * 60 : 20 * 60);
     setTimerRunning(false);
+  };
+
+  const formatEssayType = (type?: string) => {
+    if (!type || type === "All") return "";
+    if (type === "opinion") return "Agree / Disagree";
+    if (type === "discussion") return "Discuss Both Views";
+    if (type === "advantages_disadvantages") return "Advantages & Disadv.";
+    if (type === "problem_solution") return "Problem & Solution";
+    if (type === "double_question") return "Two-Part Question";
+    return type;
+  };
+
+  const handleRandomQuestion = () => {
+    const available = WRITING_PROMPTS.filter((p) => p.type === selectedTaskType);
+    if (available.length <= 1) return;
+    let nextPrompt = selectedPrompt;
+    let attempts = 0;
+    while (nextPrompt.id === selectedPrompt.id && attempts < 20) {
+      const randomIndex = Math.floor(Math.random() * available.length);
+      nextPrompt = available[randomIndex];
+      attempts++;
+    }
+    setSelectedPrompt(nextPrompt);
+    setUseCustomPrompt(false);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -710,29 +737,58 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               )}
             </div>
           ) : (
-            <div className="relative">
-              <select
-                value={selectedPrompt.id}
-                onChange={(e) => {
-                  const p = WRITING_PROMPTS.find((x) => x.id === e.target.value);
-                  if (p) setSelectedPrompt(p);
-                }}
-                className="w-full p-2.5 pr-8 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 appearance-none focus:outline-none cursor-pointer hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors"
-              >
-                {WRITING_PROMPTS.filter((p) => p.type === selectedTaskType).map((p) => (
-                  <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">
-                    [{p.category}] {p.title}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400 pointer-events-none" />
-            </div>
-          )}
+            <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 sm:p-5 shadow-xs space-y-3.5">
+              {/* Card Header: Badges & Action Buttons */}
+              <div className="flex flex-wrap items-center justify-between gap-2.5">
+                <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <span className="px-2 py-0.5 rounded-md font-mono text-[10px] uppercase font-semibold tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200/80 dark:border-neutral-700/80">
+                    {selectedPrompt.category}
+                  </span>
+                  {selectedPrompt.essayType && (
+                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] uppercase font-semibold tracking-wider bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
+                      {formatEssayType(selectedPrompt.essayType)}
+                    </span>
+                  )}
+                  {selectedPrompt.modelEssay && (
+                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] uppercase font-semibold tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      Band 9.0 Model
+                    </span>
+                  )}
+                </div>
 
-          {!useCustomPrompt && (
-            <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">Question:</span>
-              {selectedPrompt.prompt}
+                {/* Question Selection Actions: Random + Browse Question Bank */}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleRandomQuestion}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/60 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shadow-2xs"
+                    title="Pick a random question"
+                  >
+                    <Shuffle className="w-3.5 h-3.5 text-neutral-500" />
+                    <span>Random</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsQuestionPickerOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                    title="Browse complete question bank"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>Browse Questions ({WRITING_PROMPTS.filter((p) => p.type === selectedTaskType).length})</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Title & Prompt Text */}
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+                  {selectedPrompt.title}
+                </h3>
+                <div className="p-3.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-sans">
+                  {selectedPrompt.prompt}
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -1010,16 +1066,6 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               Criteria Breakdown
             </button>
             <button
-              onClick={() => setActiveTab("sentences")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === "sentences"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
-              }`}
-            >
-              Sentence Diff Archive ({analysisResult.sentenceFeedbacks.length})
-            </button>
-            <button
               onClick={() => setActiveTab("model_answer")}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 activeTab === "model_answer"
@@ -1111,46 +1157,67 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             </div>
           )}
 
-          {/* TAB 2: Sentence Diff */}
-          {activeTab === "sentences" && (
-            <div className="space-y-3">
-              {analysisResult.sentenceFeedbacks.map((s, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs"
-                >
-                  <div className="flex items-center justify-between text-neutral-400 font-mono text-[11px]">
-                    <span>Sentence {idx + 1}</span>
-                    <span className="uppercase">{s.issueType}</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-neutral-700 dark:text-neutral-300">
-                      <span className="font-mono text-[10px] text-neutral-400 block mb-1">ORIGINAL:</span>
-                      "{s.original}"
-                    </div>
-                    <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-950 dark:text-emerald-200">
-                      <span className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 block mb-1">REWRITE:</span>
-                      "{s.rewritten}"
-                    </div>
-                  </div>
-                  <p className="text-neutral-500 pt-1">{s.explanation}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* TAB 2: Model Answer */}
+          {activeTab === "model_answer" && (() => {
+            const modelEssayText = selectedPrompt.modelEssay || analysisResult.modelAnswer;
+            const modelWordCount = (modelEssayText.trim().match(/\S+/g) || []).length;
+            const paragraphs = modelEssayText.split(/\n\s*\n/).filter((p) => p.trim());
 
-          {/* TAB 3: Model Answer */}
-          {activeTab === "model_answer" && (
-            <div
-              data-paragraph="true"
-              className="ielts-paragraph p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif whitespace-pre-line"
-            >
-              <span className="font-sans font-mono text-[11px] uppercase text-neutral-400 block">
-                Model Essay
-              </span>
-              {analysisResult.modelAnswer}
-            </div>
-          )}
+            return (
+              <div
+                data-paragraph="true"
+                className="ielts-paragraph p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5"
+              >
+                {/* Header info */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-neutral-100 dark:border-neutral-800">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold flex items-center gap-1">
+                        <Sparkles className="w-3 h-3" />
+                        Band 9.0 Official Model Essay
+                      </span>
+                      <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                        {modelWordCount} words
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Topic: <span className="text-neutral-800 dark:text-neutral-200 font-medium">{selectedPrompt.title}</span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(modelEssayText);
+                      }}
+                      className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
+                    >
+                      Copy Model Essay
+                    </button>
+                  </div>
+                </div>
+
+                {/* Essay Paragraphs */}
+                <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif">
+                  {paragraphs.map((p, pIdx) => (
+                    <p key={pIdx} className="leading-relaxed">
+                      {p.trim()}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Examiner commentary footer */}
+                <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/60 dark:bg-neutral-900/30 text-xs text-neutral-600 dark:text-neutral-400 space-y-1 font-sans">
+                  <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px] uppercase tracking-wider font-mono">
+                    Examiner Commentary
+                  </div>
+                  <p>
+                    This response satisfies all Band 9 criteria: it addresses all parts of the task fully, demonstrates a fully developed position with well-supported ideas, uses cohesion in such a way that it attracts no attention, and utilizes a wide range of vocabulary and syntactic structures with full flexibility and precision.
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -1421,6 +1488,18 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
         onLoadEssay={handleLoadSavedEssay}
         onDeleteEssay={handleDeleteSavedEssay}
         isDeletingId={isDeletingId}
+      />
+
+      {/* Question Picker Modal */}
+      <QuestionPickerModal
+        isOpen={isQuestionPickerOpen}
+        onClose={() => setIsQuestionPickerOpen(false)}
+        prompts={WRITING_PROMPTS.filter((p) => p.type === selectedTaskType)}
+        selectedPromptId={selectedPrompt.id}
+        onSelectPrompt={(prompt) => {
+          setSelectedPrompt(prompt);
+          setUseCustomPrompt(false);
+        }}
       />
     </div>
   );

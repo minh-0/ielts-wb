@@ -47,6 +47,17 @@
   - Built-in prompt bank (`src/lib/ieltsPromptBank.ts`).
   - `+ Custom topic` input mode.
   - **Task 1 Visual Graph Upload**: Users can upload `.png, .jpg, .webp` chart/graph images. Thumbnails preview directly above the text area while writing, and images are passed as base64 `inlineData` to Gemini for multimodal visual accuracy checking.
+- **100 Task 2 Question Bank & Model Essays (`src/lib/task2QuestionsData.ts` & `src/lib/ieltsPromptBank.ts`)**:
+  - 100 authentic IELTS Task 2 prompts covering 10 core exam themes (Technology & AI, Education, Environment & Energy, Society, Government & Public Policy, Work & Careers, Health & Lifestyle, Crime & Justice, Media & Culture, Family & Relationships).
+  - Every single question includes an authentic, fully developed Band 8.5–9.0 model essay (~250–320 words) with essay type classification (`opinion`, `discussion`, `advantages_disadvantages`, `problem_solution`, `double_question`).
+- **Interactive Question Card & Question Picker Modal (`QuestionPickerModal.tsx`)**:
+  - Replaced cramped native select dropdown with a sleek interactive Question Card showing topic badges, essay format pills, and Band 9.0 availability.
+  - **Random Question Picker**: Dedicated "Random" button (`Shuffle` icon) to instantly rotate through the question bank.
+  - **Question Picker Modal (`QuestionPickerModal.tsx`)**: High-performance popup with live search, topic category pills, format pills, random button, question cards with active indicators, and Esc/backdrop dismiss.
+- **Model Essay Tab & Cleaned Feedback Tabs**:
+  - Removed redundant "Sentence Diff Archive" tab from post-analysis feedback.
+  - Post-analysis tabs streamlined to 2 core views: **Criteria Breakdown** and **Model Essay**.
+  - **Model Essay Tab**: Renders authentic Band 9.0 model essay with examiner commentary, exact word count badge, and 1-click copy button.
 - **Interactive In-Text Paragraph View (`AnnotatedParagraph.tsx`)**:
   - Highlights grammar errors (red wavy), vocabulary upgrades (violet dashed), and replaced words (emerald solid).
   - Clicking any underlined span displays an interactive popover with examiner rationale, 1-click **"Apply Higher-Rated Word"** or **"Revert"** button, and an **"Ignore"** button (`EyeOff` icon) to dismiss the suggestion.
@@ -54,8 +65,7 @@
 - **Inspector Panel (`DiagnosticInspector.tsx`)**:
   - Minimalist pre-submission empty state with quiet target indicator and compact color legend (no loud boxes or verbose tutorials).
   - Post-submission live criteria breakdown scores (TR/TA, CC, LR, GRA).
-  - Sentence-by-sentence diff viewer comparing original vs. rewritten forms.
-  - Model essay display.
+  - Real-time grammar & vocabulary upgrade suggestions.
   - **Ignore & Restore Capability**: Every error and vocabulary card includes an "Ignore" action. When ignored, items move to an **"Ignored ({count})"** filter pill where the user can inspect or click **"Restore"** (`RotateCcw` icon) to bring them back.
   - **Protected Batch Application**: "Apply All Upgrades" selectively skips all ignored suggestions so dismissed recommendations are never forcefully applied.
 - **Scorecard Modal (`ScorecardModal.tsx`)**:
