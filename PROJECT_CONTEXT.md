@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-07 11:46*
+*Last updated: 2026-10-07 12:01*
 
 ---
 
@@ -31,14 +31,18 @@
 #### A. Writing Studio (`src/components/writing/WritingStudio.tsx`)
 - **Task Switcher**: Clean minimalist toggle for `Task 2`, `Task 1 Academic`, and `Task 1 General`.
 - **Focused Writing Popup Modal (`isWritingModalOpen`)**:
-  - **Click-to-Enlarge**: Clicking on the writing paragraph box (or the dedicated "Enlarge" toolbar button) immediately enlarges into an expansive, distraction-free writing popup.
+  - **Explicit Enlarge Only**: Clicking or focusing the writing paragraph box stays comfortably in standard view. Enlarging into fullscreen modal occurs **strictly when clicking the dedicated 'Enlarge' button**.
   - **Single Paste Button**: Exactly 1 visible Paste button in the popup header (duplicate button and char counter removed from footer for minimalist focus).
-  - **Clean Header Controls**: Modal header contains live status badge, single word counter, timer with start/pause, 1 Paste button, and 1 clean `X` close button (duplicate Minimize button removed).
+  - **Clean Header Controls**: Modal header contains live status badge, single word counter, timer with start/pause, 1 Paste button, 1 Save button, and 1 clean `X` close button.
   - **Simplified Placeholder**: Clean, quiet `"Start writing..."` placeholder across all textareas.
-  - **Single Word Count**: Exactly 1 unified live word counter `{wordCount} / {targetWords} words` across normal and modal views (redundant target labels removed from tabs and inspector).
+  - **Single Word Count**: Exactly 1 unified live word counter `{wordCount} / {targetWords} words` across normal and modal views.
   - **Task 1 Split Layout**: When working on Task 1, the question prompt and uploaded chart/graph image are situated on the **left side** column, while the writing textarea expands on the right column. An in-modal upload dropzone allows attaching reference graphics on the fly.
   - **Task 2 Top-Down Layout**: When working on Task 2, the essay question prompt card spans across the **top**, with an expansive full-height writing textarea directly underneath.
   - **Live Synchronized Controls**: Real-time timer with start/pause/reset, dynamic word count tracking against band target, Escape shortcut dismissal, and direct "Evaluate with Rubric" submission.
+- **Online Essay & Band Score Saving (`/api/saved-essays` & `SavedEssaysModal.tsx`)**:
+  - **Server-Side Persistence**: Dedicated REST API endpoint (`GET`, `POST`, `DELETE /api/saved-essays`) storing user drafts, final essays, estimated band scores, criteria breakdowns, word counts, and timestamps in server storage (`data/saved_essays.json`) alongside automatic client `localStorage` caching.
+  - **1-Click Save**: Prominent "Save" button in both the editor toolbar and modal header with animated confirmation.
+  - **Saved Essays Drawer/Modal**: "Saved (count)" button in the top action bar opens a clean viewer to inspect past essays, view estimated band scores, load any essay back into the studio, or delete records.
 - **Question & Graph Handling**:
   - Built-in prompt bank (`src/lib/ieltsPromptBank.ts`).
   - `+ Custom topic` input mode.
@@ -91,7 +95,8 @@
 - `src/app/page.tsx`: Root page hosting tab switching (`Writing`, `Speaking`, `Vocabulary`, `Rubric`), minimalist layout, and footer.
 - `src/app/layout.tsx`: Root HTML shell, dark mode theme script, metadata `title: "slayer6767"`.
 - `src/components/Navbar.tsx`: Sticky minimalist navigation with `IELTSlayer666` badge, studio switcher, and AI mode status.
-- `src/components/writing/WritingStudio.tsx`: Writing studio core, image upload, essay textarea, timer, and scorecards.
+- `src/components/writing/WritingStudio.tsx`: Writing studio core, image upload, essay textarea, timer, save feature, and scorecards.
+- `src/components/writing/SavedEssaysModal.tsx`: Minimalist modal to view, reload, and manage saved essays and estimated scores.
 - `src/components/writing/AnnotatedParagraph.tsx`: Non-overlapping in-text underlines and fix applicator.
 - `src/components/writing/DiagnosticInspector.tsx`: Side panel for criteria breakdown and sentence diffs.
 - `src/components/speaking/SpeakingStudio.tsx`: Speaking recording, waveform, 75+ prompt bank, and evaluation cards.
@@ -105,6 +110,7 @@
 - `src/lib/gemini.ts`: Multi-turn/multimodal Gemini API integration + deterministic offline fallback engine.
 - `src/app/api/grade-writing/route.ts`: API endpoint for text + chart image grading.
 - `src/app/api/grade-speaking/route.ts`: API endpoint for speech transcript & audio evaluation.
+- `src/app/api/saved-essays/route.ts`: API endpoint for server-side persistence of essays and estimated band scores.
 
 ---
 
@@ -112,6 +118,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `feat(writing): restrict enlarge to button click and add online essay & estimated band score saving with API persistence`
   - `refactor(writing): remove duplicate paste button, minimize button, redundant word counts, and simplify placeholder to 'Start writing...'`
   - `feat(writing): add enlarged popup writing studio with Task 1 side layout, Task 2 top layout, and visible paste button`
   - `refactor(ui): minimalist redesign of vocabulary studio with compact toolbar and quiet cards`

@@ -108,3 +108,22 @@ export interface SpeakingAnalysisResult {
   sampleBand9Response: string;
   primaryBottleneck: string;
 }
+
+export interface SavedEssay {
+  id: string;
+  title: string;
+  taskType: TaskType;
+  prompt: string;
+  essayText: string;
+  wordCount: number;
+  overallBand: number | null;
+  criteriaScores?: {
+    taskAchievement?: number;
+    coherenceCohesion?: number;
+    lexicalResource?: number;
+    grammaticalRange?: number;
+  };
+  examinerSummary?: string;
+  createdAt: string;
+  updatedAt?: string;
+}

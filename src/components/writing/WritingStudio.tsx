@@ -18,14 +18,17 @@ import {
   Upload,
   ClipboardPaste,
   Maximize2,
+  Bookmark,
+  Check,
   X as XIcon,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
-import { WritingAnalysisResult, TaskType, ReplacedWordItem } from "@/types/ielts";
+import { WritingAnalysisResult, TaskType, ReplacedWordItem, SavedEssay } from "@/types/ielts";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
 import { AnnotatedParagraph } from "./AnnotatedParagraph";
 import { DiagnosticInspector } from "./DiagnosticInspector";
+import { SavedEssaysModal } from "./SavedEssaysModal";
 
 interface WritingStudioProps {
   apiKey: string;
@@ -59,6 +62,144 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
 
   // Focus/Enlarged Writing Popup State
   const [isWritingModalOpen, setIsWritingModalOpen] = useState(false);
+
+  // Saved Essays State
+  const [savedEssays, setSavedEssays] = useState<SavedEssay[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaveSuccess, setIsSaveSuccess] = useState(false);
+  const [showSavedModal, setShowSavedModal] = useState(false);
+  const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
+
+  // Fetch saved essays on mount from online API with localStorage cache
+  useEffect(() => {
+    const fetchSavedEssays = async () => {
+      try {
+        const res = await fetch("/api/saved-essays");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.essays)) {
+            setSavedEssays(data.essays);
+            if (typeof window !== "undefined") {
+              localStorage.setItem("ielts_saved_essays", JSON.stringify(data.essays));
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Server fetch for saved essays failed:", err);
+      }
+      if (typeof window !== "undefined") {
+        const local = localStorage.getItem("ielts_saved_essays");
+        if (local) {
+          try {
+            setSavedEssays(JSON.parse(local));
+          } catch {}
+        }
+      }
+    };
+    fetchSavedEssays();
+  }, []);
+
+  const handleSaveEssay = async () => {
+    if (!essayContent.trim()) return;
+    setIsSaving(true);
+    const activePromptText = useCustomPrompt
+      ? customPrompt || "Custom Question"
+      : selectedPrompt.prompt;
+    const activeTitle = useCustomPrompt
+      ? "Custom Question"
+      : selectedPrompt.title;
+
+    const payload = {
+      title: activeTitle,
+      taskType: selectedTaskType,
+      prompt: activePromptText,
+      essayText: essayContent,
+      wordCount: wordCount,
+      overallBand: analysisResult?.overallBand ?? null,
+      criteriaScores: analysisResult
+        ? {
+            taskAchievement: analysisResult.criteria.taskAchievement.score,
+            coherenceCohesion: analysisResult.criteria.coherenceCohesion.score,
+            lexicalResource: analysisResult.criteria.lexicalResource.score,
+            grammaticalRange: analysisResult.criteria.grammaticalRange.score,
+          }
+        : undefined,
+      examinerSummary: analysisResult?.examinerSummary,
+    };
+
+    try {
+      const res = await fetch("/api/saved-essays", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.essays)) {
+          setSavedEssays(data.essays);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("ielts_saved_essays", JSON.stringify(data.essays));
+          }
+        }
+      } else {
+        const newRecord: SavedEssay = {
+          id: `essay-${Date.now()}`,
+          ...payload,
+          createdAt: new Date().toISOString(),
+        };
+        setSavedEssays((prev) => [newRecord, ...prev]);
+      }
+      setIsSaveSuccess(true);
+      setTimeout(() => setIsSaveSuccess(false), 2200);
+    } catch (err) {
+      console.error("Save error:", err);
+      const newRecord: SavedEssay = {
+        id: `essay-${Date.now()}`,
+        ...payload,
+        createdAt: new Date().toISOString(),
+      };
+      setSavedEssays((prev) => [newRecord, ...prev]);
+      setIsSaveSuccess(true);
+      setTimeout(() => setIsSaveSuccess(false), 2200);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeleteSavedEssay = async (id: string) => {
+    setIsDeletingId(id);
+    try {
+      const res = await fetch(`/api/saved-essays?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.essays)) {
+          setSavedEssays(data.essays);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("ielts_saved_essays", JSON.stringify(data.essays));
+          }
+          return;
+        }
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+    } finally {
+      setIsDeletingId(null);
+    }
+    setSavedEssays((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  const handleLoadSavedEssay = (saved: SavedEssay) => {
+    setSelectedTaskType(saved.taskType);
+    setUseCustomPrompt(true);
+    setCustomPrompt(saved.prompt);
+    setEssayContent(saved.essayText);
+    setShowSavedModal(false);
+    setIsWritingModalOpen(false);
+    setAnalysisResult(null);
+    setBaseAnalysisResult(null);
+    setViewMode("edit");
+  };
 
   // Keyboard shortcut: Esc to minimize writing modal
   useEffect(() => {
@@ -450,6 +591,16 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           {/* Quick Actions */}
           <div className="flex items-center gap-3 text-xs">
             <button
+              type="button"
+              onClick={() => setShowSavedModal(true)}
+              className="inline-flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium transition-colors"
+              title="View your saved essays"
+            >
+              <Bookmark className="w-3.5 h-3.5 text-neutral-500" />
+              <span>Saved ({savedEssays.length})</span>
+            </button>
+            <span className="text-neutral-300 dark:text-neutral-700">|</span>
+            <button
               onClick={() => setUseCustomPrompt(!useCustomPrompt)}
               className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
             >
@@ -595,6 +746,27 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 <span>Paste</span>
               </button>
 
+              {/* Quick Action: Save Button */}
+              <button
+                type="button"
+                onClick={handleSaveEssay}
+                disabled={isSaving || !essayContent.trim()}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs disabled:opacity-40"
+                title="Save essay and estimated band score online"
+              >
+                {isSaveSuccess ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+                    <span className="text-emerald-600 dark:text-emerald-400">Saved</span>
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="w-3.5 h-3.5 text-neutral-500" />
+                    <span>{isSaving ? "Saving..." : "Save"}</span>
+                  </>
+                )}
+              </button>
+
               {/* Quick Action: Enlarge to Focused Popup */}
               <button
                 type="button"
@@ -698,11 +870,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             <textarea
               value={essayContent}
               onChange={(e) => setEssayContent(e.target.value)}
-              onClick={() => setIsWritingModalOpen(true)}
-              onFocus={() => setIsWritingModalOpen(true)}
               placeholder="Start writing..."
               rows={16}
-              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px] cursor-text"
+              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px]"
             />
           )}
 
@@ -1035,6 +1205,27 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   <span>Paste</span>
                 </button>
 
+                {/* Save Button */}
+                <button
+                  type="button"
+                  onClick={handleSaveEssay}
+                  disabled={isSaving || !essayContent.trim()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors disabled:opacity-40"
+                  title="Save essay and estimated score"
+                >
+                  {isSaveSuccess ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-500" />
+                      <span className="text-emerald-600 dark:text-emerald-400">Saved</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="w-3.5 h-3.5 text-neutral-500" />
+                      <span>{isSaving ? "Saving..." : "Save"}</span>
+                    </>
+                  )}
+                </button>
+
                 {/* Close Button */}
                 <button
                   type="button"
@@ -1196,6 +1387,16 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           </div>
         </div>
       )}
+
+      {/* Saved Essays Modal */}
+      <SavedEssaysModal
+        isOpen={showSavedModal}
+        onClose={() => setShowSavedModal(false)}
+        savedEssays={savedEssays}
+        onLoadEssay={handleLoadSavedEssay}
+        onDeleteEssay={handleDeleteSavedEssay}
+        isDeletingId={isDeletingId}
+      />
     </div>
   );
 }
