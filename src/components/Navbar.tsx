@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { PenTool, Mic, BookOpen, Sparkles } from "lucide-react";
+import { PenTool, Mic, BookOpen, BookA, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
-  activeTab: "writing" | "speaking" | "rubric";
-  onTabChange: (tab: "writing" | "speaking" | "rubric") => void;
+  activeTab: "writing" | "speaking" | "rubric" | "vocabulary";
+  onTabChange: (tab: "writing" | "speaking" | "rubric" | "vocabulary") => void;
   onOpenApiKeyModal: () => void;
   hasApiKey: boolean;
 }
@@ -46,6 +46,18 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
           >
             <Mic className="w-3 h-3" />
             <span>Speaking</span>
+          </button>
+
+          <button
+            onClick={() => onTabChange("vocabulary")}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all cursor-pointer ${
+              activeTab === "vocabulary"
+                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+            }`}
+          >
+            <BookA className="w-3 h-3" />
+            <span>Vocabulary</span>
           </button>
 
           <button

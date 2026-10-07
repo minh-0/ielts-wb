@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-07 09:02*
+*Last updated: 2026-10-07 09:23*
 
 ---
 
@@ -69,16 +69,27 @@
 - **Highlighting Rules**: Users can color-highlight text with yellow, green, blue, pink, or orange. A word can only be highlighted once (clicking another color updates it; clicking the same color un-highlights it; eraser tool clears it).
 - **Built-in Oxford Learner's Dictionary**: Clicking "Oxford" looks up the selected word in the local CEFR dictionary (`src/lib/oxfordDictionary.ts`), complete with definition, authentic IELTS example, collocations, and speech synthesis UK/US audio pronunciation.
 
+#### E. Vocabulary Learning Studio (`src/components/vocabulary/VocabularyStudio.tsx` & `src/lib/oxfordVocabData.ts`)
+- **Complete Oxford 3000™ & Oxford 5000™ Corpus**: 4,953 words categorized across CEFR levels (C1 Advanced: 1,311, B2 Upper-Int: 1,410, B1: 648, A2: 733, A1: 851).
+- **Three Dedicated Learning Modes**:
+  1. **Flashcards**: Active recall study card with 3D flip, keyboard controls (Space to flip, arrows to navigate, M to master, S to star), UK audio pronunciation (`SpeechSynthesis`), definition, IELTS usage example, collocations, and Oxford Dictionary direct link.
+  2. **Word Explorer**: Instant search, alphabetical A-Z quick jump, POS filter, paginated grid, and detailed word inspection modal.
+  3. **Quick Quiz**: Rapid 4-option multiple-choice definition challenge with live streak tracker and instant explanation.
+- **Progress Persistence**: Starred (`oxford_starred`) and Mastered (`oxford_mastered`) word state stored in `localStorage`.
+
 ---
 
 ### 4. Key Files Map
-- `src/app/page.tsx`: Root page hosting tab switching (`Writing`, `Speaking`, `Rubric`), minimalist layout, and footer.
+- `src/app/page.tsx`: Root page hosting tab switching (`Writing`, `Speaking`, `Vocabulary`, `Rubric`), minimalist layout, and footer.
 - `src/app/layout.tsx`: Root HTML shell, dark mode theme script, metadata `title: "slayer6767"`.
 - `src/components/Navbar.tsx`: Sticky minimalist navigation with `IELTSlayer666` badge, studio switcher, and AI mode status.
 - `src/components/writing/WritingStudio.tsx`: Writing studio core, image upload, essay textarea, timer, and scorecards.
 - `src/components/writing/AnnotatedParagraph.tsx`: Non-overlapping in-text underlines and fix applicator.
 - `src/components/writing/DiagnosticInspector.tsx`: Side panel for criteria breakdown and sentence diffs.
 - `src/components/speaking/SpeakingStudio.tsx`: Speaking recording, waveform, 75+ prompt bank, and evaluation cards.
+- `src/components/vocabulary/VocabularyStudio.tsx`: Complete vocabulary learning studio (Flashcards, Explorer, Quiz).
+- `src/lib/oxfordVocabData.ts`: Oxford 3000/5000 metadata, helper methods, quiz generator.
+- `src/lib/oxfordVocabList.json`: Pre-compiled Oxford word database.
 - `src/components/rubric/RubricViewer.tsx`: Pure minimalist table for Bands 9 to 0.
 - `src/lib/officialRubricData.ts`: Exact official public descriptor data for all tasks.
 - `src/components/SelectionToolbar.tsx`: Cursor highlight toolbar restricted to paragraphs.
@@ -93,6 +104,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `feat(vocab): add dedicated Oxford 3000 & 5000 vocabulary learning studio with flashcards, explorer, and quiz modes`
   - `refactor(ui): streamline inspector empty state with minimal placeholder and compact legend`
   - `feat: allow image upload for custom Task 1 questions and remove inspector pop-down subtitle`
   - `refactor(ui): purge all boilerplate disclaimers, subtitles, and fluff text for pure minimalist experience`

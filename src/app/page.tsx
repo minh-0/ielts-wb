@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { WritingStudio } from "@/components/writing/WritingStudio";
 import { SpeakingStudio } from "@/components/speaking/SpeakingStudio";
+import { VocabularyStudio } from "@/components/vocabulary/VocabularyStudio";
 import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"writing" | "speaking" | "rubric">("writing");
+  const [activeTab, setActiveTab] = useState<"writing" | "speaking" | "rubric" | "vocabulary">("writing");
   const [apiKey, setApiKey] = useState<string>("");
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
 
@@ -38,6 +39,7 @@ export default function Home() {
             onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
           />
         )}
+        {activeTab === "vocabulary" && <VocabularyStudio />}
         {activeTab === "rubric" && <RubricViewer />}
       </main>
 
