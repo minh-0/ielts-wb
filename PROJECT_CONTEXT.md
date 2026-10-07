@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-07 09:34*
+*Last updated: 2026-10-07 09:38*
 
 ---
 
@@ -103,6 +103,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `refactor(ui): minimalist redesign of vocabulary studio with compact toolbar and quiet cards`
   - `refactor(vocab): remove quick quiz mode to keep vocabulary studio clean and focused on flashcards and word explorer`
   - `feat(vocab): add dedicated Oxford 3000 & 5000 vocabulary learning studio with flashcards, explorer, and quiz modes`
   - `refactor(ui): streamline inspector empty state with minimal placeholder and compact legend`
