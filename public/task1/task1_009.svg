@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Annual Consumption Frequency per Person</text>
+  
+  <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
+  <line x1="75" y1="315.0" x2="645" y2="315.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="319.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
+  <line x1="75" y1="255.0" x2="645" y2="255.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="259.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
+  <line x1="75" y1="195.0" x2="645" y2="195.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="199.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="135.0" x2="645" y2="135.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="139.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
+  <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">100</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Times Eaten per Year</text>
+  <line x1="75.0" y1="375" x2="75.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="75.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">1985</text>
+  <line x1="75.0" y1="75" x2="75.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="217.5" y1="375" x2="217.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="217.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">1995</text>
+  <line x1="217.5" y1="75" x2="217.5" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2005</text>
+  <line x1="360.0" y1="75" x2="360.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="502.5" y1="375" x2="502.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="502.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2015</text>
+  <line x1="502.5" y1="75" x2="502.5" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="645.0" y1="375" x2="645.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="645.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2025</text>
+  <line x1="645.0" y1="75" x2="645.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <path d="M 75.0 300.0 L 217.5 249.0 L 360.0 180.0 L 502.5 129.0 L 645.0 93.0" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="300.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="75.0" y="292.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">25</text>
+  <circle cx="217.5" cy="249.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="217.5" y="241.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">42</text>
+  <circle cx="360.0" cy="180.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="360.0" y="172.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">65</text>
+  <circle cx="502.5" cy="129.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="502.5" y="121.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">82</text>
+  <circle cx="645.0" cy="93.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="645.0" y="85.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">94</text>
+  <path d="M 75.0 339.0 L 217.5 291.0 L 360.0 219.0 L 502.5 153.0 L 645.0 111.0" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="339.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="75.0" y="331.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">12</text>
+  <circle cx="217.5" cy="291.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="217.5" y="283.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">28</text>
+  <circle cx="360.0" cy="219.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="360.0" y="211.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">52</text>
+  <circle cx="502.5" cy="153.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="502.5" y="145.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">74</text>
+  <circle cx="645.0" cy="111.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="645.0" y="103.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">88</text>
+  <path d="M 75.0 90.0 L 217.5 141.0 L 360.0 213.0 L 502.5 261.0 L 645.0 297.0" fill="none" stroke="#f472b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="90.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="75.0" y="82.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">95</text>
+  <circle cx="217.5" cy="141.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="217.5" y="133.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">78</text>
+  <circle cx="360.0" cy="213.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="360.0" y="205.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">54</text>
+  <circle cx="502.5" cy="261.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="502.5" y="253.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">38</text>
+  <circle cx="645.0" cy="297.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="645.0" y="289.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">26</text>
+  <circle cx="549.0" cy="42" r="4.5" fill="#f472b6"/>
+  <text x="559.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Fish &amp; Chips</text>
+  <circle cx="492.5" cy="42" r="4.5" fill="#34d399"/>
+  <text x="502.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Pizza</text>
+  <circle cx="403.5" cy="42" r="4.5" fill="#38bdf8"/>
+  <text x="413.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Hamburgers</text>
+</svg>

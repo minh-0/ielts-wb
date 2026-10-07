@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Municipal Recycling Rates (2014 vs 2024)</text>
+  
+  <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
+  <line x1="75" y1="300.0" x2="645" y2="300.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="304.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
+  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
+  <line x1="75" y1="150.0" x2="645" y2="150.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="154.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Recycling Rate (%)</text>
+  <text x="122.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Vienna</text>
+  <line x1="122.5" y1="375" x2="122.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="94.5" y="180.0" width="26.0" height="195.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="107.5" y="176.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">52</text>
+  <rect x="122.5" y="120.0" width="26.0" height="255.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="135.5" y="116.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">68</text>
+  <text x="217.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Berlin</text>
+  <line x1="217.5" y1="375" x2="217.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="189.5" y="157.5" width="26.0" height="217.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="202.5" y="153.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">58</text>
+  <rect x="217.5" y="105.0" width="26.0" height="270.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="230.5" y="101.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">72</text>
+  <text x="312.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Oslo</text>
+  <line x1="312.5" y1="375" x2="312.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="284.5" y="210.0" width="26.0" height="165.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="297.5" y="206.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">44</text>
+  <rect x="312.5" y="142.5" width="26.0" height="232.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="325.5" y="138.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">62</text>
+  <text x="407.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Dublin</text>
+  <line x1="407.5" y1="375" x2="407.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="379.5" y="240.0" width="26.0" height="135.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="392.5" y="236.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">36</text>
+  <rect x="407.5" y="183.8" width="26.0" height="191.2" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="420.5" y="179.8" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">51</text>
+  <text x="502.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Madrid</text>
+  <line x1="502.5" y1="375" x2="502.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="474.5" y="270.0" width="26.0" height="105.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="487.5" y="266.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">28</text>
+  <rect x="502.5" y="217.5" width="26.0" height="157.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="515.5" y="213.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">42</text>
+  <text x="597.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Athens</text>
+  <line x1="597.5" y1="375" x2="597.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="569.5" y="315.0" width="26.0" height="60.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="582.5" y="311.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">16</text>
+  <rect x="597.5" y="266.2" width="26.0" height="108.8" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="610.5" y="262.2" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">29</text>
+  <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <rect x="595.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="611.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">2024</text>
+  <rect x="545.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="561.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">2014</text>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Municipal Budget Allocation (%)</text>
+  
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">City Expenditure</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 0 1 367.08 300.53 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="339.5" y="198.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">35%</text>
+  <path d="M 270 230 L 367.08 300.53 A 120 120 0 0 1 182.52 312.15 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="274.9" y="311.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">28%</text>
+  <path d="M 270 230 L 182.52 312.15 A 120 120 0 0 1 158.43 185.83 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="193.4" y="248.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">18%</text>
+  <path d="M 270 230 L 158.43 185.83 A 120 120 0 0 1 218.91 121.42 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="213.1" y="180.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">12%</text>
+  <path d="M 270 230 L 218.91 121.42 A 120 120 0 0 1 270.00 110.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="253.0" y="157.9" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">7%</text>
+  <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">Public Education (35%)</text>
+  <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Health &amp; Social (28%)</text>
+  <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">Public Transit (18%)</text>
+  <rect x="440" y="224" width="12" height="12" rx="3" fill="#fbbf24"/>
+  <text x="460" y="234" fill="#cbd5e1" font-size="12">Sanitation &amp; Waste (12%)</text>
+  <rect x="440" y="252" width="12" height="12" rx="3" fill="#a78bfa"/>
+  <text x="460" y="262" fill="#cbd5e1" font-size="12">Parks &amp; Culture (7%)</text>
+</svg>

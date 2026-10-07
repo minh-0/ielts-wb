@@ -70,6 +70,10 @@ export function QuestionPickerModal({
     return ["All", ...Array.from(set)];
   }, [prompts]);
 
+  const hasEssayTypes = useMemo(() => {
+    return prompts.some((p) => Boolean(p.essayType));
+  }, [prompts]);
+
   const essayTypes = [
     "All",
     "opinion",
@@ -223,65 +227,67 @@ export function QuestionPickerModal({
             )}
           </div>
 
-          {/* Essay Format Popout */}
-          <div className="relative" ref={typeDropdownRef}>
-            <button
-              type="button"
-              onClick={() => {
-                setIsTypeOpen(!isTypeOpen);
-                setIsTopicOpen(false);
-              }}
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
-                selectedEssayType !== "All"
-                  ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 shadow-2xs"
-                  : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
-              }`}
-              title="Filter by Essay Format"
-            >
-              <span className="max-w-[90px] sm:max-w-[120px] truncate text-[11px] sm:text-xs">
-                {selectedEssayType === "All" ? "Format" : formatEssayType(selectedEssayType)}
-              </span>
-              <ChevronDown
-                className={`w-3 h-3 text-neutral-400 transition-transform ${
-                  isTypeOpen ? "rotate-180" : ""
+          {/* Essay Format Popout (only when prompts contain essayType like Task 2) */}
+          {hasEssayTypes && (
+            <div className="relative" ref={typeDropdownRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsTypeOpen(!isTypeOpen);
+                  setIsTopicOpen(false);
+                }}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors cursor-pointer ${
+                  selectedEssayType !== "All"
+                    ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 shadow-2xs"
+                    : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800"
                 }`}
-              />
-            </button>
+                title="Filter by Essay Format"
+              >
+                <span className="max-w-[90px] sm:max-w-[120px] truncate text-[11px] sm:text-xs">
+                  {selectedEssayType === "All" ? "Format" : formatEssayType(selectedEssayType)}
+                </span>
+                <ChevronDown
+                  className={`w-3 h-3 text-neutral-400 transition-transform ${
+                    isTypeOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-            {/* Popout Format Dropdown Menu */}
-            {isTypeOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
-                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
-                  Select Format
-                </div>
-                {essayTypes.map((type) => {
-                  const isSelected = selectedEssayType === type;
-                  return (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => {
-                        setSelectedEssayType(type);
-                        setIsTypeOpen(false);
-                      }}
-                      className="w-full flex items-center justify-between px-3 py-2 text-xs text-left text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
-                    >
-                      <span
-                        className={`truncate ${
-                          isSelected ? "font-semibold text-neutral-900 dark:text-neutral-100" : ""
-                        }`}
+              {/* Popout Format Dropdown Menu */}
+              {isTypeOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
+                    Select Format
+                  </div>
+                  {essayTypes.map((type) => {
+                    const isSelected = selectedEssayType === type;
+                    return (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => {
+                          setSelectedEssayType(type);
+                          setIsTypeOpen(false);
+                        }}
+                        className="w-full flex items-center justify-between px-3 py-2 text-xs text-left text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                       >
-                        {formatEssayType(type)}
-                      </span>
-                      {isSelected && (
-                        <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100 ml-2" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                        <span
+                          className={`truncate ${
+                            isSelected ? "font-semibold text-neutral-900 dark:text-neutral-100" : ""
+                          }`}
+                        >
+                          {formatEssayType(type)}
+                        </span>
+                        {isSelected && (
+                          <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100 ml-2" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Random Quick Picker */}
           <button
@@ -386,6 +392,16 @@ export function QuestionPickerModal({
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
+                    {p.imageUrl && (
+                      <div className="w-16 h-12 sm:w-20 sm:h-14 shrink-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-950 p-1 flex items-center justify-center self-center sm:self-start">
+                        <img
+                          src={p.imageUrl}
+                          alt={p.title}
+                          className="w-full h-full object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
                     <div className="space-y-1 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-mono text-[10px] text-neutral-400">

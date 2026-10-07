@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Power Generation vs Renewable Share</text>
+  
+  <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
+  <line x1="75" y1="325.0" x2="645" y2="325.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="329.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">75</text>
+  <line x1="75" y1="275.0" x2="645" y2="275.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="279.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">150</text>
+  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">225</text>
+  <line x1="75" y1="175.0" x2="645" y2="175.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="179.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">300</text>
+  <line x1="75" y1="125.0" x2="645" y2="125.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="129.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">375</text>
+  <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">450</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">TWh / Percentage</text>
+  <text x="132.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2000</text>
+  <line x1="132.0" y1="375" x2="132.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="104.0" y="161.7" width="26.0" height="213.3" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="117.0" y="157.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">320</text>
+  <rect x="132.0" y="369.7" width="26.0" height="5.3" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="145.0" y="365.7" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">8</text>
+  <text x="246.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2006</text>
+  <line x1="246.0" y1="375" x2="246.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="218.0" y="135.0" width="26.0" height="240.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="231.0" y="131.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">360</text>
+  <rect x="246.0" y="365.7" width="26.0" height="9.3" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="259.0" y="361.7" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">14</text>
+  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2012</text>
+  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="332.0" y="115.0" width="26.0" height="260.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="345.0" y="111.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">390</text>
+  <rect x="360.0" y="360.3" width="26.0" height="14.7" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="373.0" y="356.3" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">22</text>
+  <text x="474.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2018</text>
+  <line x1="474.0" y1="375" x2="474.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="446.0" y="101.7" width="26.0" height="273.3" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="459.0" y="97.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">410</text>
+  <rect x="474.0" y="352.3" width="26.0" height="22.7" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="487.0" y="348.3" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">34</text>
+  <text x="588.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2024</text>
+  <line x1="588.0" y1="375" x2="588.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="560.0" y="88.3" width="26.0" height="286.7" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="573.0" y="84.3" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">430</text>
+  <rect x="588.0" y="343.0" width="26.0" height="32.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="601.0" y="339.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">48</text>
+  <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <rect x="497.5" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="513.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Renewable Share (%)</text>
+  <rect x="356.5" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="372.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Total Output (TWh)</text>
+</svg>

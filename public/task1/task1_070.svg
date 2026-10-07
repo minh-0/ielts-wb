@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Soil Formation &amp; Stratification Stages</text>
+  
+  <circle cx="350" cy="240" r="130" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="350" cy="240" r="35" fill="#131c31" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="350" y="244" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">CYCLE</text>
+  <rect x="295.0" y="84.0" width="110" height="52" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="350.0" y="104.0" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">Bedrock Cracking</text>
+  <text x="350.0" y="120.0" fill="#94a3b8" font-size="9" text-anchor="middle">Physical frost &amp; water fissures</text>
+  <rect x="418.63734711837" y="173.82779073125684" width="110" height="52" rx="8" fill="#0f172a" stroke="#34d399" stroke-width="2" filter="url(#shadow)"/>
+  <text x="473.63734711837" y="193.82779073125684" fill="#34d399" font-size="11" font-weight="700" text-anchor="middle">Pioneer Lichens</text>
+  <text x="473.63734711837" y="209.82779073125684" fill="#94a3b8" font-size="9" text-anchor="middle">Organic acid decomposition</text>
+  <rect x="371.4120827980215" y="319.1722092687432" width="110" height="52" rx="8" fill="#0f172a" stroke="#f472b6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="426.4120827980215" y="339.1722092687432" fill="#f472b6" font-size="11" font-weight="700" text-anchor="middle">Subsoil Formation</text>
+  <text x="426.4120827980215" y="355.1722092687432" fill="#94a3b8" font-size="9" text-anchor="middle">Weathered mineral C-horizon</text>
+  <rect x="218.58791720197848" y="319.1722092687432" width="110" height="52" rx="8" fill="#0f172a" stroke="#fbbf24" stroke-width="2" filter="url(#shadow)"/>
+  <text x="273.5879172019785" y="339.1722092687432" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle">Humus Accumulation</text>
+  <text x="273.5879172019785" y="355.1722092687432" fill="#94a3b8" font-size="9" text-anchor="middle">Decaying organic A-horizon</text>
+  <rect x="171.36265288163003" y="173.82779073125687" width="110" height="52" rx="8" fill="#0f172a" stroke="#a78bfa" stroke-width="2" filter="url(#shadow)"/>
+  <text x="226.36265288163003" y="193.82779073125687" fill="#a78bfa" font-size="11" font-weight="700" text-anchor="middle">Mature Strata</text>
+  <text x="226.36265288163003" y="209.82779073125687" fill="#94a3b8" font-size="9" text-anchor="middle">Complete O, A, B, C profile</text>
+</svg>

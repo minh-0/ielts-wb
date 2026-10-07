@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Renewable Electricity Share (% of Grid)</text>
+  
+  <rect x="40" y="75" width="620" height="36" rx="6" fill="#1e293b"/>
+  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">Country</text>
+  <text x="195.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2000</text>
+  <text x="298.3" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2008</text>
+  <text x="401.7" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2016</text>
+  <text x="505.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2024</text>
+  <text x="608.3" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Net Change</text>
+  <rect x="40" y="111" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Norway</text>
+  <text x="195.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">99.1%</text>
+  <text x="298.3" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">98.5%</text>
+  <text x="401.7" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">97.8%</text>
+  <text x="505.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">98.4%</text>
+  <text x="608.3" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">-0.7%</text>
+  <rect x="40" y="147" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Germany</text>
+  <text x="195.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.3%</text>
+  <text x="298.3" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">14.8%</text>
+  <text x="401.7" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">31.6%</text>
+  <text x="505.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">52.8%</text>
+  <text x="608.3" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+46.5%</text>
+  <rect x="40" y="183" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">United Kingdom</text>
+  <text x="195.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.8%</text>
+  <text x="298.3" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">5.6%</text>
+  <text x="401.7" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">24.5%</text>
+  <text x="505.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">46.2%</text>
+  <text x="608.3" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+43.4%</text>
+  <rect x="40" y="219" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">China</text>
+  <text x="195.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">16.2%</text>
+  <text x="298.3" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">17.4%</text>
+  <text x="401.7" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">25.1%</text>
+  <text x="505.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">34.5%</text>
+  <text x="608.3" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+18.3%</text>
+  <rect x="40" y="255" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="277" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">United States</text>
+  <text x="195.0" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">8.8%</text>
+  <text x="298.3" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">9.2%</text>
+  <text x="401.7" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">15.3%</text>
+  <text x="505.0" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">23.4%</text>
+  <text x="608.3" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+14.6%</text>
+</svg>

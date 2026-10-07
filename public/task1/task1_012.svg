@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Employment Share by Economic Sector (%)</text>
+  
+  <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
+  <line x1="75" y1="325.0" x2="645" y2="325.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="329.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">15</text>
+  <line x1="75" y1="275.0" x2="645" y2="275.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="279.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">30</text>
+  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">45</text>
+  <line x1="75" y1="175.0" x2="645" y2="175.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="179.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="125.0" x2="645" y2="125.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="129.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">75</text>
+  <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">90</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Share of Workforce (%)</text>
+  <text x="132.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">UK</text>
+  <line x1="132.0" y1="375" x2="132.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="90.0" y="101.7" width="26.0" height="273.3" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="103.0" y="97.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">82</text>
+  <rect x="118.0" y="321.7" width="26.0" height="53.3" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="131.0" y="317.7" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">16</text>
+  <rect x="146.0" y="368.3" width="26.0" height="6.7" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="159.0" y="364.3" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">2</text>
+  <text x="246.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">South Korea</text>
+  <line x1="246.0" y1="375" x2="246.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="204.0" y="138.3" width="26.0" height="236.7" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="217.0" y="134.3" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">71</text>
+  <rect x="232.0" y="295.0" width="26.0" height="80.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="245.0" y="291.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">24</text>
+  <rect x="260.0" y="358.3" width="26.0" height="16.7" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="273.0" y="354.3" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">5</text>
+  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Poland</text>
+  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="318.0" y="181.7" width="26.0" height="193.3" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="331.0" y="177.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">58</text>
+  <rect x="346.0" y="271.7" width="26.0" height="103.3" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="359.0" y="267.7" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">31</text>
+  <rect x="374.0" y="338.3" width="26.0" height="36.7" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="387.0" y="334.3" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">11</text>
+  <text x="474.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">India</text>
+  <line x1="474.0" y1="375" x2="474.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="432.0" y="261.7" width="26.0" height="113.3" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="445.0" y="257.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">34</text>
+  <rect x="460.0" y="298.3" width="26.0" height="76.7" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="473.0" y="294.3" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">23</text>
+  <rect x="488.0" y="231.7" width="26.0" height="143.3" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="501.0" y="227.7" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">43</text>
+  <text x="588.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Kenya</text>
+  <line x1="588.0" y1="375" x2="588.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="546.0" y="271.7" width="26.0" height="103.3" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="559.0" y="267.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">31</text>
+  <rect x="574.0" y="328.3" width="26.0" height="46.7" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="587.0" y="324.3" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">14</text>
+  <rect x="602.0" y="191.7" width="26.0" height="183.3" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="615.0" y="187.7" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">55</text>
+  <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <rect x="549.5" y="36" width="10" height="10" rx="2" fill="#f472b6"/>
+  <text x="565.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Agriculture</text>
+  <rect x="441.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="457.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Manufacturing</text>
+  <rect x="365.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="381.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Services</text>
+</svg>

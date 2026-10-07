@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Global Smartphone Shipments (%)</text>
+  
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">2024 Market Share</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 0 1 386.23 200.16 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="317.8" y="172.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">21%</text>
+  <path d="M 270 230 L 386.23 200.16 A 120 120 0 0 1 334.30 331.32 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="342.5" y="262.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">20%</text>
+  <path d="M 270 230 L 334.30 331.32 A 120 120 0 0 1 232.92 344.13 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="279.8" y="311.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">14%</text>
+  <path d="M 270 230 L 232.92 344.13 A 120 120 0 0 1 177.54 306.49 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="226.2" y="298.5" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">9%</text>
+  <path d="M 270 230 L 177.54 306.49 A 120 120 0 0 1 150.95 245.04 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="198.4" y="265.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">9%</text>
+  <path d="M 270 230 L 150.95 245.04 A 120 120 0 0 1 270.00 110.00 Z" fill="#fb7185" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="211.5" y="182.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">27%</text>
+  <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">Samsung (21%)</text>
+  <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Apple (20%)</text>
+  <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">Xiaomi (14%)</text>
+  <rect x="440" y="224" width="12" height="12" rx="3" fill="#fbbf24"/>
+  <text x="460" y="234" fill="#cbd5e1" font-size="12">Transsion (9%)</text>
+  <rect x="440" y="252" width="12" height="12" rx="3" fill="#a78bfa"/>
+  <text x="460" y="262" fill="#cbd5e1" font-size="12">Oppo (9%)</text>
+  <rect x="440" y="280" width="12" height="12" rx="3" fill="#fb7185"/>
+  <text x="460" y="290" fill="#cbd5e1" font-size="12">Others (27%)</text>
+</svg>

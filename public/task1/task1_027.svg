@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Retail Channel Distribution</text>
+  
+  <text x="180" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">2015</text>
+  <path d="M 180 220 L 180.00 125.00 A 95 95 0 1 1 86.68 202.20 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="219.4" y="271.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">78%</text>
+  <path d="M 180 220 L 86.68 202.20 A 95 95 0 0 1 145.03 131.67 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="132.4" y="184.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">16%</text>
+  <path d="M 180 220 L 145.03 131.67 A 95 95 0 0 1 180.00 125.00 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="168.4" y="163.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">6%</text>
+  <text x="440" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">2025</text>
+  <path d="M 440 220 L 440.00 125.00 A 95 95 0 0 1 474.97 308.33 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="500.7" y="212.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">44%</text>
+  <path d="M 440 220 L 474.97 308.33 A 95 95 0 0 1 359.79 270.90 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="420.9" y="282.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">22%</text>
+  <path d="M 440 220 L 359.79 270.90 A 95 95 0 0 1 440.00 125.00 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="385.9" y="194.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">34%</text>
+  <rect x="580" y="120" width="12" height="12" rx="3" fill="#38bdf8"/>
+  <text x="598" y="130" fill="#cbd5e1" font-size="11">Physical Stores</text>
+  <rect x="580" y="146" width="12" height="12" rx="3" fill="#34d399"/>
+  <text x="598" y="156" fill="#cbd5e1" font-size="11">Web Desktop</text>
+  <rect x="580" y="172" width="12" height="12" rx="3" fill="#f472b6"/>
+  <text x="598" y="182" fill="#cbd5e1" font-size="11">Mobile App</text>
+</svg>

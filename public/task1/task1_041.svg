@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Age Demographic Distribution (1980 vs 2020)</text>
+  
+  <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
+  <line x1="75" y1="300.0" x2="645" y2="300.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="304.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
+  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
+  <line x1="75" y1="150.0" x2="645" y2="150.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="154.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Population Share (%)</text>
+  <text x="170.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">0-14 Years</text>
+  <line x1="170.0" y1="375" x2="170.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="142.0" y="285.0" width="26.0" height="90.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="155.0" y="281.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">24</text>
+  <rect x="170.0" y="322.5" width="26.0" height="52.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="183.0" y="318.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">14</text>
+  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">15-64 (Working)</text>
+  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="332.0" y="127.5" width="26.0" height="247.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="345.0" y="123.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">66</text>
+  <rect x="360.0" y="142.5" width="26.0" height="232.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="373.0" y="138.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">62</text>
+  <text x="550.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">65+ (Senior)</text>
+  <line x1="550.0" y1="375" x2="550.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="522.0" y="337.5" width="26.0" height="37.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="535.0" y="333.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">10</text>
+  <rect x="550.0" y="285.0" width="26.0" height="90.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="563.0" y="281.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">24</text>
+  <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <rect x="595.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="611.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">2020</text>
+  <rect x="545.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="561.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">1980</text>
+</svg>

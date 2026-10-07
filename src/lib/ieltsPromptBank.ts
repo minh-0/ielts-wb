@@ -1,4 +1,5 @@
 import { TASK2_QUESTIONS_BANK } from "./task2QuestionsData";
+import { TASK1_ACADEMIC_BANK } from "./task1AcademicData";
 
 export interface WritingPrompt {
   id: string;
@@ -6,6 +7,7 @@ export interface WritingPrompt {
   category: string;
   title: string;
   prompt: string;
+  imageUrl?: string;
   suggestedTimeMinutes: number;
   minWordCount: number;
   essayType?: 'opinion' | 'discussion' | 'advantages_disadvantages' | 'problem_solution' | 'double_question';
@@ -23,15 +25,6 @@ export interface SpeakingPrompt {
 
 export const TASK1_PROMPTS: WritingPrompt[] = [
   {
-    id: 't1-acad-energy-consumption',
-    type: 'task1_academic',
-    category: 'Academic Chart',
-    title: 'Renewable vs Fossil Fuel Energy Consumption (2000-2025)',
-    prompt: 'The chart illustrates the changes in energy consumption by source (fossil fuels, nuclear, solar, and wind) in a European nation between 2000 and 2025. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.',
-    suggestedTimeMinutes: 20,
-    minWordCount: 150,
-  },
-  {
     id: 't1-gt-letter-complaint',
     type: 'task1_general',
     category: 'General Letter',
@@ -44,6 +37,7 @@ export const TASK1_PROMPTS: WritingPrompt[] = [
 
 export const WRITING_PROMPTS: WritingPrompt[] = [
   ...TASK2_QUESTIONS_BANK,
+  ...TASK1_ACADEMIC_BANK,
   ...TASK1_PROMPTS,
 ];
 

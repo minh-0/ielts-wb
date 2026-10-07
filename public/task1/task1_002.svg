@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="100%" height="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0b0f19;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <!-- Card Background -->
+  <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
+  
+  <!-- Title Header -->
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Household Vehicle Ownership (%)</text>
+  
+  <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
+  <line x1="75" y1="300.0" x2="645" y2="300.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="304.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
+  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="150.0" x2="645" y2="150.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="154.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
+  <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">100</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Percentage (%)</text>
+  <line x1="75.0" y1="375" x2="75.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="75.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">1970</text>
+  <line x1="75.0" y1="75" x2="75.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="189.0" y1="375" x2="189.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="189.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">1980</text>
+  <line x1="189.0" y1="75" x2="189.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="303.0" y1="375" x2="303.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="303.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">1990</text>
+  <line x1="303.0" y1="75" x2="303.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="417.0" y1="375" x2="417.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="417.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2000</text>
+  <line x1="417.0" y1="75" x2="417.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="531.0" y1="375" x2="531.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="531.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2010</text>
+  <line x1="531.0" y1="75" x2="531.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="645.0" y1="375" x2="645.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="645.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2020</text>
+  <line x1="645.0" y1="75" x2="645.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
+  <path d="M 75.0 292.5 L 189.0 247.5 L 303.0 206.2 L 417.0 180.0 L 531.0 157.5 L 645.0 142.5" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="292.5" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="75.0" y="284.5" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">42</text>
+  <circle cx="189.0" cy="247.5" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="189.0" y="239.5" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">54</text>
+  <circle cx="303.0" cy="206.2" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="303.0" y="198.2" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">65</text>
+  <circle cx="417.0" cy="180.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="417.0" y="172.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">72</text>
+  <circle cx="531.0" cy="157.5" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="531.0" y="149.5" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">78</text>
+  <circle cx="645.0" cy="142.5" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="645.0" y="134.5" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">82</text>
+  <path d="M 75.0 307.5 L 189.0 270.0 L 303.0 228.8 L 417.0 195.0 L 531.0 172.5 L 645.0 153.8" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="307.5" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="75.0" y="299.5" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">38</text>
+  <circle cx="189.0" cy="270.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="189.0" y="262.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">48</text>
+  <circle cx="303.0" cy="228.8" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="303.0" y="220.8" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">59</text>
+  <circle cx="417.0" cy="195.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="417.0" y="187.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">68</text>
+  <circle cx="531.0" cy="172.5" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="531.0" y="164.5" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">74</text>
+  <circle cx="645.0" cy="153.8" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="645.0" y="145.8" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">79</text>
+  <path d="M 75.0 330.0 L 189.0 296.2 L 303.0 255.0 L 417.0 221.2 L 531.0 187.5 L 645.0 165.0" fill="none" stroke="#f472b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="330.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="75.0" y="322.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">32</text>
+  <circle cx="189.0" cy="296.2" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="189.0" y="288.2" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">41</text>
+  <circle cx="303.0" cy="255.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="303.0" y="247.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">52</text>
+  <circle cx="417.0" cy="221.2" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="417.0" y="213.2" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">61</text>
+  <circle cx="531.0" cy="187.5" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="531.0" y="179.5" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">70</text>
+  <circle cx="645.0" cy="165.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="645.0" y="157.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">76</text>
+  <circle cx="581.5" cy="42" r="4.5" fill="#f472b6"/>
+  <text x="591.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Britain</text>
+  <circle cx="518.5" cy="42" r="4.5" fill="#34d399"/>
+  <text x="528.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">France</text>
+  <circle cx="449.0" cy="42" r="4.5" fill="#38bdf8"/>
+  <text x="459.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Germany</text>
+</svg>

@@ -50,6 +50,25 @@
 - **100 Task 2 Question Bank & Model Essays (`src/lib/task2QuestionsData.ts` & `src/lib/ieltsPromptBank.ts`)**:
   - 100 authentic IELTS Task 2 prompts covering 10 core exam themes (Technology & AI, Education, Environment & Energy, Society, Government & Public Policy, Work & Careers, Health & Lifestyle, Crime & Justice, Media & Culture, Family & Relationships).
   - Every single question includes an authentic, fully developed Band 8.5–9.0 model essay (~250–320 words) with essay type classification (`opinion`, `discussion`, `advantages_disadvantages`, `problem_solution`, `double_question`).
+- **100 Task 1 Academic Question Bank with Vector SVGs & Band 9 Model Essays (`src/lib/task1AcademicData.ts`, `public/task1/`, `src/lib/ieltsPromptBank.ts`)**:
+  - 100 comprehensive IELTS Academic Task 1 prompts covering all 10 authentic visual formats (10 questions per format):
+    1. Line Graphs (Q1–Q10)
+    2. Bar Charts (Q11–Q20)
+    3. Pie Charts (Q21–Q30)
+    4. Tables (Q31–Q40)
+    5. Mixed / Combined Charts (Q41–Q50)
+    6. Industrial & Manufacturing Processes (Q51–Q60)
+    7. Natural Life Cycles & Biological Cycles (Q61–Q70)
+    8. Maps & Urban Redevelopment (Q71–Q80)
+    9. Technical Blueprints & Mechanical Diagrams (Q81–Q90)
+    10. Demographic Matrices & Global Trends (Q91–Q100)
+  - **Standalone Vector SVGs (`public/task1/task1_001.svg` to `task1_100.svg`)**: Crisp, responsive vector graphics with dark slate styling, neon high-contrast accents, precise scales, and legends.
+  - **100 Examiner-Grade Band 9.0 Model Essays**: Each prompt includes an official Band 9 response (~170–210 words with Introduction, General Overview, and 2 Detailed Body paragraphs) ready to read and copy in the Model Essay tab.
+  - **Integrated UI & Previews**:
+    - Question card in Writing Studio displays the SVG chart immediately with border styling.
+    - Question Picker Modal displays lazy-loaded SVG thumbnails and filters cleanly by chart category.
+    - Enlarged Writing Modal displays the chart on the left column alongside the writing canvas.
+    - Model Essay tab displays the chart alongside the Band 9 response.
 - **Interactive Question Card & Question Picker Modal (`QuestionPickerModal.tsx`)**:
   - Replaced cramped native select dropdown with a sleek interactive Question Card showing topic badges, essay format pills, and Band 9.0 availability.
   - **Question Controls**: Icon-only "Random" button (`Shuffle` icon) to quickly draw prompts, and a clean "Browse" button to open the question bank.

@@ -781,13 +781,24 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               </div>
 
               {/* Title & Prompt Text */}
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
                   {selectedPrompt.title}
                 </h3>
                 <div className="p-3.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-sans">
                   {selectedPrompt.prompt}
                 </div>
+                {selectedPrompt.imageUrl && (
+                  <div className="pt-1">
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center">
+                      <img
+                        src={selectedPrompt.imageUrl}
+                        alt={selectedPrompt.title}
+                        className="w-full h-auto max-h-[380px] object-contain rounded-lg"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -1197,6 +1208,17 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   </div>
                 </div>
 
+                {/* Reference Graph / Image (for Task 1) */}
+                {selectedPrompt.imageUrl && (
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center max-w-xl mx-auto">
+                    <img
+                      src={selectedPrompt.imageUrl}
+                      alt={selectedPrompt.title}
+                      className="w-full h-auto max-h-[340px] object-contain rounded-lg"
+                    />
+                  </div>
+                )}
+
                 {/* Essay Paragraphs */}
                 <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif">
                   {paragraphs.map((p, pIdx) => (
@@ -1357,31 +1379,43 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                       <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
                         Reference Graph / Image
                       </span>
-                      {customImage && (
+                      {customImage ? (
                         <button
                           type="button"
                           onClick={handleRemoveImage}
                           className="text-[11px] text-red-500 hover:text-red-600 font-medium cursor-pointer"
                         >
-                          Remove
+                          Remove Custom
                         </button>
-                      )}
+                      ) : !useCustomPrompt && selectedPrompt.imageUrl ? (
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="text-[11px] text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 font-medium cursor-pointer"
+                        >
+                          Upload Custom
+                        </button>
+                      ) : null}
                     </div>
 
-                    {customImage ? (
+                    {customImage || (!useCustomPrompt && selectedPrompt.imageUrl) ? (
                       <div className="space-y-1.5">
-                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950 p-2 shadow-xs">
+                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center">
                           <img
-                            src={customImage}
+                            src={customImage || selectedPrompt.imageUrl}
                             alt="Task 1 reference chart"
                             className="w-full h-auto max-h-[380px] object-contain rounded-lg"
                           />
                         </div>
-                        {customImageName && (
+                        {customImageName ? (
                           <div className="text-[10px] font-mono text-neutral-400 truncate">
                             {customImageName}
                           </div>
-                        )}
+                        ) : !useCustomPrompt ? (
+                          <div className="text-[10px] font-mono text-neutral-400 truncate">
+                            {selectedPrompt.title}
+                          </div>
+                        ) : null}
                       </div>
                     ) : (
                       <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 p-5 text-center space-y-2 bg-white/60 dark:bg-neutral-950/60">
