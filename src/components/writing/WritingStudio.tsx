@@ -18,7 +18,6 @@ import {
   Upload,
   ClipboardPaste,
   Maximize2,
-  Minimize2,
   X as XIcon,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
@@ -424,7 +423,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
-              Task 2 (250w)
+              Task 2
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_academic")}
@@ -434,7 +433,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
-              Task 1 Academic (150w)
+              Task 1 Academic
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_general")}
@@ -444,7 +443,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
               }`}
             >
-              Task 1 General (150w)
+              Task 1 General
             </button>
           </div>
 
@@ -701,9 +700,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               onChange={(e) => setEssayContent(e.target.value)}
               onClick={() => setIsWritingModalOpen(true)}
               onFocus={() => setIsWritingModalOpen(true)}
-              placeholder={`Click here to enlarge and write your IELTS ${
-                selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"
-              }... Organize into clear paragraphs.`}
+              placeholder="Start writing..."
               rows={16}
               className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px] cursor-text"
             />
@@ -1038,17 +1035,6 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   <span>Paste</span>
                 </button>
 
-                {/* Minimize Button */}
-                <button
-                  type="button"
-                  onClick={() => setIsWritingModalOpen(false)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors"
-                  title="Minimize popup (Esc)"
-                >
-                  <Minimize2 className="w-3.5 h-3.5 text-neutral-500" />
-                  <span className="hidden sm:inline">Minimize</span>
-                </button>
-
                 {/* Close Button */}
                 <button
                   type="button"
@@ -1142,7 +1128,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                     autoFocus
                     value={essayContent}
                     onChange={(e) => setEssayContent(e.target.value)}
-                    placeholder="Write your IELTS Task 1 report here... Summarise the main features, report data trends, and make comparisons where relevant."
+                    placeholder="Start writing..."
                     className="w-full flex-1 p-3 sm:p-4 text-[15px] sm:text-base leading-relaxed bg-transparent text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none resize-none font-sans"
                   />
                 </div>
@@ -1176,7 +1162,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                     autoFocus
                     value={essayContent}
                     onChange={(e) => setEssayContent(e.target.value)}
-                    placeholder="Write your IELTS Task 2 essay here... Formulate an introduction, develop cohesive body paragraphs, and write a clear conclusion."
+                    placeholder="Start writing..."
                     className="w-full flex-1 p-3 sm:p-4 text-[15px] sm:text-base leading-relaxed bg-transparent text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none resize-none font-sans"
                   />
                 </div>
@@ -1184,21 +1170,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             )}
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/50 shrink-0">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={handlePasteFromClipboard}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors"
-                >
-                  <ClipboardPaste className="w-3.5 h-3.5 text-neutral-500" />
-                  <span>Paste Text</span>
-                </button>
-                <span className="text-xs text-neutral-400 hidden sm:inline">
-                  {essayContent.length} chars
-                </span>
-              </div>
-
+            <div className="flex items-center justify-end px-4 sm:px-6 py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/50 shrink-0">
               <div className="flex items-center gap-2">
                 <button
                   type="button"

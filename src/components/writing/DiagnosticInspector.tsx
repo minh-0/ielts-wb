@@ -90,9 +90,6 @@ export function DiagnosticInspector({
             <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
               Inspector
             </h3>
-            <span className="text-[11px] text-neutral-400 dark:text-neutral-500 font-mono">
-              {taskType === "task2" ? "250+ words" : "150+ words"}
-            </span>
           </div>
 
           <div className="py-14 text-center">

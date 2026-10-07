@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-07 11:36*
+*Last updated: 2026-10-07 11:46*
 
 ---
 
@@ -22,20 +22,23 @@
 - **Minimalist Studio Aesthetic**: Inspired by Linear, Raycast, and iA Writer. No marketing billboards, promotional banners, duplicate headers, or boilerplate disclaimers.
 - **Palette**: Pure monochrome neutral scales (`border-neutral-200 dark:border-neutral-800`, `bg-white dark:bg-neutral-950`, `bg-neutral-50/50 dark:bg-neutral-900/30`).
 - **Dark Mode Comfort**: High-contrast glare eliminated. Grammar mistakes use softened muted rose/red (`dark:text-rose-300/80 dark:bg-rose-950/30`), vocabulary upgrades use soft violet (`dark:text-purple-300/80 dark:bg-purple-950/30`), and replaced words use soft emerald.
-- **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, and the new Writing Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.
+- **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, and the Writing Popup Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.
 
 ---
 
 ### 3. Core Feature Architecture
 
 #### A. Writing Studio (`src/components/writing/WritingStudio.tsx`)
-- **Task Switcher**: Segmented toggle for `Task 2 (250w)`, `Task 1 Academic (150w)`, and `Task 1 General (150w)`.
+- **Task Switcher**: Clean minimalist toggle for `Task 2`, `Task 1 Academic`, and `Task 1 General`.
 - **Focused Writing Popup Modal (`isWritingModalOpen`)**:
   - **Click-to-Enlarge**: Clicking on the writing paragraph box (or the dedicated "Enlarge" toolbar button) immediately enlarges into an expansive, distraction-free writing popup.
+  - **Single Paste Button**: Exactly 1 visible Paste button in the popup header (duplicate button and char counter removed from footer for minimalist focus).
+  - **Clean Header Controls**: Modal header contains live status badge, single word counter, timer with start/pause, 1 Paste button, and 1 clean `X` close button (duplicate Minimize button removed).
+  - **Simplified Placeholder**: Clean, quiet `"Start writing..."` placeholder across all textareas.
+  - **Single Word Count**: Exactly 1 unified live word counter `{wordCount} / {targetWords} words` across normal and modal views (redundant target labels removed from tabs and inspector).
   - **Task 1 Split Layout**: When working on Task 1, the question prompt and uploaded chart/graph image are situated on the **left side** column, while the writing textarea expands on the right column. An in-modal upload dropzone allows attaching reference graphics on the fly.
   - **Task 2 Top-Down Layout**: When working on Task 2, the essay question prompt card spans across the **top**, with an expansive full-height writing textarea directly underneath.
-  - **Visible Paste Button**: Prominently accessible in the editor toolbar, popup modal header, and popup modal footer with automated `navigator.clipboard.readText()` and prompt fallback.
-  - **Live Synchronized Controls**: Real-time timer with start/pause/reset, dynamic word count tracking against band target, Escape shortcut minimization, and direct "Evaluate with Rubric" submission.
+  - **Live Synchronized Controls**: Real-time timer with start/pause/reset, dynamic word count tracking against band target, Escape shortcut dismissal, and direct "Evaluate with Rubric" submission.
 - **Question & Graph Handling**:
   - Built-in prompt bank (`src/lib/ieltsPromptBank.ts`).
   - `+ Custom topic` input mode.
@@ -109,6 +112,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `refactor(writing): remove duplicate paste button, minimize button, redundant word counts, and simplify placeholder to 'Start writing...'`
   - `feat(writing): add enlarged popup writing studio with Task 1 side layout, Task 2 top layout, and visible paste button`
   - `refactor(ui): minimalist redesign of vocabulary studio with compact toolbar and quiet cards`
   - `refactor(vocab): remove quick quiz mode to keep vocabulary studio clean and focused on flashcards and word explorer`
