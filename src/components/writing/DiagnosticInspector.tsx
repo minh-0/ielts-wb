@@ -6,7 +6,6 @@ import {
   ChevronDown,
   ArrowRight,
   Eye,
-  BookOpen,
   RotateCcw,
   Award,
   Sparkles,
@@ -82,58 +81,40 @@ export function DiagnosticInspector({
     }
   };
 
-  // If no feedback items exist yet, show examiner guidelines
+  // If no feedback items exist yet, show clean minimal empty state
   if (totalItems === 0) {
     return (
-      <div className="h-full p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col justify-between space-y-4">
+      <div className="h-full p-4 sm:p-5 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 pb-3 border-b border-neutral-100 dark:border-neutral-800/80">
-            <BookOpen className="w-4 h-4 text-neutral-500" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
-              Examiner Rubric Criteria
+          <div className="flex items-center justify-between pb-3 border-b border-neutral-100 dark:border-neutral-800/80">
+            <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              Inspector
             </h3>
+            <span className="text-[11px] text-neutral-400 dark:text-neutral-500 font-mono">
+              {taskType === "task2" ? "250+ words" : "150+ words"}
+            </span>
           </div>
 
-          <div className="pt-4 space-y-3 text-xs text-neutral-600 dark:text-neutral-400">
-            <p className="leading-relaxed">
-              When you submit your response, this inspector highlights mistakes directly in the
-              paragraph, explains higher-rated words, and lets you swap replacements with one click.
+          <div className="py-14 text-center">
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-[240px] mx-auto leading-relaxed">
+              Submit your response to view sentence diagnostics and vocabulary upgrades.
             </p>
-
-            <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-1">
-              <span className="font-semibold text-red-600 dark:text-rose-400/80 block text-[11px]">
-                🔴 In-Text Mistakes (Red Wavy)
-              </span>
-              <p className="text-[11px] leading-relaxed text-neutral-500">
-                Punctuation errors, comma splices, mechanical linkers, and subject-verb slips.
-              </p>
-            </div>
-
-            <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-1">
-              <span className="font-semibold text-violet-600 dark:text-purple-400/80 block text-[11px]">
-                🟣 Vocabulary Upgrades (Violet Dashed)
-              </span>
-              <p className="text-[11px] leading-relaxed text-neutral-500">
-                Natural C1/C2 collocations, academic idioms, and high-register reporting verbs.
-              </p>
-            </div>
-
-            <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1">
-              <span className="font-semibold text-emerald-700 dark:text-emerald-300 block text-[11px]">
-                🟢 Replaced Words (Emerald Solid)
-              </span>
-              <p className="text-[11px] leading-relaxed text-emerald-900/80 dark:text-emerald-300/80">
-                Directly replaced in your essay with full examiner rationale on why that word rates higher.
-              </p>
-            </div>
           </div>
         </div>
 
-        <div className="p-3 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-[11px] text-neutral-500">
-          <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-0.5">
-            Target Length:
+        <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/60 flex items-center justify-around text-[11px] text-neutral-400 dark:text-neutral-500">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500/70" />
+            Grammar
           </span>
-          {taskType === "task2" ? "250+ words (Task 2)" : "150+ words (Task 1)"}
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-violet-500/70" />
+            Vocabulary
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70" />
+            Applied
+          </span>
         </div>
       </div>
     );

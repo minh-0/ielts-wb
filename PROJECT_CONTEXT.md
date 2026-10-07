@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-06 21:14*
+*Last updated: 2026-10-07 09:02*
 
 ---
 
@@ -38,7 +38,8 @@
   - Highlights grammar errors (red wavy), vocabulary upgrades (violet dashed), and replaced words (emerald solid).
   - Clicking any underlined span displays an interactive popover with examiner rationale and a 1-click **"Apply Higher-Rated Word"** or **"Revert"** button.
 - **Inspector Panel (`DiagnosticInspector.tsx`)**:
-  - Live criteria breakdown scores (TR/TA, CC, LR, GRA).
+  - Minimalist pre-submission empty state with quiet target indicator and compact color legend (no loud boxes or verbose tutorials).
+  - Post-submission live criteria breakdown scores (TR/TA, CC, LR, GRA).
   - Sentence-by-sentence diff viewer comparing original vs. rewritten forms.
   - Model essay display.
 - **Scorecard Modal (`ScorecardModal.tsx`)**:
@@ -92,6 +93,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `refactor(ui): streamline inspector empty state with minimal placeholder and compact legend`
   - `feat: allow image upload for custom Task 1 questions and remove inspector pop-down subtitle`
   - `refactor(ui): purge all boilerplate disclaimers, subtitles, and fluff text for pure minimalist experience`
   - `fix: remove jump-to pills from rubric and update browser tab title to slayer6767`
