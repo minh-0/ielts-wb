@@ -18,38 +18,19 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Household Spending Categories (2024)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Global Water Consumption by Sector (%)</text>
   
-  <text x="180" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">United Kingdom</text>
-  <path d="M 180 220 L 180.00 125.00 A 95 95 0 0 1 253.20 280.56 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="235.9" y="197.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">36%</text>
-  <path d="M 180 220 L 253.20 280.56 A 95 95 0 0 1 156.37 312.02 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="199.1" y="282.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">18%</text>
-  <path d="M 180 220 L 156.37 312.02 A 95 95 0 0 1 89.65 249.36 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="137.7" y="269.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">16%</text>
-  <path d="M 180 220 L 89.65 249.36 A 95 95 0 0 1 134.23 136.75 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="122.6" y="201.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">22%</text>
-  <path d="M 180 220 L 134.23 136.75 A 95 95 0 0 1 180.00 125.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="164.6" y="164.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">8%</text>
-  <text x="440" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Japan</text>
-  <path d="M 440 220 L 440.00 125.00 A 95 95 0 0 1 534.81 214.03 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="482.3" y="179.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">24%</text>
-  <path d="M 440 220 L 534.81 214.03 A 95 95 0 0 1 405.03 308.33 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="476.3" y="274.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">32%</text>
-  <path d="M 440 220 L 405.03 308.33 A 95 95 0 0 1 354.04 260.45 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="397.7" y="269.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">12%</text>
-  <path d="M 440 220 L 354.04 260.45 A 95 95 0 0 1 363.14 164.16 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="378.5" y="218.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">17%</text>
-  <path d="M 440 220 L 363.14 164.16 A 95 95 0 0 1 440.00 125.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="412.0" y="169.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">15%</text>
-  <rect x="580" y="120" width="12" height="12" rx="3" fill="#38bdf8"/>
-  <text x="598" y="130" fill="#cbd5e1" font-size="11">Housing</text>
-  <rect x="580" y="146" width="12" height="12" rx="3" fill="#34d399"/>
-  <text x="598" y="156" fill="#cbd5e1" font-size="11">Food</text>
-  <rect x="580" y="172" width="12" height="12" rx="3" fill="#f472b6"/>
-  <text x="598" y="182" fill="#cbd5e1" font-size="11">Transport</text>
-  <rect x="580" y="198" width="12" height="12" rx="3" fill="#fbbf24"/>
-  <text x="598" y="208" fill="#cbd5e1" font-size="11">Leisure</text>
-  <rect x="580" y="224" width="12" height="12" rx="3" fill="#a78bfa"/>
-  <text x="598" y="234" fill="#cbd5e1" font-size="11">Other</text>
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Distribution</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 1 1 158.43 274.17 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="334.5" y="277.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">69%</text>
+  <path d="M 270 230 L 158.43 274.17 A 120 120 0 0 1 205.70 128.68 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="195.8" y="209.9" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">22%</text>
+  <path d="M 270 230 L 205.70 128.68 A 120 120 0 0 1 270.00 110.00 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="248.2" y="159.1" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">9%</text>
+  <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">Agriculture (69%)</text>
+  <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Industry (22%)</text>
+  <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">Domestic (9%)</text>
 </svg>

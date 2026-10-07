@@ -18,41 +18,36 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Global Grain Yields (Tonnes per Hectare)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Consumer Spending in European Nations (2002)</text>
   
   <rect x="40" y="75" width="620" height="36" rx="6" fill="#1e293b"/>
-  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">Crop</text>
-  <text x="195.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">1990</text>
-  <text x="298.3" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2000</text>
-  <text x="401.7" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2010</text>
-  <text x="505.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">2020</text>
-  <text x="608.3" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Growth (%)</text>
+  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">Country</text>
+  <text x="272.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Food/Drink/Tobacco</text>
+  <text x="427.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Clothing/Footwear</text>
+  <text x="582.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Leisure/Education</text>
   <rect x="40" y="111" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Maize (Corn)</text>
-  <text x="195.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.7</text>
-  <text x="298.3" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.3</text>
-  <text x="401.7" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">5.1</text>
-  <text x="505.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">5.9</text>
-  <text x="608.3" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+59%</text>
+  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Ireland</text>
+  <text x="272.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">28.91%</text>
+  <text x="427.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.43%</text>
+  <text x="582.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.21%</text>
   <rect x="40" y="147" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Rice (Paddy)</text>
-  <text x="195.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.5</text>
-  <text x="298.3" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.9</text>
-  <text x="401.7" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.4</text>
-  <text x="505.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.7</text>
-  <text x="608.3" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+34%</text>
+  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Italy</text>
+  <text x="272.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">16.36%</text>
+  <text x="427.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">9.00%</text>
+  <text x="582.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.20%</text>
   <rect x="40" y="183" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Wheat</text>
-  <text x="195.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.6</text>
-  <text x="298.3" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.8</text>
-  <text x="401.7" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.1</text>
-  <text x="505.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.5</text>
-  <text x="608.3" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+35%</text>
+  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Spain</text>
+  <text x="272.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">18.80%</text>
+  <text x="427.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.51%</text>
+  <text x="582.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1.98%</text>
   <rect x="40" y="219" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Barley</text>
-  <text x="195.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.2</text>
-  <text x="298.3" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.4</text>
-  <text x="401.7" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.7</text>
-  <text x="505.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.0</text>
-  <text x="608.3" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">+36%</text>
+  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Sweden</text>
+  <text x="272.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">15.77%</text>
+  <text x="427.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">5.40%</text>
+  <text x="582.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.22%</text>
+  <rect x="40" y="255" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="277" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Turkey</text>
+  <text x="272.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">32.14%</text>
+  <text x="427.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.63%</text>
+  <text x="582.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.35%</text>
 </svg>

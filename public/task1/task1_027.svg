@@ -18,26 +18,31 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Retail Channel Distribution</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Student Enrollments by Faculty (%)</text>
   
-  <text x="180" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">2015</text>
-  <path d="M 180 220 L 180.00 125.00 A 95 95 0 1 1 86.68 202.20 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="219.4" y="271.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">78%</text>
-  <path d="M 180 220 L 86.68 202.20 A 95 95 0 0 1 145.03 131.67 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="132.4" y="184.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">16%</text>
-  <path d="M 180 220 L 145.03 131.67 A 95 95 0 0 1 180.00 125.00 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="168.4" y="163.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">6%</text>
-  <text x="440" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">2025</text>
-  <path d="M 440 220 L 440.00 125.00 A 95 95 0 0 1 474.97 308.33 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="500.7" y="212.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">44%</text>
-  <path d="M 440 220 L 474.97 308.33 A 95 95 0 0 1 359.79 270.90 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="420.9" y="282.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">22%</text>
-  <path d="M 440 220 L 359.79 270.90 A 95 95 0 0 1 440.00 125.00 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="385.9" y="194.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">34%</text>
-  <rect x="580" y="120" width="12" height="12" rx="3" fill="#38bdf8"/>
-  <text x="598" y="130" fill="#cbd5e1" font-size="11">Physical Stores</text>
-  <rect x="580" y="146" width="12" height="12" rx="3" fill="#34d399"/>
-  <text x="598" y="156" fill="#cbd5e1" font-size="11">Web Desktop</text>
-  <rect x="580" y="172" width="12" height="12" rx="3" fill="#f472b6"/>
-  <text x="598" y="182" fill="#cbd5e1" font-size="11">Mobile App</text>
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Distribution</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 0 1 367.08 300.53 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="339.5" y="198.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">35%</text>
+  <path d="M 270 230 L 367.08 300.53 A 120 120 0 0 1 199.47 327.08 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="282.2" y="311.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">25%</text>
+  <path d="M 270 230 L 199.47 327.08 A 120 120 0 0 1 150.00 230.00 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="200.5" y="269.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">15%</text>
+  <path d="M 270 230 L 150.00 230.00 A 120 120 0 0 1 182.52 147.85 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="197.5" y="205.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">12%</text>
+  <path d="M 270 230 L 182.52 147.85 A 120 120 0 0 1 232.92 115.87 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="228.2" y="168.1" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">8%</text>
+  <path d="M 270 230 L 232.92 115.87 A 120 120 0 0 1 270.00 110.00 Z" fill="#fb7185" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="257.8" y="157.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">5%</text>
+  <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">Science &amp; Tech (35%)</text>
+  <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Business (25%)</text>
+  <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">Medicine (15%)</text>
+  <rect x="440" y="224" width="12" height="12" rx="3" fill="#fbbf24"/>
+  <text x="460" y="234" fill="#cbd5e1" font-size="12">Social Sciences (12%)</text>
+  <rect x="440" y="252" width="12" height="12" rx="3" fill="#a78bfa"/>
+  <text x="460" y="262" fill="#cbd5e1" font-size="12">Humanities (8%)</text>
+  <rect x="440" y="280" width="12" height="12" rx="3" fill="#fb7185"/>
+  <text x="460" y="290" fill="#cbd5e1" font-size="12">Creative Arts (5%)</text>
 </svg>

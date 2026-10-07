@@ -18,23 +18,27 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Global Habitable Land Allocation (%)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Household Expenditure in Japan vs Malaysia (2010)</text>
   
-  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Land Use Distribution</text>
-  <path d="M 270 230 L 270.00 110.00 A 120 120 0 0 1 299.84 346.23 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="347.4" y="224.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">46%</text>
-  <path d="M 270 230 L 299.84 346.23 A 120 120 0 0 1 168.68 165.70 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="206.9" y="279.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">38%</text>
-  <path d="M 270 230 L 168.68 165.70 A 120 120 0 0 1 247.51 112.13 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="226.2" y="169.5" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">13%</text>
-  <path d="M 270 230 L 247.51 112.13 A 120 120 0 0 1 270.00 110.00 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="262.7" y="156.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">3%</text>
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Distribution</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 0 1 387.87 252.49 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="330.1" y="184.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">28%</text>
+  <path d="M 270 230 L 387.87 252.49 A 120 120 0 0 1 240.16 346.23 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="311.8" y="299.9" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">26%</text>
+  <path d="M 270 230 L 240.16 346.23 A 120 120 0 0 1 158.43 185.83 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="200.5" y="269.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">27%</text>
+  <path d="M 270 230 L 158.43 185.83 A 120 120 0 0 1 240.16 113.77 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="218.4" y="175.5" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">15%</text>
+  <path d="M 270 230 L 240.16 113.77 A 120 120 0 0 1 270.00 110.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="260.2" y="156.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">4%</text>
   <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
-  <text x="460" y="150" fill="#cbd5e1" font-size="12">Agriculture (46%)</text>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">Housing (28%)</text>
   <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
-  <text x="460" y="178" fill="#cbd5e1" font-size="12">Forests (38%)</text>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Food (26%)</text>
   <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
-  <text x="460" y="206" fill="#cbd5e1" font-size="12">Shrub &amp; Grass (13%)</text>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">Other Goods (27%)</text>
   <rect x="440" y="224" width="12" height="12" rx="3" fill="#fbbf24"/>
-  <text x="460" y="234" fill="#cbd5e1" font-size="12">Urban Built (3%)</text>
+  <text x="460" y="234" fill="#cbd5e1" font-size="12">Transport (15%)</text>
+  <rect x="440" y="252" width="12" height="12" rx="3" fill="#a78bfa"/>
+  <text x="460" y="262" fill="#cbd5e1" font-size="12">Healthcare (4%)</text>
 </svg>

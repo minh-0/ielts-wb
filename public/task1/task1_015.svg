@@ -18,57 +18,73 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">International Visitors (Millions)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Household Tenure in England and Wales (% of Households)</text>
   
   <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
   <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
-  <line x1="75" y1="325.0" x2="645" y2="325.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="329.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
-  <line x1="75" y1="275.0" x2="645" y2="275.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="279.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
-  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
-  <line x1="75" y1="175.0" x2="645" y2="175.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="179.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
-  <line x1="75" y1="125.0" x2="645" y2="125.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="129.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">100</text>
+  <line x1="75" y1="315.0" x2="645" y2="315.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="319.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
+  <line x1="75" y1="255.0" x2="645" y2="255.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="259.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
+  <line x1="75" y1="195.0" x2="645" y2="195.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="199.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="135.0" x2="645" y2="135.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="139.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
   <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">120</text>
-  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Millions of Visitors</text>
-  <text x="132.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">France</text>
-  <line x1="132.0" y1="375" x2="132.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="104.0" y="150.0" width="26.0" height="225.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="117.0" y="146.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">90</text>
-  <rect x="132.0" y="125.0" width="26.0" height="250.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="145.0" y="121.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">100</text>
-  <text x="246.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Spain</text>
-  <line x1="246.0" y1="375" x2="246.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="218.0" y="165.0" width="26.0" height="210.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="231.0" y="161.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">84</text>
-  <rect x="246.0" y="162.5" width="26.0" height="212.5" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="259.0" y="158.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">85</text>
-  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">USA</text>
-  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="332.0" y="177.5" width="26.0" height="197.5" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="345.0" y="173.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">79</text>
-  <rect x="360.0" y="207.5" width="26.0" height="167.5" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="373.0" y="203.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">67</text>
-  <text x="474.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Italy</text>
-  <line x1="474.0" y1="375" x2="474.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="446.0" y="212.5" width="26.0" height="162.5" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="459.0" y="208.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">65</text>
-  <rect x="474.0" y="232.5" width="26.0" height="142.5" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="487.0" y="228.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">57</text>
-  <text x="588.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Turkey</text>
-  <line x1="588.0" y1="375" x2="588.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="560.0" y="247.5" width="26.0" height="127.5" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="573.0" y="243.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">51</text>
-  <rect x="588.0" y="237.5" width="26.0" height="137.5" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="601.0" y="233.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">55</text>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">100</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">% of Households</text>
+  <text x="110.6" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1918</text>
+  <line x1="110.6" y1="375" x2="110.6" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="83.9" y="309.0" width="24.7" height="66.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="96.3" y="305.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">22</text>
+  <rect x="110.6" y="141.0" width="24.7" height="234.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="123.0" y="137.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">78</text>
+  <text x="181.9" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1939</text>
+  <line x1="181.9" y1="375" x2="181.9" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="155.2" y="279.0" width="24.7" height="96.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="167.5" y="275.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">32</text>
+  <rect x="181.9" y="171.0" width="24.7" height="204.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="194.2" y="167.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">68</text>
+  <text x="253.1" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1953</text>
+  <line x1="253.1" y1="375" x2="253.1" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="226.4" y="279.0" width="24.7" height="96.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="238.8" y="275.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">32</text>
+  <rect x="253.1" y="171.0" width="24.7" height="204.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="265.5" y="167.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">68</text>
+  <text x="324.4" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1971</text>
+  <line x1="324.4" y1="375" x2="324.4" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="297.7" y="225.0" width="24.7" height="150.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="310.0" y="221.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">50</text>
+  <rect x="324.4" y="225.0" width="24.7" height="150.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="336.7" y="221.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">50</text>
+  <text x="395.6" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1981</text>
+  <line x1="395.6" y1="375" x2="395.6" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="368.9" y="201.0" width="24.7" height="174.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="381.3" y="197.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">58</text>
+  <rect x="395.6" y="249.0" width="24.7" height="126.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="408.0" y="245.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">42</text>
+  <text x="466.9" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1991</text>
+  <line x1="466.9" y1="375" x2="466.9" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="440.2" y="171.0" width="24.7" height="204.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="452.5" y="167.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">68</text>
+  <rect x="466.9" y="279.0" width="24.7" height="96.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="479.2" y="275.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">32</text>
+  <text x="538.1" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2001</text>
+  <line x1="538.1" y1="375" x2="538.1" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="511.4" y="168.0" width="24.7" height="207.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="523.8" y="164.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">69</text>
+  <rect x="538.1" y="282.0" width="24.7" height="93.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="550.5" y="278.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">31</text>
+  <text x="609.4" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2011</text>
+  <line x1="609.4" y1="375" x2="609.4" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="582.7" y="183.0" width="24.7" height="192.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="595.0" y="179.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">64</text>
+  <rect x="609.4" y="267.0" width="24.7" height="108.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="621.7" y="263.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">36</text>
   <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
   <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
-  <rect x="595.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
-  <text x="611.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">2023</text>
-  <rect x="545.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
-  <text x="561.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">2019</text>
+  <rect x="582.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="598.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Rented</text>
+  <rect x="525.5" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="541.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Owned</text>
 </svg>

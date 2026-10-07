@@ -18,36 +18,41 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Consumer Spending by Category (%)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Underground Railway Systems in Six Global Cities</text>
   
   <rect x="40" y="75" width="620" height="36" rx="6" fill="#1e293b"/>
-  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">Country</text>
-  <text x="272.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Food / Tobacco</text>
-  <text x="427.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Clothing / Footwear</text>
-  <text x="582.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Leisure / Education</text>
+  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">City</text>
+  <text x="272.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Date Opened</text>
+  <text x="427.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Route Length (km)</text>
+  <text x="582.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Passengers / Year</text>
   <rect x="40" y="111" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Ireland</text>
-  <text x="272.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">28.9%</text>
-  <text x="427.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.4%</text>
-  <text x="582.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.2%</text>
+  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">London</text>
+  <text x="272.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1863</text>
+  <text x="427.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">394 km</text>
+  <text x="582.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">775 million</text>
   <rect x="40" y="147" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Italy</text>
-  <text x="272.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">16.4%</text>
-  <text x="427.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">9.0%</text>
-  <text x="582.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.2%</text>
+  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Paris</text>
+  <text x="272.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1900</text>
+  <text x="427.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">199 km</text>
+  <text x="582.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1,191 million</text>
   <rect x="40" y="183" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Spain</text>
-  <text x="272.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">18.8%</text>
-  <text x="427.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.5%</text>
-  <text x="582.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1.9%</text>
+  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Tokyo</text>
+  <text x="272.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1927</text>
+  <text x="427.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">155 km</text>
+  <text x="582.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1,927 million</text>
   <rect x="40" y="219" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Sweden</text>
-  <text x="272.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">15.8%</text>
-  <text x="427.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">5.4%</text>
-  <text x="582.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.2%</text>
+  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Washington DC</text>
+  <text x="272.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1976</text>
+  <text x="427.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">126 km</text>
+  <text x="582.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">144 million</text>
   <rect x="40" y="255" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="277" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Turkey</text>
-  <text x="272.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">32.1%</text>
-  <text x="427.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">6.6%</text>
-  <text x="582.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.3%</text>
+  <text x="56.0" y="277" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Kyoto</text>
+  <text x="272.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">1981</text>
+  <text x="427.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">11 km</text>
+  <text x="582.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">45 million</text>
+  <rect x="40" y="291" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="313" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Los Angeles</text>
+  <text x="272.5" y="313" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2001</text>
+  <text x="427.5" y="313" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">28 km</text>
+  <text x="582.5" y="313" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">50 million</text>
 </svg>

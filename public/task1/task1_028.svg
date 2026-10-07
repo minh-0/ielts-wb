@@ -18,23 +18,27 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Reasons for International Flights (%)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Global Renewable Electricity Capacity (%)</text>
   
-  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Travel Purpose</text>
-  <path d="M 270 230 L 270.00 110.00 A 120 120 0 1 1 254.96 349.05 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="347.8" y="238.9" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">52%</text>
-  <path d="M 270 230 L 254.96 349.05 A 120 120 0 0 1 150.24 222.47 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="209.9" y="283.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">24%</text>
-  <path d="M 270 230 L 150.24 222.47 A 120 120 0 0 1 225.83 118.43 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="206.9" y="188.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">18%</text>
-  <path d="M 270 230 L 225.83 118.43 A 120 120 0 0 1 270.00 110.00 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="255.4" y="157.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">6%</text>
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Distribution</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 1 1 240.16 346.23 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="347.4" y="243.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">54%</text>
+  <path d="M 270 230 L 240.16 346.23 A 120 120 0 0 1 150.24 222.47 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="206.9" y="279.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">22%</text>
+  <path d="M 270 230 L 150.24 222.47 A 120 120 0 0 1 212.19 124.84 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="204.1" y="192.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">16%</text>
+  <path d="M 270 230 L 212.19 124.84 A 120 120 0 0 1 254.96 110.95 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="245.9" y="159.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">6%</text>
+  <path d="M 270 230 L 254.96 110.95 A 120 120 0 0 1 270.00 110.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="265.1" y="156.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">2%</text>
   <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
-  <text x="460" y="150" fill="#cbd5e1" font-size="12">Holiday / Tourism (52%)</text>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">Hydroelectric (54%)</text>
   <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
-  <text x="460" y="178" fill="#cbd5e1" font-size="12">Visiting Family (24%)</text>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Wind Energy (22%)</text>
   <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
-  <text x="460" y="206" fill="#cbd5e1" font-size="12">Business Travel (18%)</text>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">Solar PV (16%)</text>
   <rect x="440" y="224" width="12" height="12" rx="3" fill="#fbbf24"/>
-  <text x="460" y="234" fill="#cbd5e1" font-size="12">Education / Other (6%)</text>
+  <text x="460" y="234" fill="#cbd5e1" font-size="12">Bioenergy (6%)</text>
+  <rect x="440" y="252" width="12" height="12" rx="3" fill="#a78bfa"/>
+  <text x="460" y="262" fill="#cbd5e1" font-size="12">Geothermal (2%)</text>
 </svg>

@@ -18,80 +18,73 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Commodity Price Index (Base Year 2000 = 100)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Train Commuter On-Time Punctuality Rate (%)</text>
   
   <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">50</text>
-  <line x1="75" y1="332.1" x2="645" y2="332.1" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="336.1" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">150</text>
-  <line x1="75" y1="289.3" x2="645" y2="289.3" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="293.3" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">250</text>
-  <line x1="75" y1="246.4" x2="645" y2="246.4" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="250.4" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">350</text>
-  <line x1="75" y1="203.6" x2="645" y2="203.6" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="207.6" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">450</text>
-  <line x1="75" y1="160.7" x2="645" y2="160.7" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="164.7" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">550</text>
-  <line x1="75" y1="117.9" x2="645" y2="117.9" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="121.9" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">650</text>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <line x1="75" y1="300.0" x2="645" y2="300.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="304.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">70</text>
+  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
+  <line x1="75" y1="150.0" x2="645" y2="150.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="154.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">90</text>
   <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">750</text>
-  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Index Points</text>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">100</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">% On-Time</text>
   <line x1="75.0" y1="375" x2="75.0" y2="381" stroke="#475569" stroke-width="1"/>
   <text x="75.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2000</text>
   <line x1="75.0" y1="75" x2="75.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
-  <line x1="170.0" y1="375" x2="170.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <text x="170.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2004</text>
-  <line x1="170.0" y1="75" x2="170.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
-  <line x1="265.0" y1="375" x2="265.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <text x="265.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2008</text>
-  <line x1="265.0" y1="75" x2="265.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="217.5" y1="375" x2="217.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="217.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2005</text>
+  <line x1="217.5" y1="75" x2="217.5" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
   <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2012</text>
+  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2010</text>
   <line x1="360.0" y1="75" x2="360.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
-  <line x1="455.0" y1="375" x2="455.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <text x="455.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2016</text>
-  <line x1="455.0" y1="75" x2="455.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
-  <line x1="550.0" y1="375" x2="550.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <text x="550.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2020</text>
-  <line x1="550.0" y1="75" x2="550.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="502.5" y1="375" x2="502.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="502.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2015</text>
+  <line x1="502.5" y1="75" x2="502.5" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
   <line x1="645.0" y1="375" x2="645.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <text x="645.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2024</text>
+  <text x="645.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2020</text>
   <line x1="645.0" y1="75" x2="645.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
   <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
   <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
-  <path d="M 75.0 353.6 L 170.0 334.3 L 265.0 272.1 L 360.0 190.7 L 455.0 220.7 L 550.0 173.6 L 645.0 105.0" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="75.0" cy="353.6" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="75.0" y="345.6" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">100</text>
-  <circle cx="170.0" cy="334.3" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="170.0" y="326.3" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">145</text>
-  <circle cx="265.0" cy="272.1" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="265.0" y="264.1" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">290</text>
-  <circle cx="360.0" cy="190.7" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="360.0" y="182.7" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">480</text>
-  <circle cx="455.0" cy="220.7" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="455.0" y="212.7" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">410</text>
-  <circle cx="550.0" cy="173.6" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="550.0" y="165.6" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">520</text>
-  <circle cx="645.0" cy="105.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
-  <text x="645.0" y="97.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">680</text>
-  <path d="M 75.0 353.6 L 170.0 338.6 L 265.0 250.7 L 360.0 263.6 L 455.0 327.9 L 550.0 312.9 L 645.0 278.6" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="75.0" cy="353.6" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="75.0" y="345.6" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">100</text>
-  <circle cx="170.0" cy="338.6" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="170.0" y="330.6" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">135</text>
-  <circle cx="265.0" cy="250.7" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="265.0" y="242.7" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">340</text>
-  <circle cx="360.0" cy="263.6" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="360.0" y="255.6" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">310</text>
-  <circle cx="455.0" cy="327.9" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="455.0" y="319.9" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">160</text>
-  <circle cx="550.0" cy="312.9" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="550.0" y="304.9" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">195</text>
-  <circle cx="645.0" cy="278.6" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
-  <text x="645.0" y="270.6" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">275</text>
-  <circle cx="529.5" cy="42" r="4.5" fill="#34d399"/>
-  <text x="539.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Crude Oil Index</text>
-  <circle cx="401.5" cy="42" r="4.5" fill="#38bdf8"/>
-  <text x="411.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Gold Price Index</text>
+  <path d="M 75.0 165.0 L 217.5 142.5 L 360.0 120.0 L 502.5 127.5 L 645.0 135.0" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="165.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="75.0" y="157.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">88</text>
+  <circle cx="217.5" cy="142.5" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="217.5" y="134.5" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">91</text>
+  <circle cx="360.0" cy="120.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="360.0" y="112.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">94</text>
+  <circle cx="502.5" cy="127.5" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="502.5" y="119.5" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">93</text>
+  <circle cx="645.0" cy="135.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="645.0" y="127.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">92</text>
+  <path d="M 75.0 210.0 L 217.5 187.5 L 360.0 157.5 L 502.5 142.5 L 645.0 150.0" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="210.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="75.0" y="202.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">82</text>
+  <circle cx="217.5" cy="187.5" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="217.5" y="179.5" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">85</text>
+  <circle cx="360.0" cy="157.5" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="360.0" y="149.5" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">89</text>
+  <circle cx="502.5" cy="142.5" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="502.5" y="134.5" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">91</text>
+  <circle cx="645.0" cy="150.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="645.0" y="142.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">90</text>
+  <path d="M 75.0 187.5 L 217.5 210.0 L 360.0 240.0 L 502.5 262.5 L 645.0 285.0" fill="none" stroke="#f472b6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="187.5" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="75.0" y="179.5" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">85</text>
+  <circle cx="217.5" cy="210.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="217.5" y="202.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">82</text>
+  <circle cx="360.0" cy="240.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="360.0" y="232.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">78</text>
+  <circle cx="502.5" cy="262.5" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="502.5" y="254.5" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">75</text>
+  <circle cx="645.0" cy="285.0" r="4" fill="#0b0f19" stroke="#f472b6" stroke-width="2.5"/>
+  <text x="645.0" y="277.0" fill="#f472b6" font-size="9.5" text-anchor="middle" font-weight="600">72</text>
+  <circle cx="549.0" cy="42" r="4.5" fill="#f472b6"/>
+  <text x="559.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Western Line</text>
+  <circle cx="440.5" cy="42" r="4.5" fill="#34d399"/>
+  <text x="450.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Northern Line</text>
+  <circle cx="338.5" cy="42" r="4.5" fill="#38bdf8"/>
+  <text x="348.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Eastern Line</text>
 </svg>

@@ -18,41 +18,55 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Age Demographic Distribution (1980 vs 2020)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">University Applications in the UK (Thousands, 2000–2015)</text>
   
   <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
-  <line x1="75" y1="300.0" x2="645" y2="300.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="304.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
-  <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
-  <line x1="75" y1="150.0" x2="645" y2="150.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="154.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">150</text>
+  <line x1="75" y1="315.0" x2="645" y2="315.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="319.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">200</text>
+  <line x1="75" y1="255.0" x2="645" y2="255.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="259.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">250</text>
+  <line x1="75" y1="195.0" x2="645" y2="195.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="199.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">300</text>
+  <line x1="75" y1="135.0" x2="645" y2="135.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="63" y="139.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">350</text>
   <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
-  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Population Share (%)</text>
-  <text x="170.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">0-14 Years</text>
-  <line x1="170.0" y1="375" x2="170.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="142.0" y="285.0" width="26.0" height="90.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="155.0" y="281.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">24</text>
-  <rect x="170.0" y="322.5" width="26.0" height="52.5" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="183.0" y="318.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">14</text>
-  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">15-64 (Working)</text>
-  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="332.0" y="127.5" width="26.0" height="247.5" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="345.0" y="123.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">66</text>
-  <rect x="360.0" y="142.5" width="26.0" height="232.5" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="373.0" y="138.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">62</text>
-  <text x="550.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">65+ (Senior)</text>
-  <line x1="550.0" y1="375" x2="550.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="522.0" y="337.5" width="26.0" height="37.5" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="535.0" y="333.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">10</text>
-  <rect x="550.0" y="285.0" width="26.0" height="90.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="563.0" y="281.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">24</text>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">400</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Thousands</text>
+  <line x1="75.0" y1="375" x2="75.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="75.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2000</text>
+  <line x1="75.0" y1="75" x2="75.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="265.0" y1="375" x2="265.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="265.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2005</text>
+  <line x1="265.0" y1="75" x2="265.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="455.0" y1="375" x2="455.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="455.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2010</text>
+  <line x1="455.0" y1="75" x2="455.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
+  <line x1="645.0" y1="375" x2="645.0" y2="381" stroke="#475569" stroke-width="1"/>
+  <text x="645.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="monospace">2015</text>
+  <line x1="645.0" y1="75" x2="645.0" y2="375" stroke="#1e293b" stroke-width="0.75" opacity="0.5"/>
   <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
   <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
-  <rect x="595.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
-  <text x="611.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">2020</text>
-  <rect x="545.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
-  <text x="561.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">1980</text>
+  <path d="M 75.0 267.0 L 265.0 219.0 L 455.0 165.0 L 645.0 123.0" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="267.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="75.0" y="259.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">240</text>
+  <circle cx="265.0" cy="219.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="265.0" y="211.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">280</text>
+  <circle cx="455.0" cy="165.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="455.0" y="157.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">325</text>
+  <circle cx="645.0" cy="123.0" r="4" fill="#0b0f19" stroke="#38bdf8" stroke-width="2.5"/>
+  <text x="645.0" y="115.0" fill="#38bdf8" font-size="9.5" text-anchor="middle" font-weight="600">360</text>
+  <path d="M 75.0 315.0 L 265.0 279.0 L 455.0 249.0 L 645.0 219.0" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75.0" cy="315.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="75.0" y="307.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">200</text>
+  <circle cx="265.0" cy="279.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="265.0" y="271.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">230</text>
+  <circle cx="455.0" cy="249.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="455.0" y="241.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">255</text>
+  <circle cx="645.0" cy="219.0" r="4" fill="#0b0f19" stroke="#34d399" stroke-width="2.5"/>
+  <text x="645.0" y="211.0" fill="#34d399" font-size="9.5" text-anchor="middle" font-weight="600">280</text>
+  <circle cx="529.5" cy="42" r="4.5" fill="#34d399"/>
+  <text x="539.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Male Applicants</text>
+  <circle cx="395.0" cy="42" r="4.5" fill="#38bdf8"/>
+  <text x="405.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Female Applicants</text>
 </svg>

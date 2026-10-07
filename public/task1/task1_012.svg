@@ -18,69 +18,63 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Employment Share by Economic Sector (%)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Physical Activity in Australia by Gender and Age (2010, %)</text>
   
   <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
   <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
   <line x1="75" y1="325.0" x2="645" y2="325.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="329.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">15</text>
+  <text x="63" y="329.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">10</text>
   <line x1="75" y1="275.0" x2="645" y2="275.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="279.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">30</text>
+  <text x="63" y="279.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">20</text>
   <line x1="75" y1="225.0" x2="645" y2="225.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">45</text>
+  <text x="63" y="229.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">30</text>
   <line x1="75" y1="175.0" x2="645" y2="175.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="179.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <text x="63" y="179.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">40</text>
   <line x1="75" y1="125.0" x2="645" y2="125.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="129.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">75</text>
+  <text x="63" y="129.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">50</text>
   <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
-  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">90</text>
-  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Share of Workforce (%)</text>
-  <text x="132.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">UK</text>
-  <line x1="132.0" y1="375" x2="132.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="90.0" y="101.7" width="26.0" height="273.3" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="103.0" y="97.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">82</text>
-  <rect x="118.0" y="321.7" width="26.0" height="53.3" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="131.0" y="317.7" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">16</text>
-  <rect x="146.0" y="368.3" width="26.0" height="6.7" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="159.0" y="364.3" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">2</text>
-  <text x="246.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">South Korea</text>
-  <line x1="246.0" y1="375" x2="246.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="204.0" y="138.3" width="26.0" height="236.7" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="217.0" y="134.3" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">71</text>
-  <rect x="232.0" y="295.0" width="26.0" height="80.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="245.0" y="291.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">24</text>
-  <rect x="260.0" y="358.3" width="26.0" height="16.7" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="273.0" y="354.3" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">5</text>
-  <text x="360.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Poland</text>
-  <line x1="360.0" y1="375" x2="360.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="318.0" y="181.7" width="26.0" height="193.3" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="331.0" y="177.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">58</text>
-  <rect x="346.0" y="271.7" width="26.0" height="103.3" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="359.0" y="267.7" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">31</text>
-  <rect x="374.0" y="338.3" width="26.0" height="36.7" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="387.0" y="334.3" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">11</text>
-  <text x="474.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">India</text>
-  <line x1="474.0" y1="375" x2="474.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="432.0" y="261.7" width="26.0" height="113.3" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="445.0" y="257.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">34</text>
-  <rect x="460.0" y="298.3" width="26.0" height="76.7" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="473.0" y="294.3" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">23</text>
-  <rect x="488.0" y="231.7" width="26.0" height="143.3" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="501.0" y="227.7" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">43</text>
-  <text x="588.0" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Kenya</text>
-  <line x1="588.0" y1="375" x2="588.0" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="546.0" y="271.7" width="26.0" height="103.3" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="559.0" y="267.7" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">31</text>
-  <rect x="574.0" y="328.3" width="26.0" height="46.7" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="587.0" y="324.3" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">14</text>
-  <rect x="602.0" y="191.7" width="26.0" height="183.3" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="615.0" y="187.7" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">55</text>
+  <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">60</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">% Participating</text>
+  <text x="122.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">15–24</text>
+  <line x1="122.5" y1="375" x2="122.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="94.5" y="111.0" width="26.0" height="264.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="107.5" y="107.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">52.8</text>
+  <rect x="122.5" y="136.5" width="26.0" height="238.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="135.5" y="132.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">47.7</text>
+  <text x="217.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">25–34</text>
+  <line x1="217.5" y1="375" x2="217.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="189.5" y="164.0" width="26.0" height="211.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="202.5" y="160.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">42.2</text>
+  <rect x="217.5" y="130.5" width="26.0" height="244.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="230.5" y="126.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">48.9</text>
+  <text x="312.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">35–44</text>
+  <line x1="312.5" y1="375" x2="312.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="284.5" y="177.5" width="26.0" height="197.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="297.5" y="173.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">39.5</text>
+  <rect x="312.5" y="112.5" width="26.0" height="262.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="325.5" y="108.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">52.5</text>
+  <text x="407.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">45–54</text>
+  <line x1="407.5" y1="375" x2="407.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="379.5" y="159.5" width="26.0" height="215.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="392.5" y="155.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">43.1</text>
+  <rect x="407.5" y="108.5" width="26.0" height="266.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="420.5" y="104.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">53.3</text>
+  <text x="502.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">55–64</text>
+  <line x1="502.5" y1="375" x2="502.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="474.5" y="149.5" width="26.0" height="225.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="487.5" y="145.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">45.1</text>
+  <rect x="502.5" y="110.0" width="26.0" height="265.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="515.5" y="106.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">53.0</text>
+  <text x="597.5" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">65+</text>
+  <line x1="597.5" y1="375" x2="597.5" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="569.5" y="141.5" width="26.0" height="233.5" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="582.5" y="137.5" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">46.7</text>
+  <rect x="597.5" y="139.5" width="26.0" height="235.5" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="610.5" y="135.5" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">47.1</text>
   <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
   <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
-  <rect x="549.5" y="36" width="10" height="10" rx="2" fill="#f472b6"/>
-  <text x="565.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Agriculture</text>
-  <rect x="441.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
-  <text x="457.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Manufacturing</text>
-  <rect x="365.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
-  <text x="381.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Services</text>
+  <rect x="588.5" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="604.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Women</text>
+  <rect x="545.0" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="561.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Men</text>
 </svg>

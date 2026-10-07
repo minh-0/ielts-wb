@@ -18,38 +18,31 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Electricity Generation Sources</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Proportion of Domestic Water Usage by Region (%)</text>
   
-  <text x="180" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">1995</text>
-  <path d="M 180 220 L 180.00 125.00 A 95 95 0 0 1 209.36 310.35 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="241.0" y="214.3" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">45%</text>
-  <path d="M 180 220 L 209.36 310.35 A 95 95 0 0 1 89.65 249.36 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="152.0" y="279.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">25%</text>
-  <path d="M 180 220 L 89.65 249.36 A 95 95 0 0 1 114.97 150.75 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="120.2" y="208.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">18%</text>
-  <path d="M 180 220 L 114.97 150.75 A 95 95 0 0 1 156.37 127.98 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="150.3" y="169.9" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">8%</text>
-  <path d="M 180 220 L 156.37 127.98 A 95 95 0 0 1 180.00 125.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="172.3" y="162.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">4%</text>
-  <text x="440" y="105" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">2025</text>
-  <path d="M 440 220 L 440.00 125.00 A 95 95 0 0 1 505.03 150.75 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="462.7" y="166.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">12%</text>
-  <path d="M 440 220 L 505.03 150.75 A 95 95 0 0 1 525.96 260.45 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="500.7" y="212.4" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">20%</text>
-  <path d="M 440 220 L 525.96 260.45 A 95 95 0 0 1 451.91 314.25 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="476.3" y="274.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">16%</text>
-  <path d="M 440 220 L 451.91 314.25 A 95 95 0 0 1 394.23 303.25 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="428.4" y="284.7" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">10%</text>
-  <path d="M 440 220 L 394.23 303.25 A 95 95 0 0 1 440.00 125.00 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
-  <text x="380.2" y="208.6" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">42%</text>
-  <rect x="580" y="120" width="12" height="12" rx="3" fill="#38bdf8"/>
-  <text x="598" y="130" fill="#cbd5e1" font-size="11">Coal</text>
-  <rect x="580" y="146" width="12" height="12" rx="3" fill="#34d399"/>
-  <text x="598" y="156" fill="#cbd5e1" font-size="11">Gas</text>
-  <rect x="580" y="172" width="12" height="12" rx="3" fill="#f472b6"/>
-  <text x="598" y="182" fill="#cbd5e1" font-size="11">Nuclear</text>
-  <rect x="580" y="198" width="12" height="12" rx="3" fill="#fbbf24"/>
-  <text x="598" y="208" fill="#cbd5e1" font-size="11">Hydro</text>
-  <rect x="580" y="224" width="12" height="12" rx="3" fill="#a78bfa"/>
-  <text x="598" y="234" fill="#cbd5e1" font-size="11">Renewables</text>
+  <text x="270" y="90" fill="#f1f5f9" font-size="13" font-weight="600" text-anchor="middle">Distribution</text>
+  <path d="M 270 230 L 270.00 110.00 A 120 120 0 0 1 380.34 182.84 Z" fill="#38bdf8" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="313.0" y="168.9" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">13%</text>
+  <path d="M 270 230 L 380.34 182.84 A 120 120 0 0 1 340.53 327.08 Z" fill="#34d399" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="345.2" y="254.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">15%</text>
+  <path d="M 270 230 L 340.53 327.08 A 120 120 0 0 1 164.33 286.86 Z" fill="#f472b6" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="252.6" y="310.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">19%</text>
+  <path d="M 270 230 L 164.33 286.86 A 120 120 0 0 1 155.87 192.92 Z" fill="#fbbf24" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="192.3" y="241.0" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">9%</text>
+  <path d="M 270 230 L 155.87 192.92 A 120 120 0 0 1 199.47 132.92 Z" fill="#a78bfa" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="206.9" y="188.2" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">7%</text>
+  <path d="M 270 230 L 199.47 132.92 A 120 120 0 0 1 270.00 110.00 Z" fill="#fb7185" stroke="#0b0f19" stroke-width="2" opacity="0.95"/>
+  <text x="245.9" y="159.8" fill="#0b0f19" font-size="11" font-weight="700" text-anchor="middle">7%</text>
+  <rect x="440" y="140" width="12" height="12" rx="3" fill="#38bdf8"/>
+  <text x="460" y="150" fill="#cbd5e1" font-size="12">North America (13%)</text>
+  <rect x="440" y="168" width="12" height="12" rx="3" fill="#34d399"/>
+  <text x="460" y="178" fill="#cbd5e1" font-size="12">Europe (15%)</text>
+  <rect x="440" y="196" width="12" height="12" rx="3" fill="#f472b6"/>
+  <text x="460" y="206" fill="#cbd5e1" font-size="12">South America (19%)</text>
+  <rect x="440" y="224" width="12" height="12" rx="3" fill="#fbbf24"/>
+  <text x="460" y="234" fill="#cbd5e1" font-size="12">Africa (9%)</text>
+  <rect x="440" y="252" width="12" height="12" rx="3" fill="#a78bfa"/>
+  <text x="460" y="262" fill="#cbd5e1" font-size="12">Central Asia (7%)</text>
+  <rect x="440" y="280" width="12" height="12" rx="3" fill="#fb7185"/>
+  <text x="460" y="290" fill="#cbd5e1" font-size="12">SE Asia (7%)</text>
 </svg>

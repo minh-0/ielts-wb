@@ -18,7 +18,7 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Water Withdrawal by Sector (%)</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">UK Telephone Call Duration by Category (Billion Minutes)</text>
   
   <line x1="75" y1="375.0" x2="645" y2="375.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
   <text x="63" y="379.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">0</text>
@@ -32,45 +32,77 @@
   <text x="63" y="139.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">80</text>
   <line x1="75" y1="75.0" x2="645" y2="75.0" stroke="#1e293b" stroke-width="1" stroke-dasharray="3 3"/>
   <text x="63" y="79.0" fill="#64748b" font-size="11" text-anchor="end" font-family="monospace">100</text>
-  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Percentage of Total (%)</text>
-  <text x="146.2" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">North America</text>
-  <line x1="146.2" y1="375" x2="146.2" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="104.2" y="258.0" width="26.0" height="117.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="117.2" y="254.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">39</text>
-  <rect x="132.2" y="231.0" width="26.0" height="144.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="145.2" y="227.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">48</text>
-  <rect x="160.2" y="336.0" width="26.0" height="39.0" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="173.2" y="332.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">13</text>
-  <text x="288.8" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Europe</text>
-  <line x1="288.8" y1="375" x2="288.8" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="246.8" y="279.0" width="26.0" height="96.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="259.8" y="275.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">32</text>
-  <rect x="274.8" y="213.0" width="26.0" height="162.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="287.8" y="209.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">54</text>
-  <rect x="302.8" y="333.0" width="26.0" height="42.0" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="315.8" y="329.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">14</text>
-  <text x="431.2" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">East Asia</text>
-  <line x1="431.2" y1="375" x2="431.2" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="389.2" y="171.0" width="26.0" height="204.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="402.2" y="167.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">68</text>
-  <rect x="417.2" y="309.0" width="26.0" height="66.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="430.2" y="305.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">22</text>
-  <rect x="445.2" y="345.0" width="26.0" height="30.0" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="458.2" y="341.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">10</text>
-  <text x="573.8" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">Central Africa</text>
-  <line x1="573.8" y1="375" x2="573.8" y2="381" stroke="#475569" stroke-width="1"/>
-  <rect x="531.8" y="117.0" width="26.0" height="258.0" rx="3" fill="#38bdf8" opacity="0.9"/>
-  <text x="544.8" y="113.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">86</text>
-  <rect x="559.8" y="360.0" width="26.0" height="15.0" rx="3" fill="#34d399" opacity="0.9"/>
-  <text x="572.8" y="356.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">5</text>
-  <rect x="587.8" y="348.0" width="26.0" height="27.0" rx="3" fill="#f472b6" opacity="0.9"/>
-  <text x="600.8" y="344.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">9</text>
+  <text x="75" y="62" fill="#94a3b8" font-size="11" font-weight="500">Billion Minutes</text>
+  <text x="110.6" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1995</text>
+  <line x1="110.6" y1="375" x2="110.6" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="83.9" y="159.0" width="15.8" height="216.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="91.8" y="155.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">72</text>
+  <rect x="101.7" y="261.0" width="15.8" height="114.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="109.6" y="257.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">38</text>
+  <rect x="119.5" y="366.0" width="15.8" height="9.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="127.4" y="362.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">3</text>
+  <text x="181.9" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1996</text>
+  <line x1="181.9" y1="375" x2="181.9" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="155.2" y="141.0" width="15.8" height="234.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="163.1" y="137.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">78</text>
+  <rect x="173.0" y="252.0" width="15.8" height="123.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="180.9" y="248.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">41</text>
+  <rect x="190.8" y="363.0" width="15.8" height="12.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="198.7" y="359.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">4</text>
+  <text x="253.1" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1997</text>
+  <line x1="253.1" y1="375" x2="253.1" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="226.4" y="123.0" width="15.8" height="252.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="234.3" y="119.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">84</text>
+  <rect x="244.2" y="237.0" width="15.8" height="138.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="252.1" y="233.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">46</text>
+  <rect x="262.0" y="357.0" width="15.8" height="18.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="269.9" y="353.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">6</text>
+  <text x="324.4" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1998</text>
+  <line x1="324.4" y1="375" x2="324.4" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="297.7" y="108.0" width="15.8" height="267.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="305.6" y="104.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">89</text>
+  <rect x="315.5" y="225.0" width="15.8" height="150.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="323.4" y="221.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">50</text>
+  <rect x="333.3" y="348.0" width="15.8" height="27.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="341.2" y="344.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">9</text>
+  <text x="395.6" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">1999</text>
+  <line x1="395.6" y1="375" x2="395.6" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="368.9" y="105.0" width="15.8" height="270.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="376.8" y="101.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">90</text>
+  <rect x="386.7" y="213.0" width="15.8" height="162.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="394.6" y="209.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">54</text>
+  <rect x="404.5" y="336.0" width="15.8" height="39.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="412.4" y="332.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">13</text>
+  <text x="466.9" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2000</text>
+  <line x1="466.9" y1="375" x2="466.9" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="440.2" y="120.0" width="15.8" height="255.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="448.1" y="116.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">85</text>
+  <rect x="458.0" y="201.0" width="15.8" height="174.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="465.9" y="197.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">58</text>
+  <rect x="475.8" y="303.0" width="15.8" height="72.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="483.7" y="299.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">24</text>
+  <text x="538.1" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2001</text>
+  <line x1="538.1" y1="375" x2="538.1" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="511.4" y="144.0" width="15.8" height="231.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="519.3" y="140.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">77</text>
+  <rect x="529.2" y="195.0" width="15.8" height="180.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="537.1" y="191.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">60</text>
+  <rect x="547.0" y="261.0" width="15.8" height="114.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="554.9" y="257.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">38</text>
+  <text x="609.4" y="397" fill="#94a3b8" font-size="11" text-anchor="middle">2002</text>
+  <line x1="609.4" y1="375" x2="609.4" y2="381" stroke="#475569" stroke-width="1"/>
+  <rect x="582.7" y="159.0" width="15.8" height="216.0" rx="3" fill="#38bdf8" opacity="0.9"/>
+  <text x="590.6" y="155.0" fill="#38bdf8" font-size="9" text-anchor="middle" font-weight="600">72</text>
+  <rect x="600.5" y="192.0" width="15.8" height="183.0" rx="3" fill="#34d399" opacity="0.9"/>
+  <text x="608.4" y="188.0" fill="#34d399" font-size="9" text-anchor="middle" font-weight="600">61</text>
+  <rect x="618.3" y="240.0" width="15.8" height="135.0" rx="3" fill="#f472b6" opacity="0.9"/>
+  <text x="626.2" y="236.0" fill="#f472b6" font-size="9" text-anchor="middle" font-weight="600">45</text>
   <line x1="75" y1="75" x2="75" y2="375" stroke="#475569" stroke-width="1.5"/>
   <line x1="75" y1="375" x2="645" y2="375" stroke="#475569" stroke-width="1.5"/>
-  <rect x="569.0" y="36" width="10" height="10" rx="2" fill="#f472b6"/>
-  <text x="585.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Domestic</text>
-  <rect x="493.0" y="36" width="10" height="10" rx="2" fill="#34d399"/>
-  <text x="509.0" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Industry</text>
-  <rect x="397.5" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
-  <text x="413.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Agriculture</text>
+  <rect x="575.5" y="36" width="10" height="10" rx="2" fill="#f472b6"/>
+  <text x="591.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Mobiles</text>
+  <rect x="447.5" y="36" width="10" height="10" rx="2" fill="#34d399"/>
+  <text x="463.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">National / Int&#x27;l</text>
+  <rect x="332.5" y="36" width="10" height="10" rx="2" fill="#38bdf8"/>
+  <text x="348.5" y="45" fill="#cbd5e1" font-size="11" font-weight="500">Local Landline</text>
 </svg>

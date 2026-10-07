@@ -18,36 +18,36 @@
   <rect width="700" height="440" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" />
   
   <!-- Title Header -->
-  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">Healthcare Resources &amp; Emergency Performance</text>
+  <text x="32" y="38" fill="#f8fafc" font-size="15" font-weight="700" letter-spacing="0.2">International Tourism Inflows and Receipts (2012–2013)</text>
   
   <rect x="40" y="75" width="620" height="36" rx="6" fill="#1e293b"/>
-  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">Health Region</text>
-  <text x="226.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Beds per 1k</text>
-  <text x="350.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Doctors per 1k</text>
-  <text x="474.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Nurses per 1k</text>
-  <text x="598.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Avg ER Wait</text>
+  <text x="56.0" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="start">Country</text>
+  <text x="272.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Arrivals 2012</text>
+  <text x="427.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Arrivals 2013</text>
+  <text x="582.5" y="97" fill="#38bdf8" font-size="12" font-weight="700" text-anchor="middle">Receipts 2013 ($B)</text>
   <rect x="40" y="111" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Northern</text>
-  <text x="226.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.8</text>
-  <text x="350.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.6</text>
-  <text x="474.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">9.2</text>
-  <text x="598.0" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.1 hrs</text>
+  <text x="56.0" y="133" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">France</text>
+  <text x="272.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">83.0M</text>
+  <text x="427.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">84.7M</text>
+  <text x="582.5" y="133" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">$56.1B</text>
   <rect x="40" y="147" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Central</text>
-  <text x="226.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.2</text>
-  <text x="350.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.8</text>
-  <text x="474.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">7.1</text>
-  <text x="598.0" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.8 hrs</text>
+  <text x="56.0" y="169" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">United States</text>
+  <text x="272.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">66.7M</text>
+  <text x="427.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">69.8M</text>
+  <text x="582.5" y="169" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">$139.6B</text>
   <rect x="40" y="183" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Eastern</text>
-  <text x="226.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.5</text>
-  <text x="350.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.1</text>
-  <text x="474.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">5.8</text>
-  <text x="598.0" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">4.6 hrs</text>
+  <text x="56.0" y="205" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Spain</text>
+  <text x="272.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">57.5M</text>
+  <text x="427.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">60.7M</text>
+  <text x="582.5" y="205" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">$60.4B</text>
   <rect x="40" y="219" width="620" height="36" fill="#131c31" stroke="#1e293b" stroke-width="0.5"/>
-  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Western</text>
-  <text x="226.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.9</text>
-  <text x="350.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">3.1</text>
-  <text x="474.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">8.0</text>
-  <text x="598.0" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">2.9 hrs</text>
+  <text x="56.0" y="241" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">China</text>
+  <text x="272.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">57.7M</text>
+  <text x="427.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">55.7M</text>
+  <text x="582.5" y="241" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">$51.7B</text>
+  <rect x="40" y="255" width="620" height="36" fill="#0f172a" stroke="#1e293b" stroke-width="0.5"/>
+  <text x="56.0" y="277" fill="#f8fafc" font-size="11.5" font-weight="600" text-anchor="start">Italy</text>
+  <text x="272.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">46.4M</text>
+  <text x="427.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">47.7M</text>
+  <text x="582.5" y="277" fill="#cbd5e1" font-size="11.5" font-weight="400" text-anchor="middle">$43.9B</text>
 </svg>
