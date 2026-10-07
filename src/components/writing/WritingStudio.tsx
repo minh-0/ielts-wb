@@ -16,6 +16,9 @@ import {
   Highlighter,
   RotateCcw,
   Upload,
+  ClipboardPaste,
+  Maximize2,
+  Minimize2,
   X as XIcon,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
@@ -54,6 +57,39 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"annotated" | "edit">("edit");
   const [replacedItems, setReplacedItems] = useState<ReplacedWordItem[]>([]);
+
+  // Focus/Enlarged Writing Popup State
+  const [isWritingModalOpen, setIsWritingModalOpen] = useState(false);
+
+  // Keyboard shortcut: Esc to minimize writing modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isWritingModalOpen) {
+        setIsWritingModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isWritingModalOpen]);
+
+  // Visible Paste handler
+  const handlePasteFromClipboard = async () => {
+    try {
+      if (typeof navigator !== "undefined" && navigator?.clipboard?.readText) {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          setEssayContent((prev) => (prev.trim() ? prev + "\n\n" + text : text));
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Clipboard access denied or unsupported:", err);
+    }
+    const fallbackText = window.prompt("Paste your essay paragraph here:");
+    if (fallbackText) {
+      setEssayContent((prev) => (prev.trim() ? prev + "\n\n" + fallbackText : fallbackText));
+    }
+  };
 
   // Word count & cleaner
   const cleanRepeatedWords = (text: string) => {
@@ -549,6 +585,28 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                 {wordCount} / {targetWords} words
               </span>
 
+              {/* Quick Action: Visible Paste Button */}
+              <button
+                type="button"
+                onClick={handlePasteFromClipboard}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs"
+                title="Paste paragraph from clipboard"
+              >
+                <ClipboardPaste className="w-3.5 h-3.5 text-neutral-500" />
+                <span>Paste</span>
+              </button>
+
+              {/* Quick Action: Enlarge to Focused Popup */}
+              <button
+                type="button"
+                onClick={() => setIsWritingModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs"
+                title="Enlarge writing popup (Esc to exit)"
+              >
+                <Maximize2 className="w-3.5 h-3.5 text-neutral-500" />
+                <span>Enlarge</span>
+              </button>
+
               {/* Toggle View Mode when analysis exists */}
               {analysisResult && (
                 <div className="flex items-center gap-2">
@@ -641,11 +699,13 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             <textarea
               value={essayContent}
               onChange={(e) => setEssayContent(e.target.value)}
-              placeholder={`Type your IELTS ${
+              onClick={() => setIsWritingModalOpen(true)}
+              onFocus={() => setIsWritingModalOpen(true)}
+              placeholder={`Click here to enlarge and write your IELTS ${
                 selectedTaskType === "task2" ? "Task 2 essay" : "Task 1 report"
-              } here... Organize into clear paragraphs.`}
+              }... Organize into clear paragraphs.`}
               rows={16}
-              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px]"
+              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px] cursor-text"
             />
           )}
 
@@ -919,6 +979,250 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           primaryBottleneck={analysisResult.primaryBottleneck}
           examinerHighlight={analysisResult.criteria.lexicalResource.feedback}
         />
+      )}
+
+      {/* Focused Enlarged Writing Popup Modal */}
+      {isWritingModalOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 lg:p-6 animate-in fade-in duration-150"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsWritingModalOpen(false);
+          }}
+        >
+          <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col w-full h-[94vh] max-w-7xl overflow-hidden animate-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/50 shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] font-mono uppercase tracking-wider font-semibold px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
+                  {selectedTaskType === "task2"
+                    ? "Task 2 • Essay"
+                    : selectedTaskType === "task1_academic"
+                    ? "Task 1 • Academic Report"
+                    : "Task 1 • General Letter"}
+                </span>
+                <span
+                  className={`font-mono px-2 py-0.5 rounded text-[11px] font-medium border ${
+                    isWordCountMet
+                      ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5"
+                      : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
+                  }`}
+                >
+                  {wordCount} / {targetWords} words
+                </span>
+              </div>
+
+              {/* Timer in Modal Header */}
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="font-mono text-xs text-neutral-700 dark:text-neutral-300 font-medium">
+                  {formatTimer(secondsRemaining)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setTimerRunning(!timerRunning)}
+                  className="px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                >
+                  {timerRunning ? "Pause" : "Start Timer"}
+                </button>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2">
+                {/* Visible Paste Button */}
+                <button
+                  type="button"
+                  onClick={handlePasteFromClipboard}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors"
+                  title="Paste paragraph from clipboard"
+                >
+                  <ClipboardPaste className="w-3.5 h-3.5 text-neutral-500" />
+                  <span>Paste</span>
+                </button>
+
+                {/* Minimize Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsWritingModalOpen(false)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors"
+                  title="Minimize popup (Esc)"
+                >
+                  <Minimize2 className="w-3.5 h-3.5 text-neutral-500" />
+                  <span className="hidden sm:inline">Minimize</span>
+                </button>
+
+                {/* Close Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsWritingModalOpen(false)}
+                  className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer transition-colors"
+                  title="Close popup (Esc)"
+                >
+                  <XIcon className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: Task 1 side layout vs Task 2 top layout */}
+            {selectedTaskType.startsWith("task1") ? (
+              /* TASK 1: Question and Image on the Side (Left Column) */
+              <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
+                {/* Left Side: Question Prompt & Image/Graph */}
+                <div className="w-full md:w-[420px] lg:w-[460px] xl:w-[500px] shrink-0 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 overflow-y-auto space-y-4 bg-neutral-50/50 dark:bg-neutral-900/20">
+                  {/* Prompt Card */}
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                      Task 1 Prompt
+                    </span>
+                    <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                      {useCustomPrompt ? "Custom Question" : selectedPrompt.title}
+                    </h3>
+                    <p className="text-xs sm:text-[13px] leading-relaxed text-neutral-700 dark:text-neutral-300 whitespace-pre-line font-normal">
+                      {useCustomPrompt
+                        ? customPrompt || "No custom question text provided."
+                        : selectedPrompt.prompt}
+                    </p>
+                  </div>
+
+                  {/* Reference Image / Graph */}
+                  <div className="space-y-2 pt-2 border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
+                        Reference Graph / Image
+                      </span>
+                      {customImage && (
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="text-[11px] text-red-500 hover:text-red-600 font-medium cursor-pointer"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    {customImage ? (
+                      <div className="space-y-1.5">
+                        <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950 p-2 shadow-xs">
+                          <img
+                            src={customImage}
+                            alt="Task 1 reference chart"
+                            className="w-full h-auto max-h-[380px] object-contain rounded-lg"
+                          />
+                        </div>
+                        {customImageName && (
+                          <div className="text-[10px] font-mono text-neutral-400 truncate">
+                            {customImageName}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-700 p-5 text-center space-y-2 bg-white/60 dark:bg-neutral-950/60">
+                        <Upload className="w-5 h-5 mx-auto text-neutral-400" />
+                        <div className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                          Upload graph or diagram
+                        </div>
+                        <p className="text-[11px] text-neutral-400 max-w-xs mx-auto">
+                          Attach a chart, table, or diagram to view directly alongside your writing.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800 cursor-pointer shadow-xs transition-colors"
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>Choose image</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Side: Paragraph Writing Textarea */}
+                <div className="flex-1 flex flex-col p-4 sm:p-6 overflow-hidden bg-white dark:bg-neutral-950">
+                  <textarea
+                    autoFocus
+                    value={essayContent}
+                    onChange={(e) => setEssayContent(e.target.value)}
+                    placeholder="Write your IELTS Task 1 report here... Summarise the main features, report data trends, and make comparisons where relevant."
+                    className="w-full flex-1 p-3 sm:p-4 text-[15px] sm:text-base leading-relaxed bg-transparent text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none resize-none font-sans"
+                  />
+                </div>
+              </div>
+            ) : (
+              /* TASK 2: Question on Top, Textarea Below */
+              <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+                {/* Top Section: Question Prompt */}
+                <div className="shrink-0 border-b border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-1.5 max-h-[30vh] overflow-y-auto">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                      Task 2 Essay Question
+                    </span>
+                    {!useCustomPrompt && (
+                      <span className="text-[10px] font-mono text-neutral-400">• {selectedPrompt.category}</span>
+                    )}
+                  </div>
+                  <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                    {useCustomPrompt ? "Custom Question" : selectedPrompt.title}
+                  </h3>
+                  <p className="text-xs sm:text-[13px] leading-relaxed text-neutral-700 dark:text-neutral-300 font-normal">
+                    {useCustomPrompt
+                      ? customPrompt || "No custom question text provided."
+                      : selectedPrompt.prompt}
+                  </p>
+                </div>
+
+                {/* Bottom Section: Writing Textarea */}
+                <div className="flex-1 flex flex-col p-4 sm:p-6 overflow-hidden bg-white dark:bg-neutral-950">
+                  <textarea
+                    autoFocus
+                    value={essayContent}
+                    onChange={(e) => setEssayContent(e.target.value)}
+                    placeholder="Write your IELTS Task 2 essay here... Formulate an introduction, develop cohesive body paragraphs, and write a clear conclusion."
+                    className="w-full flex-1 p-3 sm:p-4 text-[15px] sm:text-base leading-relaxed bg-transparent text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none resize-none font-sans"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/50 shrink-0">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handlePasteFromClipboard}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-800 dark:text-neutral-200 cursor-pointer shadow-xs transition-colors"
+                >
+                  <ClipboardPaste className="w-3.5 h-3.5 text-neutral-500" />
+                  <span>Paste Text</span>
+                </button>
+                <span className="text-xs text-neutral-400 hidden sm:inline">
+                  {essayContent.length} chars
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsWritingModalOpen(false)}
+                  className="px-4 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                >
+                  Done Writing
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsWritingModalOpen(false);
+                    handleAnalyze();
+                  }}
+                  disabled={isAnalyzing || !essayContent.trim()}
+                  className="flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Evaluate with Rubric</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
