@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-07 09:23*
+*Last updated: 2026-10-07 09:34*
 
 ---
 
@@ -71,10 +71,9 @@
 
 #### E. Vocabulary Learning Studio (`src/components/vocabulary/VocabularyStudio.tsx` & `src/lib/oxfordVocabData.ts`)
 - **Complete Oxford 3000™ & Oxford 5000™ Corpus**: 4,953 words categorized across CEFR levels (C1 Advanced: 1,311, B2 Upper-Int: 1,410, B1: 648, A2: 733, A1: 851).
-- **Three Dedicated Learning Modes**:
+- **Two Dedicated Minimalist Learning Modes**:
   1. **Flashcards**: Active recall study card with 3D flip, keyboard controls (Space to flip, arrows to navigate, M to master, S to star), UK audio pronunciation (`SpeechSynthesis`), definition, IELTS usage example, collocations, and Oxford Dictionary direct link.
   2. **Word Explorer**: Instant search, alphabetical A-Z quick jump, POS filter, paginated grid, and detailed word inspection modal.
-  3. **Quick Quiz**: Rapid 4-option multiple-choice definition challenge with live streak tracker and instant explanation.
 - **Progress Persistence**: Starred (`oxford_starred`) and Mastered (`oxford_mastered`) word state stored in `localStorage`.
 
 ---
@@ -87,8 +86,8 @@
 - `src/components/writing/AnnotatedParagraph.tsx`: Non-overlapping in-text underlines and fix applicator.
 - `src/components/writing/DiagnosticInspector.tsx`: Side panel for criteria breakdown and sentence diffs.
 - `src/components/speaking/SpeakingStudio.tsx`: Speaking recording, waveform, 75+ prompt bank, and evaluation cards.
-- `src/components/vocabulary/VocabularyStudio.tsx`: Complete vocabulary learning studio (Flashcards, Explorer, Quiz).
-- `src/lib/oxfordVocabData.ts`: Oxford 3000/5000 metadata, helper methods, quiz generator.
+- `src/components/vocabulary/VocabularyStudio.tsx`: Vocabulary learning studio (Flashcards & Word Explorer).
+- `src/lib/oxfordVocabData.ts`: Oxford 3000/5000 metadata and lookup helpers.
 - `src/lib/oxfordVocabList.json`: Pre-compiled Oxford word database.
 - `src/components/rubric/RubricViewer.tsx`: Pure minimalist table for Bands 9 to 0.
 - `src/lib/officialRubricData.ts`: Exact official public descriptor data for all tasks.
@@ -104,6 +103,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `refactor(vocab): remove quick quiz mode to keep vocabulary studio clean and focused on flashcards and word explorer`
   - `feat(vocab): add dedicated Oxford 3000 & 5000 vocabulary learning studio with flashcards, explorer, and quiz modes`
   - `refactor(ui): streamline inspector empty state with minimal placeholder and compact legend`
   - `feat: allow image upload for custom Task 1 questions and remove inspector pop-down subtitle`

@@ -6,8 +6,6 @@ import {
   OxfordVocabItem,
   CefrLevel,
   CEFR_LEVEL_METADATA,
-  generateQuizQuestion,
-  QuizQuestion,
 } from "@/lib/oxfordVocabData";
 import {
   Search,
@@ -21,18 +19,16 @@ import {
   ExternalLink,
   BookOpen,
   Sparkles,
-  Trophy,
   Filter,
   Layers,
   ListFilter,
-  Flame,
   Check,
   X,
 } from "lucide-react";
 
 export function VocabularyStudio() {
   // Navigation & filter states
-  const [activeMode, setActiveMode] = useState<"flashcards" | "explorer" | "quiz">("flashcards");
+  const [activeMode, setActiveMode] = useState<"flashcards" | "explorer">("flashcards");
   const [selectedLevel, setSelectedLevel] = useState<CefrLevel | "ALL">("C1");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedPos, setSelectedPos] = useState<string>("ALL");
@@ -52,13 +48,6 @@ export function VocabularyStudio() {
   const [inspectedWord, setInspectedWord] = useState<OxfordVocabItem | null>(null);
   const [explorerPage, setExplorerPage] = useState<number>(1);
   const ITEMS_PER_PAGE = 30;
-
-  // Quiz state
-  const [quizQuestion, setQuizQuestion] = useState<QuizQuestion | null>(null);
-  const [quizSelectedOption, setQuizSelectedOption] = useState<number | null>(null);
-  const [quizScore, setQuizScore] = useState<number>(0);
-  const [quizTotal, setQuizTotal] = useState<number>(0);
-  const [quizStreak, setQuizStreak] = useState<number>(0);
 
   // Load persistence
   useEffect(() => {
@@ -210,33 +199,6 @@ export function VocabularyStudio() {
     setCardIndex((prev) => (prev - 1 + flashcardPool.length) % flashcardPool.length);
   };
 
-  // Next quiz question
-  const loadNewQuizQuestion = useCallback(() => {
-    setQuizSelectedOption(null);
-    const q = generateQuizQuestion(OXFORD_VOCAB_LIST, selectedLevel);
-    setQuizQuestion(q);
-  }, [selectedLevel]);
-
-  useEffect(() => {
-    if (activeMode === "quiz" && !quizQuestion) {
-      loadNewQuizQuestion();
-    }
-  }, [activeMode, quizQuestion, loadNewQuizQuestion]);
-
-  const handleSelectQuizOption = (index: number) => {
-    if (quizSelectedOption !== null || !quizQuestion) return;
-    setQuizSelectedOption(index);
-    setQuizTotal((t) => t + 1);
-
-    const isCorrect = quizQuestion.options[index]?.isCorrect;
-    if (isCorrect) {
-      setQuizScore((s) => s + 1);
-      setQuizStreak((st) => st + 1);
-    } else {
-      setQuizStreak(0);
-    }
-  };
-
   // Level counts
   const levelCounts = useMemo(() => {
     const c: Record<string, number> = { ALL: OXFORD_VOCAB_LIST.length };
@@ -296,18 +258,6 @@ export function VocabularyStudio() {
           >
             <ListFilter className="w-3.5 h-3.5" />
             <span>Word Explorer</span>
-          </button>
-
-          <button
-            onClick={() => setActiveMode("quiz")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all cursor-pointer ${
-              activeMode === "quiz"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
-            }`}
-          >
-            <Trophy className="w-3.5 h-3.5" />
-            <span>Quick Quiz</span>
           </button>
         </div>
       </div>
@@ -819,135 +769,6 @@ export function VocabularyStudio() {
                   Next
                 </button>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* MODE 3: QUICK QUIZ                                                        */}
-      {/* ========================================================================= */}
-      {activeMode === "quiz" && (
-        <div className="max-w-xl mx-auto space-y-5">
-          {/* Quiz Scoreboard */}
-          <div className="flex items-center justify-between p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4 text-amber-500" />
-              <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                Score: {quizScore} / {quizTotal}
-              </span>
-              {quizTotal > 0 && (
-                <span className="text-neutral-400">
-                  ({Math.round((quizScore / quizTotal) * 100)}%)
-                </span>
-              )}
-            </div>
-
-            {quizStreak > 1 && (
-              <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400 font-semibold font-mono">
-                <Flame className="w-4 h-4 fill-orange-500/20" />
-                <span>{quizStreak} Streak!</span>
-              </div>
-            )}
-          </div>
-
-          {/* Question Card */}
-          {quizQuestion && (
-            <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5 shadow-xs">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`px-2 py-0.5 rounded text-[11px] font-mono font-semibold border ${
-                        CEFR_LEVEL_METADATA[quizQuestion.targetWord.level]?.badgeColor ||
-                        "border-neutral-200"
-                      }`}
-                    >
-                      {quizQuestion.targetWord.level}
-                    </span>
-                    <span className="text-xs text-neutral-400 capitalize">
-                      {quizQuestion.targetWord.pos}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={() => playAudio(quizQuestion.targetWord.word)}
-                    className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 cursor-pointer"
-                    title="Listen pronunciation"
-                  >
-                    <Volume2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-                  {quizQuestion.targetWord.word}
-                </h3>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                  Select the most accurate definition:
-                </p>
-              </div>
-
-              {/* Options */}
-              <div className="space-y-2.5">
-                {quizQuestion.options.map((option, idx) => {
-                  const isSelected = quizSelectedOption === idx;
-                  const isAnswered = quizSelectedOption !== null;
-
-                  let optionStyle =
-                    "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200";
-
-                  if (isAnswered) {
-                    if (option.isCorrect) {
-                      optionStyle =
-                        "border-emerald-500 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200 font-medium";
-                    } else if (isSelected && !option.isCorrect) {
-                      optionStyle =
-                        "border-rose-500 bg-rose-500/10 text-rose-900 dark:text-rose-200";
-                    } else {
-                      optionStyle =
-                        "border-neutral-200 dark:border-neutral-800 opacity-40 text-neutral-400";
-                    }
-                  }
-
-                  return (
-                    <button
-                      key={idx}
-                      disabled={isAnswered}
-                      onClick={() => handleSelectQuizOption(idx)}
-                      className={`w-full p-3.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-start gap-3 ${optionStyle}`}
-                    >
-                      <span className="font-mono font-semibold text-neutral-400 mt-0.5">
-                        {String.fromCharCode(65 + idx)}.
-                      </span>
-                      <span className="flex-1 leading-relaxed">{option.text}</span>
-                      {isAnswered && option.isCorrect && (
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      )}
-                      {isAnswered && isSelected && !option.isCorrect && (
-                        <X className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Feedback and next button */}
-              {quizSelectedOption !== null && (
-                <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-3">
-                  <div className="p-3 rounded-xl border border-neutral-200/60 dark:border-neutral-800/60 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                    {quizQuestion.explanation}
-                  </div>
-
-                  <div className="flex items-center justify-end">
-                    <button
-                      onClick={loadNewQuizQuestion}
-                      className="px-4 py-2 rounded-xl border border-neutral-900 dark:border-neutral-100 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-black text-xs font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-                    >
-                      Next Question →
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </div>
