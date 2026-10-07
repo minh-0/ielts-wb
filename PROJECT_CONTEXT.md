@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (slayer6767)
 
-*Last updated: 2026-10-07 12:01*
+*Last updated: 2026-10-07 12:26*
 
 ---
 
@@ -49,12 +49,15 @@
   - **Task 1 Visual Graph Upload**: Users can upload `.png, .jpg, .webp` chart/graph images. Thumbnails preview directly above the text area while writing, and images are passed as base64 `inlineData` to Gemini for multimodal visual accuracy checking.
 - **Interactive In-Text Paragraph View (`AnnotatedParagraph.tsx`)**:
   - Highlights grammar errors (red wavy), vocabulary upgrades (violet dashed), and replaced words (emerald solid).
-  - Clicking any underlined span displays an interactive popover with examiner rationale and a 1-click **"Apply Higher-Rated Word"** or **"Revert"** button.
+  - Clicking any underlined span displays an interactive popover with examiner rationale, 1-click **"Apply Higher-Rated Word"** or **"Revert"** button, and an **"Ignore"** button (`EyeOff` icon) to dismiss the suggestion.
+  - Ignoring a suggestion removes its underline from the paragraph and hides it from active inspector counts.
 - **Inspector Panel (`DiagnosticInspector.tsx`)**:
   - Minimalist pre-submission empty state with quiet target indicator and compact color legend (no loud boxes or verbose tutorials).
   - Post-submission live criteria breakdown scores (TR/TA, CC, LR, GRA).
   - Sentence-by-sentence diff viewer comparing original vs. rewritten forms.
   - Model essay display.
+  - **Ignore & Restore Capability**: Every error and vocabulary card includes an "Ignore" action. When ignored, items move to an **"Ignored ({count})"** filter pill where the user can inspect or click **"Restore"** (`RotateCcw` icon) to bring them back.
+  - **Protected Batch Application**: "Apply All Upgrades" selectively skips all ignored suggestions so dismissed recommendations are never forcefully applied.
 - **Scorecard Modal (`ScorecardModal.tsx`)**:
   - Generates downloadable 1080x1350 PNG report with band scores, primary bottleneck, and candidate summary branded `slayer6767`.
 
@@ -118,6 +121,8 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `feat(writing): add ignore button to dismiss suggestions in-text and in inspector with restore capability`
+  - `refactor(ui): update footer watermark to 'rkrh • light' and add 'Le Tuan Minh K67 FDA NEU'`
   - `feat(writing): restrict enlarge to button click and add online essay & estimated band score saving with API persistence`
   - `refactor(writing): remove duplicate paste button, minimize button, redundant word counts, and simplify placeholder to 'Start writing...'`
   - `feat(writing): add enlarged popup writing studio with Task 1 side layout, Task 2 top layout, and visible paste button`

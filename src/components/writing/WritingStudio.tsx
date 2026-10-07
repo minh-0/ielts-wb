@@ -59,6 +59,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"annotated" | "edit">("edit");
   const [replacedItems, setReplacedItems] = useState<ReplacedWordItem[]>([]);
+  const [ignoredIds, setIgnoredIds] = useState<string[]>([]);
 
   // Focus/Enlarged Writing Popup State
   const [isWritingModalOpen, setIsWritingModalOpen] = useState(false);
@@ -198,6 +199,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     setIsWritingModalOpen(false);
     setAnalysisResult(null);
     setBaseAnalysisResult(null);
+    setReplacedItems([]);
+    setIgnoredIds([]);
     setViewMode("edit");
   };
 
@@ -375,6 +378,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     setAnalysisResult(null);
     setSelectedAnnotationId(null);
     setReplacedItems([]);
+    setIgnoredIds([]);
 
     const activePromptText = useCustomPrompt
       ? customPrompt
@@ -476,7 +480,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     let updated = cleanRepeatedWords(essayContent);
     const newReplaced: ReplacedWordItem[] = [...replacedItems];
 
-    analysisResult.vocabularySuggestions.forEach((sug) => {
+    analysisResult.vocabularySuggestions.forEach((sug, idx) => {
+      const sugId = sug.id || `sug-${idx + 1}`;
+      if (ignoredIds.includes(sugId)) return;
       const orig = cleanRepeatedWords(sug.originalPhrase);
       const upgrade = cleanRepeatedWords(sug.suggestedUpgrade);
       if (updated.includes(orig)) {
@@ -495,7 +501,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
       }
     });
 
-    analysisResult.sentenceFeedbacks.forEach((err) => {
+    analysisResult.sentenceFeedbacks.forEach((err, idx) => {
+      const errId = err.id || `err-${idx + 1}`;
+      if (ignoredIds.includes(errId)) return;
       const orig = cleanRepeatedWords(err.original);
       const rew = cleanRepeatedWords(err.rewritten);
       if (updated.includes(orig)) {
@@ -537,6 +545,17 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     }
   };
 
+  const handleIgnore = (id: string) => {
+    setIgnoredIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    if (selectedAnnotationId === id) {
+      setSelectedAnnotationId(null);
+    }
+  };
+
+  const handleUnignore = (id: string) => {
+    setIgnoredIds((prev) => prev.filter((i) => i !== id));
+  };
+
   const handleLoadSampleEssay = () => {
     setEssayContent(
       cleanRepeatedWords(
@@ -545,6 +564,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
     );
     setViewMode("edit");
     setReplacedItems([]);
+    setIgnoredIds([]);
     setAnalysisResult(null);
     setBaseAnalysisResult(null);
   };
@@ -865,6 +885,8 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
               onSelect={setSelectedAnnotationId}
               onApplyFix={handleApplyFix}
               onRevertFix={handleRevertFix}
+              ignoredIds={ignoredIds}
+              onIgnore={handleIgnore}
             />
           ) : (
             <textarea
@@ -914,6 +936,9 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
             onSelect={setSelectedAnnotationId}
             onApplyFix={handleApplyFix}
             onRevertFix={handleRevertFix}
+            ignoredIds={ignoredIds}
+            onIgnore={handleIgnore}
+            onUnignore={handleUnignore}
             taskType={selectedTaskType}
           />
         </div>

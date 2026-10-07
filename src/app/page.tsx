@@ -48,7 +48,10 @@ export default function Home() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">slayer6767</span>
+            <span className="font-mono text-[11px] text-neutral-600 dark:text-neutral-400">rkrh • light</span>
+          </div>
+          <div className="font-mono text-[11px] text-neutral-500 dark:text-neutral-500">
+            Le Tuan Minh K67 FDA NEU
           </div>
         </div>
       </footer>

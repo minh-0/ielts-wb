@@ -10,6 +10,7 @@ import {
   Award,
   Sparkles,
   AlertTriangle,
+  EyeOff,
 } from "lucide-react";
 
 interface DiagnosticInspectorProps {
@@ -20,6 +21,9 @@ interface DiagnosticInspectorProps {
   onSelect: (id: string | null) => void;
   onApplyFix: (original: string, replacement: string, meta?: any) => void;
   onRevertFix?: (replacedText: string, originalText: string) => void;
+  ignoredIds?: string[];
+  onIgnore?: (id: string) => void;
+  onUnignore?: (id: string) => void;
   taskType: string;
 }
 
@@ -31,9 +35,12 @@ export function DiagnosticInspector({
   onSelect,
   onApplyFix,
   onRevertFix,
+  ignoredIds = [],
+  onIgnore,
+  onUnignore,
   taskType,
 }: DiagnosticInspectorProps) {
-  const [filter, setFilter] = useState<"all" | "errors" | "suggestions" | "replaced">("all");
+  const [filter, setFilter] = useState<"all" | "errors" | "suggestions" | "replaced" | "ignored">("all");
   const [expandedIds, setExpandedIds] = useState<{ [key: string]: boolean }>({});
   const cardRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -117,24 +124,52 @@ export function DiagnosticInspector({
     );
   }
 
-  // Calculate items matching current filter
-  const visibleErrors = (filter === "all" || filter === "errors" || filter === "replaced")
-    ? errors.filter((err) => {
-        if (filter !== "replaced") return true;
-        return replacedItems.some(
-          (r) => r.originalText === err.original || r.replacedText === err.rewritten
-        );
-      })
-    : [];
+  // Split into active and ignored items
+  const isErrIgnored = (err: SentenceFeedback, idx: number) => {
+    const id = err.id || `err-${idx + 1}`;
+    return ignoredIds.includes(id);
+  };
+  const isSugIgnored = (sug: VocabularySuggestion, idx: number) => {
+    const id = sug.id || `sug-${idx + 1}`;
+    return ignoredIds.includes(id);
+  };
 
-  const visibleSuggestions = (filter === "all" || filter === "suggestions" || filter === "replaced")
-    ? suggestions.filter((sug) => {
-        if (filter !== "replaced") return true;
-        return replacedItems.some(
-          (r) => r.originalText === sug.originalPhrase || r.replacedText === sug.suggestedUpgrade
-        );
-      })
-    : [];
+  const activeErrors = errors.filter((err, idx) => !isErrIgnored(err, idx));
+  const activeSuggestions = suggestions.filter((sug, idx) => !isSugIgnored(sug, idx));
+  const ignoredErrors = errors.filter((err, idx) => isErrIgnored(err, idx));
+  const ignoredSuggestions = suggestions.filter((sug, idx) => isSugIgnored(sug, idx));
+
+  const activeCount = activeErrors.length + activeSuggestions.length;
+  const ignoredCount = ignoredErrors.length + ignoredSuggestions.length;
+
+  // Calculate items matching current filter
+  let visibleErrors: SentenceFeedback[] = [];
+  let visibleSuggestions: VocabularySuggestion[] = [];
+
+  if (filter === "ignored") {
+    visibleErrors = ignoredErrors;
+    visibleSuggestions = ignoredSuggestions;
+  } else if (filter === "all") {
+    visibleErrors = activeErrors;
+    visibleSuggestions = activeSuggestions;
+  } else if (filter === "errors") {
+    visibleErrors = activeErrors;
+    visibleSuggestions = [];
+  } else if (filter === "suggestions") {
+    visibleErrors = [];
+    visibleSuggestions = activeSuggestions;
+  } else if (filter === "replaced") {
+    visibleErrors = activeErrors.filter((err) =>
+      replacedItems.some(
+        (r) => r.originalText === err.original || r.replacedText === err.rewritten
+      )
+    );
+    visibleSuggestions = activeSuggestions.filter((sug) =>
+      replacedItems.some(
+        (r) => r.originalText === sug.originalPhrase || r.replacedText === sug.suggestedUpgrade
+      )
+    );
+  }
 
   const visibleTotal = visibleErrors.length + visibleSuggestions.length;
   const allVisibleIds = [
@@ -165,7 +200,7 @@ export function DiagnosticInspector({
             <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
               Inspector
               <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                {totalItems}
+                {filter === "ignored" ? ignoredCount : activeCount}
               </span>
             </h3>
           </div>
@@ -180,7 +215,7 @@ export function DiagnosticInspector({
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
-              All ({totalItems})
+              All ({activeCount})
             </button>
             <button
               onClick={() => setFilter("errors")}
@@ -191,7 +226,7 @@ export function DiagnosticInspector({
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-rose-400/80" />
-              Errors ({errors.length})
+              Errors ({activeErrors.length})
             </button>
             <button
               onClick={() => setFilter("suggestions")}
@@ -202,7 +237,7 @@ export function DiagnosticInspector({
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
-              Vocab ({suggestions.length})
+              Vocab ({activeSuggestions.length})
             </button>
             {replacedCount > 0 && (
               <button
@@ -215,6 +250,19 @@ export function DiagnosticInspector({
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                 Replaced ({replacedCount})
+              </button>
+            )}
+            {ignoredCount > 0 && (
+              <button
+                onClick={() => setFilter("ignored")}
+                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
+                  filter === "ignored"
+                    ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                }`}
+              >
+                <EyeOff className="w-3 h-3 text-neutral-400" />
+                Ignored ({ignoredCount})
               </button>
             )}
           </div>
@@ -242,11 +290,14 @@ export function DiagnosticInspector({
           const id = err.id || `err-${idx + 1}`;
           const isSelected = selectedId === id;
           const isExpanded = Boolean(expandedIds[id] || isSelected);
+          const isItemIgnored = ignoredIds.includes(id);
           const isReplaced = replacedItems.some(
             (r) => r.originalText === err.original || r.replacedText === err.rewritten
           );
 
-          const issueLabel = isReplaced
+          const issueLabel = isItemIgnored
+            ? "Ignored"
+            : isReplaced
             ? "Replaced in Essay"
             : `${err.issueType.replace("_", " ")} Mistake`;
 
@@ -257,7 +308,9 @@ export function DiagnosticInspector({
                 cardRefs.current[id] = el;
               }}
               className={`rounded-xl border transition-all text-xs overflow-hidden ${
-                isReplaced
+                isItemIgnored
+                  ? "border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 opacity-75"
+                  : isReplaced
                   ? "border-emerald-500/40 bg-emerald-500/[0.03]"
                   : isSelected
                   ? "border-red-500/80 bg-red-500/5 ring-1 ring-red-500/30 dark:border-rose-500/40 dark:bg-rose-950/20 dark:ring-rose-500/20"
@@ -272,12 +325,18 @@ export function DiagnosticInspector({
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
                     className={`w-2 h-2 rounded-full shrink-0 ${
-                      isReplaced ? "bg-emerald-500" : "bg-red-500 dark:bg-rose-400/80"
+                      isItemIgnored
+                        ? "bg-neutral-400"
+                        : isReplaced
+                        ? "bg-emerald-500"
+                        : "bg-red-500 dark:bg-rose-400/80"
                     }`}
                   />
                   <span
                     className={`font-mono text-[10px] uppercase font-semibold shrink-0 ${
-                      isReplaced
+                      isItemIgnored
+                        ? "text-neutral-500"
+                        : isReplaced
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-red-600 dark:text-rose-300/80"
                     }`}
@@ -290,19 +349,21 @@ export function DiagnosticInspector({
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelect(id);
-                      setExpandedIds((prev) => ({ ...prev, [id]: true }));
-                    }}
-                    className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
-                    title="Locate in paragraph"
-                  >
-                    <Eye className="w-3 h-3" />
-                    <span className="hidden sm:inline">Locate</span>
-                  </button>
+                  {!isItemIgnored && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelect(id);
+                        setExpandedIds((prev) => ({ ...prev, [id]: true }));
+                      }}
+                      className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
+                      title="Locate in paragraph"
+                    >
+                      <Eye className="w-3 h-3" />
+                      <span className="hidden sm:inline">Locate</span>
+                    </button>
+                  )}
                   <div
                     className={`p-1 rounded text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-transform duration-200 ${
                       isExpanded ? "rotate-180" : ""
@@ -369,8 +430,22 @@ export function DiagnosticInspector({
                     </div>
                   )}
 
-                  <div className="pt-1 flex items-center justify-end">
-                    {isReplaced ? (
+                  <div className="pt-1 flex items-center justify-end gap-2">
+                    {isItemIgnored ? (
+                      onUnignore && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onUnignore(id);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors cursor-pointer shadow-xs"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          Restore Suggestion
+                        </button>
+                      )
+                    ) : isReplaced ? (
                       <button
                         type="button"
                         onClick={(e) => handleRevert(err.original, err.rewritten, e)}
@@ -380,14 +455,30 @@ export function DiagnosticInspector({
                         Revert Word
                       </button>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => handleApply(err, err.original, err.rewritten, e)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-                      >
-                        <ArrowRight className="w-3.5 h-3.5" />
-                        Apply Higher-Rated Fix
-                      </button>
+                      <>
+                        {onIgnore && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onIgnore(id);
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                            title="Ignore this suggestion"
+                          >
+                            <EyeOff className="w-3.5 h-3.5" />
+                            <span>Ignore</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => handleApply(err, err.original, err.rewritten, e)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                        >
+                          <ArrowRight className="w-3.5 h-3.5" />
+                          Apply Higher-Rated Fix
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -401,11 +492,14 @@ export function DiagnosticInspector({
           const id = sug.id || `sug-${idx + 1}`;
           const isSelected = selectedId === id;
           const isExpanded = Boolean(expandedIds[id] || isSelected);
+          const isItemIgnored = ignoredIds.includes(id);
           const isReplaced = replacedItems.some(
             (r) => r.originalText === sug.originalPhrase || r.replacedText === sug.suggestedUpgrade
           );
 
-          const upgradeLabel = isReplaced
+          const upgradeLabel = isItemIgnored
+            ? "Ignored"
+            : isReplaced
             ? "Replaced in Essay"
             : `${sug.type.replace("_", " ")} Upgrade`;
 
@@ -416,7 +510,9 @@ export function DiagnosticInspector({
                 cardRefs.current[id] = el;
               }}
               className={`rounded-xl border transition-all text-xs overflow-hidden ${
-                isReplaced
+                isItemIgnored
+                  ? "border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 opacity-75"
+                  : isReplaced
                   ? "border-emerald-500/40 bg-emerald-500/[0.03]"
                   : isSelected
                   ? "border-violet-500/80 bg-violet-500/5 ring-1 ring-violet-500/30 dark:border-purple-500/40 dark:bg-purple-950/20 dark:ring-purple-500/20"
@@ -431,12 +527,18 @@ export function DiagnosticInspector({
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
                     className={`w-2 h-2 rounded-full shrink-0 ${
-                      isReplaced ? "bg-emerald-500" : "bg-violet-500 dark:bg-purple-400/80"
+                      isItemIgnored
+                        ? "bg-neutral-400"
+                        : isReplaced
+                        ? "bg-emerald-500"
+                        : "bg-violet-500 dark:bg-purple-400/80"
                     }`}
                   />
                   <span
                     className={`font-mono text-[10px] uppercase font-semibold shrink-0 ${
-                      isReplaced
+                      isItemIgnored
+                        ? "text-neutral-500"
+                        : isReplaced
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-violet-600 dark:text-purple-300/80"
                     }`}
@@ -449,19 +551,21 @@ export function DiagnosticInspector({
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelect(id);
-                      setExpandedIds((prev) => ({ ...prev, [id]: true }));
-                    }}
-                    className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
-                    title="Locate in paragraph"
-                  >
-                    <Eye className="w-3 h-3" />
-                    <span className="hidden sm:inline">Locate</span>
-                  </button>
+                  {!isItemIgnored && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelect(id);
+                        setExpandedIds((prev) => ({ ...prev, [id]: true }));
+                      }}
+                      className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
+                      title="Locate in paragraph"
+                    >
+                      <Eye className="w-3 h-3" />
+                      <span className="hidden sm:inline">Locate</span>
+                    </button>
+                  )}
                   <div
                     className={`p-1 rounded text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-transform duration-200 ${
                       isExpanded ? "rotate-180" : ""
@@ -528,8 +632,22 @@ export function DiagnosticInspector({
                     </div>
                   )}
 
-                  <div className="pt-1 flex items-center justify-end">
-                    {isReplaced ? (
+                  <div className="pt-1 flex items-center justify-end gap-2">
+                    {isItemIgnored ? (
+                      onUnignore && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onUnignore(id);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors cursor-pointer shadow-xs"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          Restore Suggestion
+                        </button>
+                      )
+                    ) : isReplaced ? (
                       <button
                         type="button"
                         onClick={(e) => handleRevert(sug.originalPhrase, sug.suggestedUpgrade, e)}
@@ -539,14 +657,30 @@ export function DiagnosticInspector({
                         Revert Word
                       </button>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => handleApply(sug, sug.originalPhrase, sug.suggestedUpgrade, e)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-                      >
-                        <ArrowRight className="w-3.5 h-3.5" />
-                        Apply Higher-Rated Word
-                      </button>
+                      <>
+                        {onIgnore && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onIgnore(id);
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                            title="Ignore this suggestion"
+                          >
+                            <EyeOff className="w-3.5 h-3.5" />
+                            <span>Ignore</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={(e) => handleApply(sug, sug.originalPhrase, sug.suggestedUpgrade, e)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                        >
+                          <ArrowRight className="w-3.5 h-3.5" />
+                          Apply Higher-Rated Word
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -554,6 +688,16 @@ export function DiagnosticInspector({
             </div>
           );
         })}
+
+        {visibleTotal === 0 && (
+          <div className="py-12 text-center text-xs text-neutral-400 dark:text-neutral-500">
+            {filter === "ignored"
+              ? "No ignored suggestions."
+              : filter === "replaced"
+              ? "No replaced words yet."
+              : "No items matching filter."}
+          </div>
+        )}
       </div>
     </div>
   );

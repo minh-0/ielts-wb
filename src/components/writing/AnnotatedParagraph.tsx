@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { SentenceFeedback, VocabularySuggestion, ReplacedWordItem } from "@/types/ielts";
-import { AlertCircle, Sparkles, Check, ArrowRight, X, RotateCcw, Award } from "lucide-react";
+import { AlertCircle, Sparkles, Check, ArrowRight, X, RotateCcw, Award, EyeOff } from "lucide-react";
 
 interface AnnotatedParagraphProps {
   content: string;
@@ -13,6 +13,8 @@ interface AnnotatedParagraphProps {
   onSelect: (id: string | null) => void;
   onApplyFix: (original: string, replacement: string, meta?: any) => void;
   onRevertFix?: (replacedText: string, originalText: string) => void;
+  ignoredIds?: string[];
+  onIgnore?: (id: string) => void;
 }
 
 interface SpanMatch {
@@ -43,6 +45,8 @@ export function AnnotatedParagraph({
   onSelect,
   onApplyFix,
   onRevertFix,
+  ignoredIds = [],
+  onIgnore,
 }: AnnotatedParagraphProps) {
   const [activeTooltip, setActiveTooltip] = useState<SpanMatch | null>(null);
   const [justAppliedId, setJustAppliedId] = useState<string | null>(null);
@@ -74,13 +78,15 @@ export function AnnotatedParagraph({
       }
     });
 
-    // 2. Collect error matches (only if original is currently present)
+    // 2. Collect error matches (only if not ignored and original is currently present)
     errors.forEach((err, idx) => {
+      const errId = err.id || `err-${idx + 1}`;
+      if (ignoredIds.includes(errId)) return;
       if (!err.original || !content.includes(err.original)) return;
       let startIdx = 0;
       while ((startIdx = content.indexOf(err.original, startIdx)) !== -1) {
         rawMatches.push({
-          id: err.id || `err-${idx + 1}`,
+          id: errId,
           kind: "error",
           start: startIdx,
           end: startIdx + err.original.length,
@@ -98,13 +104,15 @@ export function AnnotatedParagraph({
       }
     });
 
-    // 3. Collect vocabulary suggestions matches
+    // 3. Collect vocabulary suggestions matches (only if not ignored)
     suggestions.forEach((sug, idx) => {
+      const sugId = sug.id || `sug-${idx + 1}`;
+      if (ignoredIds.includes(sugId)) return;
       if (!sug.originalPhrase || !content.includes(sug.originalPhrase)) return;
       let startIdx = 0;
       while ((startIdx = content.indexOf(sug.originalPhrase, startIdx)) !== -1) {
         rawMatches.push({
-          id: sug.id || `sug-${idx + 1}`,
+          id: sugId,
           kind: "suggestion",
           start: startIdx,
           end: startIdx + sug.originalPhrase.length,
@@ -155,7 +163,7 @@ export function AnnotatedParagraph({
     }
 
     return { segments: segs, allMatches: nonOverlapping };
-  }, [content, errors, suggestions, replacedItems]);
+  }, [content, errors, suggestions, replacedItems, ignoredIds]);
 
   const handleApply = (span: SpanMatch, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -373,22 +381,40 @@ export function AnnotatedParagraph({
                 Revert to Original Word
               </button>
             ) : (
-              <button
-                onClick={(e) => handleApply(selectedMatch, e)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
-              >
-                {justAppliedId === selectedMatch.id ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    Applied!
-                  </>
-                ) : (
-                  <>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                    Apply Higher-Rated Word
-                  </>
+              <div className="flex items-center gap-2">
+                {onIgnore && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onIgnore(selectedMatch.id);
+                      setActiveTooltip(null);
+                      onSelect(null);
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                    title="Ignore this suggestion"
+                  >
+                    <EyeOff className="w-3.5 h-3.5" />
+                    <span>Ignore</span>
+                  </button>
                 )}
-              </button>
+                <button
+                  onClick={(e) => handleApply(selectedMatch, e)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
+                >
+                  {justAppliedId === selectedMatch.id ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      Applied!
+                    </>
+                  ) : (
+                    <>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                      Apply Higher-Rated Word
+                    </>
+                  )}
+                </button>
+              </div>
             )}
           </div>
         </div>
