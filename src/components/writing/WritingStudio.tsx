@@ -762,20 +762,20 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
                   <button
                     type="button"
                     onClick={handleRandomQuestion}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/60 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shadow-2xs"
+                    className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/60 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shadow-2xs"
                     title="Pick a random question"
+                    aria-label="Pick a random question"
                   >
                     <Shuffle className="w-3.5 h-3.5 text-neutral-500" />
-                    <span>Random</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsQuestionPickerOpen(true)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                    title="Browse complete question bank"
+                    title="Browse question bank"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>Browse Questions ({WRITING_PROMPTS.filter((p) => p.type === selectedTaskType).length})</span>
+                    <span>Browse</span>
                   </button>
                 </div>
               </div>

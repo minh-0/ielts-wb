@@ -52,8 +52,8 @@
   - Every single question includes an authentic, fully developed Band 8.5–9.0 model essay (~250–320 words) with essay type classification (`opinion`, `discussion`, `advantages_disadvantages`, `problem_solution`, `double_question`).
 - **Interactive Question Card & Question Picker Modal (`QuestionPickerModal.tsx`)**:
   - Replaced cramped native select dropdown with a sleek interactive Question Card showing topic badges, essay format pills, and Band 9.0 availability.
-  - **Random Question Picker**: Dedicated "Random" button (`Shuffle` icon) to instantly rotate through the question bank.
-  - **Question Picker Modal (`QuestionPickerModal.tsx`)**: Minimalist Command-Palette style popup with live search, clean popout topic dropdown menu, popout format selector, random picker button, sleek scannable question items, and Esc/backdrop dismiss.
+  - **Question Controls**: Icon-only "Random" button (`Shuffle` icon) to quickly draw prompts, and a clean "Browse" button to open the question bank.
+  - **Question Picker Modal (`QuestionPickerModal.tsx`)**: Minimalist Command-Palette style popup with live search, clean popout topic dropdown menu, popout format selector, icon-only random picker, and sleek scannable question items without unnecessary footer text.
 - **Model Essay Tab & Cleaned Feedback Tabs**:
   - Removed redundant "Sentence Diff Archive" tab from post-analysis feedback.
   - Post-analysis tabs streamlined to 2 core views: **Criteria Breakdown** and **Model Essay**.

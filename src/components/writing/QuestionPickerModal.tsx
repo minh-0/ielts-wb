@@ -423,14 +423,6 @@ export function QuestionPickerModal({
             })
           )}
         </div>
-
-        {/* Quiet Minimal Footer */}
-        <div className="px-4 py-2 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 flex items-center justify-between text-[11px] text-neutral-400 font-mono shrink-0">
-          <span>
-            {filteredPrompts.length} of {prompts.length} questions
-          </span>
-          <span>Esc to exit</span>
-        </div>
       </div>
     </div>
   );
