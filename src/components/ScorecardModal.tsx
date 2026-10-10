@@ -64,16 +64,16 @@ export function ScorecardModal({
 
       // Header Tag
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 18px monospace";
+      ctx.font = "bold 18px var(--font-mono), 'JetBrains Mono', monospace";
       ctx.fillText(`IELTS / ${type.toUpperCase()} DIAGNOSTIC`, 80, 110);
 
       // Candidate Score Hero
       ctx.fillStyle = "#888888";
-      ctx.font = "20px sans-serif";
+      ctx.font = "500 20px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText("ESTIMATED OVERALL BAND", 80, 200);
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 130px sans-serif";
+      ctx.font = "bold 130px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText(`Band ${overallBand.toFixed(1)}`, 80, 330);
 
       // Horizontal Divider
@@ -98,11 +98,11 @@ export function ScorecardModal({
         ctx.strokeRect(x, startY, boxW, boxH);
 
         ctx.fillStyle = "#888888";
-        ctx.font = "14px monospace";
+        ctx.font = "14px var(--font-mono), 'JetBrains Mono', monospace";
         ctx.fillText(s.label.toUpperCase(), x + 20, startY + 40);
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 48px sans-serif";
+        ctx.font = "bold 48px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
         ctx.fillText(s.score.toFixed(1), x + 20, startY + 100);
       });
 
@@ -114,11 +114,11 @@ export function ScorecardModal({
       ctx.strokeRect(80, 610, width - 160, 200);
 
       ctx.fillStyle = "#888888";
-      ctx.font = "16px monospace";
+      ctx.font = "16px var(--font-mono), 'JetBrains Mono', monospace";
       ctx.fillText("PRIMARY EXAMINER BOTTLENECK", 110, 660);
 
       ctx.fillStyle = "#ffffff";
-      ctx.font = "24px sans-serif";
+      ctx.font = "24px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText(primaryBottleneck.slice(0, 75), 110, 715);
       if (primaryBottleneck.length > 75) {
         ctx.fillText(primaryBottleneck.slice(75, 150), 110, 755);
@@ -132,11 +132,11 @@ export function ScorecardModal({
       ctx.strokeRect(80, 850, width - 160, 260);
 
       ctx.fillStyle = "#888888";
-      ctx.font = "16px monospace";
+      ctx.font = "16px var(--font-mono), 'JetBrains Mono', monospace";
       ctx.fillText("HIGH-BAND RECOMMENDATION", 110, 900);
 
       ctx.fillStyle = "#dddddd";
-      ctx.font = "italic 22px sans-serif";
+      ctx.font = "italic 22px var(--font-serif), 'Newsreader', Georgia, serif";
       ctx.fillText(`"${examinerHighlight.slice(0, 70)}"`, 110, 960);
       if (examinerHighlight.length > 70) {
         ctx.fillText(`"${examinerHighlight.slice(70, 140)}"`, 110, 1000);
@@ -144,7 +144,7 @@ export function ScorecardModal({
 
       // Footer
       ctx.fillStyle = "#555555";
-      ctx.font = "18px monospace";
+      ctx.font = "18px var(--font-mono), 'JetBrains Mono', monospace";
       ctx.fillText("light", 80, 1260);
 
       const dataUrl = canvas.toDataURL("image/png");
