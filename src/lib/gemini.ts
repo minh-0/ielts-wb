@@ -11,6 +11,16 @@ You are a senior, certified British Council and IDP IELTS Examiner with over 15 
 Evaluate the candidate's IELTS Writing submission with uncompromising examiner rigor strictly aligned with the Official IELTS Writing Band Descriptors (Task 1 & Task 2).
 
 CRITICAL CRITERIA RULES:
+0. MANDATORY TOPIC RELEVANCE & OFF-TOPIC PENALTY (CRITICAL):
+   - You MUST first determine whether the candidate essay actually addresses the prompt provided.
+   - If the candidate submits an essay on a COMPLETELY UNRELATED OR OFF-TOPIC SUBJECT (for example: candidate pastes an essay about technology/automation/AI when the prompt asks about space exploration, education funding, sports, or climate; pastes an unrelated Task 2 essay into a Task 1 prompt; or pastes pre-memorized irrelevant text):
+     * Task Achievement (Task 1) or Task Response (Task 2) score MUST BE Band 1.5 to 2.5 (Official Descriptor Band 2: "Answer is completely unrelated to the task").
+     * Coherence & Cohesion MUST NOT exceed Band 3.0 ("Fails to communicate any relevant message").
+     * The overallBand MUST NOT exceed Band 3.0 (cap at Band 2.5 - 3.0), REGARDLESS of how flawless or sophisticated the grammar and vocabulary are! You are an authentic examiner: in real IELTS exams, an off-topic essay fails immediately.
+     * In "taskAchievement.bandLabel", output: "Band 2.0 (Completely Off-Topic / Unrelated to Prompt)".
+     * In "taskAchievement.feedback", state explicitly: "CRITICAL EXAMINER PENALTY: This essay is completely unrelated to the exam prompt. Under official Cambridge IELTS criteria, an off-topic or memorized response receives Band 2.0 for Task Achievement/Response and cannot receive a passing score."
+     * In "primaryBottleneck", output: "CRITICAL PENALTY: The essay is completely unrelated to the exam prompt. Task Response is docked to Band 2.0 under official Cambridge criteria."
+     * Include at least one sentenceFeedback item with "issueType": "task_response" pointing out the topic divergence.
 1. TASK ACHIEVEMENT (Task 1) / TASK RESPONSE (Task 2):
    - Check word count penalty: Task 1 requires >= 150 words. Task 2 requires >= 250 words. If underlength, dock the Task Response score.
    - For Task 1: Check for a clear, distinct OVERVIEW. If there is no clear overview, Task Achievement MUST NOT exceed Band 5.0.
@@ -78,6 +88,13 @@ Exam Prompt: """${promptText}"""
 ${hasImage ? 'A graph, chart, table, or diagram image has been uploaded for this Task 1 visual report. Cross-reference the candidate\'s statements, overview, and specific data points directly against the visual features in the image.' : ''}
 Candidate Essay (Word count: ${wordCount}):
 """${essayText}"""
+
+MANDATORY TOPIC RELEVANCE CHECK:
+Examine whether the candidate essay actually addresses the specific question prompt above.
+If the essay is completely unrelated or on a different topic (e.g. Discussing an unrelated subject, pasting an off-topic essay, or memorized filler):
+- You MUST award "taskAchievement.score": 2.0 ("Band 2.0 (Completely Off-Topic / Unrelated to Prompt)").
+- You MUST cap "overallBand" at 2.5 or 3.0 maximum. Under real Cambridge examiner rules, an off-topic essay cannot pass.
+- In "primaryBottleneck", state: "CRITICAL PENALTY: The essay is completely unrelated to the exam prompt. Task Response is docked to Band 2.0 under official Cambridge criteria."
 
 Analyze this essay and output valid JSON with this exact structure:
 {
@@ -239,6 +256,47 @@ Only output the JSON object without markdown fences if possible.
       ...v,
       id: v.id || `sug-${idx + 1}`
     }));
+
+    // Safety validation guard: enforce strict Cambridge off-topic penalty if essay is unrelated
+    const topicCheck = evaluateTopicRelevance(promptText, essayText);
+    if (topicCheck.isOffTopic) {
+      if (parsed.criteria?.taskAchievement) {
+        parsed.criteria.taskAchievement.score = 2.0;
+        parsed.criteria.taskAchievement.bandLabel = "Band 2.0 (Completely Off-Topic / Unrelated to Prompt)";
+        parsed.criteria.taskAchievement.feedback = "CRITICAL EXAMINER PENALTY: This essay discusses an unrelated topic and fails to answer the question prompt. Under official Cambridge IELTS criteria, an off-topic response receives Band 2.0 for Task Achievement/Response regardless of grammar or vocabulary fluency.";
+        parsed.criteria.taskAchievement.weaknesses = [
+          "The entire essay is off-topic and fails to address the question prompt.",
+          "Zero relevant arguments or data points relating to the prompt were presented."
+        ];
+        parsed.criteria.taskAchievement.keyRecommendations = [
+          "Carefully analyze the prompt keywords before writing.",
+          "Ensure that your introduction, body paragraphs, and conclusion directly answer the assigned question."
+        ];
+      }
+      if (parsed.criteria?.coherenceCohesion) {
+        parsed.criteria.coherenceCohesion.score = Math.min(parsed.criteria.coherenceCohesion.score, 3.0);
+        parsed.criteria.coherenceCohesion.bandLabel = "Band 2.5 (Lacks Relevance to Task)";
+      }
+      parsed.overallBand = Math.min(parsed.overallBand || 2.5, 3.0);
+      parsed.primaryBottleneck = "CRITICAL PENALTY: The essay is completely unrelated to the exam prompt. Task Response is docked to Band 2.0 under official Cambridge criteria.";
+      parsed.examinerSummary = "Critical Assessment: Your essay discusses an unrelated subject and completely fails to address the prompt. In official Cambridge and IDP test centers, writing an off-topic or pre-memorized essay results in an immediate failure of Task Response (Band 2.0) and caps your overall score at Band 2.5.";
+
+      const hasTaskErr = (parsed.sentenceFeedbacks || []).some(f => f.issueType === 'task_response');
+      if (!hasTaskErr) {
+        const firstSentence = essayText.split(/[.!?]\s+/)[0] || essayText.slice(0, 80);
+        parsed.sentenceFeedbacks.unshift({
+          id: 'err-offtopic',
+          original: firstSentence,
+          rewritten: `[Relevant Response Required]: Paraphrase the prompt and state a clear thesis addressing the assigned topic.`,
+          issueType: 'task_response',
+          explanation: 'CRITICAL OFF-TOPIC ERROR: The essay fails to address the assigned exam question. Official examiners will immediately flag this as an off-topic response and award Band 2.0 for Task Response.',
+          bandUpgradeTip: 'Always address every part of the question prompt directly.',
+          higherRatedWordExplanation: 'Examiners evaluate topical relevance as the foundational prerequisite before evaluating grammar and style.',
+          higherRatedWords: []
+        });
+      }
+    }
+
     return parsed;
   } catch (err) {
     console.error('Error invoking Gemini for writing:', err);
@@ -406,6 +464,156 @@ Output STRICT valid JSON conforming to the SpeakingAnalysisResult schema.`;
 
 // -------------------------------------------------------------
 // -------------------------------------------------------------
+// Topic Relevance & Off-Topic Detection (Official Cambridge Criteria)
+// -------------------------------------------------------------
+
+const STOP_WORDS = new Set([
+  "a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "are", "aren't",
+  "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by",
+  "can", "can't", "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't", "doing",
+  "don't", "down", "during", "each", "few", "for", "from", "further", "had", "hadn't", "has", "hasn't",
+  "have", "haven't", "having", "he", "her", "here", "hers", "herself", "him", "himself", "his", "how",
+  "i", "if", "in", "into", "is", "isn't", "it", "it's", "its", "itself", "let's", "me", "more", "most",
+  "mustn't", "my", "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or", "other",
+  "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "shan't", "she", "should", "shouldn't",
+  "so", "some", "such", "than", "that", "the", "their", "theirs", "them", "themselves", "then", "there",
+  "these", "they", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "wasn't",
+  "we", "were", "weren't", "what", "when", "where", "which", "while", "who", "whom", "why", "with", "won't",
+  "would", "wouldn't", "you", "your", "yours", "yourself", "yourselves",
+  // Common IELTS prompt instructions and meta words:
+  "discuss", "views", "give", "opinion", "extent", "agree", "disagree", "advantages", "disadvantages",
+  "reasons", "solutions", "problems", "causes", "effects", "measures", "believe", "think", "statement",
+  "following", "question", "task", "write", "least", "words", "graph", "chart", "table", "diagram",
+  "shows", "show", "illustrates", "illustrate", "given", "below", "above", "information", "data",
+  "period", "year", "years", "summarise", "summarize", "selecting", "reporting", "main", "features",
+  "make", "comparisons", "where", "relevant", "part", "people", "many", "others", "some", "often", "also",
+  "argue", "contend", "suggest", "true", "function", "course", "useful", "regard", "regardless"
+]);
+
+// Semantic thematic clusters for IELTS topic expansion
+const THEMATIC_CLUSTERS: Record<string, string[]> = {
+  universit: ["universit", "college", "tertiari", "campus", "degre", "academ", "curriculum", "faculti", "higher educ", "undergraduat", "postgraduat"],
+  educat: ["educat", "school", "student", "teacher", "learn", "pedagogi", "pupil", "classroom", "studi", "tuition", "literaci"],
+  graduat: ["graduat", "alumni", "degre holder"],
+  work: ["work", "worker", "workplac", "workforc", "job", "career", "employ", "labor", "labour", "occupat", "vocation", "profession"],
+  employ: ["employ", "job", "career", "workplac", "worker", "hiring", "salari", "wage", "staff"],
+  skill: ["skill", "abil", "competenc", "qualif", "expertis", "train"],
+  climat: ["climat", "global warm", "greenhous", "carbon", "emiss", "atmospher", "temperatur"],
+  environ: ["environ", "ecosystem", "ecolog", "natur", "planet", "habitat", "wildlif", "conserv"],
+  pollut: ["pollut", "contamin", "waste", "smog", "rubbish", "garbag"],
+  fossil: ["fossil", "fuel", "petroleum", "oil", "gas", "coal"],
+  energi: ["energi", "renew", "solar", "wind", "electr", "power", "nuclear"],
+  technolog: ["technolog", "tech", "digit", "devic", "gadget", "innov", "autom", "robot", "machin", "artifici intellig", "algorithm", "softwar", "comput"],
+  comput: ["comput", "softwar", "internet", "onlin", "digit", "screen", "websit"],
+  artifici: ["artifici intellig", "machine learn", "algorithm", "autom", "robot"],
+  health: ["health", "medic", "doctor", "hospit", "diseas", "ill", "well", "physic", "mental"],
+  sport: ["sport", "athlet", "exercis", "fit", "game", "match", "gym", "train"],
+  diet: ["diet", "nutrit", "food", "eat", "obes", "fast food", "sugar", "calori"],
+  child: ["child", "kid", "youth", "young", "adolescen", "juvenil", "offspring", "son", "daughter", "toddler", "teen"],
+  parent: ["parent", "mother", "father", "famili", "household", "home", "upbring"],
+  toy: ["toy", "playth", "game", "play", "doll"],
+  crime: ["crime", "crimin", "offens", "offend", "delinquen", "lawbreak"],
+  prison: ["prison", "jail", "incarcer", "inmat", "detent"],
+  punish: ["punish", "sentenc", "penalti", "fine", "rehabilit"],
+  law: ["law", "legal", "legislat", "polic", "court", "judg", "justic"],
+  govern: ["govern", "state", "author", "council", "minist", "polici", "tax", "fund"],
+  societi: ["societ", "communit", "public", "citizen", "peopl", "popul"],
+  economi: ["econom", "financ", "monetari", "commerci", "fiscal", "gdp", "market"],
+  money: ["money", "cost", "expens", "spend", "price", "wealth", "incom", "salari", "wage", "revenu", "budget"],
+  touris: ["touris", "travel", "holiday", "vacat", "visitor", "destin"],
+  cultur: ["cultur", "tradit", "heritag", "custom", "art", "museum", "theatr"],
+  elderli: ["elderli", "age", "aging", "ageing", "senior", "old", "retir", "pension"],
+  populat: ["popul", "demograph", "inhabit", "resid", "citizen"],
+  transport: ["transport", "vehicl", "car", "automobil", "traffic", "transit", "road", "rail", "train", "bus", "subway"],
+  citi: ["citi", "urban", "metropolit", "town", "municip"]
+};
+
+function stemWord(word: string): string {
+  let s = word.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (s.length <= 3) return s;
+  s = s.replace(/(?:ing|tion|ment|ies|es|ed|s)$/g, '');
+  return s;
+}
+
+function extractPromptKeywords(promptText: string): { stems: string[]; rawWords: string[] } {
+  const clean = promptText.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  const tokens = clean.split(/\s+/).filter(Boolean);
+  const rawWords: string[] = [];
+  const stems = new Set<string>();
+
+  for (const token of tokens) {
+    if (token.length >= 3 && !STOP_WORDS.has(token)) {
+      rawWords.push(token);
+      const stem = stemWord(token);
+      if (stem.length >= 3) {
+        stems.add(stem);
+      }
+    }
+  }
+
+  return { stems: Array.from(stems), rawWords };
+}
+
+function evaluateTopicRelevance(promptText: string, essayText: string): {
+  isOffTopic: boolean;
+  matchedCount: number;
+  totalKeyStems: number;
+  relevanceRatio: number;
+  matchedStems: string[];
+} {
+  const { stems: promptStems } = extractPromptKeywords(promptText);
+  if (promptStems.length < 2) {
+    return { isOffTopic: false, matchedCount: 0, totalKeyStems: 0, relevanceRatio: 1, matchedStems: [] };
+  }
+
+  const essayLower = essayText.toLowerCase();
+  const essayTokens = essayLower.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+  const essayStems = new Set(essayTokens.map(stemWord));
+
+  const matchedStems: string[] = [];
+
+  for (const pStem of promptStems) {
+    // 1. Direct stem match in essay
+    if (essayStems.has(pStem) || essayLower.includes(pStem)) {
+      matchedStems.push(pStem);
+      continue;
+    }
+
+    // 2. Thematic cluster expansion match
+    let clusterMatched = false;
+    for (const [clusterKey, synonyms] of Object.entries(THEMATIC_CLUSTERS)) {
+      if (pStem.startsWith(clusterKey) || clusterKey.startsWith(pStem)) {
+        for (const syn of synonyms) {
+          if (essayLower.includes(syn) || essayStems.has(syn)) {
+            matchedStems.push(pStem);
+            clusterMatched = true;
+            break;
+          }
+        }
+      }
+      if (clusterMatched) break;
+    }
+  }
+
+  const totalKeyStems = promptStems.length;
+  const matchedCount = matchedStems.length;
+  const relevanceRatio = matchedCount / totalKeyStems;
+
+  const isOffTopic =
+    (matchedCount === 0 && totalKeyStems >= 2) ||
+    (totalKeyStems >= 3 && matchedCount <= 1 && relevanceRatio < 0.22) ||
+    (totalKeyStems >= 6 && matchedCount <= 2 && relevanceRatio < 0.25);
+
+  return {
+    isOffTopic,
+    matchedCount,
+    totalKeyStems,
+    relevanceRatio,
+    matchedStems,
+  };
+}
+
+// -------------------------------------------------------------
 // High-Fidelity Mock Examiner Fallbacks (Ensures instant preview)
 // -------------------------------------------------------------
 
@@ -428,6 +636,80 @@ function generateMockWritingAnalysis(
   const wordCount = words.length;
   const targetMin = taskType === 'task2' ? 250 : 150;
   const isPenalty = wordCount < targetMin;
+
+  // Check topic relevance under official Cambridge criteria
+  const topicCheck = evaluateTopicRelevance(prompt, essay);
+  if (topicCheck.isOffTopic) {
+    const firstSentence = essay.split(/[.!?]\s+/)[0] || essay.slice(0, 80);
+    const promptSnippet = prompt.slice(0, 75).trim();
+
+    return {
+      overallBand: 2.5,
+      wordCount,
+      wordCountStatus: isPenalty ? 'penalty_applied' : 'sufficient',
+      criteria: {
+        taskAchievement: {
+          score: 2.0,
+          bandLabel: 'Band 2.0 (Completely Off-Topic / Unrelated to Task)',
+          feedback: 'CRITICAL EXAMINER PENALTY: This essay discusses a completely unrelated topic and fails to answer the question prompt. Under official Cambridge IELTS criteria, an off-topic or memorized response receives Band 2.0 for Task Achievement/Response regardless of grammar or vocabulary fluency.',
+          strengths: ['Sentence forms were attempted, but cannot be positively evaluated due to complete task irrelevance.'],
+          weaknesses: [
+            'The entire response is off-topic and fails to address the question prompt.',
+            'Zero relevant arguments or data points relating to the prompt were presented.'
+          ],
+          keyRecommendations: [
+            'Carefully read the prompt keywords before writing.',
+            'Ensure every single paragraph directly supports your thesis answering the assigned question.'
+          ]
+        },
+        coherenceCohesion: {
+          score: 2.5,
+          bandLabel: 'Band 2.5 (Lacks Relevance to Task)',
+          feedback: 'Coherence requires logical progression in support of the prompt\'s central thesis. Off-topic responses fail to communicate any relevant message.',
+          strengths: ['Paragraph breaks are present.'],
+          weaknesses: ['Lacks relevant communicative progression.'],
+          keyRecommendations: ['Align all cohesive markers with arguments that directly address the prompt.']
+        },
+        lexicalResource: {
+          score: 4.0,
+          bandLabel: 'Band 4.0 (Inappropriate for Required Task)',
+          feedback: 'Vocabulary used fails to address the lexical field required by the assigned exam prompt.',
+          strengths: ['Some general English words are used.'],
+          weaknesses: ['Vocabulary is detached from the assigned question prompt.'],
+          keyRecommendations: ['Use topic-specific vocabulary directly aligned with the question.']
+        },
+        grammaticalRange: {
+          score: 5.0,
+          bandLabel: 'Band 5.0 (Sentence Structure Attempted)',
+          feedback: 'Some complex sentence structures are attempted, but grammar alone cannot compensate for an off-topic submission.',
+          strengths: ['Basic clause structures are functional.'],
+          weaknesses: ['Grammar cannot overcome task failure.'],
+          keyRecommendations: ['Direct your grammatical variety toward answering the prompt.']
+        }
+      },
+      sentenceFeedbacks: [
+        {
+          id: 'err-offtopic',
+          original: firstSentence,
+          rewritten: `[Relevant Response Required]: Paraphrase the prompt ("${promptSnippet}...") and state a clear position on the assigned topic.`,
+          issueType: 'task_response',
+          explanation: 'CRITICAL OFF-TOPIC ERROR: The essay fails to address the assigned exam question. Official examiners will immediately flag this as an off-topic response and award Band 2.0 for Task Response.',
+          bandUpgradeTip: 'Always address every part of the question prompt directly.',
+          higherRatedWordExplanation: 'Examiners evaluate topical relevance as the foundational prerequisite before evaluating grammar and style.',
+          higherRatedWords: []
+        }
+      ],
+      vocabularySuggestions: [],
+      cohesionAnalysis: {
+        overusedLinkers: [],
+        referencingQuality: 'Irrelevant to prompt.',
+        paragraphProgression: 'Discourse does not address the required topic.'
+      },
+      examinerSummary: 'Critical Assessment: Your essay discusses an unrelated subject and completely fails to address the prompt. In official Cambridge and IDP test centers, writing an off-topic or pre-memorized essay results in an immediate failure of Task Response (Band 2.0) and caps your overall score at Band 2.5.',
+      modelAnswer: `Candidates must answer the specific prompt provided. For prompt: "${prompt}", ensure every paragraph develops a relevant argument addressing all parts of the question.`,
+      primaryBottleneck: 'CRITICAL PENALTY: The submitted text is completely unrelated to the exam prompt. Task Response is docked to Band 2.0 under official Cambridge IELTS criteria.'
+    };
+  }
 
   // Track applied high-band upgrades in the essay
   const appliedSampleUpgrades = [

@@ -260,6 +260,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   ): WritingAnalysisResult => {
     if (currentReplaced.length === 0) return base;
 
+    // Off-topic submissions cannot be elevated by lexical replacements alone
+    const isOffTopic = base.criteria.taskAchievement.score <= 3.0;
+    if (isOffTopic) {
+      return base;
+    }
+
     const count = currentReplaced.length;
     // Boost Lexical Resource, Grammatical Range & Coherence dynamically
     const lrBoost = Math.min(2.5, count * 0.5);
@@ -1053,11 +1059,31 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
             {/* Panel 3: Bottleneck & Share Card Action */}
             <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs leading-relaxed space-y-1">
-                <span className="font-semibold text-neutral-900 dark:text-neutral-100 block text-[11px] uppercase tracking-wide">
-                  Primary Score Bottleneck:
+              <div
+                className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1 ${
+                  analysisResult.criteria.taskAchievement.score <= 3.0
+                    ? "border-red-500/50 bg-red-500/5 dark:border-rose-500/30 dark:bg-rose-950/20"
+                    : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950"
+                }`}
+              >
+                <span
+                  className={`font-semibold block text-[11px] uppercase tracking-wide ${
+                    analysisResult.criteria.taskAchievement.score <= 3.0
+                      ? "text-red-600 dark:text-rose-400"
+                      : "text-neutral-900 dark:text-neutral-100"
+                  }`}
+                >
+                  {analysisResult.criteria.taskAchievement.score <= 3.0
+                    ? "Off-Topic Penalty Alert:"
+                    : "Primary Score Bottleneck:"}
                 </span>
-                <p className="text-neutral-600 dark:text-neutral-400">
+                <p
+                  className={
+                    analysisResult.criteria.taskAchievement.score <= 3.0
+                      ? "text-red-700 dark:text-rose-300 font-medium"
+                      : "text-neutral-600 dark:text-neutral-400"
+                  }
+                >
                   {analysisResult.primaryBottleneck}
                 </p>
               </div>

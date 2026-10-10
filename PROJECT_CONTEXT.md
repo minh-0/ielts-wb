@@ -56,6 +56,13 @@
 - **100 Task 2 Question Bank & Model Essays (`src/lib/task2QuestionsData.ts` & `src/lib/ieltsPromptBank.ts`)**:
   - 100 authentic IELTS Task 2 prompts covering 10 core exam themes (Technology & AI, Education, Environment & Energy, Society, Government & Public Policy, Work & Careers, Health & Lifestyle, Crime & Justice, Media & Culture, Family & Relationships).
   - Every single question includes an authentic, fully developed Band 8.5–9.0 model essay (~250–320 words) with essay type classification (`opinion`, `discussion`, `advantages_disadvantages`, `problem_solution`, `double_question`).
+- **Strict Topic Relevance & Off-Topic Penalty (Cambridge Band 2.0 Descriptors)**:
+  - **Relevance Evaluator (`evaluateTopicRelevance`)**: Analyzes keyword and semantic stem overlap against thematic clusters (Education, Work, Climate, Technology, Health, Family, Crime, Demographics, etc.).
+  - **Off-Topic Detection & Score Cap**: If an essay is completely unrelated to the prompt (e.g. pasting an essay on modern technology for a demographics/population chart, or pasting an irrelevant pre-memorized script):
+    - Task Achievement / Task Response is strictly docked to **Band 2.0** (`Band 2.0 (Completely Off-Topic / Unrelated to Task)`).
+    - Coherence is capped at Band 2.5 and Lexical Resource at Band 4.0; overall score is capped at **Band 2.5 – 3.0**.
+    - An in-text `task_response` critique highlights the topic divergence and instructs the candidate to address the specific question.
+    - Double-guaranteed across both Live Gemini AI mode (prompt rules + server validator) and the offline heuristic engine.
 - **50 Authentic Human-Examiner Task 1 Question Bank & SVGs (`src/lib/task1AcademicData.ts`, `public/task1/`, `src/lib/ieltsPromptBank.ts`)**:
   - 50 authentic IELTS Academic Task 1 prompts with **100% human-written Band 9.0 model essays** by authentic examiners: Simon Corcoran (former British Council examiner) and Cambridge University Press Official Examiner Answer Keys (Cambridge Books 3–18).
   - Covers all canonical visual types:
