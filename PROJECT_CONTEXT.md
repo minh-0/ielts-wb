@@ -29,8 +29,9 @@
 - **Professional Typography Architecture**:
   - **Interface Sans (`--font-sans` / `Plus Jakarta Sans`)**: Modern, geometric, high-precision sans-serif engineered for clean interfaces and executive contrast. Replaces generic default fonts.
   - **Technical Monospace (`--font-mono` / `JetBrains Mono`)**: The industry-standard monospaced typeface for all technical stamps, timers, word counts, CEFR badges, and band metrics. Tabular numerals prevent jitter.
-  - **Editorial Academic Serif (`--font-serif` / `Newsreader`)**: Award-winning editorial serif for examiner model essays, question prompts, and Oxford dictionary entries, providing an authentic Cambridge/Oxford publishing aesthetic.
-  - **Tailwind v4 Theme Binding**: Explicit `@theme` mapping in `globals.css` ensuring `font-sans`, `font-mono`, and `font-serif` utilities resolve to Google Fonts on Windows and all platforms rather than falling back to system defaults.
+  - **High-Contrast Editorial Serif (`--font-serif` & `--font-display` / `Playfair Display`)**: Inspired by Paradose (Wasabib Studio) and Playfair Display (Claus Eggers Sørensen). Used across the hero headline, brand title, model essays, and scorecard titles to provide a high-end, classic British publishing aesthetic.
+  - **Tailwind v4 Theme Binding**: Explicit `@theme` mapping in `globals.css` ensuring `font-sans`, `font-mono`, `font-serif`, and `font-display` utilities resolve to Google Fonts on Windows and all platforms rather than falling back to system defaults.
+- **Top Navigation Layout**: Navigation tabs (`Writing`, `Speaking`, `Vocabulary`, `Rubric`) are right-aligned alongside utility actions (`AI Mode` and `ThemeToggle`), leaving the left cleanly anchored to the brand title.
 - **Palette**: Pure monochrome neutral scales (`border-neutral-200 dark:border-neutral-800`, `bg-white dark:bg-neutral-950`, `bg-neutral-50/50 dark:bg-neutral-900/30`).
 - **Dark Mode Comfort**: High-contrast glare eliminated. Grammar mistakes use softened muted rose/red (`dark:text-rose-300/80 dark:bg-rose-950/30`), vocabulary upgrades use soft violet (`dark:text-purple-300/80 dark:bg-purple-950/30`), and replaced words use soft emerald.
 - **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, and the Writing Popup Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.

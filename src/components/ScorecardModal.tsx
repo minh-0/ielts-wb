@@ -183,14 +183,14 @@ export function ScorecardModal({
           <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
             {type} Test Evaluation
           </span>
-          <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+          <h3 className="text-xl font-serif font-semibold tracking-tight">{title}</h3>
         </div>
 
         {/* Hero Score Box */}
         <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center justify-between">
           <div>
             <div className="text-[11px] font-mono text-neutral-500 uppercase">Predicted Overall</div>
-            <div className="text-4xl font-semibold tracking-tight mt-0.5">
+            <div className="text-4xl font-serif font-medium tracking-tight mt-0.5">
               Band {overallBand.toFixed(1)}
             </div>
           </div>

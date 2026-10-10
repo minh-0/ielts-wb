@@ -107,9 +107,9 @@ export default function Home() {
             <div className="space-y-6 animate-in fade-in duration-200">
               {/* Primary Headline & Specific Human Copy */}
               <div className="max-w-3xl space-y-3">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-neutral-950 dark:text-neutral-50 font-sans leading-[1.18]">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-neutral-950 dark:text-neutral-50 font-serif leading-[1.15]">
                   Real examiner standards.{" "}
-                  <span className="text-neutral-400 dark:text-neutral-500 font-normal">
+                  <span className="italic text-neutral-400 dark:text-neutral-500 font-normal">
                     Without the AI flattery.
                   </span>
                 </h1>

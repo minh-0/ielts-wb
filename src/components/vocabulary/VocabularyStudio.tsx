@@ -325,7 +325,7 @@ export function VocabularyStudio() {
                   <div className="my-auto py-4">
                     {!isFlipped ? (
                       <div className="text-center space-y-2">
-                        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+                        <h2 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight text-neutral-900 dark:text-neutral-100">
                           {currentCard.word}
                         </h2>
                         <p className="font-mono text-xs text-neutral-400">
