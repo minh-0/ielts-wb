@@ -34,10 +34,11 @@ import { QuestionPickerModal } from "./QuestionPickerModal";
 
 interface WritingStudioProps {
   apiKey: string;
+  initialTaskType?: TaskType;
 }
 
-export function WritingStudio({ apiKey }: WritingStudioProps) {
-  const [selectedTaskType, setSelectedTaskType] = useState<TaskType>("task2");
+export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
+  const [selectedTaskType, setSelectedTaskType] = useState<TaskType>(initialTaskType || "task2");
   const [selectedPrompt, setSelectedPrompt] = useState<WritingPrompt>(WRITING_PROMPTS[0]);
   const [customPrompt, setCustomPrompt] = useState("");
   const [useCustomPrompt, setUseCustomPrompt] = useState(false);
@@ -73,6 +74,13 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
   const [isSaveSuccess, setIsSaveSuccess] = useState(false);
   const [showSavedModal, setShowSavedModal] = useState(false);
   const [isDeletingId, setIsDeletingId] = useState<string | null>(null);
+
+  // Sync task type if passed from hero quick action
+  useEffect(() => {
+    if (initialTaskType && initialTaskType !== selectedTaskType) {
+      handleTaskTypeChange(initialTaskType);
+    }
+  }, [initialTaskType]);
 
   // Fetch saved essays on mount from online API with localStorage cache
   useEffect(() => {
@@ -305,7 +313,7 @@ export function WritingStudio({ apiKey }: WritingStudioProps) {
           ...base.criteria.coherenceCohesion,
           score: newCC,
           bandLabel: `Band ${newCC.toFixed(1)} (${
-            newCC >= 8.0 ? "Seamless Thematic Progression" : "Coherent & Varied"
+            newCC >= 8.0 ? "Fluent Organic Progression" : "Coherent & Varied"
           })`,
         },
       },

@@ -19,7 +19,13 @@
 ---
 
 ### 2. Design System & Aesthetic Principles
-- **Minimalist Studio Aesthetic**: Inspired by Linear, Raycast, and iA Writer. No marketing billboards, promotional banners, duplicate headers, or boilerplate disclaimers.
+- **Minimalist Studio Aesthetic (The Examiner's Workbench)**: Inspired by Linear, Raycast, and iA Writer. No marketing billboards, promotional banners, purple-blue gradients, glassmorphism cards, glowing blobs, floating dashboards, or corporate buzzwords ("unlock", "supercharge", "streamline", "seamless").
+- **Memorable Minimalist Hero**:
+  - High-impact headline: *"Real examiner standards. Without the AI flattery."*
+  - Specific human copy articulating the value proposition: benchmarks against official Cambridge/IDP public descriptors, 50 verified human examiner Task 1 models (Simon Corcoran & Cambridge books), and 100 Task 2 prompts without artificial score inflation.
+  - Clear conversion pathways: "Start Writing Session", "Simulate Speaking", direct jump links to 50 Task 1 charts and 100 Task 2 prompt categories.
+  - Four hairline audit blocks detailing bank assets and privacy.
+  - Built-in "Focus Mode" toggle: allows candidates to collapse/expand the hero with persistent `localStorage` preference.
 - **Palette**: Pure monochrome neutral scales (`border-neutral-200 dark:border-neutral-800`, `bg-white dark:bg-neutral-950`, `bg-neutral-50/50 dark:bg-neutral-900/30`).
 - **Dark Mode Comfort**: High-contrast glare eliminated. Grammar mistakes use softened muted rose/red (`dark:text-rose-300/80 dark:bg-rose-950/30`), vocabulary upgrades use soft violet (`dark:text-purple-300/80 dark:bg-purple-950/30`), and replaced words use soft emerald.
 - **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, and the Writing Popup Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.

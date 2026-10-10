@@ -675,7 +675,7 @@ function generateMockWritingAnalysis(
       },
       coherenceCohesion: {
         score: ccScore,
-        bandLabel: `Band ${ccScore.toFixed(1)} (${ccScore >= 8.0 ? 'Seamless Organic Thematic Progression' : 'Coherent with Structured Paragraphs'})`,
+        bandLabel: `Band ${ccScore.toFixed(1)} (${ccScore >= 8.0 ? 'Fluent Organic Thematic Progression' : 'Coherent with Structured Paragraphs'})`,
         feedback: ccScore >= 8.0
           ? 'Ideas flow naturally with sophisticated lexical referencing and participial linking instead of formulaic mechanical linkers.'
           : 'Overall progression is clear and logical. However, paragraph transitions rely slightly on mechanical connectors.',

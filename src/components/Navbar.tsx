@@ -16,9 +16,12 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
     <header className="sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 backdrop-blur-md">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 h-13 flex items-center justify-between">
         {/* Brand / Logo - Project Name */}
-        <div className="flex items-center gap-2">
-          <span className="font-mono font-bold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50">
+        <div className="flex items-center gap-2.5">
+          <span className="font-mono font-bold text-sm tracking-tight text-neutral-900 dark:text-neutral-100 px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60">
             IELTSlayer666
+          </span>
+          <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-wider text-neutral-400 dark:text-neutral-500 border border-neutral-200/80 dark:border-neutral-800/80 px-1.5 py-0.5 rounded">
+            Examiner Bench
           </span>
         </div>
 
