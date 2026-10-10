@@ -1,11 +1,11 @@
-# Project Context: IELTSlayer666 (slayer6767)
+# Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-07 12:26*
+*Last updated: 2026-10-10 19:29*
 
 ---
 
 ### 1. Identity & Tech Stack
-- **Project Name**: `IELTSlayer666` (Browser tab title: `slayer6767`, repository root: `e:/contest`).
+- **Project Name**: `IELTSlayer666` (Browser tab title: `light`, repository root: `e:/contest`).
 - **Core Purpose**: High-precision, examiner-grade diagnostic practice suite for IELTS Writing (Task 1 & 2) and Speaking (Parts 1, 2, 3) aligned strictly with official British Council, IDP, and Cambridge band descriptors.
 - **Tech Stack**:
   - **Framework**: Next.js 16.3.8 (App Router, Turbopack enabled)
