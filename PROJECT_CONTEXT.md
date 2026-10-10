@@ -163,6 +163,7 @@
 - **Branch**: `master`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `style: replace boxed containers with horizontal hairline dividers and sentence-case typography`
   - `feat(writing): add ignore button to dismiss suggestions in-text and in inspector with restore capability`
   - `refactor(ui): update footer watermark to 'rkrh • light' and add 'Le Tuan Minh K67 FDA NEU'`
   - `feat(writing): restrict enlarge to button click and add online essay & estimated band score saving with API persistence`
