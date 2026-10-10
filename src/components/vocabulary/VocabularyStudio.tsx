@@ -236,24 +236,24 @@ export function VocabularyStudio() {
             </button>
           </div>
 
-          {/* Mode Switcher */}
-          <div className="inline-flex p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/50 text-xs">
+          {/* Mode Switcher: Clean horizontal underline tabs (no box) */}
+          <div className="flex items-center gap-4 text-xs">
             <button
               onClick={() => setActiveMode("flashcards")}
-              className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+              className={`py-1 transition-colors cursor-pointer ${
                 activeMode === "flashcards"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 font-medium"
               }`}
             >
               Cards
             </button>
             <button
               onClick={() => setActiveMode("explorer")}
-              className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+              className={`py-1 transition-colors cursor-pointer ${
                 activeMode === "explorer"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 font-medium"
               }`}
             >
               List
@@ -357,7 +357,7 @@ export function VocabularyStudio() {
                             {currentCard.collocations.map((c, i) => (
                               <span
                                 key={i}
-                                className="text-[10px] px-2 py-0.5 rounded-md border border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40 text-neutral-600 dark:text-neutral-400 font-mono"
+                                className="text-xs px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium"
                               >
                                 {c}
                               </span>
@@ -565,7 +565,7 @@ export function VocabularyStudio() {
                 {inspectedWord.collocations.map((c, i) => (
                   <span
                     key={i}
-                    className="text-[10px] px-2 py-0.5 rounded-md border border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 text-neutral-600 dark:text-neutral-400 font-mono"
+                    className="text-xs px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium"
                   >
                     {c}
                   </span>

@@ -20,21 +20,21 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
           <span className="font-serif font-semibold text-lg sm:text-xl tracking-tight text-neutral-900 dark:text-neutral-100">
             IELTSlayer666
           </span>
-          <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-wider text-neutral-400 dark:text-neutral-500 border border-neutral-200/80 dark:border-neutral-800/80 px-1.5 py-0.5 rounded">
+          <span className="hidden sm:inline text-xs text-neutral-400 dark:text-neutral-500">
             Examiner Bench
           </span>
         </div>
 
         {/* Right Section: Tabs moved to the right + Actions */}
-        <div className="flex items-center gap-2 sm:gap-3.5">
-          {/* Tab Navigation: Moved to the right */}
-          <nav className="flex items-center gap-0.5 sm:gap-1 p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs font-medium">
+        <div className="flex items-center gap-4 sm:gap-6">
+          {/* Tab Navigation: Minimal horizontal underline tabs (no box) */}
+          <nav className="flex items-center gap-4 sm:gap-5 text-xs">
             <button
               onClick={() => onTabChange("writing")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md transition-all cursor-pointer ${
+              className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
                 activeTab === "writing"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               <PenTool className="w-3 h-3" />
@@ -43,10 +43,10 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
             <button
               onClick={() => onTabChange("speaking")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md transition-all cursor-pointer ${
+              className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
                 activeTab === "speaking"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               <Mic className="w-3 h-3" />
@@ -55,10 +55,10 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
             <button
               onClick={() => onTabChange("vocabulary")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md transition-all cursor-pointer ${
+              className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
                 activeTab === "vocabulary"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               <BookA className="w-3 h-3" />
@@ -67,10 +67,10 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
 
             <button
               onClick={() => onTabChange("rubric")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md transition-all cursor-pointer hidden md:flex ${
+              className={`py-1.5 transition-colors cursor-pointer hidden md:flex items-center gap-1.5 ${
                 activeTab === "rubric"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               <BookOpen className="w-3 h-3" />
@@ -79,7 +79,7 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
           </nav>
 
           {/* Hairline separator */}
-          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 hidden sm:block" />
+          <div className="h-4 w-px bg-neutral-200 dark:border-neutral-800 hidden sm:block" />
 
           {/* AI Mode Selector Button */}
           <button

@@ -180,16 +180,16 @@ export function ScorecardModal({
 
         {/* Header */}
         <div className="space-y-1 pr-6 pb-4 border-b border-neutral-100 dark:border-neutral-800/80">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500">
+          <span className="text-xs text-neutral-500">
             {type} Test Evaluation
           </span>
           <h3 className="text-xl font-serif font-semibold tracking-tight">{title}</h3>
         </div>
 
         {/* Hero Score Box */}
-        <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center justify-between">
+        <div className="py-2 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800/80 pb-4">
           <div>
-            <div className="text-[11px] font-mono text-neutral-500 uppercase">Predicted Overall</div>
+            <div className="text-xs text-neutral-500">Predicted Overall</div>
             <div className="text-4xl font-serif font-medium tracking-tight mt-0.5">
               Band {overallBand.toFixed(1)}
             </div>
@@ -197,26 +197,26 @@ export function ScorecardModal({
           <RadarChart scores={scores} size={130} accentColor="#ffffff" />
         </div>
 
-        {/* 4 Chips */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {/* 4 Scores: Clean hairline strip without individual boxes */}
+        <div className="grid grid-cols-4 gap-2 py-3 border-b border-neutral-100 dark:border-neutral-800/80 text-center">
           {scores.map((s, idx) => (
-            <div key={idx} className="p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center">
-              <div className="text-[10px] font-mono text-neutral-500 uppercase">{s.label}</div>
-              <div className="text-lg font-semibold mt-0.5">{s.score.toFixed(1)}</div>
+            <div key={idx} className="space-y-0.5">
+              <div className="text-xs text-neutral-500">{s.label}</div>
+              <div className="text-base font-semibold">{s.score.toFixed(1)}</div>
             </div>
           ))}
         </div>
 
-        {/* Primary Bottleneck */}
-        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
-          <span className="font-mono text-[10px] uppercase text-neutral-500 block">Primary Bottleneck:</span>
-          <p className="text-neutral-700 dark:text-neutral-300">{primaryBottleneck}</p>
-        </div>
-
-        {/* Advice */}
-        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
-          <span className="font-mono text-[10px] uppercase text-neutral-500 block">Examiner Note:</span>
-          <p className="text-neutral-700 dark:text-neutral-300 italic">"{examinerHighlight}"</p>
+        {/* Primary Bottleneck & Examiner Note: Clean text blocks without boxes */}
+        <div className="space-y-3 pt-1 text-xs">
+          <div className="space-y-0.5">
+            <span className="text-neutral-500 font-medium block">Primary Bottleneck:</span>
+            <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">{primaryBottleneck}</p>
+          </div>
+          <div className="space-y-0.5">
+            <span className="text-neutral-500 font-medium block">Examiner Note:</span>
+            <p className="text-neutral-700 dark:text-neutral-300 italic leading-relaxed">"{examinerHighlight}"</p>
+          </div>
         </div>
 
         {/* Actions */}

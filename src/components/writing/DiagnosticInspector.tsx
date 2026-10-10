@@ -197,32 +197,32 @@ export function DiagnosticInspector({
       <div className="space-y-2 pb-2 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+            <h3 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
               Inspector
-              <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                {filter === "ignored" ? ignoredCount : activeCount}
+              <span className="text-neutral-400 dark:text-neutral-500 font-normal">
+                ({filter === "ignored" ? ignoredCount : activeCount})
               </span>
             </h3>
           </div>
 
-          {/* Filter buttons */}
-          <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-[11px]">
+          {/* Filter tabs: Clean horizontal tabs (no box) */}
+          <div className="flex items-center gap-3 text-xs overflow-x-auto pb-0.5">
             <button
               onClick={() => setFilter("all")}
-              className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${
+              className={`py-1 transition-colors cursor-pointer shrink-0 ${
                 filter === "all"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               All ({activeCount})
             </button>
             <button
               onClick={() => setFilter("errors")}
-              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
+              className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
                 filter === "errors"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-rose-400/80" />
@@ -230,10 +230,10 @@ export function DiagnosticInspector({
             </button>
             <button
               onClick={() => setFilter("suggestions")}
-              className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
+              className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
                 filter === "suggestions"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
@@ -242,26 +242,25 @@ export function DiagnosticInspector({
             {replacedCount > 0 && (
               <button
                 onClick={() => setFilter("replaced")}
-                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
+                className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
                   filter === "replaced"
-                    ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                    : "text-emerald-600 dark:text-emerald-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Replaced ({replacedCount})
+                Applied ({replacedCount})
               </button>
             )}
             {ignoredCount > 0 && (
               <button
                 onClick={() => setFilter("ignored")}
-                className={`px-2 py-1 rounded-md transition-colors flex items-center gap-1 cursor-pointer ${
+                className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
                   filter === "ignored"
-                    ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
                 }`}
               >
-                <EyeOff className="w-3 h-3 text-neutral-400" />
                 Ignored ({ignoredCount})
               </button>
             )}
@@ -333,7 +332,7 @@ export function DiagnosticInspector({
                     }`}
                   />
                   <span
-                    className={`font-mono text-[10px] uppercase font-semibold shrink-0 ${
+                    className={`text-xs font-medium shrink-0 capitalize ${
                       isItemIgnored
                         ? "text-neutral-500"
                         : isReplaced
@@ -343,7 +342,7 @@ export function DiagnosticInspector({
                   >
                     {issueLabel}
                   </span>
-                  <span className="text-[11px] text-neutral-600 dark:text-neutral-400 truncate font-mono">
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
                     "{err.original}"
                   </span>
                 </div>
@@ -357,7 +356,7 @@ export function DiagnosticInspector({
                         onSelect(id);
                         setExpandedIds((prev) => ({ ...prev, [id]: true }));
                       }}
-                      className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
+                      className="text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
                       title="Locate in paragraph"
                     >
                       <Eye className="w-3 h-3" />
@@ -378,23 +377,23 @@ export function DiagnosticInspector({
               {isExpanded && (
                 <div className="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-neutral-100 dark:border-neutral-800/80 animate-in fade-in-50 duration-150">
                   {/* Before / After */}
-                  <div className="space-y-1.5 pt-1">
-                    <div className="p-2 rounded-md bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-500 line-through">
+                  <div className="space-y-1 pt-1">
+                    <div className="py-1 text-xs text-neutral-500 line-through">
                       "{err.original}"
                     </div>
-                    <div className="p-2 rounded-md bg-emerald-500/5 border border-emerald-500/20 text-emerald-950 dark:text-emerald-200 font-medium">
+                    <div className="py-1 text-xs font-medium text-neutral-900 dark:text-neutral-100">
                       "{err.rewritten}"
                     </div>
                   </div>
 
                   {/* Small explanation of that higher rated word */}
                   {err.higherRatedWordExplanation && (
-                    <div className="p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1.5">
-                      <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
-                        <Award className="w-3 h-3" />
-                        <span>Why This Rates Higher:</span>
+                    <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
+                      <div className="flex items-center gap-1 text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                        <span>Why this rates higher:</span>
                       </div>
-                      <p className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                      <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {err.higherRatedWordExplanation}
                       </p>
                       {err.higherRatedWords && (
@@ -402,13 +401,13 @@ export function DiagnosticInspector({
                           {err.higherRatedWords.map((hw, i) => (
                             <div
                               key={i}
-                              className="text-[10px] flex items-baseline gap-1 text-neutral-600 dark:text-neutral-400"
+                              className="text-xs flex items-baseline gap-1.5 text-neutral-600 dark:text-neutral-400"
                             >
-                              <span className="font-semibold text-emerald-700 dark:text-emerald-300 font-mono">
+                              <span className="font-semibold text-emerald-700 dark:text-emerald-300">
                                 {hw.word}
                               </span>
                               {hw.level && (
-                                <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                                <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
                                   {hw.level}
                                 </span>
                               )}
@@ -535,7 +534,7 @@ export function DiagnosticInspector({
                     }`}
                   />
                   <span
-                    className={`font-mono text-[10px] uppercase font-semibold shrink-0 ${
+                    className={`text-xs font-medium shrink-0 capitalize ${
                       isItemIgnored
                         ? "text-neutral-500"
                         : isReplaced
@@ -545,7 +544,7 @@ export function DiagnosticInspector({
                   >
                     {upgradeLabel}
                   </span>
-                  <span className="text-[11px] text-neutral-600 dark:text-neutral-400 truncate font-mono">
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
                     "{sug.originalPhrase}"
                   </span>
                 </div>
@@ -559,7 +558,7 @@ export function DiagnosticInspector({
                         onSelect(id);
                         setExpandedIds((prev) => ({ ...prev, [id]: true }));
                       }}
-                      className="text-[10px] text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
+                      className="text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
                       title="Locate in paragraph"
                     >
                       <Eye className="w-3 h-3" />
@@ -580,23 +579,23 @@ export function DiagnosticInspector({
               {isExpanded && (
                 <div className="px-3.5 pb-3.5 pt-1 space-y-2.5 border-t border-neutral-100 dark:border-neutral-800/80 animate-in fade-in-50 duration-150">
                   {/* Phrase Upgrade */}
-                  <div className="space-y-1.5 pt-1">
-                    <div className="p-2 rounded-md bg-neutral-100/60 dark:bg-neutral-900/60 text-neutral-500 line-through">
+                  <div className="space-y-1 pt-1">
+                    <div className="py-1 text-xs text-neutral-500 line-through">
                       "{sug.originalPhrase}"
                     </div>
-                    <div className="p-2 rounded-md bg-violet-500/5 border border-violet-500/20 text-violet-950 dark:bg-purple-950/30 dark:border-purple-800/30 dark:text-purple-200/90 font-medium">
+                    <div className="py-1 text-xs font-medium text-neutral-900 dark:text-neutral-100">
                       "{sug.suggestedUpgrade}"
                     </div>
                   </div>
 
                   {/* Small explanation of that higher rated word */}
                   {sug.higherRatedWordExplanation && (
-                    <div className="p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-1.5">
-                      <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300">
-                        <Award className="w-3 h-3" />
-                        <span>Why This Word Rates Higher (Examiner Insight):</span>
+                    <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
+                      <div className="flex items-center gap-1 text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                        <span>Why this rates higher:</span>
                       </div>
-                      <p className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                      <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {sug.higherRatedWordExplanation}
                       </p>
                       {sug.higherRatedWords && (
@@ -604,13 +603,13 @@ export function DiagnosticInspector({
                           {sug.higherRatedWords.map((hw, i) => (
                             <div
                               key={i}
-                              className="text-[10px] flex items-baseline gap-1 text-neutral-600 dark:text-neutral-400"
+                              className="text-xs flex items-baseline gap-1.5 text-neutral-600 dark:text-neutral-400"
                             >
-                              <span className="font-semibold text-emerald-700 dark:text-emerald-300 font-mono">
+                              <span className="font-semibold text-emerald-700 dark:text-emerald-300">
                                 {hw.word}
                               </span>
                               {hw.level && (
-                                <span className="px-1 py-0.2 rounded text-[8px] font-mono bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                                <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
                                   {hw.level}
                                 </span>
                               )}

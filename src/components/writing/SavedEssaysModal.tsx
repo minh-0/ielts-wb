@@ -106,48 +106,47 @@ export function SavedEssaysModal({
             savedEssays.map((essay) => (
               <div
                 key={essay.id}
-                className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800/80 bg-white dark:bg-neutral-900/40 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all space-y-3"
+                className="py-4 border-b border-neutral-200 dark:border-neutral-800 space-y-2.5"
               >
                 {/* Header row */}
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       {getTaskLabel(essay.taskType)}
                     </span>
 
                     {/* Band Score or Draft badge */}
                     {typeof essay.overallBand === "number" ? (
-                      <span className="px-2 py-0.5 rounded font-mono font-semibold text-xs border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
-                        <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                        Band {essay.overallBand.toFixed(1)}
+                      <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        • Band {essay.overallBand.toFixed(1)}
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded font-mono text-[11px] border border-neutral-200 dark:border-neutral-800 text-neutral-400 bg-neutral-50/50 dark:bg-neutral-900/50">
-                        Draft
+                      <span className="text-xs text-neutral-400">
+                        • Draft
                       </span>
                     )}
 
-                    <span className="text-[11px] font-mono text-neutral-400">
-                      {essay.wordCount} words
+                    <span className="text-xs text-neutral-400">
+                      • {essay.wordCount} words
                     </span>
                   </div>
 
-                  <span className="text-[11px] text-neutral-400 flex items-center gap-1 font-mono">
+                  <span className="text-xs text-neutral-400 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {formatDate(essay.createdAt)}
                   </span>
                 </div>
 
                 {/* Prompt preview */}
-                <div className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2 leading-relaxed bg-neutral-50/60 dark:bg-neutral-900/30 p-2.5 rounded-lg border border-neutral-100 dark:border-neutral-800/60 font-sans">
-                  <span className="font-semibold text-neutral-800 dark:text-neutral-200 mr-1">
+                <div className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2 leading-relaxed">
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200 mr-1">
                     Prompt:
                   </span>
                   {essay.prompt}
                 </div>
 
                 {/* Essay preview */}
-                <p className="text-xs text-neutral-700 dark:text-neutral-300 line-clamp-3 leading-relaxed font-sans">
+                <p className="text-xs text-neutral-700 dark:text-neutral-300 line-clamp-3 leading-relaxed font-serif">
                   {essay.essayText}
                 </p>
 

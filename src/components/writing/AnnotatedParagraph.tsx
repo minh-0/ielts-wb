@@ -92,7 +92,7 @@ export function AnnotatedParagraph({
           end: startIdx + err.original.length,
           original: err.original,
           replacement: err.rewritten,
-          label: `${err.issueType.replace("_", " ").toUpperCase()} ERROR`,
+          label: `${err.issueType.replace("_", " ")} error`,
           explanation: err.explanation,
           tip: err.bandUpgradeTip,
           subType: err.issueType,
@@ -118,7 +118,7 @@ export function AnnotatedParagraph({
           end: startIdx + sug.originalPhrase.length,
           original: sug.originalPhrase,
           replacement: sug.suggestedUpgrade,
-          label: `${sug.type.replace("_", " ").toUpperCase()} UPGRADE`,
+          label: `${sug.type.replace("_", " ")} upgrade`,
           explanation: sug.explanation,
           tip: sug.exampleInSentence,
           subType: sug.type,
@@ -282,24 +282,25 @@ export function AnnotatedParagraph({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span
-                className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
+                className={`text-xs font-semibold capitalize ${
                   selectedMatch.kind === "replaced"
-                    ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40"
+                    ? "text-emerald-700 dark:text-emerald-400"
                     : selectedMatch.kind === "error"
-                    ? "bg-red-500/10 text-red-600 dark:text-rose-300/80 dark:bg-rose-950/30 border border-red-500/30 dark:border-rose-900/40"
-                    : "bg-violet-500/10 text-violet-600 dark:text-purple-300/80 dark:bg-purple-950/30 border border-violet-500/30 dark:border-purple-900/40"
+                    ? "text-red-600 dark:text-rose-400"
+                    : "text-neutral-900 dark:text-neutral-100"
                 }`}
               >
                 {selectedMatch.kind === "replaced"
-                  ? "✨ Replaced Higher-Rated Word"
+                  ? "Replaced word"
                   : selectedMatch.label}
               </span>
-              <span className="text-xs text-neutral-500 font-mono">
+              <span className="text-neutral-300 dark:text-neutral-700">•</span>
+              <span className="text-xs text-neutral-500 font-medium">
                 {selectedMatch.kind === "replaced"
-                  ? "Applied to Essay"
+                  ? "Applied to essay"
                   : selectedMatch.kind === "error"
-                  ? "Direct Mistake"
-                  : "Vocabulary Upgrade"}
+                  ? "Grammar & accuracy"
+                  : "Vocabulary upgrade"}
               </span>
             </div>
 
@@ -315,26 +316,26 @@ export function AnnotatedParagraph({
           </div>
 
           {/* Before & After Words Comparison */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <div className="p-2.5 rounded-lg border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02]">
-              <span className="font-mono text-[10px] text-neutral-400 block mb-0.5">
-                ORIGINAL WORD(S):
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs py-2 border-y border-neutral-200 dark:border-neutral-800">
+            <div>
+              <span className="text-xs text-neutral-400 block mb-0.5 font-medium">
+                Original word:
               </span>
               <span className="line-through text-neutral-500">{selectedMatch.original}</span>
             </div>
-            <div className="p-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-950 dark:text-emerald-200">
-              <span className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 block mb-0.5">
-                HIGHER-RATED REPLACEMENT:
+            <div>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 block mb-0.5 font-medium">
+                Suggested replacement:
               </span>
-              <span className="font-bold">{selectedMatch.replacement}</span>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-300">{selectedMatch.replacement}</span>
             </div>
           </div>
 
           {/* Small Explanation of that Higher-Rated Word */}
-          <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 space-y-2">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
-              <Award className="w-3.5 h-3.5" />
-              <span>Why This Word Rates Higher (Examiner Insight):</span>
+          <div className="pt-2 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+              <Award className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span>Why this rates higher:</span>
             </div>
             <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
               {selectedMatch.higherRatedWordExplanation ||
@@ -344,14 +345,14 @@ export function AnnotatedParagraph({
 
             {/* Micro Word-Level Breakdown if available */}
             {selectedMatch.higherRatedWords && selectedMatch.higherRatedWords.length > 0 && (
-              <div className="pt-1.5 border-t border-emerald-500/15 space-y-1">
+              <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
                 {selectedMatch.higherRatedWords.map((hw, i) => (
-                  <div key={i} className="text-[11px] flex flex-wrap items-baseline gap-1.5">
-                    <span className="font-semibold text-emerald-700 dark:text-emerald-300 font-mono">
+                  <div key={i} className="text-xs flex flex-wrap items-baseline gap-1.5">
+                    <span className="font-semibold text-emerald-700 dark:text-emerald-300">
                       {hw.word}
                     </span>
                     {hw.level && (
-                      <span className="px-1 py-0.2 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                      <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
                         {hw.level}
                       </span>
                     )}

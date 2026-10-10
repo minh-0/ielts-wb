@@ -78,26 +78,26 @@ export default function Home() {
           {/* Top Metadata Row with Focus Mode Toggle */}
           <div className="flex items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-neutral-900 dark:text-neutral-100 dark:bg-neutral-100" />
-              <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                Cambridge & IDP Diagnostic Bench • Public Band Descriptors
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100" />
+              <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                Cambridge & IDP Diagnostic Bench • Official Descriptors
               </span>
             </div>
 
             <button
               onClick={toggleHeroCollapse}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 border border-neutral-200 dark:border-neutral-800 rounded hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
               title={isHeroCollapsed ? "Expand studio overview" : "Collapse for focus mode"}
             >
               {isHeroCollapsed ? (
                 <>
                   <span>Overview</span>
-                  <ChevronDown className="w-3 h-3" />
+                  <ChevronDown className="w-3.5 h-3.5" />
                 </>
               ) : (
                 <>
                   <span>Focus Mode</span>
-                  <ChevronUp className="w-3 h-3" />
+                  <ChevronUp className="w-3.5 h-3.5" />
                 </>
               )}
             </button>
@@ -122,7 +122,7 @@ export default function Home() {
               </div>
 
               {/* Conversion Pathways & Direct Actions */}
-              <div className="flex flex-wrap items-center gap-2.5 pt-1">
+              <div className="flex flex-wrap items-center gap-3 pt-1">
                 <button
                   onClick={() => handleStartWriting("task2")}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-neutral-100 dark:hover:bg-white dark:text-neutral-900 text-xs font-medium tracking-tight transition-colors shadow-xs cursor-pointer"
@@ -144,64 +144,66 @@ export default function Home() {
 
                 <button
                   onClick={() => handleStartWriting("task1_academic")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-neutral-200/80 dark:border-neutral-800/80 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50 text-[12px] font-mono text-neutral-600 dark:text-neutral-400 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
-                  <BarChart2 className="w-3 h-3 text-neutral-400" />
+                  <BarChart2 className="w-3.5 h-3.5 text-neutral-400" />
                   <span>50 Task 1 Charts</span>
                 </button>
 
                 <button
                   onClick={() => handleStartWriting("task2")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-neutral-200/80 dark:border-neutral-800/80 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50 text-[12px] font-mono text-neutral-600 dark:text-neutral-400 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
-                  <FileText className="w-3 h-3 text-neutral-400" />
+                  <FileText className="w-3.5 h-3.5 text-neutral-400" />
                   <span>100 Task 2 Prompts</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("rubric")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-neutral-200/80 dark:border-neutral-800/80 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50 text-[12px] font-mono text-neutral-600 dark:text-neutral-400 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
-                  <BookOpen className="w-3 h-3 text-neutral-400" />
+                  <BookOpen className="w-3.5 h-3.5 text-neutral-400" />
                   <span>Public Descriptors</span>
                 </button>
               </div>
 
-              {/* Minimalist Verification Audit Strip (4 hairline blocks) */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                <div className="p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white/60 dark:bg-neutral-900/40">
-                  <div className="text-[11px] font-mono font-medium text-neutral-900 dark:text-neutral-100">
-                    50 Task 1 Charts
+              {/* Minimalist Verification Audit Strip (Clean horizontal line instead of box cards) */}
+              <div className="border-t border-neutral-200 dark:border-neutral-800 pt-5 mt-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                      50 Task 1 Charts
+                    </div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Simon Corcoran & Cambridge books verified
+                    </div>
                   </div>
-                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-1">
-                    Simon Corcoran & Cambridge books verified
-                  </div>
-                </div>
 
-                <div className="p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white/60 dark:bg-neutral-900/40">
-                  <div className="text-[11px] font-mono font-medium text-neutral-900 dark:text-neutral-100">
-                    100 Task 2 Prompts
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                      100 Task 2 Prompts
+                    </div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      9 core academic exam categories
+                    </div>
                   </div>
-                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-1">
-                    9 core academic exam categories
-                  </div>
-                </div>
 
-                <div className="p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white/60 dark:bg-neutral-900/40">
-                  <div className="text-[11px] font-mono font-medium text-neutral-900 dark:text-neutral-100">
-                    4 Official Criteria
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                      4 Official Criteria
+                    </div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      TA/TR, CC, LR, and GRA calibration
+                    </div>
                   </div>
-                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-1">
-                    TA/TR • CC • LR • GRA strict calibration
-                  </div>
-                </div>
 
-                <div className="p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white/60 dark:bg-neutral-900/40">
-                  <div className="text-[11px] font-mono font-medium text-neutral-900 dark:text-neutral-100">
-                    Zero Data Retention
-                  </div>
-                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5 line-clamp-1">
-                    Local heuristic engine or client Gemini key
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                      Zero Data Retention
+                    </div>
+                    <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                      Local engine or client Gemini key
+                    </div>
                   </div>
                 </div>
               </div>

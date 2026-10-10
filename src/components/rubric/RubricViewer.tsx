@@ -22,33 +22,33 @@ export function RubricViewer() {
     <div className="space-y-4">
       {/* Task Switcher */}
       <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs font-medium">
+        <div className="flex items-center gap-6 text-xs">
           <button
             onClick={() => setSelectedRubricKey("task2")}
-            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`py-1 transition-colors cursor-pointer ${
               selectedRubricKey === "task2"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             Writing Task 2
           </button>
           <button
             onClick={() => setSelectedRubricKey("task1")}
-            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`py-1 transition-colors cursor-pointer ${
               selectedRubricKey === "task1"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             Writing Task 1
           </button>
           <button
             onClick={() => setSelectedRubricKey("speaking")}
-            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`py-1 transition-colors cursor-pointer ${
               selectedRubricKey === "speaking"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             Speaking

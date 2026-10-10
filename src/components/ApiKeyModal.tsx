@@ -80,7 +80,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
         </div>
 
         {/* Option 1: Free Practice Mode (Active by Default) */}
-        <div className="p-3.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 space-y-1.5">
+        <div className="p-3.5 border-l-2 border-emerald-500 bg-emerald-500/5 space-y-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -88,8 +88,8 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
                 1. Free Practice Engine (Active by Default)
               </span>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
-              {keyInput ? "Available" : "Active Now"}
+            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+              {keyInput ? "Available" : "Active now"}
             </span>
           </div>
           <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
@@ -100,7 +100,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
         </div>
 
         {/* Option 2: Live Google Gemini AI (Optional) */}
-        <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-2.5">
+        <div className="p-3.5 border-l-2 border-neutral-300 dark:border-neutral-700 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5 text-violet-500" />
@@ -108,7 +108,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
                 2. Live Google Gemini AI (Optional)
               </span>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
+            <span className="text-xs font-medium text-neutral-500">
               {keyInput ? "Active" : "Optional"}
             </span>
           </div>

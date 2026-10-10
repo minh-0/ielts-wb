@@ -382,34 +382,34 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
     <div className="space-y-8">
       {/* Section 1: Mode & Part Controls (Unified minimalist toolbar) */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-5 border-b border-neutral-200 dark:border-neutral-800">
-        {/* Part Selection */}
-        <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs">
+        {/* Part Selection: Minimalist horizontal tabs (no box) */}
+        <div className="flex items-center gap-5 text-xs">
           <button
             onClick={() => handlePartChange("part1")}
-            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`py-1 transition-colors cursor-pointer ${
               selectedPart === "part1"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             Part 1 (Short Q&A)
           </button>
           <button
             onClick={() => handlePartChange("part2_cuecard")}
-            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`py-1 transition-colors cursor-pointer ${
               selectedPart === "part2_cuecard"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             Part 2 (Cue Card)
           </button>
           <button
             onClick={() => handlePartChange("part3")}
-            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+            className={`py-1 transition-colors cursor-pointer ${
               selectedPart === "part3"
-                ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             Part 3 (Discussion)
@@ -469,18 +469,18 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
         </div>
       </div>
 
-      {/* Section 2: Cue Card & Question Box with Question Bank Selector */}
-      <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-4">
-        {/* Top Controls: Bank Selector Header & Quick Actions */}
+      {/* Section 2: Cue Card & Question Section (Horizontal line, pure typography) */}
+      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 space-y-4">
+        {/* Top Controls: Bank Header & Quick Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 font-medium">
-              IOT Question Bank
+            <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200">
+              Question Bank
             </span>
-            <span className="px-1.5 py-0.2 rounded-full font-mono text-[10px] bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-              {currentPromptIndex >= 0
+            <span className="text-xs text-neutral-400">
+              ({currentPromptIndex >= 0
                 ? `${currentPromptIndex + 1} of ${currentPartPrompts.length}`
-                : `${currentPartPrompts.length} questions`}
+                : `${currentPartPrompts.length} questions`})
             </span>
           </div>
 
@@ -545,7 +545,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
         {/* Custom Question Input */}
         {useCustomPrompt && (
           <div className="space-y-1">
-            <label className="text-[11px] font-mono text-neutral-500 uppercase">
+            <label className="text-xs text-neutral-500">
               Custom Speaking Question or Topic:
             </label>
             <textarea
@@ -553,30 +553,31 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               onChange={(e) => setCustomQuestion(e.target.value)}
               placeholder="Paste or type your own IELTS speaking prompt or cue card here..."
               rows={2}
-              className="w-full p-2.5 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
+              className="w-full p-2.5 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-normal"
             />
           </div>
         )}
 
-        {/* Question Topic & Text Display */}
+        {/* Question Topic & Text Display: Clean typography */}
         <div className="space-y-2 pt-1">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-medium text-neutral-800 dark:text-neutral-200">
               {useCustomPrompt ? "Custom Topic" : selectedPrompt.topic}
             </span>
-            <span className="text-[11px] text-neutral-400 font-mono">
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
+            <span className="text-neutral-400">
               Suggested: {selectedPart === "part2_cuecard" ? "2 mins" : selectedPart === "part1" ? "30 secs" : "1 min"}
             </span>
           </div>
 
-          <h3 className="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+          <h3 className="text-base sm:text-lg font-serif font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
             {useCustomPrompt
               ? customQuestion.trim() || "Your Custom Speaking Topic"
               : selectedPrompt.question}
           </h3>
 
           {!useCustomPrompt && selectedPrompt.bulletPoints && selectedPrompt.bulletPoints.length > 0 && (
-            <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300 mt-2">
+            <div className="pt-2 text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300">
               <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-1">
                 You should say:
               </span>
@@ -685,12 +686,12 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
         {/* Real-time Spoken Transcript Box */}
         <div className="w-full max-w-xl text-left space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800/80">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-mono text-[11px] uppercase tracking-wider text-neutral-500 font-semibold flex items-center gap-1.5">
+            <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium flex items-center gap-1.5">
               <Volume2 className="w-3.5 h-3.5 text-neutral-400" />
-              Candidate Spoken Transcript
+              Candidate spoken transcript
             </span>
             {isRecording && (
-              <span className="flex items-center gap-1.5 text-red-500 dark:text-rose-400/80 text-[11px] font-mono animate-pulse font-medium">
+              <span className="flex items-center gap-1.5 text-red-500 dark:text-rose-400/80 text-xs animate-pulse font-medium">
                 <span className="w-2 h-2 rounded-full bg-red-500 dark:bg-rose-400/80" />
                 {isListeningSpeech ? "Listening & transcribing..." : "Recording active..."}
               </span>
@@ -792,15 +793,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
       {/* Section 4: Results View */}
       {analysisResult && (
         <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-6 animate-in fade-in duration-200">
-          <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
+              <div className="text-xs text-neutral-500 font-medium">
                 Estimated Speaking Score
               </div>
-              <div className="text-5xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+              <div className="text-5xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
                 Band {analysisResult.overallBand.toFixed(1)}
               </div>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 max-w-md">
+              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-md leading-relaxed">
                 {analysisResult.examinerSummary}
               </p>
             </div>
@@ -818,15 +819,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               />
             </div>
 
-            <div className="flex flex-col gap-2 w-full md:w-auto">
+            <div className="flex flex-col gap-2.5 w-full md:w-auto">
               <button
                 onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-medium text-xs hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer shadow-xs"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-medium text-xs hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer shadow-xs"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Export Share Card
               </button>
-              <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-[11px] text-neutral-600 dark:text-neutral-400">
+              <div className="p-3 border-l-2 border-neutral-900 dark:border-neutral-100 bg-neutral-50/60 dark:bg-neutral-900/30 text-xs text-neutral-600 dark:text-neutral-400">
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-0.5">Primary Bottleneck:</span>
                 {analysisResult.primaryBottleneck}
               </div>
@@ -834,21 +835,21 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           </div>
 
           {/* Prominent Transcribed Candidate Speech Card */}
-          <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2.5">
+          <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-2.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Volume2 className="w-4 h-4 text-neutral-400" />
-                <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 font-semibold">
+                <span className="text-xs text-neutral-700 dark:text-neutral-300 font-medium">
                   Transcribed Candidate Speech
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono text-neutral-500">
+                <span className="text-xs text-neutral-500">
                   {analysisResult.speechDurationSeconds}s spoken • {analysisResult.wordsPerMinute} WPM
                 </span>
                 {analysisResult.overallBand <= 3.0 && (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-red-500/10 text-red-600 dark:text-rose-300/80 dark:bg-rose-950/40 border border-red-500/20 dark:border-rose-900/30">
-                    Insufficient Language Sample (Band {analysisResult.overallBand.toFixed(1)})
+                  <span className="text-xs font-medium text-red-600 dark:text-rose-400">
+                    • Insufficient Language Sample (Band {analysisResult.overallBand.toFixed(1)})
                   </span>
                 )}
               </div>
@@ -985,27 +986,27 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           {activeTab === "spoken_idioms" && (
             <div className="space-y-3">
               {analysisResult.idiomAndPhrasalVerbUpgrades && analysisResult.idiomAndPhrasalVerbUpgrades.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {analysisResult.idiomAndPhrasalVerbUpgrades.map((item, idx) => (
                     <div
                       key={idx}
-                      className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2"
+                      className="py-3 border-b border-neutral-200 dark:border-neutral-800 space-y-1.5"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-neutral-400 line-through">{item.originalPhrase}</span>
-                        <span className="font-mono text-[10px] uppercase text-neutral-500">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-neutral-400 line-through">{item.originalPhrase}</span>
+                        <span className="text-neutral-500 font-medium">
                           {item.type.replace("_", " ")}
                         </span>
                       </div>
                       <div className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                         {item.suggestedUpgrade}
                       </div>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.explanation}</p>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">{item.explanation}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="p-6 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center space-y-1">
+                <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 text-center space-y-1">
                   <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                     No Spoken Idiom Upgrades
                   </div>
@@ -1021,29 +1022,29 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
           {activeTab === "speech_metrics" && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center">
-                  <div className="text-[11px] font-mono text-neutral-500">WORDS PER MINUTE</div>
-                  <div className="text-3xl font-semibold mt-1">{analysisResult.wordsPerMinute}</div>
-                  <div className="text-[10px] text-neutral-400 mt-0.5">Target: 120-150 WPM</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-4 border-y border-neutral-200 dark:border-neutral-800 text-center sm:text-left">
+                <div>
+                  <div className="text-xs text-neutral-500 font-medium">Words per minute</div>
+                  <div className="text-3xl font-serif font-bold mt-1 text-neutral-900 dark:text-neutral-100">{analysisResult.wordsPerMinute}</div>
+                  <div className="text-xs text-neutral-400 mt-0.5">Target: 120–150 WPM</div>
                 </div>
 
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center">
-                  <div className="text-[11px] font-mono text-neutral-500">FILLER WORDS</div>
-                  <div className="text-3xl font-semibold mt-1">{analysisResult.fillerWords.totalCount}</div>
-                  <div className="text-[10px] text-neutral-400 mt-0.5">"um, uh, like"</div>
+                <div>
+                  <div className="text-xs text-neutral-500 font-medium">Filler words</div>
+                  <div className="text-3xl font-serif font-bold mt-1 text-neutral-900 dark:text-neutral-100">{analysisResult.fillerWords.totalCount}</div>
+                  <div className="text-xs text-neutral-400 mt-0.5">"um, uh, like"</div>
                 </div>
 
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center">
-                  <div className="text-[11px] font-mono text-neutral-500">DURATION</div>
-                  <div className="text-3xl font-semibold mt-1">{analysisResult.speechDurationSeconds}s</div>
-                  <div className="text-[10px] text-neutral-400 mt-0.5">Spoken time</div>
+                <div>
+                  <div className="text-xs text-neutral-500 font-medium">Spoken duration</div>
+                  <div className="text-3xl font-serif font-bold mt-1 text-neutral-900 dark:text-neutral-100">{analysisResult.speechDurationSeconds}s</div>
+                  <div className="text-xs text-neutral-400 mt-0.5">Continuous speech</div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
-                <span className="text-xs font-mono uppercase text-neutral-500">Transcribed Answer</span>
-                <p className="text-xs text-neutral-700 dark:text-neutral-300 font-mono italic">
+              <div className="pt-2 space-y-1">
+                <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Transcribed Answer</span>
+                <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 italic leading-relaxed">
                   "{analysisResult.transcript}"
                 </p>
               </div>
@@ -1051,11 +1052,11 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           )}
 
           {activeTab === "model_answer" && (
-            <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif italic whitespace-pre-line">
-              <span className="font-sans font-mono text-[11px] uppercase text-neutral-400 not-italic block mb-2">
+            <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif italic whitespace-pre-line space-y-2">
+              <span className="font-sans text-xs font-medium text-neutral-500 not-italic block">
                 Band 9 Model Transcript
               </span>
-              "{analysisResult.sampleBand9Response}"
+              <p>"{analysisResult.sampleBand9Response}"</p>
             </div>
           )}
         </div>

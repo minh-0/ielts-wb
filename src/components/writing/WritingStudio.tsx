@@ -615,34 +615,34 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       {/* Section 1: Task Switcher & Prompt (Clean minimalist toolbar) */}
       <div className="space-y-3 pb-5 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          {/* Task Type Switcher: Minimalist tabs with thin outline */}
-          <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs">
+          {/* Task Type Switcher: Minimalist horizontal tabs (no box) */}
+          <div className="flex items-center gap-5 text-xs">
             <button
               onClick={() => handleTaskTypeChange("task2")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
+              className={`py-1 transition-colors cursor-pointer ${
                 selectedTaskType === "task2"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               Task 2
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_academic")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
+              className={`py-1 transition-colors cursor-pointer ${
                 selectedTaskType === "task1_academic"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               Task 1 Academic
             </button>
             <button
               onClick={() => handleTaskTypeChange("task1_general")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors cursor-pointer ${
+              className={`py-1 transition-colors cursor-pointer ${
                 selectedTaskType === "task1_general"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               Task 1 General
@@ -751,23 +751,27 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               )}
             </div>
           ) : (
-            <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 sm:p-5 shadow-xs space-y-3.5">
-              {/* Card Header: Badges & Action Buttons */}
+            <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 space-y-3">
+              {/* Question Header: Text metadata with dot separators & Action Buttons */}
               <div className="flex flex-wrap items-center justify-between gap-2.5">
-                <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-                  <span className="px-2 py-0.5 rounded-md font-mono text-[10px] uppercase font-semibold tracking-wider bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200/80 dark:border-neutral-700/80">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">
                     {selectedPrompt.category}
                   </span>
                   {selectedPrompt.essayType && (
-                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] uppercase font-semibold tracking-wider bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
-                      {formatEssayType(selectedPrompt.essayType)}
-                    </span>
+                    <>
+                      <span className="text-neutral-300 dark:text-neutral-700">•</span>
+                      <span>{formatEssayType(selectedPrompt.essayType)}</span>
+                    </>
                   )}
                   {selectedPrompt.modelEssay && (
-                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] uppercase font-semibold tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                      <Sparkles className="w-2.5 h-2.5" />
-                      Band 9.0 Model
-                    </span>
+                    <>
+                      <span className="text-neutral-300 dark:text-neutral-700">•</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                        <Sparkles className="w-3 h-3" />
+                        Band 9.0 Model
+                      </span>
+                    </>
                   )}
                 </div>
 
@@ -776,16 +780,16 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   <button
                     type="button"
                     onClick={handleRandomQuestion}
-                    className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/60 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shadow-2xs"
+                    className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
                     title="Pick a random question"
                     aria-label="Pick a random question"
                   >
-                    <Shuffle className="w-3.5 h-3.5 text-neutral-500" />
+                    <Shuffle className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsQuestionPickerOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 text-xs font-semibold transition-all cursor-pointer shadow-xs"
                     title="Browse question bank"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
@@ -794,17 +798,17 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </div>
               </div>
 
-              {/* Title & Prompt Text */}
+              {/* Title & Prompt Text: Pure typography, no nested card boxes */}
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+                <h3 className="text-base sm:text-lg font-serif font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
                   {selectedPrompt.title}
                 </h3>
-                <div className="p-3.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-sans">
+                <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-sans">
                   {selectedPrompt.prompt}
-                </div>
+                </p>
                 {selectedPrompt.imageUrl && (
-                  <div className="pt-1">
-                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center">
+                  <div className="pt-2">
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center max-w-2xl">
                       <img
                         src={selectedPrompt.imageUrl}
                         alt={selectedPrompt.title}
@@ -1029,13 +1033,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       {analysisResult && (
         <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-8 animate-in fade-in duration-200">
           {/* Header Score Overview: Expansive 3-column dashboard */}
-          <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Panel 1: Band Score & Summary */}
-            <div className="lg:col-span-5 space-y-2.5 text-center lg:text-left">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
-                Overall Band
+            <div className="lg:col-span-5 space-y-2 text-center lg:text-left">
+              <div className="text-xs text-neutral-500 font-medium">
+                Overall Band Score
               </div>
-              <div className="text-5xl sm:text-6xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+              <div className="text-5xl sm:text-6xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
                 Band {analysisResult.overallBand.toFixed(1)}
               </div>
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed pt-1 max-w-lg">
@@ -1060,14 +1064,14 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             {/* Panel 3: Bottleneck & Share Card Action */}
             <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
               <div
-                className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1 ${
+                className={`p-4 border-l-2 text-xs leading-relaxed space-y-1 ${
                   analysisResult.criteria.taskAchievement.score <= 3.0
-                    ? "border-red-500/50 bg-red-500/5 dark:border-rose-500/30 dark:bg-rose-950/20"
-                    : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950"
+                    ? "border-red-500 bg-red-500/5 dark:bg-rose-950/20"
+                    : "border-neutral-900 dark:border-neutral-100 bg-neutral-50/60 dark:bg-neutral-900/30"
                 }`}
               >
                 <span
-                  className={`font-semibold block text-[11px] uppercase tracking-wide ${
+                  className={`font-semibold block text-xs ${
                     analysisResult.criteria.taskAchievement.score <= 3.0
                       ? "text-red-600 dark:text-rose-400"
                       : "text-neutral-900 dark:text-neutral-100"
@@ -1098,24 +1102,24 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             </div>
           </div>
 
-          {/* Tab Navigation for Detailed Feedback */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-neutral-200 dark:border-neutral-800 pb-3">
+          {/* Tab Navigation for Detailed Feedback: Minimal horizontal underline tabs (no box) */}
+          <div className="flex items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 pb-2">
             <button
               onClick={() => setActiveTab("criteria")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              className={`py-1 text-xs transition-colors cursor-pointer ${
                 activeTab === "criteria"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               Criteria Breakdown
             </button>
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+              className={`py-1 text-xs transition-colors cursor-pointer ${
                 activeTab === "model_answer"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               Model Essay
@@ -1263,11 +1267,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </div>
 
                 {/* Examiner commentary footer */}
-                <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/60 dark:bg-neutral-900/30 text-xs text-neutral-600 dark:text-neutral-400 space-y-1 font-sans">
-                  <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px] uppercase tracking-wider font-mono">
+                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 space-y-1 font-sans">
+                  <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-xs">
                     Examiner Commentary
                   </div>
-                  <p>
+                  <p className="leading-relaxed">
                     This response satisfies all Band 9 criteria: it addresses all parts of the task fully, demonstrates a fully developed position with well-supported ideas, uses cohesion in such a way that it attracts no attention, and utilizes a wide range of vocabulary and syntactic structures with full flexibility and precision.
                   </p>
                 </div>
@@ -1307,19 +1311,20 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col w-full h-[94vh] max-w-7xl overflow-hidden animate-in zoom-in-95 duration-150">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/50 shrink-0">
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] font-mono uppercase tracking-wider font-semibold px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                   {selectedTaskType === "task2"
                     ? "Task 2 • Essay"
                     : selectedTaskType === "task1_academic"
                     ? "Task 1 • Academic Report"
                     : "Task 1 • General Letter"}
                 </span>
+                <span className="text-neutral-300 dark:text-neutral-700">•</span>
                 <span
-                  className={`font-mono px-2 py-0.5 rounded text-[11px] font-medium border ${
+                  className={`text-xs font-medium ${
                     isWordCountMet
-                      ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5"
-                      : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-neutral-500 dark:text-neutral-400"
                   }`}
                 >
                   {wordCount} / {targetWords} words
@@ -1394,7 +1399,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 <div className="w-full md:w-[420px] lg:w-[460px] xl:w-[500px] shrink-0 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 overflow-y-auto space-y-4 bg-neutral-50/50 dark:bg-neutral-900/20">
                   {/* Prompt Card */}
                   <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                    <span className="text-xs text-neutral-500 font-medium">
                       Task 1 Prompt
                     </span>
                     <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
@@ -1410,7 +1415,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   {/* Reference Image / Graph */}
                   <div className="space-y-2 pt-2 border-t border-neutral-200 dark:border-neutral-800">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
+                      <span className="text-xs text-neutral-500 font-medium">
                         Reference Graph / Image
                       </span>
                       {customImage ? (
@@ -1490,11 +1495,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 {/* Top Section: Question Prompt */}
                 <div className="shrink-0 border-b border-neutral-200 dark:border-neutral-800 p-4 sm:p-6 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-1.5 max-h-[30vh] overflow-y-auto">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+                    <span className="text-xs text-neutral-500 font-medium">
                       Task 2 Essay Question
                     </span>
                     {!useCustomPrompt && (
-                      <span className="text-[10px] font-mono text-neutral-400">• {selectedPrompt.category}</span>
+                      <span className="text-xs text-neutral-400">• {selectedPrompt.category}</span>
                     )}
                   </div>
                   <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">

@@ -97,8 +97,8 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
             <div>
               <div className="text-xs font-semibold tracking-tight text-black dark:text-white flex items-center gap-1.5">
                 Oxford Learner's Dictionaries
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 uppercase">
-                  Built-in
+                <span className="text-xs text-neutral-400 font-normal">
+                  • Built-in
                 </span>
               </div>
             </div>
@@ -185,9 +185,9 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
           </div>
         </div>
 
-        {/* Definition Box */}
-        <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 font-semibold">
+        {/* Definition */}
+        <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-1">
+          <div className="text-xs text-neutral-500 font-medium">
             Definition
           </div>
           <p className="text-sm text-neutral-900 dark:text-neutral-100 leading-relaxed font-normal">
@@ -196,27 +196,27 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
         </div>
 
         {/* IELTS Example Sentence */}
-        <div className="space-y-1.5">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 font-semibold">
+        <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-1.5">
+          <div className="text-xs text-neutral-500 font-medium">
             Authentic Example
           </div>
-          <div className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/30 dark:bg-neutral-900/20 text-xs text-neutral-800 dark:text-neutral-200 italic leading-relaxed">
+          <div className="pl-3 border-l-2 border-neutral-300 dark:border-neutral-700 text-xs text-neutral-800 dark:text-neutral-200 italic leading-relaxed">
             "{entry.example}"
           </div>
         </div>
 
         {/* Academic Collocations */}
         {entry.collocations && entry.collocations.length > 0 && (
-          <div className="space-y-1.5">
-            <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 font-semibold flex items-center gap-1.5">
+          <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-2">
+            <div className="text-xs text-neutral-500 font-medium flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-neutral-400" />
-              High-Scoring Collocations
+              High-scoring collocations
             </div>
             <div className="flex flex-wrap gap-1.5">
               {entry.collocations.map((c, i) => (
                 <span
                   key={i}
-                  className="px-2.5 py-1 rounded-md text-xs font-medium border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200"
+                  className="px-2 py-0.5 rounded text-xs text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-800"
                 >
                   {c}
                 </span>

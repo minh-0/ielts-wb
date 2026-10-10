@@ -188,7 +188,7 @@ export function QuestionPickerModal({
             {/* Popout Dropdown Menu */}
             {isTopicOpen && (
               <div className="absolute right-0 sm:left-0 sm:right-auto top-full mt-1.5 w-60 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100 max-h-72 overflow-y-auto">
-                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
+                <div className="px-3 py-1.5 text-xs font-medium text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
                   Select Topic
                 </div>
                 {categories.map((cat) => {
@@ -256,7 +256,7 @@ export function QuestionPickerModal({
               {/* Popout Format Dropdown Menu */}
               {isTypeOpen && (
                 <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
-                  <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
+                  <div className="px-3 py-1.5 text-xs font-medium text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
                     Select Format
                   </div>
                   {essayTypes.map((type) => {
@@ -314,9 +314,9 @@ export function QuestionPickerModal({
         {hasActiveFilters && (
           <div className="flex items-center justify-between px-4 py-1.5 bg-neutral-50/80 dark:bg-neutral-900/40 border-b border-neutral-100 dark:border-neutral-800/80 text-[11px] text-neutral-500 shrink-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] uppercase font-mono text-neutral-400">Filtering:</span>
+              <span className="text-xs text-neutral-400 font-medium">Filtering:</span>
               {selectedCategory !== "All" && (
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-[10px] font-medium">
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-200/70 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs font-medium">
                   {selectedCategory}
                   <button
                     type="button"
@@ -385,15 +385,15 @@ export function QuestionPickerModal({
                     onSelectPrompt(p);
                     onClose();
                   }}
-                  className={`p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer group select-none ${
+                  className={`p-3 sm:p-3.5 border-b border-neutral-100 dark:border-neutral-800/80 transition-all cursor-pointer group select-none ${
                     isSelected
-                      ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-2xs"
-                      : "border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-50/60 dark:hover:bg-neutral-900/30"
+                      ? "bg-neutral-50 dark:bg-neutral-900/60"
+                      : "hover:bg-neutral-50/70 dark:hover:bg-neutral-900/30"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     {p.imageUrl && (
-                      <div className="w-16 h-12 sm:w-20 sm:h-14 shrink-0 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-950 p-1 flex items-center justify-center self-center sm:self-start">
+                      <div className="w-16 h-12 sm:w-20 sm:h-14 shrink-0 rounded border border-neutral-200 dark:border-neutral-800 bg-neutral-950 p-1 flex items-center justify-center self-center sm:self-start">
                         <img
                           src={p.imageUrl}
                           alt={p.title}
@@ -410,14 +410,13 @@ export function QuestionPickerModal({
                         <h4 className="text-xs sm:text-[13px] font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-black dark:group-hover:text-white transition-colors">
                           {p.title}
                         </h4>
-                        <div className="flex items-center gap-1.5 text-[10px]">
-                          <span className="font-mono px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                            {p.category}
-                          </span>
+                        <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400">
+                          <span>{p.category}</span>
                           {p.essayType && (
-                            <span className="px-1.5 py-0.2 rounded font-mono text-[9px] uppercase tracking-wider bg-purple-500/10 text-purple-700 dark:text-purple-300">
-                              {formatEssayType(p.essayType)}
-                            </span>
+                            <>
+                              <span className="text-neutral-300 dark:text-neutral-700">•</span>
+                              <span>{formatEssayType(p.essayType)}</span>
+                            </>
                           )}
                         </div>
                       </div>

@@ -125,10 +125,10 @@ export function RadarChart({ scores, size = 200 }: RadarChartProps) {
               y={ly}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="fill-neutral-600 dark:fill-neutral-300 font-medium text-[9px] uppercase tracking-wider"
+              className="fill-neutral-600 dark:fill-neutral-300 font-sans text-[10px] font-medium"
             >
               <tspan x={lx} dy="-0.2em">{item.label}</tspan>
-              <tspan x={lx} dy="1.1em" className="fill-black dark:fill-white font-mono font-bold text-[10px]">
+              <tspan x={lx} dy="1.15em" className="fill-neutral-900 dark:fill-neutral-100 font-semibold text-[11px]">
                 {item.score.toFixed(1)}
               </tspan>
             </text>
