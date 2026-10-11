@@ -306,7 +306,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               ? "Advanced C1/C2 Academic Vocabulary"
               : "Strong Collocations"
           })`,
-          feedback: `Elevated with ${count} higher-rated academic upgrades. Lexical precision is substantially boosted.`,
+          feedback: `Elevated with ${count} academic alternative word choices. Lexical precision is substantially boosted.`,
         },
         grammaticalRange: {
           ...base.criteria.grammaticalRange,
@@ -323,11 +323,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           })`,
         },
       },
-      examinerSummary: `Upgraded revision: Incorporating ${count} examiner-recommended higher-rated phrases and complex structures has elevated your score to Band ${newOverall.toFixed(1)}.`,
+      examinerSummary: `Upgraded revision: Incorporating ${count} examiner-recommended alternative words and complex structures has elevated your score to Band ${newOverall.toFixed(1)}.`,
       primaryBottleneck:
         count >= 4
           ? "All major lexical and syntactic upgrades incorporated. Ready for examiner submission."
-          : `${count} upgrade(s) applied. Review remaining items in the inspector to push towards Band 8.5+.`,
+          : `${count} alternative word(s) applied. Review remaining items in the inspector to push towards Band 8.5+.`,
     };
   };
 
@@ -723,7 +723,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 max-w-[200px] truncate">
                         {customImageName || "graph.png"}
                       </span>
-                      <span className="text-[10px] font-mono text-neutral-400">
+                      <span className="text-[10px] text-neutral-400">
                         Attached
                       </span>
                     </div>
@@ -762,15 +762,6 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     <>
                       <span className="text-neutral-300 dark:text-neutral-700">•</span>
                       <span>{formatEssayType(selectedPrompt.essayType)}</span>
-                    </>
-                  )}
-                  {selectedPrompt.modelEssay && (
-                    <>
-                      <span className="text-neutral-300 dark:text-neutral-700">•</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        Band 9.0 Model
-                      </span>
                     </>
                   )}
                 </div>
@@ -827,131 +818,146 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN: Paragraph Box (pushed to left, col-span-7) */}
         <div className="lg:col-span-7 space-y-3">
-          {/* Editor / Review Toolbar */}
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs pb-1">
-            <div className="flex items-center gap-2">
-              <span
-                className={`font-mono px-2 py-0.5 rounded-md border text-[11px] font-medium ${
-                  isWordCountMet
-                    ? "border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5"
-                    : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
-                }`}
-              >
-                {wordCount} / {targetWords} words
-              </span>
+          {/* Editor / Review Toolbar: Minimalist row with horizontal divider (no chunky boxes) */}
+          <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 text-xs pb-2.5 border-b border-neutral-200 dark:border-neutral-800">
+            {/* Left side: Word count, View tabs, Alternative words action, and Text actions */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              {/* Word count */}
+              <div className="text-xs text-neutral-500 dark:text-neutral-400">
+                <span className={isWordCountMet ? "font-semibold text-emerald-600 dark:text-emerald-400" : "font-semibold text-neutral-900 dark:text-neutral-100"}>
+                  {wordCount}
+                </span>
+                <span className="text-neutral-400 dark:text-neutral-600"> / {targetWords} words</span>
+              </div>
 
-              {/* Quick Action: Visible Paste Button */}
-              <button
-                type="button"
-                onClick={handlePasteFromClipboard}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs"
-                title="Paste paragraph from clipboard"
-              >
-                <ClipboardPaste className="w-3.5 h-3.5 text-neutral-500" />
-                <span>Paste</span>
-              </button>
-
-              {/* Quick Action: Save Button */}
-              <button
-                type="button"
-                onClick={handleSaveEssay}
-                disabled={isSaving || !essayContent.trim()}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs disabled:opacity-40"
-                title="Save essay and estimated band score online"
-              >
-                {isSaveSuccess ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    <span className="text-emerald-600 dark:text-emerald-400">Saved</span>
-                  </>
-                ) : (
-                  <>
-                    <Bookmark className="w-3.5 h-3.5 text-neutral-500" />
-                    <span>{isSaving ? "Saving..." : "Save"}</span>
-                  </>
-                )}
-              </button>
-
-              {/* Quick Action: Enlarge to Focused Popup */}
-              <button
-                type="button"
-                onClick={() => setIsWritingModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-[11px] font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs"
-                title="Enlarge writing popup (Esc to exit)"
-              >
-                <Maximize2 className="w-3.5 h-3.5 text-neutral-500" />
-                <span>Enlarge</span>
-              </button>
-
-              {/* Toggle View Mode when analysis exists */}
+              {/* View Mode when analysis exists: Minimal text underline tabs */}
               {analysisResult && (
-                <div className="flex items-center gap-2">
-                  <div className="inline-flex items-center p-0.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-[11px]">
+                <>
+                  <span className="text-neutral-200 dark:text-neutral-800 hidden sm:inline">|</span>
+                  <div className="flex items-center gap-3 text-xs">
                     <button
+                      type="button"
                       onClick={() => setViewMode("annotated")}
-                      className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
+                      className={`py-0.5 transition-colors cursor-pointer flex items-center gap-1 ${
                         viewMode === "annotated"
-                          ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
                       }`}
                     >
-                      <Highlighter className="w-3 h-3" />
-                      Annotated
+                      <Highlighter className="w-3.5 h-3.5" />
+                      <span>Annotated</span>
                     </button>
                     <button
+                      type="button"
                       onClick={() => setViewMode("edit")}
-                      className={`px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors ${
+                      className={`py-0.5 transition-colors cursor-pointer flex items-center gap-1 ${
                         viewMode === "edit"
-                          ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
                       }`}
                     >
-                      <Edit3 className="w-3 h-3" />
-                      Edit
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit</span>
                     </button>
                   </div>
+                </>
+              )}
 
-                  {/* Apply All / Revert All Upgrade Toggle */}
+              {/* Alternative words action */}
+              {analysisResult && (
+                <>
+                  <span className="text-neutral-200 dark:text-neutral-800 hidden sm:inline">|</span>
                   {replacedItems.length > 0 ? (
                     <button
+                      type="button"
                       onClick={handleRevertAllUpgrades}
-                      className="px-2 py-0.5 rounded text-[11px] border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 cursor-pointer transition-colors"
-                      title="Revert all replacements back to original draft"
+                      className="inline-flex items-center gap-1 text-xs text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer underline underline-offset-2"
+                      title="Revert all alternative words back to original draft"
                     >
                       <RotateCcw className="w-3 h-3" />
-                      Revert All ({replacedItems.length})
+                      <span>Revert alternative words ({replacedItems.length})</span>
                     </button>
                   ) : (
                     <button
+                      type="button"
                       onClick={handleApplyAllUpgrades}
-                      className="px-2 py-0.5 rounded text-[11px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-500/20 flex items-center gap-1 cursor-pointer font-medium transition-colors"
-                      title="Apply all recommended higher-rated words to preview elevated essay"
+                      className="inline-flex items-center gap-1 text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 font-medium transition-colors cursor-pointer underline underline-offset-2"
+                      title="Apply recommended alternative words"
                     >
                       <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                      Apply All Upgrades
+                      <span>Apply alternative words</span>
                     </button>
                   )}
-                </div>
+                </>
               )}
+
+              {analysisResult && (
+                <span className="text-neutral-200 dark:text-neutral-800 hidden sm:inline">|</span>
+              )}
+
+              {/* Quick Text Actions: Minimal text buttons */}
+              <div className="flex items-center gap-3 text-xs">
+                <button
+                  type="button"
+                  onClick={handlePasteFromClipboard}
+                  className="inline-flex items-center gap-1 text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
+                  title="Paste paragraph from clipboard"
+                >
+                  <ClipboardPaste className="w-3.5 h-3.5" />
+                  <span>Paste</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSaveEssay}
+                  disabled={isSaving || !essayContent.trim()}
+                  className="inline-flex items-center gap-1 text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer disabled:opacity-40"
+                  title="Save essay"
+                >
+                  {isSaveSuccess ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-500" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">Saved</span>
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="w-3.5 h-3.5" />
+                      <span>{isSaving ? "Saving..." : "Save"}</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsWritingModalOpen(true)}
+                  className="inline-flex items-center gap-1 text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
+                  title="Enlarge writing view"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>Enlarge</span>
+                </button>
+              </div>
             </div>
 
-            {/* Timer */}
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-neutral-700 dark:text-neutral-300 font-medium">
+            {/* Right side: Timer */}
+            <div className="flex items-center gap-2.5 text-xs">
+              <span className="text-neutral-700 dark:text-neutral-300 font-medium">
                 {formatTimer(secondsRemaining)}
               </span>
               <button
+                type="button"
                 onClick={() => setTimerRunning(!timerRunning)}
-                className="px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 text-[11px] text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                className="text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer underline underline-offset-2"
               >
-                {timerRunning ? "Pause" : "Timer"}
+                {timerRunning ? "Pause" : "Start timer"}
               </button>
               <button
+                type="button"
                 onClick={() => {
                   setSecondsRemaining(selectedTaskType === "task2" ? 40 * 60 : 20 * 60);
                   setTimerRunning(false);
                 }}
-                className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer p-0.5"
+                className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer p-0.5 transition-colors"
                 title="Reset timer"
               >
                 <RefreshCw className="w-3 h-3" />
@@ -965,6 +971,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               content={essayContent}
               errors={analysisResult.sentenceFeedbacks}
               suggestions={analysisResult.vocabularySuggestions}
+              effectiveFeatures={analysisResult.effectiveFeatures}
               replacedItems={replacedItems}
               selectedId={selectedAnnotationId}
               onSelect={setSelectedAnnotationId}
@@ -979,14 +986,14 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               onChange={(e) => setEssayContent(e.target.value)}
               placeholder="Start writing..."
               rows={16}
-              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px]"
+              className="w-full p-6 text-[15px] sm:text-base leading-relaxed rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-sans min-h-[420px]"
             />
           )}
 
           {/* Submit Action */}
           <div className={`flex flex-col sm:flex-row items-start sm:items-center ${apiKey ? "justify-between" : "justify-end"} gap-3 pt-1`}>
             {apiKey && (
-              <span className="text-xs text-neutral-500 font-mono">
+              <span className="text-xs text-neutral-500">
                 Live Gemini evaluation active
               </span>
             )}
@@ -1016,6 +1023,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           <DiagnosticInspector
             errors={analysisResult?.sentenceFeedbacks || []}
             suggestions={analysisResult?.vocabularySuggestions || []}
+            effectiveFeatures={analysisResult?.effectiveFeatures || []}
             replacedItems={replacedItems}
             selectedId={selectedAnnotationId}
             onSelect={setSelectedAnnotationId}
@@ -1126,14 +1134,14 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             </button>
           </div>
 
-          {/* TAB 1: Criteria (Spacious 4-column layout on wide screens) */}
+          {/* TAB 1: Criteria (Clean column layout with hairline borders) */}
           {activeTab === "criteria" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
+              <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                     <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
-                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
                     </span>
                   </div>
@@ -1141,7 +1149,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     {analysisResult.criteria.taskAchievement.feedback}
                   </p>
                 </div>
-                <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-100 dark:border-neutral-800/80">
+                <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
                   <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
                   <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                     {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
@@ -1151,11 +1159,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
+              <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                     <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Coherence & Cohesion</span>
-                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
                     </span>
                   </div>
@@ -1164,17 +1172,17 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   </p>
                 </div>
                 {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
-                  <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-700 dark:text-amber-400">
+                  <div className="text-[11px] text-amber-700 dark:text-amber-400 border-l-2 border-amber-500 pl-2">
                     Overused linkers: {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
                   </div>
                 )}
               </div>
 
-              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
+              <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                     <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
-                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
                     </span>
                   </div>
@@ -1182,16 +1190,16 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     {analysisResult.criteria.lexicalResource.feedback}
                   </p>
                 </div>
-                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-100 dark:border-neutral-800/80">
+                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-200 dark:border-neutral-800">
                   <span className="text-[11px] text-neutral-400">Focus on C1/C2 collocations & precision</span>
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3 flex flex-col justify-between">
+              <div className="space-y-3 pb-4 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-neutral-100 dark:border-neutral-800/80">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                     <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range</span>
-                    <span className="font-mono text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
                     </span>
                   </div>
@@ -1199,7 +1207,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     {analysisResult.criteria.grammaticalRange.feedback}
                   </p>
                 </div>
-                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-100 dark:border-neutral-800/80">
+                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-200 dark:border-neutral-800">
                   <span className="text-[11px] text-neutral-400">Incorporate complex & non-finite clauses</span>
                 </div>
               </div>
@@ -1215,33 +1223,26 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             return (
               <div
                 data-paragraph="true"
-                className="ielts-paragraph p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5"
+                className="ielts-paragraph pt-3 space-y-5"
               >
-                {/* Header info */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-neutral-100 dark:border-neutral-800">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold flex items-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        Band 9.0 Official Model Essay
-                      </span>
-                      <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                        {modelWordCount} words
-                      </span>
-                    </div>
+                {/* Header info: Minimal typography with horizontal hairline divider */}
+                <div className="flex flex-wrap items-baseline justify-between gap-3 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+                  <div className="space-y-0.5">
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       Topic: <span className="text-neutral-800 dark:text-neutral-200 font-medium">{selectedPrompt.title}</span>
+                      <span className="text-neutral-300 dark:text-neutral-700 mx-1.5">•</span>
+                      <span>{modelWordCount} words</span>
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div>
                     <button
                       type="button"
                       onClick={() => {
                         navigator.clipboard?.writeText(modelEssayText);
                       }}
-                      className="px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-700 dark:text-neutral-300 transition-colors cursor-pointer"
+                      className="text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white underline underline-offset-2 transition-colors cursor-pointer"
                     >
-                      Copy Model Essay
+                      Copy model essay
                     </button>
                   </div>
                 </div>
@@ -1272,7 +1273,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     Examiner Commentary
                   </div>
                   <p className="leading-relaxed">
-                    This response satisfies all Band 9 criteria: it addresses all parts of the task fully, demonstrates a fully developed position with well-supported ideas, uses cohesion in such a way that it attracts no attention, and utilizes a wide range of vocabulary and syntactic structures with full flexibility and precision.
+                    This response satisfies all official descriptor criteria: it addresses all parts of the task fully, demonstrates a fully developed position with well-supported ideas, uses cohesion in such a way that it attracts no attention, and utilizes a wide range of vocabulary and syntactic structures with full flexibility and precision.
                   </p>
                 </div>
               </div>
@@ -1333,7 +1334,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
               {/* Timer in Modal Header */}
               <div className="hidden sm:flex items-center gap-2">
-                <span className="font-mono text-xs text-neutral-700 dark:text-neutral-300 font-medium">
+                <span className="text-xs text-neutral-700 dark:text-neutral-300 font-medium">
                   {formatTimer(secondsRemaining)}
                 </span>
                 <button
@@ -1447,11 +1448,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                           />
                         </div>
                         {customImageName ? (
-                          <div className="text-[10px] font-mono text-neutral-400 truncate">
+                          <div className="text-[10px] text-neutral-400 truncate">
                             {customImageName}
                           </div>
                         ) : !useCustomPrompt ? (
-                          <div className="text-[10px] font-mono text-neutral-400 truncate">
+                          <div className="text-[10px] text-neutral-400 truncate">
                             {selectedPrompt.title}
                           </div>
                         ) : null}

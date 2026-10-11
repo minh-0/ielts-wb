@@ -61,7 +61,7 @@ export function RadarChart({ scores, size = 200 }: RadarChartProps) {
                 y={center - (level / maxScore) * radius - 2}
                 textAnchor="middle"
                 fontSize={7}
-                className="fill-neutral-400 font-mono"
+                className="fill-neutral-400"
               >
                 {level}
               </text>

@@ -75,7 +75,7 @@ export function SavedEssaysModal({
             <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
               Saved Essays
             </h2>
-            <span className="px-2 py-0.5 rounded-full font-mono text-[11px] bg-neutral-200/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+            <span className="px-2 py-0.5 rounded-full text-[11px] bg-neutral-200/70 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
               {savedEssays.length}
             </span>
           </div>
@@ -152,7 +152,7 @@ export function SavedEssaysModal({
 
                 {/* Criteria breakdown if available */}
                 {essay.criteriaScores && (
-                  <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-neutral-100 dark:border-neutral-800/60 text-[11px] font-mono text-neutral-500">
+                  <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-neutral-100 dark:border-neutral-800/60 text-[11px] text-neutral-500">
                     {typeof essay.criteriaScores.taskAchievement === "number" && (
                       <span>TR: {essay.criteriaScores.taskAchievement.toFixed(1)}</span>
                     )}

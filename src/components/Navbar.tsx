@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { PenTool, Mic, BookOpen, BookA, Sparkles } from "lucide-react";
+import { PenTool, Mic, BookOpen, BookA, BookText, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
-  activeTab: "writing" | "speaking" | "rubric" | "vocabulary";
-  onTabChange: (tab: "writing" | "speaking" | "rubric" | "vocabulary") => void;
+  activeTab: "writing" | "speaking" | "rubric" | "vocabulary" | "collocations";
+  onTabChange: (tab: "writing" | "speaking" | "rubric" | "vocabulary" | "collocations") => void;
   onOpenApiKeyModal: () => void;
   hasApiKey: boolean;
 }
@@ -18,7 +18,7 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
         {/* Brand / Logo - High-contrast editorial serif */}
         <div className="flex items-center gap-2.5">
           <span className="font-serif font-semibold text-lg sm:text-xl tracking-tight text-neutral-900 dark:text-neutral-100">
-            IELTSlayer666
+            IELTSpro666
           </span>
           <span className="hidden sm:inline text-xs text-neutral-400 dark:text-neutral-500">
             Examiner Bench
@@ -63,6 +63,18 @@ export function Navbar({ activeTab, onTabChange, onOpenApiKeyModal, hasApiKey }:
             >
               <BookA className="w-3 h-3" />
               <span>Vocabulary</span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("collocations")}
+              className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
+                activeTab === "collocations"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+              }`}
+            >
+              <BookText className="w-3 h-3" />
+              <span>Collocations</span>
             </button>
 
             <button

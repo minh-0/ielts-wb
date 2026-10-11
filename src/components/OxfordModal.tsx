@@ -127,11 +127,11 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
             <h2 className="text-3xl font-semibold tracking-tight font-serif text-black dark:text-white">
               {entry.word}
             </h2>
-            <span className="text-xs font-mono italic text-neutral-500">
+            <span className="text-xs italic text-neutral-500">
               {entry.partOfSpeech}
             </span>
             <span
-              className={`px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold ${
+              className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
                 entry.cefrLevel === "C2"
                   ? "bg-purple-500/15 text-purple-700 dark:text-purple-300/80 dark:bg-purple-950/40 border border-purple-500/25 dark:border-purple-800/30"
                   : entry.cefrLevel === "C1"
@@ -145,7 +145,7 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
 
           {/* Pronunciation audio controls */}
           <div className="flex items-center gap-3 pt-1">
-            <span className="font-mono text-sm text-neutral-600 dark:text-neutral-400">
+            <span className="text-sm text-neutral-600 dark:text-neutral-400">
               {entry.phonetic}
             </span>
 

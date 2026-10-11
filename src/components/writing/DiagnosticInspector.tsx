@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { SentenceFeedback, VocabularySuggestion, ReplacedWordItem } from "@/types/ielts";
+import { SentenceFeedback, VocabularySuggestion, ReplacedWordItem, EffectiveFeature } from "@/types/ielts";
 import {
   ChevronDown,
   ArrowRight,
@@ -11,11 +11,13 @@ import {
   Sparkles,
   AlertTriangle,
   EyeOff,
+  ThumbsUp,
 } from "lucide-react";
 
 interface DiagnosticInspectorProps {
   errors: SentenceFeedback[];
   suggestions: VocabularySuggestion[];
+  effectiveFeatures?: EffectiveFeature[];
   replacedItems?: ReplacedWordItem[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
@@ -30,6 +32,7 @@ interface DiagnosticInspectorProps {
 export function DiagnosticInspector({
   errors,
   suggestions,
+  effectiveFeatures = [],
   replacedItems = [],
   selectedId,
   onSelect,
@@ -40,11 +43,12 @@ export function DiagnosticInspector({
   onUnignore,
   taskType,
 }: DiagnosticInspectorProps) {
-  const [filter, setFilter] = useState<"all" | "errors" | "suggestions" | "replaced" | "ignored">("all");
+  const [filter, setFilter] = useState<"all" | "errors" | "suggestions" | "effective" | "replaced" | "ignored">("all");
   const [expandedIds, setExpandedIds] = useState<{ [key: string]: boolean }>({});
   const cardRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const totalItems = errors.length + suggestions.length;
+  const effectiveCount = effectiveFeatures.length;
+  const totalItems = errors.length + suggestions.length + effectiveCount;
   const replacedCount = replacedItems.length;
 
   // Auto-expand and scroll to selected card when selectedId changes from paragraph click
@@ -91,9 +95,9 @@ export function DiagnosticInspector({
   // If no feedback items exist yet, show clean minimal empty state
   if (totalItems === 0) {
     return (
-      <div className="h-full p-4 sm:p-5 rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 flex flex-col justify-between">
+      <div className="h-full py-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-100 dark:border-neutral-800/80">
+          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800">
             <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
               Inspector
             </h3>
@@ -106,7 +110,7 @@ export function DiagnosticInspector({
           </div>
         </div>
 
-        <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/60 flex items-center justify-around text-[11px] text-neutral-400 dark:text-neutral-500">
+        <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-around text-[11px] text-neutral-400 dark:text-neutral-500">
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-rose-500/70" />
             Grammar
@@ -116,8 +120,12 @@ export function DiagnosticInspector({
             Vocabulary
           </span>
           <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-500/70" />
+            Good choices
+          </span>
+          <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70" />
-            Applied
+            Alternative words
           </span>
         </div>
       </div>
@@ -145,19 +153,28 @@ export function DiagnosticInspector({
   // Calculate items matching current filter
   let visibleErrors: SentenceFeedback[] = [];
   let visibleSuggestions: VocabularySuggestion[] = [];
+  let visibleEffective: EffectiveFeature[] = [];
 
   if (filter === "ignored") {
     visibleErrors = ignoredErrors;
     visibleSuggestions = ignoredSuggestions;
+    visibleEffective = [];
   } else if (filter === "all") {
     visibleErrors = activeErrors;
     visibleSuggestions = activeSuggestions;
+    visibleEffective = effectiveFeatures;
   } else if (filter === "errors") {
     visibleErrors = activeErrors;
     visibleSuggestions = [];
+    visibleEffective = [];
   } else if (filter === "suggestions") {
     visibleErrors = [];
     visibleSuggestions = activeSuggestions;
+    visibleEffective = [];
+  } else if (filter === "effective") {
+    visibleErrors = [];
+    visibleSuggestions = [];
+    visibleEffective = effectiveFeatures;
   } else if (filter === "replaced") {
     visibleErrors = activeErrors.filter((err) =>
       replacedItems.some(
@@ -169,12 +186,14 @@ export function DiagnosticInspector({
         (r) => r.originalText === sug.originalPhrase || r.replacedText === sug.suggestedUpgrade
       )
     );
+    visibleEffective = [];
   }
 
-  const visibleTotal = visibleErrors.length + visibleSuggestions.length;
+  const visibleTotal = visibleErrors.length + visibleSuggestions.length + visibleEffective.length;
   const allVisibleIds = [
     ...visibleErrors.map((e, idx) => e.id || `err-${idx + 1}`),
     ...visibleSuggestions.map((s, idx) => s.id || `sug-${idx + 1}`),
+    ...visibleEffective.map((eff, idx) => eff.id || `eff-${idx + 1}`),
   ];
   const allAreExpanded = allVisibleIds.length > 0 && allVisibleIds.every((id) => Boolean(expandedIds[id]));
 
@@ -200,7 +219,7 @@ export function DiagnosticInspector({
             <h3 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
               Inspector
               <span className="text-neutral-400 dark:text-neutral-500 font-normal">
-                ({filter === "ignored" ? ignoredCount : activeCount})
+                ({filter === "ignored" ? ignoredCount : activeCount + effectiveCount})
               </span>
             </h3>
           </div>
@@ -215,7 +234,7 @@ export function DiagnosticInspector({
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
-              All ({activeCount})
+              All ({activeCount + effectiveCount})
             </button>
             <button
               onClick={() => setFilter("errors")}
@@ -239,6 +258,19 @@ export function DiagnosticInspector({
               <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
               Vocab ({activeSuggestions.length})
             </button>
+            {effectiveCount > 0 && (
+              <button
+                onClick={() => setFilter("effective")}
+                className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
+                  filter === "effective"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+                }`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                Good choices ({effectiveCount})
+              </button>
+            )}
             {replacedCount > 0 && (
               <button
                 onClick={() => setFilter("replaced")}
@@ -249,7 +281,7 @@ export function DiagnosticInspector({
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Applied ({replacedCount})
+                Alternative words ({replacedCount})
               </button>
             )}
             {ignoredCount > 0 && (
@@ -297,7 +329,7 @@ export function DiagnosticInspector({
           const issueLabel = isItemIgnored
             ? "Ignored"
             : isReplaced
-            ? "Replaced in Essay"
+            ? "Alternative word in essay"
             : `${err.issueType.replace("_", " ")} Mistake`;
 
           return (
@@ -386,12 +418,12 @@ export function DiagnosticInspector({
                     </div>
                   </div>
 
-                  {/* Small explanation of that higher rated word */}
+                  {/* Examiner rationale */}
                   {err.higherRatedWordExplanation && (
                     <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
                       <div className="flex items-center gap-1 text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                         <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                        <span>Why this rates higher:</span>
+                        <span>Examiner rationale:</span>
                       </div>
                       <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {err.higherRatedWordExplanation}
@@ -475,7 +507,7 @@ export function DiagnosticInspector({
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
                         >
                           <ArrowRight className="w-3.5 h-3.5" />
-                          Apply Higher-Rated Fix
+                          Apply Alternative Word
                         </button>
                       </>
                     )}
@@ -499,7 +531,7 @@ export function DiagnosticInspector({
           const upgradeLabel = isItemIgnored
             ? "Ignored"
             : isReplaced
-            ? "Replaced in Essay"
+            ? "Alternative word in essay"
             : `${sug.type.replace("_", " ")} Upgrade`;
 
           return (
@@ -588,12 +620,12 @@ export function DiagnosticInspector({
                     </div>
                   </div>
 
-                  {/* Small explanation of that higher rated word */}
+                  {/* Examiner rationale */}
                   {sug.higherRatedWordExplanation && (
                     <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
                       <div className="flex items-center gap-1 text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                         <Award className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                        <span>Why this rates higher:</span>
+                        <span>Examiner rationale:</span>
                       </div>
                       <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                         {sug.higherRatedWordExplanation}
@@ -677,10 +709,85 @@ export function DiagnosticInspector({
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
                         >
                           <ArrowRight className="w-3.5 h-3.5" />
-                          Apply Higher-Rated Word
+                          Apply Alternative Word
                         </button>
                       </>
                     )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Render Good Choices / Candidate Strengths */}
+        {visibleEffective.map((eff, idx) => {
+          const id = eff.id || `eff-${idx + 1}`;
+          const isSelected = selectedId === id;
+          const isExpanded = Boolean(expandedIds[id] || isSelected);
+
+          return (
+            <div
+              key={id}
+              ref={(el) => {
+                cardRefs.current[id] = el;
+              }}
+              className={`rounded-xl border transition-all text-xs overflow-hidden ${
+                isSelected
+                  ? "border-sky-500/80 bg-sky-500/5 ring-1 ring-sky-500/30 dark:border-sky-500/40 dark:bg-sky-950/20"
+                  : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700"
+              }`}
+            >
+              <div
+                onClick={() => toggleCard(id)}
+                className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-neutral-50/70 dark:hover:bg-neutral-900/40 transition-colors"
+              >
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="w-2 h-2 rounded-full shrink-0 bg-sky-500 ring-2 ring-sky-500/20" />
+                  <span className="text-xs font-medium shrink-0 capitalize text-sky-700 dark:text-sky-300">
+                    Good {eff.type || "choice"}
+                  </span>
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
+                    "{eff.originalPhrase}"
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelect(id);
+                      setExpandedIds((prev) => ({ ...prev, [id]: true }));
+                    }}
+                    className="text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition-colors"
+                    title="Locate in paragraph"
+                  >
+                    <Eye className="w-3 h-3" />
+                    <span className="hidden sm:inline">Locate</span>
+                  </button>
+                  <div
+                    className={`p-1 rounded text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-transform duration-200 ${
+                      isExpanded ? "rotate-180" : ""
+                    }`}
+                  >
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </div>
+
+              {isExpanded && (
+                <div className="px-3.5 pb-3.5 pt-1 space-y-2 border-t border-neutral-100 dark:border-neutral-800/80 animate-in fade-in-50 duration-150">
+                  <div className="pt-1">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 bg-sky-500/10 dark:bg-sky-950/30 px-1.5 py-0.5 rounded">
+                      "{eff.originalPhrase}"
+                    </span>
+                  </div>
+                  <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
+                    {eff.explanation}
+                  </p>
+                  <div className="text-[11px] text-neutral-400 dark:text-neutral-500 italic pt-1 border-t border-neutral-100 dark:border-neutral-800">
+                    Strength identified: natural phrasing noted. (Pointing this out does not alter the objective band score rating.)
                   </div>
                 </div>
               )}
@@ -693,7 +800,9 @@ export function DiagnosticInspector({
             {filter === "ignored"
               ? "No ignored suggestions."
               : filter === "replaced"
-              ? "No replaced words yet."
+              ? "No alternative words applied yet."
+              : filter === "effective"
+              ? "No commendable language choices identified yet."
               : "No items matching filter."}
           </div>
         )}

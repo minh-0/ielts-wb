@@ -452,7 +452,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
           {speakingMode === "official_exam" ? null : (
             <div className="flex items-center gap-1.5 text-xs border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 px-2.5 py-1.5 rounded-lg">
-              <span className="text-neutral-400 font-mono text-[11px]">Timer:</span>
+              <span className="text-neutral-400 text-[11px]">Timer:</span>
               <select
                 value={customTimerSeconds}
                 onChange={(e) => setCustomTimerSeconds(Number(e.target.value))}
@@ -598,7 +598,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-neutral-400" />
                 <span className="font-medium text-black dark:text-white">1-Minute Preparation:</span>
-                <span className="font-mono font-semibold text-neutral-800 dark:text-neutral-200">
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
                   {formatTime(prepSecondsRemaining)}
                 </span>
               </div>
@@ -625,10 +625,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
       {/* Section 3: Audio Recorder (Clean minimalist controls) */}
       <div className="p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col items-center justify-center space-y-5 text-center">
         <div className="space-y-1">
-          <div className="text-4xl font-mono font-medium text-neutral-900 dark:text-neutral-100">
+          <div className="text-4xl font-medium text-neutral-900 dark:text-neutral-100">
             {formatTime(recordSeconds)}
           </div>
-          <span className="text-xs text-neutral-500 font-mono">
+          <span className="text-xs text-neutral-500">
             {isRecording ? "Recording active..." : audioUrl ? "Recording captured" : "Click mic to record"}
           </span>
         </div>
@@ -706,7 +706,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 : "Spoken transcript will appear here. You can also edit or paste directly before analyzing..."
             }
             rows={3}
-            className="w-full p-3 text-xs font-mono rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
+            className="w-full p-3 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
           <div className="flex items-center justify-between text-[11px] text-neutral-500">
             <span>
@@ -854,7 +854,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 )}
               </div>
             </div>
-            <p className="text-sm font-mono text-neutral-800 dark:text-neutral-200 bg-neutral-50/70 dark:bg-neutral-900/40 p-3.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 italic">
+            <p className="text-sm text-neutral-800 dark:text-neutral-200 bg-neutral-50/70 dark:bg-neutral-900/40 p-3.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 italic">
               "{analysisResult.transcript}"
             </p>
           </div>
@@ -918,7 +918,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Fluency & Coherence</span>
-                  <span className="font-mono text-xs font-semibold">Band {analysisResult.criteria.fluencyCoherence.score.toFixed(1)}</span>
+                  <span className="text-xs font-semibold">Band {analysisResult.criteria.fluencyCoherence.score.toFixed(1)}</span>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.fluencyCoherence.feedback}</p>
               </div>
@@ -926,7 +926,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
-                  <span className="font-mono text-xs font-semibold">Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}</span>
+                  <span className="text-xs font-semibold">Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}</span>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.lexicalResource.feedback}</p>
               </div>
@@ -934,7 +934,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range & Accuracy</span>
-                  <span className="font-mono text-xs font-semibold">Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}</span>
+                  <span className="text-xs font-semibold">Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}</span>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.grammaticalRange.feedback}</p>
               </div>
@@ -942,7 +942,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Pronunciation</span>
-                  <span className="font-mono text-xs font-semibold">Band {analysisResult.criteria.pronunciation.score.toFixed(1)}</span>
+                  <span className="text-xs font-semibold">Band {analysisResult.criteria.pronunciation.score.toFixed(1)}</span>
                 </div>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.pronunciation.feedback}</p>
               </div>
@@ -958,10 +958,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       key={idx}
                       className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2"
                     >
-                      <div className="text-xs text-neutral-400 line-through font-mono">
+                      <div className="text-xs text-neutral-400 line-through">
                         "{item.spokenSnippet}"
                       </div>
-                      <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 font-mono">
+                      <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                         "{item.correctedSnippet}"
                       </div>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.rule}</p>
@@ -1054,7 +1054,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           {activeTab === "model_answer" && (
             <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif italic whitespace-pre-line space-y-2">
               <span className="font-sans text-xs font-medium text-neutral-500 not-italic block">
-                Band 9 Model Transcript
+                Sample Examiner Transcript
               </span>
               <p>"{analysisResult.sampleBand9Response}"</p>
             </div>

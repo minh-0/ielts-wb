@@ -51,6 +51,14 @@ export interface ReplacedWordItem {
   }[];
 }
 
+export interface EffectiveFeature {
+  id?: string;
+  originalPhrase: string;
+  type: 'vocabulary' | 'idiom' | 'grammar' | 'collocation';
+  label: string;
+  explanation: string;
+}
+
 export interface WritingAnalysisResult {
   overallBand: number;
   wordCount: number;
@@ -63,6 +71,7 @@ export interface WritingAnalysisResult {
   };
   sentenceFeedbacks: SentenceFeedback[];
   vocabularySuggestions: VocabularySuggestion[];
+  effectiveFeatures?: EffectiveFeature[];
   cohesionAnalysis: {
     overusedLinkers: string[];
     referencingQuality: string;

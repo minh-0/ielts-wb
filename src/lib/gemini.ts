@@ -1,4 +1,4 @@
-import { WritingAnalysisResult, SpeakingAnalysisResult } from '@/types/ielts';
+import { WritingAnalysisResult, SpeakingAnalysisResult, EffectiveFeature } from '@/types/ielts';
 
 const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
 const GEMINI_FALLBACK_MODEL = 'gemini-2.5-flash';
@@ -169,6 +169,14 @@ Analyze this essay and output valid JSON with this exact structure:
       ]
     }
   ],
+  "effectiveFeatures": [
+    {
+      "originalPhrase": string,
+      "type": "vocabulary" | "idiom" | "grammar" | "collocation",
+      "label": string,
+      "explanation": string
+    }
+  ],
   "cohesionAnalysis": {
     "overusedLinkers": [string],
     "referencingQuality": string,
@@ -181,6 +189,7 @@ Analyze this essay and output valid JSON with this exact structure:
 CRITICAL INSTRUCTION FOR IN-TEXT UNDERLINE & HIGHLIGHTING:
 - In "sentenceFeedbacks": each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
 - In "vocabularySuggestions": each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms. Include "higherRatedWordExplanation" and "higherRatedWords" with CEFR levels (C1/C2) and concise explanations.
+- In "effectiveFeatures": identify 2 to 5 EXACT VERBATIM SUBSTRINGS (1 to 6 words) from Candidate Essay showing commendable language: e.g. well-chosen academic vocabulary, idiomatic expressions, natural collocations, or sophisticated grammar structures. Give a brief complimentary rationale explaining why this is effective. IMPORTANT: This is formative praise to highlight candidate strengths and MUST NOT alter or change your objective band score rating.
 
 Only output the JSON object without markdown fences if possible.
 `;
@@ -255,6 +264,14 @@ Only output the JSON object without markdown fences if possible.
     parsed.vocabularySuggestions = (parsed.vocabularySuggestions || []).map((v, idx) => ({
       ...v,
       id: v.id || `sug-${idx + 1}`
+    }));
+
+    const effectiveList = (parsed.effectiveFeatures && parsed.effectiveFeatures.length > 0)
+      ? parsed.effectiveFeatures
+      : extractEffectiveFeatures(essayText);
+    parsed.effectiveFeatures = effectiveList.map((f, idx) => ({
+      ...f,
+      id: f.id || `effective-${idx + 1}`
     }));
 
     // Safety validation guard: enforce strict Cambridge off-topic penalty if essay is unrelated
@@ -625,6 +642,98 @@ function cleanRepeatedWords(text: string): string {
   return cleaned;
 }
 
+export function extractEffectiveFeatures(essay: string): EffectiveFeature[] {
+  const features: EffectiveFeature[] = [];
+  let idCount = 1;
+
+  // 1. Commendable Academic Vocabulary & Collocations
+  const vocabPatterns: { pattern: RegExp; label: string; explanation: string; type: 'vocabulary' | 'collocation' }[] = [
+    { pattern: /\b(paramount importance|vital importance|profound impact|far-reaching consequences)\b/i, label: 'High-band academic collocation', explanation: 'Demonstrates precise lexical resource favored at Band 8.0+ by coupling strong academic nouns with evaluative adjectives.', type: 'collocation' },
+    { pattern: /\b(play(?:s|ed|ing)? a (?:pivotal|crucial|vital|fundamental) role)\b/i, label: 'Natural academic collocation', explanation: 'Demonstrates natural, idiomatic academic phrasing with correct verb-noun collocation.', type: 'collocation' },
+    { pattern: /\b(shed(?:s|ding)? light on|pave(?:s|d|ing)? the way for|take(?:s|n|ing)? into account|take(?:s|n|ing)? into consideration)\b/i, label: 'Fluent idiomatic collocation', explanation: 'Natural idiomatic expression used accurately within formal writing context.', type: 'collocation' },
+    { pattern: /\b(in stark contrast|on the contrary|conversely|by contrast)\b/i, label: 'Sophisticated contrastive marker', explanation: 'Smooth discursive transition that provides logical cohesion between opposing arguments.', type: 'collocation' },
+    { pattern: /\b(exacerbate|multifaceted|predicament|catalyz(?:e|es|ed|ing)|formidable impediments|drudgery|emancipating|disparities|trajectory|synergy)\b/i, label: 'C1/C2 Academic vocabulary', explanation: 'Precise lexical choice that conveys nuanced meaning without clumsy paraphrasing.', type: 'vocabulary' },
+    { pattern: /\b(inevitable|indispensable|proliferation|imperative|mitigate|unprecedented|substantially|compelling)\b/i, label: 'Effective academic vocabulary', explanation: 'Accurate use of formal academic register enhancing Lexical Resource.', type: 'vocabulary' },
+  ];
+
+  for (const item of vocabPatterns) {
+    if (features.length >= 4) break;
+    const match = essay.match(item.pattern);
+    if (match && !features.some(f => f.originalPhrase.toLowerCase() === match[0].toLowerCase())) {
+      features.push({
+        id: `effective-${idCount++}`,
+        originalPhrase: match[0],
+        type: item.type,
+        label: item.label,
+        explanation: item.explanation
+      });
+    }
+  }
+
+  // 2. Commendable Idioms
+  const idiomPatterns: { pattern: RegExp; label: string; explanation: string }[] = [
+    { pattern: /\b(a double-edged sword)\b/i, label: 'Natural idiom', explanation: 'Accurately communicates dual consequences with natural native-like fluency.' },
+    { pattern: /\b(at the expense of)\b/i, label: 'Natural idiomatic phrase', explanation: 'Clear prepositional idiom indicating tradeoff or sacrifice.' },
+    { pattern: /\b(in the long run)\b/i, label: 'Natural temporal idiom', explanation: 'Idiomatic expression used appropriately to contrast immediate vs extended outlook.' },
+    { pattern: /\b(strike(?:s|ing)? a balance|striking a balance)\b/i, label: 'Effective evaluative idiom', explanation: 'Natural idiom expressing moderate synthesis of competing arguments.' },
+    { pattern: /\b(go(?:es)? hand in hand)\b/i, label: 'Idiomatic expression', explanation: 'Effective phrasing indicating close correlation between factors.' },
+    { pattern: /\b(tip of the iceberg)\b/i, label: 'Idiomatic metaphor', explanation: 'Well-placed metaphor highlighting hidden complexity of an issue.' },
+  ];
+
+  for (const item of idiomPatterns) {
+    if (features.length >= 5) break;
+    const match = essay.match(item.pattern);
+    if (match && !features.some(f => f.originalPhrase.toLowerCase() === match[0].toLowerCase())) {
+      features.push({
+        id: `effective-${idCount++}`,
+        originalPhrase: match[0],
+        type: 'idiom',
+        label: item.label,
+        explanation: item.explanation
+      });
+    }
+  }
+
+  // 3. Commendable Grammar Structures
+  const grammarPatterns: { pattern: RegExp; label: string; explanation: string }[] = [
+    { pattern: /\b(not only\b[^\.\,\;]+?\bbut also)\b/i, label: 'Correlative inversion structure', explanation: 'Demonstrates syntactic complexity and emphatic cohesion across clauses.' },
+    { pattern: /\b(it is (?:widely|commonly|frequently) (?:believed|acknowledged|recognized|argued) that)\b/i, label: 'Impersonal passive reporting structure', explanation: 'Shows mastery of formal academic distancing and objective presentation.' },
+    { pattern: /,\s*(leading to|resulting in|thereby\s+\w+ing|which in turn)\b/i, label: 'Non-finite / participle result clause', explanation: 'Effective subordination that varies sentence rhythm and shows advanced grammatical control.' },
+    { pattern: /\b(had (?:they|governments|citizens|individuals) [^\.\,]+?,|were (?:it|they) to\b|should (?:there|they|governments)\b)/i, label: 'Conditional inversion', explanation: 'Rare and sophisticated C2 grammar structure highlighting Grammatical Range.' },
+    { pattern: /\b(what is (?:most|particularly) (?:striking|notable|concerning) is)\b/i, label: 'Wh-cleft focus structure', explanation: 'Advanced emphasis structure focusing examiner attention on core idea.' },
+  ];
+
+  for (const item of grammarPatterns) {
+    if (features.length >= 5) break;
+    const match = essay.match(item.pattern);
+    if (match && !features.some(f => f.originalPhrase.toLowerCase() === match[0].toLowerCase())) {
+      features.push({
+        id: `effective-${idCount++}`,
+        originalPhrase: match[0],
+        type: 'grammar',
+        label: item.label,
+        explanation: item.explanation
+      });
+    }
+  }
+
+  // Fallback: If student wrote a solid essay, point out good discourse markers or analytical adjectives
+  if (features.length === 0) {
+    const genericMatches = essay.match(/\b(furthermore|moreover|nevertheless|consequently|subsequently|demonstrates|illustrates|facilitates|significantly|crucial|essential)\b/i);
+    if (genericMatches) {
+      features.push({
+        id: `effective-${idCount++}`,
+        originalPhrase: genericMatches[0],
+        type: 'vocabulary',
+        label: 'Accurate discourse marker',
+        explanation: 'Contributes to clear paragraph progression and coherence across ideas.'
+      });
+    }
+  }
+
+  return features;
+}
+
 function generateMockWritingAnalysis(
   prompt: string,
   rawEssay: string,
@@ -990,6 +1099,7 @@ function generateMockWritingAnalysis(
     },
     sentenceFeedbacks,
     vocabularySuggestions,
+    effectiveFeatures: extractEffectiveFeatures(essay),
     cohesionAnalysis: {
       overusedLinkers: ccScore >= 8.0 ? [] : ['Furthermore', 'In addition'],
       referencingQuality: ccScore >= 8.0 ? 'Superior pronoun referencing and organic transitions.' : 'Moderate referencing.',
@@ -997,7 +1107,7 @@ function generateMockWritingAnalysis(
     },
     examinerSummary: isFullyUpgraded
       ? `Outstanding revision! Incorporating high-band academic collocations, sophisticated C1/C2 idioms, and varied non-finite clause structures has elevated this essay to an official Band ${overallBand.toFixed(1)}.`
-      : `A solid essay performing at Band ${overallBand.toFixed(1)}. Apply the remaining examiner-recommended higher-rated vocabulary and syntax upgrades to push into Band 8.0+.`,
+      : `A solid essay performing at Band ${overallBand.toFixed(1)}. Apply the remaining examiner-recommended alternative vocabulary and syntax upgrades to push into Band 8.0+.`,
     modelAnswer: `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Conversely, skeptics caution that unregulated algorithmic systems exacerbate socioeconomic disparities.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`,
     primaryBottleneck: isFullyUpgraded
       ? 'None! All major lexical and syntactic upgrades incorporated. Ready for examiner submission.'

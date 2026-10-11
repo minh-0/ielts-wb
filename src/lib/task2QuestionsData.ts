@@ -1,4 +1,4 @@
-// 100 Curated IELTS Writing Task 2 Questions with Official Examiner Band 9.0 Model Essays
+// 100 Curated IELTS Writing Task 2 Questions with Official Examiner Model Essays
 // Aligned strictly with Cambridge, British Council, and IDP public band descriptors
 
 import { WritingPrompt } from "./ieltsPromptBank";

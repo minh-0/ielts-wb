@@ -281,7 +281,7 @@ export function VocabularyStudio() {
                   {/* Top card bar */}
                   <div className="flex items-center justify-between text-xs text-neutral-400">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-medium text-neutral-900 dark:text-neutral-100">
+                      <span className="font-medium text-neutral-900 dark:text-neutral-100">
                         {currentCard.level}
                       </span>
                       <span>•</span>
@@ -328,7 +328,7 @@ export function VocabularyStudio() {
                         <h2 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight text-neutral-900 dark:text-neutral-100">
                           {currentCard.word}
                         </h2>
-                        <p className="font-mono text-xs text-neutral-400">
+                        <p className="text-xs text-neutral-400">
                           {currentCard.phonetic}
                         </p>
                         <p className="text-[11px] text-neutral-400/70 pt-3">
@@ -370,7 +370,7 @@ export function VocabularyStudio() {
 
                   {/* Card bottom */}
                   <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 dark:border-neutral-900">
-                    <span className="font-mono">
+                    <span>
                       {cardIndex + 1} of {flashcardPool.length}
                     </span>
                     <a
@@ -443,7 +443,7 @@ export function VocabularyStudio() {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
-                  <span className="font-mono text-[10px] text-neutral-400">
+                  <span className="text-[10px] text-neutral-400">
                     {item.level}
                   </span>
                   <button
@@ -480,7 +480,7 @@ export function VocabularyStudio() {
           {/* Minimal Pagination */}
           {filteredWords.length > ITEMS_PER_PAGE && (
             <div className="flex items-center justify-between pt-2 text-xs text-neutral-400">
-              <span className="font-mono text-[11px]">
+              <span className="text-[11px]">
                 {(explorerPage - 1) * ITEMS_PER_PAGE + 1}–
                 {Math.min(explorerPage * ITEMS_PER_PAGE, filteredWords.length)} of{" "}
                 {filteredWords.length.toLocaleString()}
@@ -494,7 +494,7 @@ export function VocabularyStudio() {
                 >
                   Prev
                 </button>
-                <span className="px-1.5 font-mono text-[11px]">
+                <span className="px-1.5 text-[11px]">
                   {explorerPage} / {totalExplorerPages}
                 </span>
                 <button
@@ -534,11 +534,11 @@ export function VocabularyStudio() {
                   </button>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-neutral-400 mt-0.5">
-                  <span className="font-mono">{inspectedWord.phonetic}</span>
+                  <span>{inspectedWord.phonetic}</span>
                   <span>•</span>
                   <span className="capitalize">{inspectedWord.pos}</span>
                   <span>•</span>
-                  <span className="font-mono">{inspectedWord.level}</span>
+                  <span>{inspectedWord.level}</span>
                 </div>
               </div>
 

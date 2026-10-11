@@ -215,7 +215,7 @@ export function QuestionPickerModal({
                         {cat}
                       </span>
                       <div className="flex items-center gap-2 shrink-0 ml-2">
-                        <span className="font-mono text-[10px] text-neutral-400">({count})</span>
+                        <span className="text-[10px] text-neutral-400">({count})</span>
                         {isSelected && (
                           <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
                         )}
@@ -404,7 +404,7 @@ export function QuestionPickerModal({
                     )}
                     <div className="space-y-1 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-[10px] text-neutral-400">
+                        <span className="text-[10px] text-neutral-400">
                           #{idx + 1}
                         </span>
                         <h4 className="text-xs sm:text-[13px] font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-black dark:group-hover:text-white transition-colors">

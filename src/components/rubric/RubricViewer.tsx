@@ -61,7 +61,7 @@ export function RubricViewer() {
         <table className="w-full text-left text-xs border-collapse min-w-[760px]">
           <thead>
             <tr className="border-b border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 font-semibold bg-neutral-50/50 dark:bg-neutral-900/30">
-              <th className="py-3 px-3 w-16 font-mono">Band</th>
+              <th className="py-3 px-3 w-16">Band</th>
               <th className="py-3 px-3 w-1/4">{currentRubric.columns[0]}</th>
               <th className="py-3 px-3 w-1/4">{currentRubric.columns[1]}</th>
               <th className="py-3 px-3 w-1/4">{currentRubric.columns[2]}</th>
@@ -83,7 +83,7 @@ export function RubricViewer() {
                   {/* Band Number */}
                   <td className="py-3 px-3">
                     <span
-                      className={`inline-flex items-center justify-center w-7 h-7 rounded-md font-mono font-semibold text-xs ${
+                      className={`inline-flex items-center justify-center w-7 h-7 rounded-md font-semibold text-xs ${
                         isBand9
                           ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
                           : Number(row.band) >= 7

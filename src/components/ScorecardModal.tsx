@@ -64,7 +64,7 @@ export function ScorecardModal({
 
       // Header Tag
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 18px var(--font-mono), 'JetBrains Mono', monospace";
+      ctx.font = "bold 18px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText(`IELTS / ${type.toUpperCase()} DIAGNOSTIC`, 80, 110);
 
       // Candidate Score Hero
@@ -98,7 +98,7 @@ export function ScorecardModal({
         ctx.strokeRect(x, startY, boxW, boxH);
 
         ctx.fillStyle = "#888888";
-        ctx.font = "14px var(--font-mono), 'JetBrains Mono', monospace";
+        ctx.font = "14px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
         ctx.fillText(s.label.toUpperCase(), x + 20, startY + 40);
 
         ctx.fillStyle = "#ffffff";
@@ -114,7 +114,7 @@ export function ScorecardModal({
       ctx.strokeRect(80, 610, width - 160, 200);
 
       ctx.fillStyle = "#888888";
-      ctx.font = "16px var(--font-mono), 'JetBrains Mono', monospace";
+      ctx.font = "16px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText("PRIMARY EXAMINER BOTTLENECK", 110, 660);
 
       ctx.fillStyle = "#ffffff";
@@ -132,7 +132,7 @@ export function ScorecardModal({
       ctx.strokeRect(80, 850, width - 160, 260);
 
       ctx.fillStyle = "#888888";
-      ctx.font = "16px var(--font-mono), 'JetBrains Mono', monospace";
+      ctx.font = "16px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText("HIGH-BAND RECOMMENDATION", 110, 900);
 
       ctx.fillStyle = "#dddddd";
@@ -144,7 +144,7 @@ export function ScorecardModal({
 
       // Footer
       ctx.fillStyle = "#555555";
-      ctx.font = "18px var(--font-mono), 'JetBrains Mono', monospace";
+      ctx.font = "18px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText("light", 80, 1260);
 
       const dataUrl = canvas.toDataURL("image/png");

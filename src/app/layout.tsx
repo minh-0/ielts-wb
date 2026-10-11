@@ -27,7 +27,7 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: "light",
   description:
-    "Evaluate your IELTS Writing (Task 1 & 2) and Speaking (Parts 1-3) with official Cambridge & IDP band descriptors. Line-by-line diffs, band-boosting idioms, and downloadable scorecards.",
+    "The best IELTS tools for candidates. Practice Writing (Task 1 & 2), Speaking (Parts 1-3), Collocations in Use, and Oxford 3000/5000 vocabulary with official Cambridge & IDP band descriptors.",
 };
 
 export default function RootLayout({
