@@ -27,6 +27,7 @@ import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
 import { WritingAnalysisResult, TaskType, ReplacedWordItem, SavedEssay } from "@/types/ielts";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
+import { BandScoreEmoji } from "../BandScoreEmoji";
 import { AnnotatedParagraph } from "./AnnotatedParagraph";
 import { DiagnosticInspector } from "./DiagnosticInspector";
 import { SavedEssaysModal } from "./SavedEssaysModal";
@@ -1047,8 +1048,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               <div className="text-xs text-neutral-500 font-medium">
                 Overall Band Score
               </div>
-              <div className="text-5xl sm:text-6xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-                Band {analysisResult.overallBand.toFixed(1)}
+              <div className="flex items-center justify-center lg:justify-start gap-3.5">
+                <span className="text-5xl sm:text-6xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+                  Band {analysisResult.overallBand.toFixed(1)}
+                </span>
+                <BandScoreEmoji score={analysisResult.overallBand} size={54} />
               </div>
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed pt-1 max-w-lg">
                 {analysisResult.examinerSummary}

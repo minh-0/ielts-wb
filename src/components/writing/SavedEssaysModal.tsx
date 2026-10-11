@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { X, Trash2, ArrowUpRight, Award, FileText, Calendar, Clock } from "lucide-react";
 import { SavedEssay } from "@/types/ielts";
+import { BandScoreEmoji } from "../BandScoreEmoji";
 
 interface SavedEssaysModalProps {
   isOpen: boolean;
@@ -117,8 +118,9 @@ export function SavedEssaysModal({
 
                     {/* Band Score or Draft badge */}
                     {typeof essay.overallBand === "number" ? (
-                      <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
                         • Band {essay.overallBand.toFixed(1)}
+                        <BandScoreEmoji score={essay.overallBand} size={16} />
                       </span>
                     ) : (
                       <span className="text-xs text-neutral-400">

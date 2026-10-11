@@ -23,6 +23,7 @@ import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
 import { SpeakingAnalysisResult, SpeakingPart, SpeakingMode } from "@/types/ielts";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
+import { BandScoreEmoji } from "../BandScoreEmoji";
 
 interface SpeakingStudioProps {
   apiKey: string;
@@ -798,8 +799,11 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               <div className="text-xs text-neutral-500 font-medium">
                 Estimated Speaking Score
               </div>
-              <div className="text-5xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-                Band {analysisResult.overallBand.toFixed(1)}
+              <div className="flex items-center justify-center md:justify-start gap-3.5">
+                <span className="text-5xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+                  Band {analysisResult.overallBand.toFixed(1)}
+                </span>
+                <BandScoreEmoji score={analysisResult.overallBand} size={50} />
               </div>
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-md leading-relaxed">
                 {analysisResult.examinerSummary}

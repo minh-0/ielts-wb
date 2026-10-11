@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import { Download, X, Check, Share2 } from "lucide-react";
 import { RadarChart } from "./RadarChart";
+import { BandScoreEmoji, getBandEmojiInfo } from "./BandScoreEmoji";
 
 interface ScorecardModalProps {
   isOpen: boolean;
@@ -75,6 +76,22 @@ export function ScorecardModal({
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 130px var(--font-sans), 'Plus Jakarta Sans', sans-serif";
       ctx.fillText(`Band ${overallBand.toFixed(1)}`, 80, 330);
+
+      // Draw Band Emoji sticker next to the score
+      try {
+        const emojiInfo = getBandEmojiInfo(overallBand);
+        const emojiImg = new window.Image();
+        emojiImg.src = emojiInfo.src;
+        await new Promise((resolve) => {
+          emojiImg.onload = () => {
+            const textWidth = ctx.measureText(`Band ${overallBand.toFixed(1)}`).width;
+            ctx.drawImage(emojiImg, 80 + textWidth + 30, 215, 125, 125);
+            resolve(true);
+          };
+          emojiImg.onerror = () => resolve(false);
+          setTimeout(() => resolve(false), 300);
+        });
+      } catch {}
 
       // Horizontal Divider
       ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
@@ -190,8 +207,11 @@ export function ScorecardModal({
         <div className="py-2 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800/80 pb-4">
           <div>
             <div className="text-xs text-neutral-500">Predicted Overall</div>
-            <div className="text-4xl font-serif font-medium tracking-tight mt-0.5">
-              Band {overallBand.toFixed(1)}
+            <div className="flex items-center gap-3 mt-0.5">
+              <span className="text-4xl font-serif font-medium tracking-tight">
+                Band {overallBand.toFixed(1)}
+              </span>
+              <BandScoreEmoji score={overallBand} size={38} />
             </div>
           </div>
           <RadarChart scores={scores} size={130} accentColor="#ffffff" />
