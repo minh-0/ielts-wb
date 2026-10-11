@@ -233,16 +233,16 @@ export function AnnotatedParagraph({
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-violet-500 dark:bg-purple-400/80" />
             <span className="underline decoration-dashed decoration-violet-500 dark:decoration-purple-400/50 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Vocabulary upgrades
+              Lexical refinements
             </span>
             <span className="text-[11px] text-neutral-400">({suggestionCount})</span>
           </div>
 
-          {/* 3. Sky Dotted: Good Choices */}
+          {/* 3. Sky Dotted: Effective Phrasing */}
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-sky-500 ring-2 ring-sky-500/20" />
             <span className="underline decoration-dotted decoration-sky-500 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Good choices
+              Effective phrasing
             </span>
             <span className="text-[11px] text-neutral-400">({effectiveCount})</span>
           </div>
@@ -344,7 +344,7 @@ export function AnnotatedParagraph({
                   ? "Applied to essay"
                   : selectedMatch.kind === "error"
                   ? "Grammar & accuracy"
-                  : "Vocabulary upgrade"}
+                  : "Lexical refinement"}
               </span>
             </div>
 
@@ -488,7 +488,7 @@ export function AnnotatedParagraph({
                   ) : (
                     <>
                       <ArrowRight className="w-3.5 h-3.5" />
-                      Apply Alternative Word
+                      Apply
                     </>
                   )}
                 </button>

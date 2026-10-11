@@ -15,13 +15,16 @@ import {
   Mic,
   BookOpen,
   BookText,
+  BookA,
   BarChart2,
   FileText,
   ArrowRight,
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"writing" | "speaking" | "rubric" | "vocabulary" | "collocations">("writing");
+  const [category, setCategory] = useState<"practice" | "learn">("practice");
+  const [practiceTab, setPracticeTab] = useState<"writing" | "speaking">("writing");
+  const [learnTab, setLearnTab] = useState<"collocations" | "vocabulary" | "rubric">("collocations");
   const [apiKey, setApiKey] = useState<string>("");
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [writingTaskType, setWritingTaskType] = useState<TaskType>("task2");
@@ -33,7 +36,8 @@ export default function Home() {
 
   const handleStartWriting = (taskType: TaskType = "task2") => {
     setWritingTaskType(taskType);
-    setActiveTab("writing");
+    setCategory("practice");
+    setPracticeTab("writing");
     const studioEl = document.getElementById("diagnostic-studio");
     if (studioEl) {
       studioEl.scrollIntoView({ behavior: "smooth" });
@@ -41,7 +45,17 @@ export default function Home() {
   };
 
   const handleStartSpeaking = () => {
-    setActiveTab("speaking");
+    setCategory("practice");
+    setPracticeTab("speaking");
+    const studioEl = document.getElementById("diagnostic-studio");
+    if (studioEl) {
+      studioEl.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleOpenLearn = (subTab: "collocations" | "vocabulary" | "rubric") => {
+    setCategory("learn");
+    setLearnTab(subTab);
     const studioEl = document.getElementById("diagnostic-studio");
     if (studioEl) {
       studioEl.scrollIntoView({ behavior: "smooth" });
@@ -52,8 +66,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-neutral-200 dark:selection:bg-neutral-800">
       {/* Top Navigation */}
       <Navbar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
+        activeCategory={category}
+        onCategoryChange={setCategory}
         onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
         hasApiKey={Boolean(apiKey)}
       />
@@ -73,10 +87,7 @@ export default function Home() {
             {/* Primary Headline & Description */}
             <div className="max-w-3xl space-y-3">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-neutral-950 dark:text-neutral-50 font-serif leading-[1.15]">
-                The best IELTS tools.{" "}
-                <span className="italic text-neutral-400 dark:text-neutral-500 font-normal">
-                  Built for real band gains.
-                </span>
+                The IELTS companion
               </h1>
               <p className="text-sm sm:text-[15px] text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl">
                 A complete, examiner-grade diagnostic workbench for IELTS candidates. Practice Writing with 50 Task 1 visual charts and 100 Task 2 prompts, simulate full Speaking tests with real-time speech analytics, master high-yield Collocations from official Cambridge books, and study Oxford 3000/5000 vocabulary — all scored against authentic British Council and IDP band descriptors.
@@ -121,7 +132,7 @@ export default function Home() {
                 </button>
 
                 <button
-                  onClick={() => setActiveTab("rubric")}
+                  onClick={() => handleOpenLearn("rubric")}
                   className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-neutral-400" />
@@ -129,7 +140,7 @@ export default function Home() {
                 </button>
 
                 <button
-                  onClick={() => setActiveTab("collocations")}
+                  onClick={() => handleOpenLearn("collocations")}
                   className="inline-flex items-center gap-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
                   <BookText className="w-3.5 h-3.5 text-neutral-400" />
@@ -183,19 +194,85 @@ export default function Home() {
 
       {/* Main Expansive Container */}
       <main id="diagnostic-studio" className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-5 sm:py-6">
+        {/* Category Sub-Navigation (Clean Underline Style) */}
+        <div className="flex items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-6">
+          {category === "practice" ? (
+            <>
+              <button
+                onClick={() => setPracticeTab("writing")}
+                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                  practiceTab === "writing"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                }`}
+              >
+                <PenTool className="w-3.5 h-3.5" />
+                <span>Writing Studio</span>
+              </button>
+              <button
+                onClick={() => setPracticeTab("speaking")}
+                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                  practiceTab === "speaking"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                }`}
+              >
+                <Mic className="w-3.5 h-3.5" />
+                <span>Speaking Studio</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setLearnTab("collocations")}
+                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                  learnTab === "collocations"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                }`}
+              >
+                <BookText className="w-3.5 h-3.5" />
+                <span>Collocations</span>
+              </button>
+              <button
+                onClick={() => setLearnTab("vocabulary")}
+                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                  learnTab === "vocabulary"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                }`}
+              >
+                <BookA className="w-3.5 h-3.5" />
+                <span>Vocabulary (Oxford)</span>
+              </button>
+              <button
+                onClick={() => setLearnTab("rubric")}
+                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                  learnTab === "rubric"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Band Descriptors</span>
+              </button>
+            </>
+          )}
+        </div>
+
         {/* Tab Content */}
-        {activeTab === "writing" && (
+        {category === "practice" && practiceTab === "writing" && (
           <WritingStudio apiKey={apiKey} initialTaskType={writingTaskType} />
         )}
-        {activeTab === "speaking" && (
+        {category === "practice" && practiceTab === "speaking" && (
           <SpeakingStudio
             apiKey={apiKey}
             onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
           />
         )}
-        {activeTab === "vocabulary" && <VocabularyStudio />}
-        {activeTab === "collocations" && <CollocationsStudio />}
-        {activeTab === "rubric" && <RubricViewer />}
+        {category === "learn" && learnTab === "collocations" && <CollocationsStudio />}
+        {category === "learn" && learnTab === "vocabulary" && <VocabularyStudio />}
+        {category === "learn" && learnTab === "rubric" && <RubricViewer />}
       </main>
 
       {/* Footer: Simple, quiet line */}

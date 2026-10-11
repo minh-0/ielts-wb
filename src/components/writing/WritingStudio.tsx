@@ -1011,7 +1011,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               ) : (
                 <>
                   <Sparkles className="w-3.5 h-3.5" />
-                  {analysisResult ? "Re-analyze with IELTS Rubric" : "Analyze with IELTS Rubric"}
+                  {analysisResult ? "Re-analyze" : "Analyze"}
                 </>
               )}
             </button>
@@ -1546,7 +1546,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   className="flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Evaluate with Rubric</span>
+                  <span>Analyze</span>
                 </button>
               </div>
             </div>

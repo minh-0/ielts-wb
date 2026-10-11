@@ -95,7 +95,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
           <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
             <strong>No setup or API key needed!</strong> You can practice anytime. Studio comes with
             realistic Cambridge IELTS scoring, line-by-line grammar mistake underlines,
-            vocabulary upgrades, and speech pacing metrics completely free out of the box.
+            lexical refinements, and speech pacing metrics completely free out of the box.
           </p>
         </div>
 

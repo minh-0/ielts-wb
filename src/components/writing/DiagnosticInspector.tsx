@@ -105,7 +105,7 @@ export function DiagnosticInspector({
 
           <div className="py-14 text-center">
             <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-[240px] mx-auto leading-relaxed">
-              Submit your response to view sentence diagnostics and vocabulary upgrades.
+              Submit your response to view sentence diagnostics and lexical refinements.
             </p>
           </div>
         </div>
@@ -117,11 +117,11 @@ export function DiagnosticInspector({
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-violet-500/70" />
-            Vocabulary
+            Lexical
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-500/70" />
-            Good choices
+            Effective phrasing
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70" />
@@ -268,7 +268,7 @@ export function DiagnosticInspector({
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-                Good choices ({effectiveCount})
+                Effective phrasing ({effectiveCount})
               </button>
             )}
             {replacedCount > 0 && (
@@ -302,7 +302,7 @@ export function DiagnosticInspector({
         {/* Subheader: Quick expand/collapse toggle */}
         <div className="flex items-center justify-between text-[11px] pt-1">
           <span className="text-neutral-500 dark:text-neutral-400">
-            {visibleTotal} items shown · compact view
+            {visibleTotal} items shown
           </span>
           <button
             type="button"
@@ -507,7 +507,7 @@ export function DiagnosticInspector({
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
                         >
                           <ArrowRight className="w-3.5 h-3.5" />
-                          Apply Alternative Word
+                          Apply
                         </button>
                       </>
                     )}
@@ -709,7 +709,7 @@ export function DiagnosticInspector({
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
                         >
                           <ArrowRight className="w-3.5 h-3.5" />
-                          Apply Alternative Word
+                          Apply
                         </button>
                       </>
                     )}
@@ -720,7 +720,7 @@ export function DiagnosticInspector({
           );
         })}
 
-        {/* Render Good Choices / Candidate Strengths */}
+        {/* Render Effective Phrasing / Candidate Strengths */}
         {visibleEffective.map((eff, idx) => {
           const id = eff.id || `eff-${idx + 1}`;
           const isSelected = selectedId === id;
@@ -745,7 +745,7 @@ export function DiagnosticInspector({
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span className="w-2 h-2 rounded-full shrink-0 bg-sky-500 ring-2 ring-sky-500/20" />
                   <span className="text-xs font-medium shrink-0 capitalize text-sky-700 dark:text-sky-300">
-                    Good {eff.type || "choice"}
+                    Effective {eff.type || "phrasing"}
                   </span>
                   <span className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
                     "{eff.originalPhrase}"
@@ -786,9 +786,6 @@ export function DiagnosticInspector({
                   <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
                     {eff.explanation}
                   </p>
-                  <div className="text-[11px] text-neutral-400 dark:text-neutral-500 italic pt-1 border-t border-neutral-100 dark:border-neutral-800">
-                    Strength identified: natural phrasing noted. (Pointing this out does not alter the objective band score rating.)
-                  </div>
                 </div>
               )}
             </div>
