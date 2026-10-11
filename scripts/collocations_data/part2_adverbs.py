@@ -1,0 +1,241 @@
+# Cambridge English Collocations in Use (Intermediate & Advanced)
+# Topic: intensifying_adverbs (Intensifying Adverbs)
+# Units covered:
+# - Intermediate: Unit 7 (Intensifying Adverbs), Unit 13 (Highly, Widely, Deeply)
+# - Advanced: Unit 4 (Utterly, Blissfully, Bitterly), Unit 5 (Strongly, Strictly, Distinctly)
+
+ITEMS = [
+    ("bitterly disappointed", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Deeply and acutely sad or resentful over a broken hope or failed outcome.",
+     "Applicants were bitterly disappointed when grant funding was cancelled without warning.",
+     "❌ sourly disappointed / painfully sad → ✔ bitterly disappointed", "Band 8.0+", ["deeply disillusioned", "sharply disappointed"],
+     "Use for Task 2 public dissatisfaction: 'Citizens were bitterly disappointed by the budget.'"),
+    
+    ("deeply grateful", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Feeling profound and sincere thankfulness.",
+     "The research cohort was deeply grateful for the laboratory resources provided by the university.",
+     "❌ heavily thankful / strongly thanking → ✔ deeply grateful / profoundly thankful", "Band 7.5+", ["profoundly grateful", "immensely indebted"],
+     "High register replacement for 'very thankful' in letters or speaking."),
+    
+    ("utterly absurd", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Completely, thoroughly, and laughably ridiculous.",
+     "The proposition that economic growth can continue without environmental degradation is utterly absurd.",
+     "❌ fully clownish / extreme ridiculous → ✔ utterly absurd / patently ridiculous", "Band 8.5+", ["patently ridiculous", "completely nonsensical"],
+     "Strong emphasis when evaluating illogical stances in academic debate."),
+    
+    ("blissfully unaware", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Happy and completely unconcerned because one does not realize danger or trouble exists.",
+     "Many smartphone users remain blissfully unaware of third-party telemetry tracking.",
+     "❌ happily not-knowing / sweetly ignorant → ✔ blissfully unaware / blissful in ignorance", "Band 8.5+", ["wholly oblivious", "entirely unmindful"],
+     "High-register idiom for essays on technology, privacy, or health negligence."),
+    
+    ("highly improbable", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Extremely unlikely to take place or be true.",
+     "A sudden rebound in fossil-fuel employment is highly improbable in the current economic landscape.",
+     "❌ very much not possible / heavy unlikely → ✔ highly improbable / highly unlikely", "Band 8.0+", ["virtually impossible", "exceedingly unlikely"],
+     "Task 2 evaluation: 'It is highly improbable that voluntary curbs will suffice.'"),
+    
+    ("strictly forbidden", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "Rigidly prohibited by authoritative rules or law.",
+     "Using generative AI without formal attribution is strictly forbidden under academic integrity policies.",
+     "❌ tightly prevented / hard prohibited → ✔ strictly forbidden / strictly prohibited", "Band 7.5+", ["expressly prohibited", "rigidly outlawed"],
+     "Great for education and discipline Task 2 essays."),
+    
+    ("distinctly remember", "verb_adv", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "To clearly and precisely recall a past occurrence or detail.",
+     "Older generations distinctly remember the transition from agrarian community life to urban centers.",
+     "❌ sharply remember / clear-minded recall → ✔ distinctly remember / vivid memory", "Band 8.0+", ["vividly recall", "clearly recollect"],
+     "Speaking Part 2 narrative opening: 'I distinctly remember the moment when...'"),
+    
+    ("heavily guarded", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "Protected with exceptional security, military presence, or vigilance.",
+     "Proprietary chip designs remain heavily guarded secrets among semiconductor manufacturers.",
+     "❌ densely protected / strongly watch-kept → ✔ heavily guarded", "Band 8.0+", ["tightly secured", "rigorously protected"],
+     "Used metaphorically for proprietary intellectual property."),
+    
+    ("wildly inaccurate", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Containing enormous, uncontrolled errors or misconceptions.",
+     "Early forecasts predicting immediate economic collapse proved wildly inaccurate.",
+     "❌ crazy mistaken / chaotic wrong → ✔ wildly inaccurate / grossly misleading", "Band 8.5+", ["grossly mistaken", "substantially flawed"],
+     "Great for critiquing media alarmism in Task 2."),
+    
+    ("spotlessly clean", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Extremely, immaculately clean without any blemish or stain.",
+     "Modern semiconductor fabrication facilities must remain spotlessly clean at all times.",
+     "❌ clean without dot / shining-pure → ✔ spotlessly clean / immaculately maintained", "Band 8.0+", ["immaculately clean", "pristine"],
+     "Ideal for essays discussing healthcare hygiene or high-tech manufacturing."),
+    
+    ("fully aware", "adv_adj", "Intermediate", "English Collocations in Use Intermediate", "Unit 7: Intensifying Adverbs", "intensifying_adverbs",
+     "Having total, conscious knowledge and comprehension of a reality.",
+     "Policymakers are fully aware that automated transit requires massive initial capital expenditure.",
+     "❌ totally knowing / deeply cognisant of without doubt → ✔ fully aware / acutely aware", "Band 7.5+", ["well-informed", "acutely conscious"],
+     "Standard phrase for Task 2 discourse: 'While authorities are fully aware of...'"),
+    
+    ("acutely conscious", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Sharply, painfully, or intensely mindful of a fact.",
+     "Adolescents in the digital era are acutely conscious of peer appraisal on social media.",
+     "❌ needle-sharp mindful / heavily conscious → ✔ acutely conscious / keenly aware", "Band 8.5+", ["keenly aware", "painfully conscious"],
+     "Shows nuanced psychological understanding in essays on youth and society."),
+    
+    ("passionately committed", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "Possessing fervent, deep-seated dedication to a cause or purpose.",
+     "Environmental activists remain passionately committed to preventing deep-sea mining.",
+     "❌ hotly dedicated / burning faithful → ✔ passionately committed / fiercely dedicated", "Band 8.5+", ["staunchly dedicated", "unwaveringly devoted"],
+     "Speaking Part 1 & 2 character description."),
+    
+    ("desperately needed", "adv_adj", "Intermediate", "English Collocations in Use Intermediate", "Unit 7: Intensifying Adverbs", "intensifying_adverbs",
+     "Urgently, crucially, and critically required in a time of shortage.",
+     "State subsidies provide desperately needed relief to low-income agricultural cooperatives.",
+     "❌ crying-out wanted / hungry-needed → ✔ desperately needed / urgently required", "Band 7.5+", ["urgently required", "imperatively needed"],
+     "Expresses urgency without sounding conversational: 'This funding is desperately needed.'"),
+    
+    ("painfully obvious", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "So apparent and undeniable that it causes distress or embarrassment.",
+     "It is painfully obvious that current public transport networks cannot cope with peak demand.",
+     "❌ hurtingly visible / clear to pain → ✔ painfully obvious / patently evident", "Band 8.0+", ["patently evident", "glaringly apparent"],
+     "Forceful evaluation when addressing policy oversights."),
+    
+    ("strongly recommend", "verb_adv", "Intermediate", "English Collocations in Use Intermediate", "Unit 7: Intensifying Adverbs", "intensifying_adverbs",
+     "To endorse or advocate an action with maximum confidence and conviction.",
+     "Healthcare specialists strongly recommend thirty minutes of daily cardiovascular exercise.",
+     "❌ heavy recommend / powerfully advise → ✔ strongly recommend", "Band 7.5+", ["urgently advise", "heartily advocate"],
+     "Core phrase for general and academic conclusion paragraphs."),
+    
+    ("deeply rooted", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Extremely firmly established and difficult to eradicate or change.",
+     "Gender stereotyping remains deeply rooted in certain traditional workplace cultures.",
+     "❌ heavily planted / underground-set → ✔ deeply rooted / deeply entrenched", "Band 8.5+", ["firmly entrenched", "ingrained"],
+     "Perfect for sociology and cultural tradition essays."),
+    
+    ("widely regarded", "adv_adj", "Intermediate", "English Collocations in Use Intermediate", "Unit 13: Intensifying Adverbs", "intensifying_adverbs",
+     "Considered by a large consensus of people to be of a certain status.",
+     "The Finnish education model is widely regarded as among the most equitable globally.",
+     "❌ broadly thought as / people-wide seen → ✔ widely regarded as", "Band 7.5+", ["broadly considered", "universally acknowledged"],
+     "Academic attribution: 'The country is widely regarded as a leader in...'"),
+    
+    ("thoroughly enjoy", "verb_adv", "Intermediate", "English Collocations in Use Intermediate", "Unit 7: Intensifying Adverbs", "intensifying_adverbs",
+     "To experience complete, comprehensive pleasure from an activity.",
+     "Visitors thoroughly enjoy participating in indigenous cultural ceremonies.",
+     "❌ deeply like / heavily entertain → ✔ thoroughly enjoy", "Band 7.5+", ["relish", "take immense pleasure in"],
+     "Speaking Part 1 hobbies and interests."),
+    
+    ("utterly devastating", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Causing total, catastrophic ruin or overwhelming heartbreak.",
+     "The hurricane had an utterly devastating impact on the archipelago's agricultural infrastructure.",
+     "❌ all-the-way ruinous / fully destroyed-making → ✔ utterly devastating", "Band 8.5+", ["catastrophic", "ruinous"],
+     "Environmental and humanitarian topic essays."),
+    
+    ("vehemently deny", "verb_adv", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "To reject an accusation with intense, passionate, and vigorous energy.",
+     "The spokesperson vehemently denied allegations of corporate espionage.",
+     "❌ hot-mouth refuse / violently say no → ✔ vehemently deny / vigorously refute", "Band 8.5+", ["vigorously dispute", "flatly deny"],
+     "Legal and political controversy."),
+    
+    ("flatly refuse", "verb_adv", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "To decline completely and unconditionally without leaving room for compromise.",
+     "The trade union flatly refused the proposed reduction in pension entitlements.",
+     "❌ straight-say no / levelly decline → ✔ flatly refuse / reject outright", "Band 8.0+", ["reject outright", "adamantly refuse"],
+     "Expresses firm refusal in labor disputes and diplomacy."),
+    
+    ("freely admit", "verb_adv", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "To willingly and openly acknowledge a fault, shortcoming, or fact.",
+     "Government analysts freely admit that initial economic projections were overly optimistic.",
+     "❌ open-mouth confess / without-jail admit → ✔ freely admit / openly acknowledge", "Band 8.0+", ["openly acknowledge", "concede readily"],
+     "Useful for concessive clauses: 'While proponents freely admit that...'"),
+    
+    ("sorely tempted", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Feeling a very strong, almost irresistible desire to do something (often ill-advised).",
+     "Facing mounting debts, the entrepreneur was sorely tempted to compromise manufacturing standards.",
+     "❌ hurtingly attracted / painfully wanting → ✔ sorely tempted", "Band 8.5+", ["strongly inclined", "heavily seduced by"],
+     "High-register psychological idiom."),
+    
+    ("heavily reliant on", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "Extremely dependent on someone or something for survival or success.",
+     "Many developing economies remain heavily reliant on raw mineral commodity exports.",
+     "❌ deeply leaning / big depend on → ✔ heavily reliant on / heavily dependent on", "Band 8.0+", ["acutely dependent on", "contingent upon"],
+     "Economic and environmental essays."),
+    
+    ("widely held belief", "adj_noun", "Intermediate", "English Collocations in Use Intermediate", "Unit 13: Intensifying Adverbs", "intensifying_adverbs",
+     "An opinion or assumption accepted by large segments of the population.",
+     "It is a widely held belief that money directly equates to lasting personal happiness.",
+     "❌ broad-spread belief / popular thought → ✔ a widely held belief / a common misconception", "Band 7.5+", ["popular conviction", "prevalent perception"],
+     "Opening hook for Task 2 essays examining common attitudes."),
+    
+    ("highly beneficial", "adv_adj", "Intermediate", "English Collocations in Use Intermediate", "Unit 13: Intensifying Adverbs", "intensifying_adverbs",
+     "Producing extremely advantageous, helpful, or positive results.",
+     "Subsidising renewable installations has proved highly beneficial for local economies.",
+     "❌ very good helpful / strong good → ✔ highly beneficial / immensely advantageous", "Band 7.5+", ["immensely advantageous", "enormously helpful"],
+     "Upgrades 'very good' or 'very helpful' across all essays."),
+    
+    ("gravely concerned", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Deeply, seriously, and acutely worried about a dangerous situation.",
+     "Medical authorities are gravely concerned regarding the proliferation of antibiotic-resistant bacteria.",
+     "❌ heavy worried / dark concerned → ✔ gravely concerned / deeply apprehensive", "Band 8.5+", ["deeply apprehensive", "profoundly troubled"],
+     "Health and geopolitical crisis essays."),
+    
+    ("fiercely competitive", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "Characterized by intense, aggressive, and unrelenting rivalry.",
+     "Gaining admission to Ivy League universities has become a fiercely competitive endeavor.",
+     "❌ wildly fighting / animal-like competitive → ✔ fiercely competitive / ruthlessly competitive", "Band 8.5+", ["intensely rivalrous", "cut-throat"],
+     "Education and career essays."),
+    
+    ("blatantly obvious", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Conspicuously, shamelessly, and unmistakably noticeable.",
+     "It was blatantly obvious that the marketing campaign was directed at vulnerable minors.",
+     "❌ loud-clear visible / shameless open → ✔ blatantly obvious / glaringly apparent", "Band 8.5+", ["glaringly apparent", "manifestly clear"],
+     "Media and ethical essays."),
+    
+    ("painstakingly slow", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Progressing with extreme care, meticulous attention, but frustratingly little speed.",
+     "The restitution of looted cultural artifacts has been a painstakingly slow process.",
+     "❌ hurtingly un-fast / tired slow → ✔ painstakingly slow / agonizingly sluggish", "Band 8.5+", ["excruciatingly slow", "sluggish"],
+     "Essays discussing bureaucratic inertia."),
+    
+    ("sharply criticize", "verb_adv", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "To point out faults or condemn something with piercing severity.",
+     "The international community sharply criticized the regime's clampdown on independent press.",
+     "❌ knife-criticize / point-condemn → ✔ sharply criticize / roundly condemn", "Band 8.0+", ["severely condemn", "castigate"],
+     "Politics and media coverage essays."),
+    
+    ("virtually impossible", "adv_adj", "Intermediate", "English Collocations in Use Intermediate", "Unit 7: Intensifying Adverbs", "intensifying_adverbs",
+     "Almost completely unattainable or unrealistic in practice.",
+     "Monitoring illicit crypto-currency transfers has proved virtually impossible for regulators.",
+     "❌ nearly no-way / basically impossible → ✔ virtually impossible", "Band 7.5+", ["practically unachievable", "almost insurmountable"],
+     "Upgrades 'almost cannot do'."),
+    
+    ("inextricably linked", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "So tightly joined, connected, or intertwined that separation is impossible.",
+     "Economic prosperity and environmental stewardship are inextricably linked in the modern era.",
+     "❌ un-untie connected / knot-together joined → ✔ inextricably linked / intrinsically tied", "Band 8.5+", ["intrinsically connected", "intertwined"],
+     "The ultimate Band 9 phrase for interrelated global issues."),
+    
+    ("staunchly opposed", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 5: Strongly, Strictly, Distinctly", "intensifying_adverbs",
+     "Firmly, loyally, and unswervingly against a particular policy or ideology.",
+     "Local conservationist groups are staunchly opposed to the proposed coastal expressway.",
+     "❌ rock-like against / strongly enemy to → ✔ staunchly opposed / vehemently against", "Band 8.5+", ["resolutely against", "adamantly opposed"],
+     "Use when depicting political or societal resistance."),
+    
+    ("terminally ill", "adv_adj", "Intermediate", "English Collocations in Use Intermediate", "Unit 22: Health and Illness", "intensifying_adverbs",
+     "Suffering from a disease that cannot be cured and is destined to cause death.",
+     "Palliative hospices provide specialized comfort care for terminally ill patients.",
+     "❌ deadly sick / end-life ill → ✔ terminally ill", "Band 7.5+", ["incurably sick"],
+     "Medical ethics and hospice care."),
+    
+    ("fatally flawed", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Suffering from an essential defect that completely invalidates or ruins the whole.",
+     "The proposed urban zoning blueprint was fatally flawed from its very inception.",
+     "❌ deadly broken / death-defect → ✔ fatally flawed / irreparably compromised", "Band 8.5+", ["fundamentally defective", "ruinously compromised"],
+     "Sharp analytical critique for Task 2."),
+    
+    ("profoundly grateful", "adv_adj", "Advanced", "English Collocations in Use Advanced", "Unit 4: Utterly, Blissfully, Bitterly", "intensifying_adverbs",
+     "Experiencing heartfelt, deep-seated emotional appreciation.",
+     "Recipients of academic scholarships are profoundly grateful for the life-changing opportunity.",
+     "❌ deep-soul thankful / huge grateful → ✔ profoundly grateful", "Band 8.5+", ["deeply thankful", "immensely indebted"],
+     "Formal appreciation and personal narrative."),
+    
+    ("actively encourage", "verb_adv", "Intermediate", "English Collocations in Use Intermediate", "Unit 7: Intensifying Adverbs", "intensifying_adverbs",
+     "To take deliberate, energetic measures to foster or promote an outcome.",
+     "Progressive corporations actively encourage telecommuting to reduce urban traffic emissions.",
+     "❌ lively push / moving-forward encourage → ✔ actively encourage / proactively promote", "Band 7.5+", ["proactively promote", "strongly incentivize"],
+     "Policy solution paragraphs: 'Governments should actively encourage...'")
+]
