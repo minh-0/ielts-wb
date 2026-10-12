@@ -14,7 +14,7 @@ export const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[20rem] sm:auto-rows-[22rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5 sm:gap-6",
+        "grid w-full auto-rows-[14rem] sm:auto-rows-[15.5rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5",
         className,
       )}
     >
@@ -46,16 +46,16 @@ export const BentoCard = ({
     key={name}
     onClick={onClick}
     className={cn(
-      "group relative col-span-3 flex flex-col justify-between overflow-hidden border transition-colors duration-200 select-none",
+      "group relative col-span-3 flex flex-col justify-between overflow-hidden border transition-all duration-200 select-none",
       // Editorial hairline styling
-      "border-neutral-200 dark:border-neutral-800 bg-white/40 dark:bg-neutral-950/40 hover:border-neutral-400 dark:hover:border-neutral-600",
+      "border-neutral-200 dark:border-neutral-800 bg-white/40 dark:bg-neutral-950/40 hover:border-neutral-900 dark:hover:border-neutral-100 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30",
       onClick ? "cursor-pointer" : "",
       className,
     )}
   >
-    <div className="absolute inset-0 z-0 overflow-hidden">{background}</div>
+    {background && <div className="absolute inset-0 z-0 overflow-hidden">{background}</div>}
 
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2.5 p-6 sm:p-7 transition-all duration-300 group-hover:-translate-y-7 sm:group-hover:-translate-y-8">
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2 p-5 sm:p-6 transition-all duration-200 group-hover:-translate-y-5">
       {Icon && (
         <div className="w-9 h-9 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:border-neutral-900 dark:group-hover:border-neutral-100">
           <Icon className="h-4.5 w-4.5 text-neutral-800 dark:text-neutral-200" />
