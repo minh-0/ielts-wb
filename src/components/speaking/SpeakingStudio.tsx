@@ -344,18 +344,18 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
   return (
     <div className="space-y-8">
-      {/* Pillar Navigation Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200 dark:border-neutral-800">
-        <div className="flex items-center gap-2 flex-wrap">
+      {/* Pillar Navigation Tabs: Clean underline style */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-2">
+        <div className="flex items-center gap-6 overflow-x-auto">
           <button
             onClick={() => {
               setActiveTab("cue_card_scaffolder");
               stopSpeaking();
             }}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+            className={`py-1 text-xs transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === "cue_card_scaffolder"
-                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/40"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -367,10 +367,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               setActiveTab("shadowing_intonation");
               stopSpeaking();
             }}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+            className={`py-1 text-xs transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === "shadowing_intonation"
-                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/40"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             <Headphones className="w-3.5 h-3.5" />
@@ -382,10 +382,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               setActiveTab("fluency_gym");
               stopSpeaking();
             }}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+            className={`py-1 text-xs transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === "fluency_gym"
-                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
-                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/40"
+                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
             }`}
           >
             <Zap className="w-3.5 h-3.5 text-amber-500" />
@@ -405,7 +405,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
       {activeTab === "cue_card_scaffolder" && (
         <div className="space-y-6 animate-in fade-in duration-200">
           {/* Cue Card Selection Toolbar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-200 dark:border-neutral-800 pb-3">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Cue Card Bank
@@ -433,7 +433,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </button>
               <button
                 onClick={handleNextPrompt}
-                className="flex items-center gap-1 px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60 cursor-pointer font-medium text-neutral-700 dark:text-neutral-300"
+                className="flex items-center gap-1 px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60 cursor-pointer font-medium text-neutral-700 dark:text-neutral-300"
               >
                 <span>Next</span>
                 <ChevronRight className="w-3 h-3" />
@@ -453,10 +453,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     resetPrepAndDelivery();
                   }
                 }}
-                className="w-full p-2.5 pr-8 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 appearance-none cursor-pointer focus:outline-none hover:border-neutral-300 dark:hover:border-neutral-700 font-medium"
+                className="w-full p-2.5 pr-8 text-xs border border-neutral-200 dark:border-neutral-800 bg-transparent text-neutral-900 dark:text-neutral-100 appearance-none cursor-pointer focus:outline-none hover:border-neutral-300 dark:hover:border-neutral-700 font-medium"
               >
                 {cueCardPrompts.map((p, idx) => (
-                  <option key={p.id} value={p.id}>
+                  <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900">
                     #{idx + 1}: [{p.topic}] {p.question}
                   </option>
                 ))}
@@ -469,104 +469,109 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               onChange={(e) => setCustomQuestion(e.target.value)}
               placeholder="Paste or type your custom cue card prompt here..."
               rows={2}
-              className="w-full p-2.5 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none"
+              className="w-full p-2.5 text-xs border border-neutral-200 dark:border-neutral-800 bg-transparent text-neutral-900 dark:text-neutral-100 focus:outline-none"
             />
           )}
 
-          {/* Authentic Cue Card Display Box */}
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-4">
+          {/* Authentic Cue Card Display Box: Unboxed editorial card */}
+          <div className="py-5 border-y border-neutral-200 dark:border-neutral-800 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 font-medium text-neutral-800 dark:text-neutral-200">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                 {useCustomPrompt ? "Custom Topic" : selectedPrompt.topic}
               </span>
-              <span className="text-neutral-400">Target Duration: 2 full minutes</span>
+              <span className="text-neutral-400 text-xs">Target Duration: 2 full minutes</span>
             </div>
 
-            <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+            <h3 className="text-xl sm:text-2xl font-serif font-normal text-neutral-900 dark:text-neutral-100 leading-snug">
               {useCustomPrompt
                 ? customQuestion.trim() || "Your Custom Cue Card Prompt"
                 : selectedPrompt.question}
             </h3>
 
             {!useCustomPrompt && selectedPrompt.bulletPoints && (
-              <div className="pt-2 text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300 border-t border-neutral-100 dark:border-neutral-800/80">
+              <div className="pt-3 text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300 border-t border-neutral-200 dark:border-neutral-800">
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-1">
                   You should say:
                 </span>
-                {selectedPrompt.bulletPoints.map((bullet, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
-                    <span>{bullet}</span>
-                  </div>
-                ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {selectedPrompt.bulletPoints.map((bullet, idx) => (
+                    <div key={idx} className="flex items-baseline gap-2 text-neutral-600 dark:text-neutral-400">
+                      <span className="text-neutral-400 dark:text-neutral-600 font-mono text-[10px]">•</span>
+                      <span>{bullet}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
 
-          {/* Scaffolding Framework Selector */}
+          {/* Scaffolding Framework Selector: Clean 3-column hairline grid */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-xs pb-1 border-b border-neutral-200 dark:border-neutral-800">
               <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
                 <Compass className="w-3.5 h-3.5 text-neutral-500" />
                 Select Story Scaffolding Framework
               </span>
-              <span className="text-neutral-400">Choose how to structure your 2-minute narrative</span>
+              <span className="text-neutral-400 text-[11px]">Choose narrative structure</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800">
               <button
                 onClick={() => setActiveFramework("four_wh")}
-                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                className={`p-4 text-left cursor-pointer transition-colors ${
                   activeFramework === "four_wh"
-                    ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-xs"
-                    : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+                    ? "bg-neutral-100/70 dark:bg-neutral-900/60"
+                    : "bg-transparent hover:bg-neutral-50 dark:hover:bg-neutral-900/30"
                 }`}
               >
-                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1">
-                  1. The 4-Wh Framework
+                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1 flex items-center justify-between">
+                  <span>1. The 4-Wh Framework</span>
+                  {activeFramework === "four_wh" && <span className="text-[10px] font-mono text-neutral-500">Selected</span>}
                 </div>
                 <div className="text-[11px] text-neutral-500 leading-relaxed">
-                  Who/What $\rightarrow$ When/Where $\rightarrow$ Why Important $\rightarrow$ How It Felt. Best for general cue cards and memory recall.
+                  Who/What &rarr; When/Where &rarr; Why Important &rarr; How It Felt. Best for general cue cards and memory recall.
                 </div>
               </button>
 
               <button
                 onClick={() => setActiveFramework("ppf")}
-                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                className={`p-4 text-left cursor-pointer transition-colors ${
                   activeFramework === "ppf"
-                    ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-xs"
-                    : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+                    ? "bg-neutral-100/70 dark:bg-neutral-900/60"
+                    : "bg-transparent hover:bg-neutral-50 dark:hover:bg-neutral-900/30"
                 }`}
               >
-                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1">
-                  2. P.P.F. (Past - Present - Future)
+                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1 flex items-center justify-between">
+                  <span>2. P.P.F. (Past - Present - Future)</span>
+                  {activeFramework === "ppf" && <span className="text-[10px] font-mono text-neutral-500">Selected</span>}
                 </div>
                 <div className="text-[11px] text-neutral-500 leading-relaxed">
-                  How it started in the past $\rightarrow$ Current significance today $\rightarrow$ Future aspirations. Showcases diverse grammatical tenses.
+                  How it started in past &rarr; Current significance &rarr; Future aspirations. Showcases diverse grammatical tenses.
                 </div>
               </button>
 
               <button
                 onClick={() => setActiveFramework("story_arc")}
-                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                className={`p-4 text-left cursor-pointer transition-colors ${
                   activeFramework === "story_arc"
-                    ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-xs"
-                    : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+                    ? "bg-neutral-100/70 dark:bg-neutral-900/60"
+                    : "bg-transparent hover:bg-neutral-50 dark:hover:bg-neutral-900/30"
                 }`}
               >
-                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1">
-                  3. Story Arc & Obstacle
+                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1 flex items-center justify-between">
+                  <span>3. Story Arc & Obstacle</span>
+                  {activeFramework === "story_arc" && <span className="text-[10px] font-mono text-neutral-500">Selected</span>}
                 </div>
                 <div className="text-[11px] text-neutral-500 leading-relaxed">
-                  The goal $\rightarrow$ Unexpected complication or challenge $\rightarrow$ Resolution & life lesson. Creates gripping listener engagement.
+                  The goal &rarr; Unexpected complication &rarr; Resolution & takeaway. Creates gripping listener engagement.
                 </div>
               </button>
             </div>
           </div>
 
-          {/* 1-Minute Prep Planner & Scratchpad */}
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          {/* 1-Minute Prep Planner & Scratchpad: Unboxed hairline section */}
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs pb-2 border-b border-neutral-200 dark:border-neutral-800">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-neutral-500" />
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
@@ -578,14 +583,14 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="px-3 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+                <div className="px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 font-mono font-semibold text-neutral-900 dark:text-neutral-100">
                   {formatTime(prepSecondsRemaining)}
                 </div>
 
                 {!isPrepping && prepSecondsRemaining === 60 ? (
                   <button
                     onClick={() => setIsPrepping(true)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-medium cursor-pointer"
                   >
                     <Play className="w-3 h-3" />
                     <span>Start 60s Timer</span>
@@ -593,7 +598,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 ) : isPrepping ? (
                   <button
                     onClick={() => setIsPrepping(false)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 font-medium cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1 border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium cursor-pointer"
                   >
                     <Pause className="w-3 h-3" />
                     <span>Pause</span>
@@ -604,7 +609,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       setIsPrepping(false);
                       setPrepSecondsRemaining(60);
                     }}
-                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 text-xs cursor-pointer"
                   >
                     <RotateCcw className="w-3 h-3" />
                     <span>Reset</span>
@@ -613,8 +618,8 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </div>
             </div>
 
-            {/* Framework Guidance Hint & Insert Button */}
-            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs space-y-2">
+            {/* Framework Guidance Hint: Unboxed editorial callout */}
+            <div className="p-3.5 border-l-2 border-neutral-900 dark:border-neutral-100 bg-neutral-50/50 dark:bg-neutral-900/20 text-xs space-y-2">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
                   <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
@@ -665,33 +670,33 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 onChange={(e) => setPrepNotes(e.target.value)}
                 placeholder="Jot down quick abbreviations, transition keywords, and story triggers..."
                 rows={4}
-                className="w-full p-3 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none font-mono"
+                className="w-full p-3 text-xs border border-neutral-200 dark:border-neutral-800 bg-transparent text-neutral-900 dark:text-neutral-100 focus:outline-none font-mono focus:border-neutral-900 dark:focus:border-neutral-100"
               />
             </div>
           </div>
 
-          {/* Target Lexical Pack (Band 8+ Collocations & Idioms) */}
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
-            <div className="flex items-center justify-between text-xs">
+          {/* Target Lexical Pack: Unboxed hairline divided grid */}
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+            <div className="flex items-center justify-between text-xs pb-1 border-b border-neutral-200 dark:border-neutral-800">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-500" />
+                <Sparkles className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  Target Lexical Pack: Band 8+ Vocabulary for this Cue Card
+                  Target Lexical Pack: Band 8+ Collocations for this Cue Card
                 </span>
               </div>
               <span className="text-neutral-400 text-[11px]">
-                Challenge: Weave at least 2 of these into your speech!
+                Aim to integrate at least 2 target collocations naturally
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800">
               {activeLexicalPack.items.map((item, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1.5"
+                  className="p-4 text-xs space-y-2"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                    <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                       {item.phrase}
                     </span>
                     <button
@@ -702,7 +707,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       {copiedKey === `lex-${idx}` ? (
                         <>
                           <Check className="w-3 h-3 text-emerald-500" />
-                          <span className="text-emerald-500">Copied</span>
+                          <span className="text-emerald-500 font-mono">Copied</span>
                         </>
                       ) : (
                         <>
@@ -712,19 +717,19 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       )}
                     </button>
                   </div>
-                  <p className="text-[11px] text-neutral-500 leading-tight">
+                  <p className="text-[11px] text-neutral-500 leading-relaxed">
                     {item.meaning}
                   </p>
-                  <p className="text-[11px] text-neutral-700 dark:text-neutral-300 italic bg-white dark:bg-neutral-950 p-2 rounded-lg border border-neutral-100 dark:border-neutral-900">
-                    "{item.example}"
-                  </p>
+                  <div className="border-l-2 border-emerald-500/60 dark:border-emerald-400/60 pl-2.5 py-0.5 text-[11px] italic text-neutral-700 dark:text-neutral-300">
+                    &ldquo;{item.example}&rdquo;
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* 2-Minute Speaking Delivery Pacer & Checkpoints */}
-          <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5 text-center">
+          {/* 2-Minute Speaking Delivery Pacer: Unboxed hairline section */}
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-5 text-center">
             <div className="space-y-1">
               <div className="text-4xl font-mono font-medium text-neutral-900 dark:text-neutral-100">
                 {formatTime(deliverySeconds)} / 02:00
@@ -738,18 +743,18 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </span>
             </div>
 
-            {/* Checkpoint Timeline (4 x 30s Segments) */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-left">
+            {/* Checkpoint Timeline: Connected 4-segment hairline strip */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 border border-neutral-200 dark:border-neutral-800 divide-y sm:divide-y-0 sm:divide-x divide-neutral-200 dark:divide-neutral-800 text-left">
               <div
-                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                className={`p-3 transition-colors text-xs ${
                   deliverySeconds >= 0 && deliverySeconds < 30 && isSpeakingDelivery
-                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    ? "bg-emerald-500/10 dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-200"
                     : deliverySeconds >= 30
-                    ? "border-neutral-200 dark:border-neutral-800 opacity-60"
-                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                    ? "opacity-60"
+                    : "text-neutral-400"
                 }`}
               >
-                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider mb-0.5">
                   0:00 - 0:30
                 </div>
                 <div className="font-medium text-[11px]">1. Scene & Setup</div>
@@ -757,15 +762,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </div>
 
               <div
-                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                className={`p-3 transition-colors text-xs ${
                   deliverySeconds >= 30 && deliverySeconds < 60 && isSpeakingDelivery
-                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    ? "bg-emerald-500/10 dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-200"
                     : deliverySeconds >= 60
-                    ? "border-neutral-200 dark:border-neutral-800 opacity-60"
-                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                    ? "opacity-60"
+                    : "text-neutral-400"
                 }`}
               >
-                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider mb-0.5">
                   0:30 - 1:00
                 </div>
                 <div className="font-medium text-[11px]">2. Narrative Details</div>
@@ -773,15 +778,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </div>
 
               <div
-                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                className={`p-3 transition-colors text-xs ${
                   deliverySeconds >= 60 && deliverySeconds < 90 && isSpeakingDelivery
-                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    ? "bg-emerald-500/10 dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-200"
                     : deliverySeconds >= 90
-                    ? "border-neutral-200 dark:border-neutral-800 opacity-60"
-                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                    ? "opacity-60"
+                    : "text-neutral-400"
                 }`}
               >
-                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider mb-0.5">
                   1:00 - 1:30
                 </div>
                 <div className="font-medium text-[11px]">3. Key Moment</div>
@@ -789,13 +794,13 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </div>
 
               <div
-                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                className={`p-3 transition-colors text-xs ${
                   deliverySeconds >= 90 && isSpeakingDelivery
-                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
-                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                    ? "bg-emerald-500/10 dark:bg-emerald-950/30 text-emerald-950 dark:text-emerald-200"
+                    : "text-neutral-400"
                 }`}
               >
-                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider mb-0.5">
                   1:30 - 2:00
                 </div>
                 <div className="font-medium text-[11px]">4. Reflection</div>
@@ -808,7 +813,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               {!isSpeakingDelivery ? (
                 <button
                   onClick={startDeliveryRecording}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-semibold text-xs cursor-pointer hover:opacity-90 transition-transform hover:scale-105 shadow-xs"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium text-xs cursor-pointer hover:opacity-90 transition-opacity"
                 >
                   <Mic className="w-4 h-4 text-red-400" />
                   <span>Start 2-Minute Practice (Record Voice)</span>
@@ -816,7 +821,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               ) : (
                 <button
                   onClick={stopDeliveryRecording}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 text-white font-semibold text-xs cursor-pointer hover:bg-red-700 transition-colors shadow-xs"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white font-medium text-xs cursor-pointer hover:bg-red-700 transition-colors"
                 >
                   <Square className="w-4 h-4" />
                   <span>Stop Practice</span>
@@ -829,7 +834,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     setDeliverySeconds(0);
                     setDeliveryAudioUrl(null);
                   }}
-                  className="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                  className="p-2 border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
                   title="Retake delivery"
                 >
                   <RotateCcw className="w-4 h-4" />
@@ -837,15 +842,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               )}
             </div>
 
-            {/* Local Voice Playback (Zero External Server Calls) */}
+            {/* Local Voice Playback */}
             {deliveryAudioUrl && (
-              <div className="max-w-md mx-auto p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-left space-y-2">
+              <div className="max-w-md mx-auto pt-3 border-t border-neutral-200 dark:border-neutral-800 text-left space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
                     <Volume2 className="w-3.5 h-3.5 text-neutral-500" />
                     Listen Back to Your 2-Minute Delivery
                   </span>
-                  <span className="text-[11px] text-neutral-400">
+                  <span className="text-[11px] font-mono text-neutral-400">
                     Delivered: {formatTime(deliverySeconds)}
                   </span>
                 </div>
@@ -857,27 +862,27 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             )}
           </div>
 
-          {/* Official Cambridge Examiner Pro-Tips */}
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-3">
-            <div className="flex items-center gap-2 font-semibold text-neutral-900 dark:text-neutral-100">
+          {/* Official Cambridge Examiner Pro-Tips: Unboxed 3-column hairline section */}
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+            <div className="flex items-center gap-2 font-semibold text-xs text-neutral-900 dark:text-neutral-100">
               <Info className="w-4 h-4 text-neutral-500" />
               <span>Examiner Pro-Tips for Part 2 Mastery</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
-              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+            <div className="grid grid-cols-1 md:grid-cols-3 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800 text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
+              <div className="p-4">
                 <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
                   1. Tell a Story, Not a List
                 </strong>
                 Examiners penalize answers that sound like reading grocery lists ("First bullet is... second is..."). Connect points naturally with temporal transitions.
               </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+              <div className="p-4">
                 <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
                   2. Never Stop Early
                 </strong>
                 If you stop before 1:40, the examiner will wait in silence or prompt you. Keep expanding on personal feelings and reflections until they interrupt you.
               </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+              <div className="p-4">
                 <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
                   3. Use Temporal Signposts
                 </strong>
@@ -893,8 +898,8 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
       {/* ======================================================== */}
       {activeTab === "shadowing_intonation" && (
         <div className="space-y-6 animate-in fade-in duration-200">
-          {/* Top Model Answer Selector */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+          {/* Top Model Answer Selector & Speed Control */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-200 dark:border-neutral-800 pb-3">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Band 9 Audio Shadowing Models
@@ -904,17 +909,17 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </span>
             </div>
 
-            {/* Speed Control Pill */}
+            {/* Speed Control */}
             <div className="flex items-center gap-2">
-              <span className="text-neutral-400">Playback Speed:</span>
-              <div className="inline-flex rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 p-0.5">
+              <span className="text-neutral-400">Speed:</span>
+              <div className="inline-flex border border-neutral-200 dark:border-neutral-800 divide-x divide-neutral-200 dark:divide-neutral-800">
                 {[0.85, 1.0, 1.15].map((speed) => (
                   <button
                     key={speed}
                     onClick={() => setSpeechSpeed(speed)}
-                    className={`px-2 py-0.5 rounded-md text-[11px] font-semibold cursor-pointer transition-colors ${
+                    className={`px-2.5 py-0.5 text-[11px] font-mono cursor-pointer transition-colors ${
                       speechSpeed === speed
-                        ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 shadow-xs"
+                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-semibold"
                         : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
                     }`}
                   >
@@ -925,8 +930,8 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             </div>
           </div>
 
-          {/* Model Switcher Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+          {/* Model Switcher Tabs: Clean horizontal line */}
+          <div className="flex items-center gap-6 overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 pb-2 text-xs">
             {SHADOWING_MODELS.map((model) => (
               <button
                 key={model.id}
@@ -936,10 +941,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                   stopSpeaking();
                   setShadowAudioUrl(null);
                 }}
-                className={`px-3.5 py-2 rounded-xl whitespace-nowrap font-medium cursor-pointer transition-all border ${
+                className={`py-1 whitespace-nowrap cursor-pointer transition-colors ${
                   selectedModel.id === model.id
-                    ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
-                    : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
                 }`}
               >
                 {model.topic}
@@ -947,13 +952,13 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             ))}
           </div>
 
-          {/* Selected Model Question Banner */}
-          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
-            <span className="text-[11px] uppercase font-semibold tracking-wider text-neutral-400">
+          {/* Selected Model Question Banner: Unboxed editorial prompt */}
+          <div className="py-4 border-b border-neutral-200 dark:border-neutral-800 space-y-1">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-400">
               Exam Prompt ({selectedModel.part.toUpperCase()}):
             </span>
-            <div className="font-serif text-base font-bold text-neutral-900 dark:text-neutral-100">
-              "{selectedModel.question}"
+            <div className="font-serif text-lg font-normal text-neutral-900 dark:text-neutral-100">
+              &ldquo;{selectedModel.question}&rdquo;
             </div>
             <p className="text-[11px] text-neutral-500 pt-0.5">
               {selectedModel.contextSummary}
@@ -961,7 +966,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           </div>
 
           {/* Full Model Answer Audio Control */}
-          <div className="flex items-center justify-between p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs">
+          <div className="flex items-center justify-between py-3 border-b border-neutral-200 dark:border-neutral-800 text-xs">
             <div className="flex items-center gap-2">
               <Volume2 className="w-4 h-4 text-neutral-500" />
               <span className="font-medium text-neutral-800 dark:text-neutral-200">
@@ -978,7 +983,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       setIsPlayingFullAudio(false)
                     );
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-semibold cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-medium cursor-pointer"
                 >
                   <Play className="w-3 h-3" />
                   <span>Play Full Model ({speechSpeed}x)</span>
@@ -986,7 +991,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               ) : (
                 <button
                   onClick={stopSpeaking}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-semibold cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs font-medium cursor-pointer"
                 >
                   <Square className="w-3 h-3 text-red-500" />
                   <span>Stop</span>
@@ -995,10 +1000,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             </div>
           </div>
 
-          {/* Sentence-by-Sentence Shadowing Card */}
-          <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5">
+          {/* Sentence-by-Sentence Shadowing Studio: Unboxed hairline layout */}
+          <div className="space-y-4 pt-2">
             {/* Sentence Header & Progress */}
-            <div className="flex items-center justify-between text-xs pb-3 border-b border-neutral-100 dark:border-neutral-800/80">
+            <div className="flex items-center justify-between text-xs pb-3 border-b border-neutral-200 dark:border-neutral-800">
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                 Sentence {activeSentenceIndex + 1} of {selectedModel.sentences.length}
               </span>
@@ -1010,7 +1015,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     setShadowAudioUrl(null);
                   }}
                   disabled={activeSentenceIndex === 0}
-                  className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 disabled:opacity-30 cursor-pointer font-medium"
+                  className="px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 disabled:opacity-30 cursor-pointer font-medium"
                 >
                   Prev
                 </button>
@@ -1023,7 +1028,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     setShadowAudioUrl(null);
                   }}
                   disabled={activeSentenceIndex === selectedModel.sentences.length - 1}
-                  className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 disabled:opacity-30 cursor-pointer font-medium"
+                  className="px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 disabled:opacity-30 cursor-pointer font-medium"
                 >
                   Next
                 </button>
@@ -1031,9 +1036,9 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             </div>
 
             {/* Visual Intonation & Stress Display */}
-            <div className="p-5 rounded-xl border border-neutral-100 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-3">
-              <div className="text-xs text-neutral-400 font-medium">
-                Rhythm & Pitch Contour: (Bold = Stressed Syllables • ↗ Rising Pitch • ↘ Falling Pitch)
+            <div className="py-4 border-b border-neutral-200 dark:border-neutral-800 space-y-2">
+              <div className="text-[11px] font-mono text-neutral-400">
+                Rhythm & Pitch Contour: (Bold = Stressed • ↗ Rising Pitch • ↘ Falling Pitch)
               </div>
               <div
                 className="text-base sm:text-lg font-serif text-neutral-900 dark:text-neutral-100 leading-relaxed"
@@ -1041,9 +1046,9 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               />
             </div>
 
-            {/* Intonation Explanation & Stressed Words */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 space-y-1">
+            {/* Intonation Explanation & Stressed Words: Clean 2 columns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800 text-xs">
+              <div className="p-4 space-y-1">
                 <span className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
                   <ArrowUpRight className="w-3.5 h-3.5 text-blue-500" />
                   Intonation Logic:
@@ -1053,7 +1058,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 space-y-1.5">
+              <div className="p-4 space-y-1.5">
                 <span className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
                   Key Collocations & Fillers:
@@ -1062,7 +1067,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                   {activeSentence.keyCollocations.map((col, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-medium text-[11px]"
+                      className="px-2 py-0.5 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-medium text-[11px]"
                     >
                       {col}
                     </span>
@@ -1072,7 +1077,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             </div>
 
             {/* Sentence Listen & Self-Shadowing Recorder */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-neutral-100 dark:border-neutral-800/80">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-neutral-200 dark:border-neutral-800">
               <div className="flex items-center gap-2">
                 {!isPlayingSentenceAudio ? (
                   <button
@@ -1082,7 +1087,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                         setIsPlayingSentenceAudio(false)
                       );
                     }}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-semibold cursor-pointer shadow-xs hover:opacity-90"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-medium cursor-pointer hover:opacity-90 transition-opacity"
                   >
                     <Volume2 className="w-3.5 h-3.5" />
                     <span>Hear Native Sentence ({speechSpeed}x)</span>
@@ -1090,7 +1095,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 ) : (
                   <button
                     onClick={stopSpeaking}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-semibold cursor-pointer"
+                    className="flex items-center gap-1.5 px-4 py-2 border border-neutral-300 dark:border-neutral-700 text-xs font-medium cursor-pointer"
                   >
                     <Square className="w-3.5 h-3.5 text-red-500" />
                     <span>Stop Audio</span>
@@ -1103,7 +1108,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 {!isShadowRecording ? (
                   <button
                     onClick={startShadowRecording}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium cursor-pointer"
+                    className="flex items-center gap-1.5 px-3.5 py-2 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium cursor-pointer"
                   >
                     <Mic className="w-3.5 h-3.5 text-red-500" />
                     <span>Record My Shadowing</span>
@@ -1111,7 +1116,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 ) : (
                   <button
                     onClick={stopShadowRecording}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold cursor-pointer animate-pulse"
+                    className="flex items-center gap-1.5 px-3.5 py-2 bg-red-600 text-white text-xs font-medium cursor-pointer animate-pulse"
                   >
                     <Square className="w-3.5 h-3.5" />
                     <span>Stop Shadowing</span>
@@ -1122,7 +1127,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
             {/* Shadow Audio Playback */}
             {shadowAudioUrl && (
-              <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs space-y-2">
+              <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 text-xs space-y-2">
                 <span className="font-semibold text-neutral-800 dark:text-neutral-200">
                   Compare Your Rhythm Against the Native Model:
                 </span>
@@ -1131,25 +1136,25 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             )}
           </div>
 
-          {/* Pronunciation & Connected Speech Coaching Guide */}
-          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-3">
-            <div className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+          {/* Pronunciation & Connected Speech Coaching Guide: Clean 2 columns */}
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+            <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
               <Lightbulb className="w-4 h-4 text-amber-500" />
               <span>Band 9 Pronunciation & Connected Speech Rules</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-neutral-600 dark:text-neutral-400 text-[11px] leading-relaxed">
-              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+            <div className="grid grid-cols-1 md:grid-cols-2 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800 text-neutral-600 dark:text-neutral-400 text-[11px] leading-relaxed">
+              <div className="p-4">
                 <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
                   Liaison (Consonant-to-Vowel Linking)
                 </strong>
-                Native speakers never pause between words. "Turn it off" is pronounced as <em>/tur-ni-toff/</em>. Link final consonants smoothly to following vowels.
+                Native speakers never pause between words. &ldquo;Turn it off&rdquo; is pronounced smoothly as <em>/tur-ni-toff/</em>. Link final consonants directly to following vowels.
               </div>
-              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+              <div className="p-4">
                 <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
                   Intonation & Pitch Variety
                 </strong>
-                Monotone English sounds robotic and triggers Band 5.0 in Pronunciation. Use rising pitch ↗ on clauses to show connection, and firm downward pitch ↘ on final nouns.
+                Monotone English sounds robotic and triggers Band 5.0 in Pronunciation. Use rising pitch ↗ on clauses to signal continuation, and downward pitch ↘ on final thoughts.
               </div>
             </div>
           </div>
@@ -1161,17 +1166,17 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
       {/* ======================================================== */}
       {activeTab === "fluency_gym" && (
         <div className="space-y-6 animate-in fade-in duration-200">
-          {/* Sub-drill Switcher */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs border-b border-neutral-100 dark:border-neutral-800/80">
+          {/* Sub-drill Switcher: Clean horizontal underline tabs */}
+          <div className="flex items-center gap-6 overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 pb-2 text-xs">
             <button
               onClick={() => {
                 setActiveGymDrill("area_builder");
                 stopSpeaking();
               }}
-              className={`px-3.5 py-2 rounded-xl font-semibold cursor-pointer transition-colors ${
+              className={`py-1 cursor-pointer transition-colors ${
                 activeGymDrill === "area_builder"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               1. The A.R.E.A. Formula Builder
@@ -1182,13 +1187,13 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 setActiveGymDrill("buying_time_fillers");
                 stopSpeaking();
               }}
-              className={`px-3.5 py-2 rounded-xl font-semibold cursor-pointer transition-colors ${
+              className={`py-1 cursor-pointer transition-colors ${
                 activeGymDrill === "buying_time_fillers"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
-              2. "Stall & Buy-Time" Fillers Trainer
+              2. &ldquo;Stall & Buy-Time&rdquo; Fillers Trainer
             </button>
 
             <button
@@ -1196,10 +1201,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 setActiveGymDrill("collocation_flashcards");
                 stopSpeaking();
               }}
-              className={`px-3.5 py-2 rounded-xl font-semibold cursor-pointer transition-colors ${
+              className={`py-1 cursor-pointer transition-colors ${
                 activeGymDrill === "collocation_flashcards"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
               3. Spoken Collocation Upgrade Cards
@@ -1210,9 +1215,9 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           {activeGymDrill === "area_builder" && (
             <div className="space-y-6">
               {/* Question Banner */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-200 dark:border-neutral-800 pb-3">
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  A.R.E.A. Answering Formula (Answer $\rightarrow$ Reason $\rightarrow$ Example $\rightarrow$ Alternative)
+                  A.R.E.A. Answering Formula (Answer &rarr; Reason &rarr; Example &rarr; Alternative)
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="text-neutral-400">Drill {activeAreaIndex + 1} of {AREA_DRILLS.length}</span>
@@ -1225,31 +1230,30 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       setAreaExampleText("");
                       setAreaAltText("");
                     }}
-                    className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium cursor-pointer"
+                    className="px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium cursor-pointer"
                   >
                     Next Prompt
                   </button>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
-                <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+              {/* Discussion Prompt */}
+              <div className="py-4 border-b border-neutral-200 dark:border-neutral-800 text-xs space-y-1">
+                <span className="text-[11px] font-mono font-semibold text-neutral-400 uppercase tracking-wider">
                   Discussion Prompt ({activeAreaQuestion.category}):
                 </span>
-                <div className="text-base font-serif font-bold text-neutral-900 dark:text-neutral-100">
-                  "{activeAreaQuestion.question}"
+                <div className="text-base font-serif font-normal text-neutral-900 dark:text-neutral-100">
+                  &ldquo;{activeAreaQuestion.question}&rdquo;
                 </div>
               </div>
 
-              {/* 4 Interactive Steps */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* 4 Interactive Steps: Clean 4-quadrant hairline grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800">
                 {/* Step 1: A - Direct Answer */}
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                <div className="p-4 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 flex items-center justify-center font-mono text-[11px]">
-                        A
-                      </span>
+                    <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-bold">[A]</span>
                       Direct Answer
                     </span>
                     <button
@@ -1265,17 +1269,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     onChange={(e) => setAreaAnswerText(e.target.value)}
                     placeholder={activeAreaQuestion.guidedAnswer.answer.sample}
                     rows={2}
-                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                    className="w-full p-2.5 border border-neutral-200 dark:border-neutral-800 bg-transparent text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-100 font-sans"
                   />
                 </div>
 
                 {/* Step 2: R - Core Reason */}
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                <div className="p-4 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-mono text-[11px]">
-                        R
-                      </span>
+                    <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-bold">[R]</span>
                       Underlying Reason
                     </span>
                     <button
@@ -1291,17 +1293,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     onChange={(e) => setAreaReasonText(e.target.value)}
                     placeholder={activeAreaQuestion.guidedAnswer.reason.sample}
                     rows={2}
-                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                    className="w-full p-2.5 border border-neutral-200 dark:border-neutral-800 bg-transparent text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-100 font-sans"
                   />
                 </div>
 
                 {/* Step 3: E - Concrete Example */}
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                <div className="p-4 space-y-2 text-xs border-t border-neutral-200 dark:border-neutral-800">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 flex items-center justify-center font-mono text-[11px]">
-                        E
-                      </span>
+                    <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">[E]</span>
                       Concrete Example
                     </span>
                     <button
@@ -1317,17 +1317,15 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     onChange={(e) => setAreaExampleText(e.target.value)}
                     placeholder={activeAreaQuestion.guidedAnswer.example.sample}
                     rows={2}
-                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                    className="w-full p-2.5 border border-neutral-200 dark:border-neutral-800 bg-transparent text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-100 font-sans"
                   />
                 </div>
 
                 {/* Step 4: A - Alternative Perspective */}
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                <div className="p-4 space-y-2 text-xs border-t border-neutral-200 dark:border-neutral-800">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 flex items-center justify-center font-mono text-[11px]">
-                        A
-                      </span>
+                    <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="font-mono text-xs text-purple-600 dark:text-purple-400 font-bold">[A]</span>
                       Alternative / Nuance
                     </span>
                     <button
@@ -1343,35 +1341,35 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     onChange={(e) => setAreaAltText(e.target.value)}
                     placeholder={activeAreaQuestion.guidedAnswer.alternative.sample}
                     rows={2}
-                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                    className="w-full p-2.5 border border-neutral-200 dark:border-neutral-800 bg-transparent text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-neutral-100 font-sans"
                   />
                 </div>
               </div>
 
-              {/* Assembled Response Preview & Model Answer View */}
-              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
-                <div className="flex items-center justify-between text-xs">
+              {/* Assembled Response Preview: Unboxed editorial presentation */}
+              <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+                <div className="flex items-center justify-between text-xs pb-1 border-b border-neutral-200 dark:border-neutral-800">
                   <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                    Assembled Fluent Response:
+                    Assembled Fluent Response
                   </span>
                   <button
                     onClick={() => setShowAreaModel(!showAreaModel)}
-                    className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer underline"
+                    className="text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer underline"
                   >
                     {showAreaModel ? "Hide Band 9 Model" : "View Band 9 Model Response"}
                   </button>
                 </div>
 
-                <div className="p-4 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 text-xs text-neutral-800 dark:text-neutral-200 font-serif leading-relaxed">
+                <div className="p-4 border-l-2 border-neutral-900 dark:border-neutral-100 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs text-neutral-800 dark:text-neutral-200 font-serif leading-relaxed">
                   {showAreaModel ? (
                     <span>
-                      <strong className="text-blue-600 dark:text-blue-400">[Answer]</strong>{" "}
+                      <strong className="text-blue-600 dark:text-blue-400 font-sans font-semibold">[Answer]</strong>{" "}
                       {activeAreaQuestion.guidedAnswer.answer.sample}{" "}
-                      <strong className="text-emerald-600 dark:text-emerald-400">[Reason]</strong>{" "}
+                      <strong className="text-emerald-600 dark:text-emerald-400 font-sans font-semibold">[Reason]</strong>{" "}
                       {activeAreaQuestion.guidedAnswer.reason.sample}{" "}
-                      <strong className="text-amber-600 dark:text-amber-400">[Example]</strong>{" "}
+                      <strong className="text-amber-600 dark:text-amber-400 font-sans font-semibold">[Example]</strong>{" "}
                       {activeAreaQuestion.guidedAnswer.example.sample}{" "}
-                      <strong className="text-purple-600 dark:text-purple-400">[Alternative]</strong>{" "}
+                      <strong className="text-purple-600 dark:text-purple-400 font-sans font-semibold">[Alternative]</strong>{" "}
                       {activeAreaQuestion.guidedAnswer.alternative.sample}
                     </span>
                   ) : (
@@ -1390,7 +1388,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                           `${activeAreaQuestion.guidedAnswer.answer.sample} ${activeAreaQuestion.guidedAnswer.reason.sample} ${activeAreaQuestion.guidedAnswer.example.sample} ${activeAreaQuestion.guidedAnswer.alternative.sample}`
                         )
                       }
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-xs font-medium cursor-pointer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-xs font-medium cursor-pointer"
                     >
                       <Volume2 className="w-3.5 h-3.5" />
                       <span>Listen to Assembled Model</span>
@@ -1404,17 +1402,17 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           {/* DRILL B: BUYING-TIME NATURAL FILLERS */}
           {activeGymDrill === "buying_time_fillers" && (
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-200 dark:border-neutral-800 pb-3">
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  "Stall & Buy-Time" Natural Hesitation Fillers (Eliminate "Umm / Uhh")
+                  &ldquo;Stall & Buy-Time&rdquo; Natural Hesitation Fillers (Eliminate &ldquo;Umm / Uhh&rdquo;)
                 </span>
                 <span className="text-neutral-400">
                   Card {activeFillerIndex + 1} of {BUYING_TIME_FILLERS.length}
                 </span>
               </div>
 
-              {/* Filler Category Navigation */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+              {/* Filler Category Navigation: Clean horizontal line */}
+              <div className="flex items-center gap-4 overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 pb-2 text-xs">
                 {BUYING_TIME_FILLERS.map((filler, idx) => (
                   <button
                     key={filler.id}
@@ -1422,10 +1420,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       setActiveFillerIndex(idx);
                       stopSpeaking();
                     }}
-                    className={`px-3 py-1.5 rounded-xl whitespace-nowrap font-medium cursor-pointer transition-all border ${
+                    className={`py-1 whitespace-nowrap cursor-pointer transition-colors ${
                       activeFillerIndex === idx
-                        ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
-                        : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50"
+                        ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100 -mb-2 pb-2"
+                        : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
                     }`}
                   >
                     {filler.category}
@@ -1433,27 +1431,27 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 ))}
               </div>
 
-              {/* Active Filler Display Card */}
-              <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-4">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="px-2.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-semibold text-[11px]">
+              {/* Active Filler Display Card: Unboxed editorial presentation */}
+              <div className="space-y-4 pt-1">
+                <div className="flex items-center justify-between text-xs pb-1 border-b border-neutral-200 dark:border-neutral-800">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500">
                     {activeFiller.category} Strategy
                   </span>
                   <button
                     onClick={() => speakText(activeFiller.phrase)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium cursor-pointer"
                   >
                     <Volume2 className="w-3.5 h-3.5 text-neutral-500" />
                     <span>Hear Pronunciation</span>
                   </button>
                 </div>
 
-                <div className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100 leading-snug p-4 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 border border-neutral-100 dark:border-neutral-900">
-                  "{activeFiller.phrase}"
+                <div className="text-xl sm:text-2xl font-serif font-normal text-neutral-900 dark:text-neutral-100 leading-snug py-3">
+                  &ldquo;{activeFiller.phrase}&rdquo;
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                  <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 space-y-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 border border-neutral-200 dark:border-neutral-800 divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800 text-xs">
+                  <div className="p-4 space-y-1">
                     <strong className="text-neutral-900 dark:text-neutral-100 block">
                       Why Examiners Reward This:
                     </strong>
@@ -1462,7 +1460,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 space-y-1">
+                  <div className="p-4 space-y-1">
                     <strong className="text-neutral-900 dark:text-neutral-100 block">
                       When to Deploy:
                     </strong>
@@ -1474,8 +1472,8 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
               </div>
 
               {/* Interactive Practice Prompt: Deploy this filler! */}
-              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-3">
-                <div className="flex items-center justify-between">
+              <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+                <div className="flex items-center justify-between text-xs pb-1 border-b border-neutral-200 dark:border-neutral-800">
                   <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
                     <Zap className="w-3.5 h-3.5 text-amber-500" />
                     Reflex Challenge: Launch your answer using this filler!
@@ -1491,12 +1489,12 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                   </button>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900 font-serif text-sm font-semibold text-neutral-800 dark:text-neutral-200">
-                  "{TRICKY_PROMPTS[trickyPromptIndex]}"
+                <div className="p-4 border-l-2 border-neutral-900 dark:border-neutral-100 bg-neutral-50/50 dark:bg-neutral-900/30 font-serif text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                  &ldquo;{TRICKY_PROMPTS[trickyPromptIndex]}&rdquo;
                 </div>
 
                 <p className="text-[11px] text-neutral-500 italic">
-                  Say aloud right now: <strong>"{activeFiller.phrase}"</strong> followed by your spontaneous point!
+                  Say aloud right now: <strong>&ldquo;{activeFiller.phrase}&rdquo;</strong> followed by your spontaneous point!
                 </p>
               </div>
             </div>
@@ -1505,7 +1503,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           {/* DRILL C: SPOKEN COLLOCATION FLASHCARDS */}
           {activeGymDrill === "collocation_flashcards" && (
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-200 dark:border-neutral-800 pb-3">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                     Spoken Collocation Upgrade Flashcards
@@ -1523,7 +1521,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       );
                       setIsCardFlipped(false);
                     }}
-                    className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 font-medium cursor-pointer"
+                    className="px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 font-medium cursor-pointer"
                   >
                     Prev
                   </button>
@@ -1532,14 +1530,14 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       setFlashcardIndex((prev) => (prev + 1) % COLLOCATION_FLASHCARDS.length);
                       setIsCardFlipped(false);
                     }}
-                    className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 font-medium cursor-pointer"
+                    className="px-2.5 py-1 border border-neutral-200 dark:border-neutral-800 font-medium cursor-pointer"
                   >
                     Next
                   </button>
                 </div>
               </div>
 
-              {/* Flashcard Main Box */}
+              {/* Flashcard Main Box: Sleek hairline card */}
               {(() => {
                 const currentCard = COLLOCATION_FLASHCARDS[flashcardIndex] || COLLOCATION_FLASHCARDS[0];
                 const isMastered = masteredCards.has(currentCard.id);
@@ -1548,14 +1546,14 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                   <div className="max-w-xl mx-auto space-y-4">
                     <div
                       onClick={() => setIsCardFlipped(!isCardFlipped)}
-                      className={`min-h-[220px] p-6 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between select-none ${
+                      className={`min-h-[220px] p-6 sm:p-8 border transition-colors cursor-pointer flex flex-col justify-between select-none ${
                         isCardFlipped
-                          ? "border-emerald-500/50 bg-emerald-50/20 dark:bg-emerald-950/20 shadow-xs"
-                          : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700 shadow-xs"
+                          ? "border-emerald-500/80 bg-emerald-50/10 dark:bg-emerald-950/20"
+                          : "border-neutral-200 dark:border-neutral-800 bg-transparent hover:border-neutral-400 dark:hover:border-neutral-600"
                       }`}
                     >
                       <div className="flex items-center justify-between text-xs text-neutral-400">
-                        <span className="px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 font-semibold text-[10px] text-neutral-700 dark:text-neutral-300">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500">
                           {currentCard.category}
                         </span>
                         <span>Click card to {isCardFlipped ? "see basic phrase" : "reveal Band 8+ upgrade"}</span>
@@ -1564,11 +1562,11 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       <div className="text-center py-6 space-y-2">
                         {!isCardFlipped ? (
                           <>
-                            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block">
+                            <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider block">
                               Common Candidate Cliché:
                             </span>
-                            <div className="text-xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
-                              "{currentCard.basicPhrase}"
+                            <div className="text-xl sm:text-2xl font-serif font-normal text-neutral-900 dark:text-neutral-100">
+                              &ldquo;{currentCard.basicPhrase}&rdquo;
                             </div>
                             <span className="text-xs text-neutral-400 block pt-1">
                               (Tap to reveal high-band collocation)
@@ -1576,22 +1574,22 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                           </>
                         ) : (
                           <>
-                            <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">
+                            <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">
                               {currentCard.registerLevel} Spoken Upgrade:
                             </span>
-                            <div className="text-xl font-serif font-bold text-emerald-700 dark:text-emerald-300">
-                              "{currentCard.upgradedCollocation}"
+                            <div className="text-xl sm:text-2xl font-serif font-normal text-emerald-700 dark:text-emerald-300">
+                              &ldquo;{currentCard.upgradedCollocation}&rdquo;
                             </div>
                             <p className="text-xs text-neutral-500 pt-1">{currentCard.definition}</p>
-                            <p className="text-xs italic text-neutral-700 dark:text-neutral-300 pt-2 border-t border-neutral-100 dark:border-neutral-800">
-                              "{currentCard.exampleIeltsSentence}"
+                            <p className="text-xs italic text-neutral-700 dark:text-neutral-300 pt-3 border-t border-neutral-200 dark:border-neutral-800">
+                              &ldquo;{currentCard.exampleIeltsSentence}&rdquo;
                             </p>
                           </>
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 dark:border-neutral-900">
-                        <span>Card {flashcardIndex + 1} of {COLLOCATION_FLASHCARDS.length}</span>
+                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-200 dark:border-neutral-800">
+                        <span className="font-mono">Card {flashcardIndex + 1} of {COLLOCATION_FLASHCARDS.length}</span>
                         {isCardFlipped && (
                           <button
                             onClick={(e) => {
@@ -1616,9 +1614,9 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                           else nextSet.add(currentCard.id);
                           setMasteredCards(nextSet);
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border transition-colors ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium cursor-pointer border transition-colors ${
                           isMastered
-                            ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
+                            ? "border-emerald-500 bg-emerald-50/20 text-emerald-700 dark:text-emerald-300"
                             : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                         }`}
                       >
@@ -1632,7 +1630,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                           setFlashcardIndex(rand);
                           setIsCardFlipped(false);
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-xs font-medium cursor-pointer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-xs font-medium cursor-pointer"
                       >
                         <Shuffle className="w-3.5 h-3.5" />
                         <span>Shuffle</span>

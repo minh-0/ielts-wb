@@ -46,43 +46,41 @@ export const BentoCard = ({
     key={name}
     onClick={onClick}
     className={cn(
-      "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-2xl border transition-all duration-300 select-none",
-      // Light mode styling
-      "border-neutral-200/80 bg-white/80 backdrop-blur-xs hover:border-neutral-300 hover:shadow-xl hover:shadow-neutral-900/5",
-      // Dark mode styling
-      "transform-gpu dark:border-neutral-800/80 dark:bg-neutral-950/70 dark:hover:border-neutral-700 dark:hover:shadow-2xl dark:hover:shadow-black/70",
+      "group relative col-span-3 flex flex-col justify-between overflow-hidden border transition-colors duration-200 select-none",
+      // Editorial hairline styling
+      "border-neutral-200 dark:border-neutral-800 bg-white/40 dark:bg-neutral-950/40 hover:border-neutral-400 dark:hover:border-neutral-600",
       onClick ? "cursor-pointer" : "",
       className,
     )}
   >
     <div className="absolute inset-0 z-0 overflow-hidden">{background}</div>
 
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2 p-6 sm:p-7 transition-all duration-300 group-hover:-translate-y-8 sm:group-hover:-translate-y-10">
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2.5 p-6 sm:p-7 transition-all duration-300 group-hover:-translate-y-7 sm:group-hover:-translate-y-8">
       {Icon && (
-        <div className="w-11 h-11 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-100/90 dark:bg-neutral-900/90 flex items-center justify-center transform-gpu transition-all duration-300 ease-in-out group-hover:scale-95 group-hover:bg-neutral-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black shadow-xs">
-          <Icon className="h-5 w-5 text-neutral-800 dark:text-neutral-200 transition-colors duration-200 group-hover:text-inherit" />
+        <div className="w-9 h-9 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:border-neutral-900 dark:group-hover:border-neutral-100">
+          <Icon className="h-4.5 w-4.5 text-neutral-800 dark:text-neutral-200" />
         </div>
       )}
-      <h3 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 mt-1">
+      <h3 className="text-lg font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100 mt-0.5">
         {name}
       </h3>
-      <p className="max-w-md text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+      <p className="max-w-md text-xs sm:text-[13px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
         {description}
       </p>
     </div>
 
     <div
       className={cn(
-        "pointer-events-none z-10 flex w-full translate-y-10 transform-gpu flex-row items-center p-6 sm:p-7 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none z-10 flex w-full translate-y-8 transform-gpu flex-row items-center p-6 sm:p-7 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100",
       )}
     >
-      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-neutral-100 underline-offset-4 group-hover:underline">
+      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-neutral-100 border-b border-neutral-900 dark:border-neutral-100 pb-0.5">
         {cta || "Launch studio"}
         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
       </span>
     </div>
 
     {/* Subtle interactive hover highlight layer */}
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-neutral-900/[0.02] group-hover:dark:bg-white/[0.02]" />
+    <div className="pointer-events-none absolute inset-0 transition-opacity duration-200 group-hover:bg-neutral-900/[0.015] group-hover:dark:bg-white/[0.015]" />
   </div>
 );

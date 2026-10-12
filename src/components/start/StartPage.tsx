@@ -84,12 +84,12 @@ export function StartPage({
           background={
             <div className="absolute right-0 top-0 w-full h-full pointer-events-none overflow-hidden opacity-40 dark:opacity-30">
               <div className="absolute -right-12 -top-12 w-80 h-80 rounded-full bg-gradient-to-br from-red-500/10 via-rose-500/5 to-transparent blur-2xl" />
-              <div className="absolute right-6 top-8 hidden sm:flex flex-col gap-2.5 w-64 p-3.5 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-white/90 dark:bg-neutral-900/90 shadow-md">
-                <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-2">
+              <div className="absolute right-6 top-8 hidden sm:flex flex-col gap-2.5 w-64 p-3.5 border border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95">
+                <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-2">
                   <span className="text-[11px] font-semibold text-neutral-800 dark:text-neutral-200">
                     Band 8.0 Evaluated
                   </span>
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold">
+                  <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                     +0.5 Upgrade
                   </span>
                 </div>
@@ -125,7 +125,7 @@ export function StartPage({
                   <span
                     key={i}
                     style={{ height: `${h}px` }}
-                    className="w-1 rounded-full bg-neutral-300 dark:bg-neutral-700"
+                    className="w-1 bg-neutral-300 dark:bg-neutral-700"
                   />
                 ))}
               </div>
@@ -144,13 +144,13 @@ export function StartPage({
           background={
             <div className="absolute right-0 top-0 w-full h-full pointer-events-none overflow-hidden opacity-30 dark:opacity-20">
               <div className="absolute right-4 top-8 flex flex-col gap-2">
-                <span className="px-2.5 py-1 rounded-full border border-neutral-300 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/70 text-[10px] font-mono">
+                <span className="text-[10px] font-mono text-neutral-500 border-b border-neutral-200 dark:border-neutral-800 pb-0.5">
                   formidable barrier
                 </span>
-                <span className="px-2.5 py-1 rounded-full border border-neutral-300 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/70 text-[10px] font-mono">
+                <span className="text-[10px] font-mono text-neutral-500 border-b border-neutral-200 dark:border-neutral-800 pb-0.5">
                   contingent upon
                 </span>
-                <span className="px-2.5 py-1 rounded-full border border-neutral-300 dark:border-neutral-700 bg-white/70 dark:bg-neutral-900/70 text-[10px] font-mono">
+                <span className="text-[10px] font-mono text-neutral-500 border-b border-neutral-200 dark:border-neutral-800 pb-0.5">
                   tangible boon
                 </span>
               </div>
@@ -201,19 +201,21 @@ export function StartPage({
         />
       </BentoGrid>
 
-      {/* Bottom Features Strip */}
-      <div className="pt-6 border-t border-neutral-200/80 dark:border-neutral-800/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-neutral-600 dark:text-neutral-400">
-        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30">
-          <Award className="w-4 h-4 text-neutral-900 dark:text-neutral-100 shrink-0" />
-          <span>Calibrated against authentic Cambridge and IDP examiners</span>
-        </div>
-        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30">
-          <ShieldCheck className="w-4 h-4 text-neutral-900 dark:text-neutral-100 shrink-0" />
-          <span>Zero data retention: completely client-side & private</span>
-        </div>
-        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-neutral-200/70 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30">
-          <Zap className="w-4 h-4 text-neutral-900 dark:text-neutral-100 shrink-0" />
-          <span>Instant scoring with progressive C1/C2 syntactic elevators</span>
+      {/* Bottom Features Strip: Unboxed hairline divided row */}
+      <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-neutral-200 dark:divide-neutral-800 border-y border-neutral-200 dark:border-neutral-800 py-3 text-xs text-neutral-600 dark:text-neutral-400">
+          <div className="flex items-center gap-2.5 sm:px-4 py-2 sm:py-0">
+            <Award className="w-4 h-4 text-neutral-900 dark:text-neutral-100 shrink-0" />
+            <span>Calibrated against authentic Cambridge & IDP criteria</span>
+          </div>
+          <div className="flex items-center gap-2.5 sm:px-4 py-2 sm:py-0">
+            <ShieldCheck className="w-4 h-4 text-neutral-900 dark:text-neutral-100 shrink-0" />
+            <span>Zero data retention: completely client-side & private</span>
+          </div>
+          <div className="flex items-center gap-2.5 sm:px-4 py-2 sm:py-0">
+            <Zap className="w-4 h-4 text-neutral-900 dark:text-neutral-100 shrink-0" />
+            <span>Instant scoring with progressive C1/C2 syntactic elevators</span>
+          </div>
         </div>
       </div>
     </div>
