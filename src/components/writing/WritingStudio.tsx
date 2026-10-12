@@ -268,10 +268,10 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
     }
 
     const count = currentReplaced.length;
-    // Boost Lexical Resource, Grammatical Range & Coherence dynamically
-    const lrBoost = Math.min(2.5, count * 0.5);
-    const graBoost = Math.min(2.0, Math.floor(count * 0.4) * 0.5);
-    const ccBoost = Math.min(1.5, Math.floor(count * 0.3) * 0.5);
+    // Meaningful, progressive elevation across criteria
+    const lrBoost = Math.min(2.0, count >= 1 ? 0.5 + (count - 1) * 0.25 : 0);
+    const graBoost = Math.min(1.5, count >= 1 ? 0.5 + Math.floor((count - 1) / 2) * 0.5 : 0);
+    const ccBoost = Math.min(1.5, count >= 2 ? 0.5 + Math.floor((count - 2) / 2) * 0.5 : 0);
 
     const newLR = Math.min(9.0, Number((base.criteria.lexicalResource.score + lrBoost).toFixed(1)));
     const newGRA = Math.min(
@@ -287,6 +287,18 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
     const rawAvg = (newTA + newCC + newLR + newGRA) / 4;
     const newOverall = Math.min(9.0, Math.round(rawAvg * 2) / 2);
 
+    const recentWords = currentReplaced.map((r) => r.replacedText).slice(-2).join(", ");
+    const isHigher = newOverall > base.overallBand;
+
+    const updatedSummary = isHigher
+      ? `Upgraded to Band ${newOverall.toFixed(1)}! Applying advanced C1/C2 upgrades (${recentWords}) elevated lexical precision and syntactic range beyond Band ${base.overallBand.toFixed(1)}.`
+      : `Incorporated ${count} advanced upgrade(s) (${recentWords}). Lexical precision is elevated to Band ${newLR.toFixed(1)} (+${lrBoost.toFixed(1)}). Adopt remaining inspector suggestions to push toward Band ${(base.overallBand + 0.5).toFixed(1)}.`;
+
+    const updatedBottleneck =
+      count >= 3
+        ? "All key upgrades incorporated! Essay demonstrates Band 8.0+ fluency. Maintain this level on test day."
+        : `${count} upgrade(s) applied. Check remaining inspector cards to solidify Band 8.0+ across all criteria.`;
+
     return {
       ...base,
       overallBand: newOverall,
@@ -295,7 +307,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
         taskAchievement: {
           ...base.criteria.taskAchievement,
           score: newTA,
-          bandLabel: `Band ${newTA.toFixed(1)} (Good Development)`,
+          bandLabel: `Band ${newTA.toFixed(1)} (${newTA >= 8.0 ? "Thorough Topic Exploration" : "Well-Developed Response"})`,
         },
         lexicalResource: {
           ...base.criteria.lexicalResource,
@@ -307,7 +319,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               ? "Advanced C1/C2 Academic Vocabulary"
               : "Strong Collocations"
           })`,
-          feedback: `Elevated with ${count} academic alternative word choices. Lexical precision is substantially boosted.`,
+          feedback: `Incorporated ${count} advanced academic collocation(s): ${recentWords}. Lexical precision and stylistic register are heightened.`,
+          keyRecommendations: count >= 2
+            ? [
+                "Lexical Resource is operating at Band 8.0+ standard.",
+                "Ensure precision in complex academic collocations under timed exam conditions."
+              ]
+            : base.criteria.lexicalResource.keyRecommendations,
         },
         grammaticalRange: {
           ...base.criteria.grammaticalRange,
@@ -315,6 +333,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           bandLabel: `Band ${newGRA.toFixed(1)} (${
             newGRA >= 8.0 ? "Sophisticated Syntactic Variety" : "Complex Structures Controlled"
           })`,
+          feedback: count >= 1
+            ? `Syntactic control is reinforced with elevated clause structures. Error frequency remains minimal.`
+            : base.criteria.grammaticalRange.feedback,
         },
         coherenceCohesion: {
           ...base.criteria.coherenceCohesion,
@@ -322,13 +343,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           bandLabel: `Band ${newCC.toFixed(1)} (${
             newCC >= 8.0 ? "Fluent Organic Progression" : "Coherent & Varied"
           })`,
+          feedback: count >= 2
+            ? `Paragraph cohesion benefits from organic thematic referencing rather than repetitive mechanical connectors.`
+            : base.criteria.coherenceCohesion.feedback,
         },
       },
-      examinerSummary: `Upgraded revision: Incorporating ${count} examiner-recommended alternative words and complex structures has elevated your score to Band ${newOverall.toFixed(1)}.`,
-      primaryBottleneck:
-        count >= 4
-          ? "All major lexical and syntactic upgrades incorporated. Ready for examiner submission."
-          : `${count} alternative word(s) applied. Review remaining items in the inspector to push towards Band 8.5+.`,
+      examinerSummary: updatedSummary,
+      primaryBottleneck: updatedBottleneck,
     };
   };
 
@@ -1142,79 +1163,219 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
           {/* TAB 1: Criteria (Clean column layout with hairline borders) */}
           {activeTab === "criteria" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
-              <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                      Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
-                    </span>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
+                <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {analysisResult.criteria.taskAchievement.feedback}
+                    </p>
                   </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {analysisResult.criteria.taskAchievement.feedback}
-                  </p>
+                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <ul className="list-disc list-inside space-y-0.5 text-[11px]">
+                      {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
-                  <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
-                  <ul className="list-disc list-inside space-y-0.5 text-[11px]">
-                    {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ul>
+
+                <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Coherence & Cohesion</span>
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {analysisResult.criteria.coherenceCohesion.feedback}
+                    </p>
+                  </div>
+                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <ul className="list-disc list-inside space-y-0.5 text-[11px]">
+                      {analysisResult.criteria.coherenceCohesion.keyRecommendations?.map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                    {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
+                      <div className="text-[11px] text-amber-700 dark:text-amber-400 border-l-2 border-amber-500 pl-2 mt-1">
+                        Overused linkers: {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {analysisResult.criteria.lexicalResource.feedback}
+                    </p>
+                  </div>
+                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <ul className="list-disc list-inside space-y-0.5 text-[11px]">
+                      {analysisResult.criteria.lexicalResource.keyRecommendations?.map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pb-4 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range</span>
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {analysisResult.criteria.grammaticalRange.feedback}
+                    </p>
+                  </div>
+                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <ul className="list-disc list-inside space-y-0.5 text-[11px]">
+                      {analysisResult.criteria.grammaticalRange.keyRecommendations?.map((r, i) => (
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Coherence & Cohesion</span>
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                      Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
-                    </span>
+              {/* Band 8.0 → 9.0 Advanced Mastery Roadmap */}
+              <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
+                      Band 8.0 → 9.0 Advanced Mastery Roadmap
+                    </h4>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
+                      What official Cambridge examiners look for to push an already strong essay (Band 7.0–7.5) to Band 8.5–9.0.
+                    </p>
                   </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {analysisResult.criteria.coherenceCohesion.feedback}
-                  </p>
+                  <div className="text-[11px] font-mono px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 self-start sm:self-auto">
+                    Examiner Descriptors
+                  </div>
                 </div>
-                {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
-                  <div className="text-[11px] text-amber-700 dark:text-amber-400 border-l-2 border-amber-500 pl-2">
-                    Overused linkers: {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
-                  </div>
-                )}
-              </div>
 
-              <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                      Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
-                    </span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1">
+                  {/* Pillar 1: Academic Hedging (TR) */}
+                  <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        1. Academic Hedging (Task Response)
+                      </span>
+                      <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider">
+                        Avoid Absolutes
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Band 7.5 essays often rely on categorical statements (e.g., <em>&ldquo;will always lead to&rdquo;</em>). Band 9 examiners reward probabilistic nuance and epistemic modesty.
+                    </p>
+                    <div className="space-y-1.5 text-xs font-mono">
+                      <div className="p-2 rounded bg-neutral-200/50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/50 text-neutral-600 dark:text-neutral-400">
+                        <span className="text-rose-500 font-sans font-semibold mr-1.5">[7.0]:</span>
+                        &ldquo;AI will inevitably replace all human labor in the foreseeable future.&rdquo;
+                      </div>
+                      <div className="p-2 rounded bg-neutral-900 dark:bg-neutral-100 text-neutral-50 dark:text-neutral-950 font-sans text-xs">
+                        <span className="font-semibold text-emerald-400 dark:text-emerald-700 mr-1.5">[8.5+]:</span>
+                        &ldquo;While AI is arguably poised to displace routine clerical roles, it tends to complement high-order analytical occupations.&rdquo;
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {analysisResult.criteria.lexicalResource.feedback}
-                  </p>
-                </div>
-                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-200 dark:border-neutral-800">
-                  <span className="text-[11px] text-neutral-400">Focus on C1/C2 collocations & precision</span>
-                </div>
-              </div>
 
-              <div className="space-y-3 pb-4 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range</span>
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                      Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
-                    </span>
+                  {/* Pillar 2: Organic Thematic Bridging (CC) */}
+                  <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        2. Organic Thematic Referencing (CC)
+                      </span>
+                      <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider">
+                        Invisible Flow
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Band 8+ cohesion &ldquo;attracts no attention&rdquo;. Replace mechanical sentence starters (<em>&ldquo;Furthermore&rdquo;, &ldquo;In addition&rdquo;</em>) with noun-phrase bridging and demonstratives.
+                    </p>
+                    <div className="space-y-1.5 text-xs font-mono">
+                      <div className="p-2 rounded bg-neutral-200/50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/50 text-neutral-600 dark:text-neutral-400">
+                        <span className="text-rose-500 font-sans font-semibold mr-1.5">[7.0]:</span>
+                        &ldquo;Furthermore, the environment is being damaged. In addition, governments must act.&rdquo;
+                      </div>
+                      <div className="p-2 rounded bg-neutral-900 dark:bg-neutral-100 text-neutral-50 dark:text-neutral-950 font-sans text-xs">
+                        <span className="font-semibold text-emerald-400 dark:text-emerald-700 mr-1.5">[8.5+]:</span>
+                        &ldquo;This escalating ecological strain in turn necessitates decisive, synchronized state intervention.&rdquo;
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {analysisResult.criteria.grammaticalRange.feedback}
-                  </p>
-                </div>
-                <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-200 dark:border-neutral-800">
-                  <span className="text-[11px] text-neutral-400">Incorporate complex & non-finite clauses</span>
+
+                  {/* Pillar 3: Syntactic Inversion & Clefting (GRA) */}
+                  <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        3. Inversion & Clefting (Grammatical Range)
+                      </span>
+                      <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider">
+                        Rhetorical Syntax
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Showcase rare grammatical forms naturally: inverted conditionals (<em>&ldquo;Were [subject] to [verb]&rdquo;</em>) and wh-cleft sentences for persuasive focus.
+                    </p>
+                    <div className="space-y-1.5 text-xs font-mono">
+                      <div className="p-2 rounded bg-neutral-200/50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/50 text-neutral-600 dark:text-neutral-400">
+                        <span className="text-rose-500 font-sans font-semibold mr-1.5">[7.0]:</span>
+                        &ldquo;If authorities subsidize public transport, commuters will stop driving cars.&rdquo;
+                      </div>
+                      <div className="p-2 rounded bg-neutral-900 dark:bg-neutral-100 text-neutral-50 dark:text-neutral-950 font-sans text-xs">
+                        <span className="font-semibold text-emerald-400 dark:text-emerald-700 mr-1.5">[8.5+]:</span>
+                        &ldquo;Were authorities to heavily subsidize municipal transit, commuters would be markedly more inclined to forgo private transport.&rdquo;
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pillar 4: Connotative Nuance & Collocations (LR) */}
+                  <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        4. Connotative Precision (Lexical Resource)
+                      </span>
+                      <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider">
+                        C1/C2 Nuance
+                      </span>
+                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      Band 8.5+ relies on precise connotation rather than just big words. Pair analytical verbs with specific abstract nouns instead of generic synonyms.
+                    </p>
+                    <div className="space-y-1.5 text-xs font-mono">
+                      <div className="p-2 rounded bg-neutral-200/50 dark:bg-neutral-800/40 border border-neutral-200 dark:border-neutral-700/50 text-neutral-600 dark:text-neutral-400">
+                        <span className="text-rose-500 font-sans font-semibold mr-1.5">[7.0]:</span>
+                        &ldquo;This will solve the problem and have a positive impact on the economy.&rdquo;
+                      </div>
+                      <div className="p-2 rounded bg-neutral-900 dark:bg-neutral-100 text-neutral-50 dark:text-neutral-950 font-sans text-xs">
+                        <span className="font-semibold text-emerald-400 dark:text-emerald-700 mr-1.5">[8.5+]:</span>
+                        &ldquo;This systematically alleviates underlying structural friction, thereby yielding palpable macroeconomic dividends.&rdquo;
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

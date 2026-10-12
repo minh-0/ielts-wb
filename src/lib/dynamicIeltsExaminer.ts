@@ -103,6 +103,52 @@ const DIAGNOSTIC_RULES: DiagnosticRule[] = [
       { word: "decidedly advantageous", level: "C1 Collocation", explanation: "Elevated evaluative phrase favored over basic 'very good'." },
       { word: "pressing predicament", level: "C2 Collocation", explanation: "Precise formal collocation replacing casual 'big problem'." }
     ]
+  },
+
+  // 5. Band 8.5+ Syntactic Inversion Elevator (Conditional clauses)
+  {
+    pattern: /\bif\s+(governments|citizens|individuals|students|policymakers|authorities|machines|taxpayers)\s+([a-z]+)\b/i,
+    issueType: 'grammar',
+    explanation: (match) => `Standard conditional clause ("${match}") can be elevated into a conditional inversion ("Were ${match.replace(/^if\s+/i, '').split(/\s+/)[0]} to ${match.replace(/^if\s+/i, '').split(/\s+/)[1]}..."), an elite syntactic structure prized at Band 8.5+.`,
+    bandUpgradeTip: 'Convert standard "if" conditionals into inverted conditionals to demonstrate superior Grammatical Range.',
+    rewrite: (sentence, match) => {
+      const parts = match.replace(/^if\s+/i, '').split(/\s+/);
+      const subject = parts[0];
+      const verb = parts[1];
+      const baseVerb = verb.endsWith('s') && !verb.endsWith('ss') ? verb.slice(0, -1) : verb;
+      return sentence.replace(new RegExp(`\\bif\\s+${subject}\\s+${verb}\\b`, 'i'), `were ${subject} to ${baseVerb}`);
+    },
+    higherRatedWords: [
+      { word: "Were [subject] to [verb]", level: "C2 Inversion", explanation: "Hypothetical inversion structure demonstrating top-tier syntactic control." }
+    ]
+  },
+
+  // 6. Band 8.5+ Participle Result Clause Elevator (Coordinate linkers)
+  {
+    pattern: /,\s*and\s+(?:this|it)\s+(?:leads to|causes|results in|means that)\s+/i,
+    issueType: 'grammar',
+    explanation: (match) => `Coordinate connector ("${match.trim()}") creates loose clause chaining. Compressing into a non-finite participle clause ("thereby precipitating...") demonstrates Band 8.5+ cohesion.`,
+    bandUpgradeTip: 'Replace coordinate "and this leads to" clauses with participial result clauses.',
+    rewrite: (sentence, match) => {
+      return sentence.replace(new RegExp(match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), ', thereby precipitating ');
+    },
+    higherRatedWords: [
+      { word: ", thereby precipitating", level: "C1 Participle", explanation: "Non-finite participial result clause creating crisp sentence rhythm." }
+    ]
+  },
+
+  // 7. Band 8.5+ Wh-Cleft Focus Structure Elevator
+  {
+    pattern: /\b(?:this|it)\s+is\s+(?:very|extremely|really|most)\s+important\s+because\s+/i,
+    issueType: 'grammar',
+    explanation: (match) => `Declarative emphasis ("${match.trim()}") can be transformed into a wh-cleft focus structure to create dramatic rhetorical emphasis.`,
+    bandUpgradeTip: 'Use cleft sentences ("What remains of paramount importance is...") to emphasize central thesis points.',
+    rewrite: (sentence, match) => {
+      return sentence.replace(new RegExp(match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), 'what remains of paramount importance is that ');
+    },
+    higherRatedWords: [
+      { word: "What remains of paramount importance is", level: "C2 Cleft Structure", explanation: "Emphatic wh-cleft structure demonstrating rhetorical flair." }
+    ]
   }
 ];
 
@@ -132,7 +178,7 @@ const VOCAB_UPGRADES_LEXICON: VocabUpgradeEntry[] = [
     ]
   },
   {
-    matcher: /\bproblem\b/i,
+    matcher: /\bproblem(?:s)?\b/i,
     targetWord: "problem",
     upgrade: "predicament / impediment",
     type: "collocation",
@@ -211,7 +257,7 @@ const VOCAB_UPGRADES_LEXICON: VocabUpgradeEntry[] = [
   {
     matcher: /\bmoney\b/i,
     targetWord: "money",
-    upgrade: "financial capital / fiscal resources",
+    upgrade: "fiscal resources / financial capital",
     type: "collocation",
     explanation: "Elementary noun. Economic discourse favors 'fiscal resources' or 'financial capital'.",
     higherRatedWords: [
@@ -249,6 +295,310 @@ const VOCAB_UPGRADES_LEXICON: VocabUpgradeEntry[] = [
     explanation: "Generic noun/verb. In analytical writing, significant changes represent a 'paradigm shift'.",
     higherRatedWords: [
       { word: "paradigm shift", level: "C2 Collocation", explanation: "A fundamental change in approach or underlying assumptions." }
+    ]
+  },
+  {
+    matcher: /\blead(?:s|ing)? to\b|\bled to\b/i,
+    targetWord: "lead to",
+    upgrade: "precipitate / culminate in",
+    type: "academic_c1_c2",
+    explanation: "Replaces common verb 'lead to' with active academic verbs denoting rapid causation or final outcome.",
+    higherRatedWords: [
+      { word: "precipitate", level: "C1 Verb", explanation: "Cause an event or situation to happen suddenly or prematurely." },
+      { word: "culminate in", level: "C2 Verb Phrase", explanation: "Reach a climax or point of highest development." }
+    ]
+  },
+  {
+    matcher: /\bplay(?:s|ed|ing)? a (?:big|major|important)?\s*role\b/i,
+    targetWord: "play a role",
+    upgrade: "exert a decisive bearing / serve as a cornerstone",
+    type: "collocation",
+    explanation: "'Play a role' is an overused cliché. Native academic writing prefers 'exert a decisive bearing'.",
+    higherRatedWords: [
+      { word: "exert a decisive bearing", level: "C2 Collocation", explanation: "Have a profound, determining influence upon an outcome." },
+      { word: "serve as a cornerstone", level: "C1 Metaphor", explanation: "Function as the fundamental base upon which something depends." }
+    ]
+  },
+  {
+    matcher: /\bpositive (?:impact|effect|influence)\b/i,
+    targetWord: "positive impact",
+    upgrade: "salutary ramification / tangible boon",
+    type: "collocation",
+    explanation: "Replaces elementary adjective 'positive' with formal academic evaluators.",
+    higherRatedWords: [
+      { word: "salutary ramification", level: "C2 Collocation", explanation: "A beneficial, constructive long-term consequence." },
+      { word: "tangible boon", level: "C1 Collocation", explanation: "A concrete, palpable benefit." }
+    ]
+  },
+  {
+    matcher: /\bnegative (?:impact|effect|influence)\b/i,
+    targetWord: "negative impact",
+    upgrade: "adverse repercussion / detrimental fallout",
+    type: "collocation",
+    explanation: "Replaces elementary adjective 'negative' with precise analytical nouns.",
+    higherRatedWords: [
+      { word: "adverse repercussion", level: "C1 Collocation", explanation: "Unfavorable secondary effect or unintended consequence." },
+      { word: "detrimental fallout", level: "C2 Collocation", explanation: "Damaging residual effects resulting from an event." }
+    ]
+  },
+  {
+    matcher: /\b(?:in )?modern society\b|\b(?:in )?contemporary society\b/i,
+    targetWord: "modern society",
+    upgrade: "across contemporary civilization / in our globalized epoch",
+    type: "collocation",
+    explanation: "'In modern society' is ubiquitous in Band 6-7 essays. Advanced writing uses temporal noun phrasing.",
+    higherRatedWords: [
+      { word: "contemporary civilization", level: "C1 Collocation", explanation: "Elevated societal framing favored in formal discourse." },
+      { word: "globalized epoch", level: "C2 Lexicon", explanation: "Precise historical-temporal categorization." }
+    ]
+  },
+  {
+    matcher: /\bgovernment(?:s)? should\b/i,
+    targetWord: "governments should",
+    upgrade: "policymakers ought to prioritize / authorities are compelled to",
+    type: "collocation",
+    explanation: "Replaces repetitive modal 'governments should' with formal legislative agency.",
+    higherRatedWords: [
+      { word: "policymakers ought to prioritize", level: "C1 Register", explanation: "Formal civic directive replacing colloquial 'should'." },
+      { word: "authorities are compelled to", level: "C2 Passive", explanation: "Strong institutional obligation structure." }
+    ]
+  },
+  {
+    matcher: /\bincrease(?:s|d|ing)?\b|\brise(?:s|ing)?\b/i,
+    targetWord: "increase",
+    upgrade: "escalate / witness a marked expansion",
+    type: "academic_c1_c2",
+    explanation: "Generic growth verb. Formal reports favor 'witness a marked expansion' or 'escalate'.",
+    higherRatedWords: [
+      { word: "escalate", level: "C1 Verb", explanation: "Increase rapidly in magnitude or intensity." },
+      { word: "marked expansion", level: "C2 Collocation", explanation: "Substantial, clearly visible statistical growth." }
+    ]
+  },
+  {
+    matcher: /\bdecrease(?:s|d|ing)?\b|\bfall(?:s|ing)?\b/i,
+    targetWord: "decrease",
+    upgrade: "diminish / experience a notable contraction",
+    type: "academic_c1_c2",
+    explanation: "Generic decline verb. Replaced by formal economic descriptors like 'diminish' or 'contraction'.",
+    higherRatedWords: [
+      { word: "diminish", level: "C1 Verb", explanation: "Make or become less in extent or significance." },
+      { word: "notable contraction", level: "C2 Collocation", explanation: "Palpable statistical reduction." }
+    ]
+  },
+  {
+    matcher: /\baffect(?:s|ed|ing)?\b/i,
+    targetWord: "affect",
+    upgrade: "exert a profound influence upon / permeate",
+    type: "collocation",
+    explanation: "Replaces common transitive verb 'affect' with active analytical verb phrases.",
+    higherRatedWords: [
+      { word: "exert a profound influence upon", level: "C1 Collocation", explanation: "Formal academic causative phrase." },
+      { word: "permeate", level: "C2 Verb", explanation: "Spread throughout and influence every part of." }
+    ]
+  },
+  {
+    matcher: /\bdifferent\b/i,
+    targetWord: "different",
+    upgrade: "disparate / divergent",
+    type: "academic_c1_c2",
+    explanation: "Common adjective. 'Disparate' (distinct in kind) and 'divergent' (differing in direction) convey subtle precision.",
+    higherRatedWords: [
+      { word: "disparate", level: "C1 Adjective", explanation: "Essentially different in kind; not allowing comparison." },
+      { word: "divergent", level: "C2 Adjective", explanation: "Moving apart in different directions; conflicting." }
+    ]
+  },
+  {
+    matcher: /\bsimilar\b/i,
+    targetWord: "similar",
+    upgrade: "comparable / analogous",
+    type: "academic_c1_c2",
+    explanation: "Common adjective. 'Comparable' and 'analogous' reflect rigorous scholarly comparison.",
+    higherRatedWords: [
+      { word: "analogous", level: "C2 Adjective", explanation: "Comparable in certain respects, typically in a way which makes clearer the nature of the things compared." }
+    ]
+  },
+  {
+    matcher: /\bbecause of\b/i,
+    targetWord: "because of",
+    upgrade: "attributable to / stemming from",
+    type: "collocation",
+    explanation: "Conversational causal connector. Formal essays employ prepositional participles.",
+    higherRatedWords: [
+      { word: "attributable to", level: "C1 Collocation", explanation: "Regarded as being caused by or belonging to." },
+      { word: "stemming from", level: "B2/C1 Collocation", explanation: "Originating or developing from." }
+    ]
+  },
+  {
+    matcher: /\balthough\b|\beven though\b/i,
+    targetWord: "although",
+    upgrade: "notwithstanding the reality that / albeit with",
+    type: "collocation",
+    explanation: "Elevates standard concessive clauses into high-tier formal academic discourse.",
+    higherRatedWords: [
+      { word: "notwithstanding the reality that", level: "C2 Concession", explanation: "Advanced formal concessive clause marker." }
+    ]
+  },
+  {
+    matcher: /\bin order to\b/i,
+    targetWord: "in order to",
+    upgrade: "with an eye toward / so as to facilitate",
+    type: "collocation",
+    explanation: "Replaces repetitive purposive linker with varied analytical phrasing.",
+    higherRatedWords: [
+      { word: "so as to facilitate", level: "C1 Purposive", explanation: "Sophisticated formal prepositional infinitive structure." }
+    ]
+  },
+  {
+    matcher: /\bsolve(?:s|d|ing)?\b/i,
+    targetWord: "solve",
+    upgrade: "alleviate / mitigate / remediate",
+    type: "academic_c1_c2",
+    explanation: "Elementary verb. Cambridge examiners distinguish between 'alleviating' (lessening severity) and 'remediating' (rectifying).",
+    higherRatedWords: [
+      { word: "alleviate", level: "C1 Verb", explanation: "Make suffering, deficiency, or a problem less severe." },
+      { word: "remediate", level: "C2 Verb", explanation: "Provide a remedy for; correct or make good." }
+    ]
+  },
+  {
+    matcher: /\bmany people\b/i,
+    targetWord: "many people",
+    upgrade: "a substantial proportion of citizens / widespread demographics",
+    type: "collocation",
+    explanation: "Informal, conversational subject. Upgrades to sociological demographic terminology.",
+    higherRatedWords: [
+      { word: "a substantial proportion of citizens", level: "C1 Collocation", explanation: "Formal demographic quantification." }
+    ]
+  },
+  {
+    matcher: /\bmain reason\b/i,
+    targetWord: "main reason",
+    upgrade: "primary catalyst / pivotal driver",
+    type: "collocation",
+    explanation: "Elevates generic cause noun into analytical academic terminology.",
+    higherRatedWords: [
+      { word: "primary catalyst", level: "C1 Collocation", explanation: "The central agency precipitating change." },
+      { word: "pivotal driver", level: "C2 Collocation", explanation: "The foundational factor propelling a development." }
+    ]
+  },
+  {
+    matcher: /\bresult(?:s|ed|ing)? in\b/i,
+    targetWord: "result in",
+    upgrade: "engender / give rise to",
+    type: "academic_c1_c2",
+    explanation: "Elementary phrasal verb. 'Engender' (produce or cause) provides formal causative elegance.",
+    higherRatedWords: [
+      { word: "engender", level: "C2 Verb", explanation: "Cause or give rise to a feeling, situation, or condition." }
+    ]
+  },
+  {
+    matcher: /\bmake(?:s|ing)? it possible\b/i,
+    targetWord: "make it possible",
+    upgrade: "pave the way for / unlock fertile avenues for",
+    type: "collocation",
+    explanation: "Conversational idiom. Replaced by high-register academic metaphorical collocations.",
+    higherRatedWords: [
+      { word: "pave the way for", level: "C1 Collocation", explanation: "Create circumstances enabling something to occur." }
+    ]
+  },
+  {
+    matcher: /\bclear\b/i,
+    targetWord: "clear",
+    upgrade: "unambiguous / manifest",
+    type: "academic_c1_c2",
+    explanation: "Generic adjective. 'Unambiguous' (leaving no doubt) and 'manifest' (obvious to the eye) display high register.",
+    higherRatedWords: [
+      { word: "unambiguous", level: "C1 Adjective", explanation: "Not open to more than one interpretation." },
+      { word: "manifest", level: "C2 Adjective", explanation: "Clear or obvious to the eye or mind." }
+    ]
+  },
+  {
+    matcher: /\bsuccessful\b/i,
+    targetWord: "successful",
+    upgrade: "fruitful / efficacious",
+    type: "academic_c1_c2",
+    explanation: "Generic adjective. 'Efficacious' (producing desired result) demonstrates C2 precision.",
+    higherRatedWords: [
+      { word: "efficacious", level: "C2 Adjective", explanation: "Successful in producing a desired or intended result." }
+    ]
+  },
+  {
+    matcher: /\bhard to\b/i,
+    targetWord: "hard to",
+    upgrade: "presents a formidable barrier to",
+    type: "collocation",
+    explanation: "Conversational phrasing. Upgraded to academic noun-phrase complementation.",
+    higherRatedWords: [
+      { word: "formidable barrier", level: "C2 Collocation", explanation: "An obstacle inspiring respect through difficulty." }
+    ]
+  },
+  {
+    matcher: /\bneed(?:s)? to\b/i,
+    targetWord: "need to",
+    upgrade: "is imperative to / necessitates concerted effort to",
+    type: "collocation",
+    explanation: "Conversational necessity modal. Academic essays employ 'it is imperative that'.",
+    higherRatedWords: [
+      { word: "imperative", level: "C1 Adjective", explanation: "Of vital importance; crucial." }
+    ]
+  },
+  {
+    matcher: /\bbenefit(?:s)?\b/i,
+    targetWord: "benefit",
+    upgrade: "distinct boon / tangible advantage",
+    type: "collocation",
+    explanation: "Standard noun. 'Boon' (timely benefit) and 'tangible advantage' elevate Lexical Resource.",
+    higherRatedWords: [
+      { word: "distinct boon", level: "C2 Collocation", explanation: "A timely, significant benefit or blessing." }
+    ]
+  },
+  {
+    matcher: /\bdrawback(?:s)?\b/i,
+    targetWord: "drawback",
+    upgrade: "inherent impediment / palpable shortcoming",
+    type: "collocation",
+    explanation: "Common noun. 'Inherent impediment' conveys analytical nuance prized by examiners.",
+    higherRatedWords: [
+      { word: "inherent impediment", level: "C2 Collocation", explanation: "An intrinsic obstacle existing as a natural part of something." }
+    ]
+  },
+  {
+    matcher: /\bthink(?:s)? that\b/i,
+    targetWord: "think that",
+    upgrade: "posit that / maintain that",
+    type: "academic_c1_c2",
+    explanation: "Elementary opinion verb. 'Posit' (assume as fact) and 'maintain' provide formal argumentative register.",
+    higherRatedWords: [
+      { word: "posit", level: "C2 Verb", explanation: "Put forward as fact or as a basis for argument." }
+    ]
+  },
+  {
+    matcher: /\bbelieve(?:s)?\b/i,
+    targetWord: "believe",
+    upgrade: "contend / assert",
+    type: "academic_c1_c2",
+    explanation: "Conversational belief verb. Academic discourse favors 'contend' or 'assert'.",
+    higherRatedWords: [
+      { word: "contend", level: "C1 Verb", explanation: "Assert something as a position in an argument." }
+    ]
+  },
+  {
+    matcher: /\bdanger(?:s)?\b/i,
+    targetWord: "danger",
+    upgrade: "grave peril / imminent hazard",
+    type: "collocation",
+    explanation: "Basic noun. Academic writing uses 'peril' or 'hazard' paired with evaluative adjectives.",
+    higherRatedWords: [
+      { word: "grave peril", level: "C2 Collocation", explanation: "Severe, serious risk or danger." }
+    ]
+  },
+  {
+    matcher: /\bopportunit(?:y|ies)\b/i,
+    targetWord: "opportunity",
+    upgrade: "promising avenue / fertile prospect",
+    type: "collocation",
+    explanation: "Common noun. Elevates to analytical metaphorical collocations.",
+    higherRatedWords: [
+      { word: "promising avenue", level: "C1 Collocation", explanation: "A favorable course of action or prospective pathway." }
     ]
   }
 ];
@@ -478,50 +828,143 @@ export function evaluateWritingDynamically(
   // -------------------------------------------------------------
   // Dynamic Feedback & Guidance Text Specific to Prompt & Essay
   // -------------------------------------------------------------
-  const promptTopicSnippet = promptKeywords.slice(0, 3).join(', ') || 'the assigned task';
+  const isHighScoring = overallBand >= 7.5;
 
   const taFeedback = isPenalty
     ? `Your essay contains ${wordCount} words, which falls below the mandatory threshold of ${targetMin} words. Under official Cambridge guidelines, this triggers an automatic underlength penalty.`
     : taskType === 'task1_academic'
     ? imageBase64
       ? `Visual report on "${promptText.slice(0, 65)}..." analyzes key data trends with a coherent overview.`
-      : `Presents key features and trends related to ${promptTopicSnippet}. Ensure your overview clearly summarizes the main comparative milestones.`
+      : `Presents key features and trends accurately. Ensure your overview clearly summarizes the main comparative milestones rather than just listing isolated data points.`
     : taskType === 'task1_general'
-    ? `Addresses the purpose of the letter and develops key points for "${promptText.slice(0, 60)}...". Maintain consistent register throughout.`
-    : `Addresses the central prompt regarding ${promptTopicSnippet}. Position is articulated and developed across ${paragraphs.length} paragraphs.`;
+    ? `Addresses the purpose of the letter and covers all required bullet points. Maintain a consistent formal or semi-formal register throughout.`
+    : isHighScoring
+    ? `Comprehensive topic response with well-extended arguments across ${paragraphs.length} paragraphs. To attain Band 8.5–9.0, introduce subtle academic hedging to avoid over-generalization and deepen counter-argument rebuttals.`
+    : `Addresses the central prompt requirements with clear paragraph development. Ensure every main idea is supported with concrete reasoning and real-world illustrations.`;
 
   const taStrengths = isPenalty
     ? ['Arguments are relevant to the topic despite being underlength.']
     : taskType === 'task1_academic'
-    ? ['Clear identification of main data features', 'Coherent factual reporting tone without personal bias']
-    : ['Direct engagement with the assigned question prompt', `Clear thesis statement addressing ${promptTopicSnippet}`];
+    ? ['Clear identification of main data features', 'Objective reporting tone without unsubstantiated assumptions']
+    : ['Direct engagement with all aspects of the prompt', 'Consistent position maintained from introduction to conclusion'];
 
   const taWeaknesses = isPenalty
     ? [`Word count (${wordCount} words) is below the required ${targetMin} words.`]
+    : isHighScoring
+    ? ['Some claims can be qualified with subtle academic hedging rather than absolute statements.']
     : paragraphs.length < 4
     ? ['Can organize body arguments into two distinctly developed paragraphs.']
-    : ['Ensure all supporting examples are fully fleshed out with specific explanations.'];
+    : ['Secondary arguments would benefit from deeper illustrative evidence.'];
 
   const taRecommendations = isPenalty
     ? [`Expand your ideas with supporting examples to exceed ${targetMin} words.`]
+    : isHighScoring
+    ? [
+        'Qualify assertions with academic hedging ("is arguably contingent upon", "tends to precipitate") to prevent sweeping statements.',
+        'Deepen the concession section with an explicit rebuttal showing why the opposing view is empirically limited.',
+        'In the conclusion, synthesize a forward-looking implication rather than merely summarizing previous sentences.'
+      ]
     : taskType === 'task1_academic'
-    ? ['Ensure every cited figure directly corresponds to the axes and legends of the visual graph.']
-    : ['Ensure each body paragraph begins with an explicit, authoritative topic sentence.'];
+    ? [
+        'Ensure every cited figure directly corresponds to the axes and legends of the visual chart.',
+        'Group minor categories together in body paragraphs to highlight macro contrasts.'
+      ]
+    : [
+        'Ensure each body paragraph begins with an authoritative topic sentence establishing a single central theme.',
+        'Support abstract points with concrete, real-world examples.'
+      ];
+
+  // Coherence & Cohesion Advice
+  const ccFeedback = overusedLinkers.length > 0
+    ? `Overall progression is clear. Note that the connector(s) "${overusedLinkers.join(', ')}" were repeated multiple times; aim for more varied participial and pronoun referencing.`
+    : isHighScoring
+    ? `Natural discourse flow across ${paragraphs.length} paragraphs. To advance from Band 7.5 to 8.5+, transition away from mechanical additive linkers ("Furthermore", "In addition") toward organic thematic chaining and demonstrative referencing.`
+    : `Ideas flow coherently across paragraphs with structured transitional markers and logical sequencing.`;
+
+  const ccRecommendations = isHighScoring
+    ? [
+        'Open body paragraphs by echoing the previous paragraph\'s core concept rather than using generic linkers ("Furthermore", "In addition").',
+        'Use non-finite participle clauses (", thereby compounding...", ", while simultaneously fostering...") to blend supporting clauses seamlessly.',
+        'Deploy demonstrative referencing ("this disparity", "such systemic shifts") to maintain thread continuity.'
+      ]
+    : [
+        'Use adverbial participle clauses ("leading to...", "thereby fostering...") to link ideas seamlessly.',
+        'Ensure clear transitional words between opposing arguments ("Conversely", "On the other hand").'
+      ];
+
+  // Lexical Resource Advice
+  const lrFeedback = isHighScoring
+    ? `Solid command of academic register and topic vocabulary (TTR: ${(ttr * 100).toFixed(0)}%). To unlock Band 8.5+, replace conventional expressions with native-like collocations that convey subtle distinctions in meaning.`
+    : `Employs topic-appropriate terminology with a lexical diversity ratio of ${(ttr * 100).toFixed(0)}%. Incorporating the suggested academic collocations will elevate your Lexical Resource to Band 7.5+.`;
+
+  const lrRecommendations = isHighScoring
+    ? [
+        'Adopt precise academic verb-noun collocations (e.g. "catalyze progress", "alleviate disparities", "formidable impediments").',
+        'Differentiate fine shades of meaning (e.g., "subsidize" vs "underwrite", "mitigate" vs "eradicate") to demonstrate lexical mastery.',
+        'Review the collocation upgrade cards in the inspector and adopt advanced C1/C2 pairings.'
+      ]
+    : [
+        'Review the vocabulary upgrade cards in the inspector and adopt the suggested collocations.',
+        'Avoid informal or casual phrasing ("kids", "a lot of", "very good").'
+      ];
+
+  // Grammatical Range Advice
+  const graFeedback = sentenceFeedbacks.length > 0
+    ? `Syntactic control across ${sentenceList.length} sentences. Found ${sentenceFeedbacks.length} sentence(s) with register, contraction, or structural points that can be refined.`
+    : isHighScoring
+    ? `High percentage of error-free sentences with strong complex clause control. Band 8.5+ requires active showcase of advanced syntax: conditional inversions ("Were governments to..."), cleft focus sentences, and non-finite participle clauses.`
+    : `Good syntactic control across complex and compound sentence forms.`;
+
+  const graRecommendations = isHighScoring
+    ? [
+        'Convert standard conditional sentences into inverted conditionals ("Were authorities to intervene..." rather than "If authorities intervened...").',
+        'Utilize wh-cleft or it-cleft structures ("What is of paramount significance is...") to create natural rhetorical emphasis.',
+        'Ensure absolute accuracy in complex punctuation (semicolons separating independent clauses, non-restrictive relative clauses).'
+      ]
+    : [
+        'Practice non-contracted academic forms and incorporate more conditional or non-finite clauses.',
+        'Vary sentence length between concise declarations and multi-clause analytical sentences.'
+      ];
 
   // Look up model answer from question bank matching this prompt
   const matchingBankPrompt = WRITING_PROMPTS.find(
     p => p.prompt.trim() === promptText.trim() || promptText.includes(p.prompt.slice(0, 40))
   );
+  const promptTopicTitle = matchingBankPrompt?.title || promptText.slice(0, 50).trim();
   const modelAnswer = matchingBankPrompt?.modelEssay ||
-    `In contemporary society, addressing ${promptTopicSnippet} requires a nuanced, multifaceted strategy.\n\nOn one hand, proactive institutional frameworks ensure that structural challenges are systematically mitigated. Furthermore, allocating dedicated resources bolsters community resilience and drives tangible long-term progress.\n\nOn the other hand, individual agency and ethical responsibility remain equally paramount. Fostering informed public awareness empowers citizens to make constructive decisions that complement broader legislative reforms.\n\nIn conclusion, sustainable progress on this issue demands balanced collaboration between governmental policy and civic engagement.`;
+    `In contemporary society, addressing ${promptTopicTitle} requires a nuanced, multifaceted strategy.\n\nOn one hand, proactive institutional frameworks ensure that structural challenges are systematically mitigated. Furthermore, allocating dedicated resources bolsters community resilience and drives tangible long-term progress.\n\nOn the other hand, individual agency and ethical responsibility remain equally paramount. Fostering informed public awareness empowers citizens to make constructive decisions that complement broader legislative reforms.\n\nIn conclusion, sustainable progress on this issue demands balanced collaboration between governmental policy and civic engagement.`;
 
-  const primaryBottleneck = isPenalty
-    ? `Word count (${wordCount}/${targetMin} words): Extend your response with supporting reasons and concrete examples.`
-    : sentenceFeedbacks.length > 0
-    ? `Eliminate identified formal register slips and contractions in ${sentenceFeedbacks.length} sentence(s).`
-    : `Elevate remaining generic vocabulary with C1/C2 academic collocations to unlock Band 8.5+.`;
+  // Concise, highly informative Examiner Summary
+  let examinerSummary = "";
+  if (isPenalty) {
+    examinerSummary = `Underlength submission (${wordCount}/${targetMin} words). To achieve Band 7.0+, you must sustain your discussion with detailed supporting explanations and concrete illustrations to exceed the required word threshold.`;
+  } else if (overallBand >= 8.5) {
+    examinerSummary = `Master-grade execution (Band ${overallBand.toFixed(1)}). Sophisticated lexical range and natural clause rhythms throughout. Final polish: Refine subtle rhetorical balance and hedge claims to sustain a flawless Band 9.0.`;
+  } else if (overallBand === 8.0) {
+    examinerSummary = `Exceptional Band 8.0 standard with mature paragraph flow. To break into Band 8.5+, eliminate remaining mechanical transitions in favor of organic noun-referencing and replace conventional phrases with rare C2 collocations.`;
+  } else if (overallBand === 7.5) {
+    examinerSummary = `Strong Band 7.5 foundation with clear arguments and topic progression. To advance to Band 8.0+, qualify assertions with academic hedging, replace formulaic linkers with organic discourse flow, and integrate conditional inversion.`;
+  } else if (overallBand === 7.0) {
+    examinerSummary = `Solid Band 7.0 response with well-structured ideas. To unlock Band 7.5+, deepen counter-argument rebuttals, eliminate conversational adjectives with C1 collocations, and expand syntactic complexity.`;
+  } else if (overallBand === 6.5) {
+    examinerSummary = `Competent Band 6.5 development. Core message is clear, but formulaic transitions and B2 lexical choices anchor your score. Focus on precise collocations and varied complex clause structures.`;
+  } else {
+    examinerSummary = `Band ${overallBand.toFixed(1)} submission. Focus on developing clear central topic sentences, expanding supporting points with concrete examples, and eliminating informal register slips.`;
+  }
 
-  const examinerSummary = `Your submission demonstrates solid communicative capability at Band ${overallBand.toFixed(1)} (${wordCount} words). The response engages directly with the assigned prompt concerning ${promptTopicSnippet}. To maximize your score, apply the contextual sentence corrections and lexical upgrades highlighted in the inspector.`;
+  // Actionable Primary Bottleneck
+  let primaryBottleneck = "";
+  if (isPenalty) {
+    primaryBottleneck = `Word Count: Response is ${targetMin - wordCount} word(s) underlength. Expand arguments to meet the ${targetMin}-word minimum.`;
+  } else if (overallBand >= 8.0) {
+    primaryBottleneck = `Band 8.5+ Mastery: Focus on organic paragraph chaining and subtle evaluative hedging ('tends to precipitate', 'arguably').`;
+  } else if (overallBand >= 7.0) {
+    primaryBottleneck = `Advancing to Band 8.0: Adopt C1/C2 academic collocations and inject advanced syntactic structures (conditional inversions, non-finite result clauses).`;
+  } else if (sentenceFeedbacks.length > 0) {
+    primaryBottleneck = `Formal Register: Resolve the identified contractions and conversational expressions in the inspector cards.`;
+  } else {
+    primaryBottleneck = `Lexical & Cohesive Range: Elevate standard vocabulary to academic collocations and vary paragraph linking.`;
+  }
 
   return {
     overallBand,
@@ -530,7 +973,7 @@ export function evaluateWritingDynamically(
     criteria: {
       taskAchievement: {
         score: taScore,
-        bandLabel: isPenalty ? 'Band 5.5 (Underlength Penalty)' : `Band ${taScore.toFixed(1)} (${taScore >= 7.5 ? 'Well-Developed Response' : 'Addresses Prompt Requirements'})`,
+        bandLabel: isPenalty ? 'Band 5.5 (Underlength Penalty)' : `Band ${taScore.toFixed(1)} (${taScore >= 8.0 ? 'Thorough Topic Exploration' : taScore >= 7.0 ? 'Well-Developed Response' : 'Addresses Prompt Requirements'})`,
         feedback: taFeedback,
         strengths: taStrengths,
         weaknesses: taWeaknesses,
@@ -538,31 +981,27 @@ export function evaluateWritingDynamically(
       },
       coherenceCohesion: {
         score: ccScore,
-        bandLabel: `Band ${ccScore.toFixed(1)} (${ccScore >= 7.5 ? 'Fluent Thematic Progression' : 'Logical Paragraph Structure'})`,
-        feedback: overusedLinkers.length > 0
-          ? `Overall progression is clear. Note that the connector(s) "${overusedLinkers.join(', ')}" were repeated multiple times; aim for more varied participial and pronoun referencing.`
-          : `Ideas flow coherently across paragraphs with appropriate transitional markers and logical sequencing.`,
+        bandLabel: `Band ${ccScore.toFixed(1)} (${ccScore >= 8.0 ? 'Fluent Organic Progression' : ccScore >= 7.0 ? 'Fluent Thematic Progression' : 'Logical Paragraph Structure'})`,
+        feedback: ccFeedback,
         strengths: [`Logical paragraph distribution across ${paragraphs.length} sections`, 'Clear relationship between supporting arguments and conclusions'],
         weaknesses: overusedLinkers.length > 0 ? [`Repetitive usage of: ${overusedLinkers.join(', ')}`] : [],
-        keyRecommendations: ['Use adverbial participle clauses ("leading to...", "thereby fostering...") to link ideas seamlessly.']
+        keyRecommendations: ccRecommendations
       },
       lexicalResource: {
         score: lrScore,
-        bandLabel: `Band ${lrScore.toFixed(1)} (${lrScore >= 7.5 ? 'Advanced C1 Precision & Collocations' : 'Adequate Topic Vocabulary'})`,
-        feedback: `Employs topic-appropriate terminology with a lexical diversity ratio of ${(ttr * 100).toFixed(0)}%. Incorporating the suggested academic collocations will elevate your Lexical Resource to Band 8.0+.`,
+        bandLabel: `Band ${lrScore.toFixed(1)} (${lrScore >= 8.5 ? 'Masterly C2 Precision' : lrScore >= 7.5 ? 'Advanced C1 Precision & Collocations' : 'Adequate Topic Vocabulary'})`,
+        feedback: lrFeedback,
         strengths: ['Clear word choices appropriate to the topic', 'Consistent academic register without inappropriate informal slang'],
         weaknesses: vocabularySuggestions.length > 0 ? ['Some conversational expressions can be upgraded to C1/C2 register'] : [],
-        keyRecommendations: ['Review the vocabulary upgrade cards in the inspector and adopt the suggested collocations.']
+        keyRecommendations: lrRecommendations
       },
       grammaticalRange: {
         score: graScore,
-        bandLabel: `Band ${graScore.toFixed(1)} (${graScore >= 7.5 ? 'Frequent Error-Free Complex Structures' : 'Mix of Simple & Complex Forms'})`,
-        feedback: sentenceFeedbacks.length > 0
-          ? `Good syntactic control across ${sentenceList.length} sentences. Found ${sentenceFeedbacks.length} sentence(s) with register or contraction slips that can be refined.`
-          : `High degree of grammatical accuracy across complex and compound sentence forms.`,
+        bandLabel: `Band ${graScore.toFixed(1)} (${graScore >= 8.0 ? 'Wide Variety of Complex Structures' : graScore >= 7.0 ? 'Frequent Error-Free Complex Structures' : 'Mix of Simple & Complex Forms'})`,
+        feedback: graFeedback,
         strengths: ['Control of subordinate and relative clauses', 'Consistent subject-verb agreement throughout'],
         weaknesses: sentenceFeedbacks.length > 0 ? [`${sentenceFeedbacks.length} sentence(s) can be upgraded for formal academic precision`] : [],
-        keyRecommendations: ['Practice non-contracted academic forms and incorporate more conditional or non-finite clauses.']
+        keyRecommendations: graRecommendations
       }
     },
     sentenceFeedbacks,
