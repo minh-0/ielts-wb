@@ -22,6 +22,7 @@ import {
 import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
 import { SpeakingAnalysisResult, SpeakingPart, SpeakingMode } from "@/types/ielts";
 import { generateMockSpeakingAnalysis } from "@/lib/gemini";
+import { convertAudioBlobToWav } from "@/lib/wavEncoder";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
 import { BandScoreEmoji } from "../BandScoreEmoji";
@@ -51,6 +52,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
   const [isProcessingAudio, setIsProcessingAudio] = useState<boolean>(false);
+  const [isTranscribing, setIsTranscribing] = useState<boolean>(false);
   const [transcriptFallback, setTranscriptFallback] = useState<string>("");
   const [isListeningSpeech, setIsListeningSpeech] = useState<boolean>(false);
   const [speechNotice, setSpeechNotice] = useState<string | null>(null);
@@ -62,6 +64,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
   // Robust recording & recognition lifecycle refs
   const isRecordingRef = useRef<boolean>(false);
+  const recognitionFailedRef = useRef<boolean>(false);
   const recordedMimeRef = useRef<string>("audio/webm");
   const transcriptRef = useRef<string>("");
   const persistedTranscriptRef = useRef<string>("");
@@ -190,11 +193,54 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
         };
 
         stream.getTracks().forEach((track) => track.stop());
+
+        // Automated speech transcription: if live browser transcription didn't transcribe or was minimal
+        if (!transcriptRef.current || transcriptRef.current.trim().split(/\s+/).length < 5) {
+          setIsTranscribing(true);
+          convertAudioBlobToWav(audioBlob)
+            .then((wavBlob) => {
+              const wavReader = new FileReader();
+              wavReader.readAsDataURL(wavBlob);
+              wavReader.onloadend = async () => {
+                const wavBase64 = (wavReader.result as string).split(",")[1];
+                try {
+                  const transRes = await fetch("/api/transcribe-speech", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      audioData: wavBase64,
+                      mimeType: "audio/wav",
+                      apiKey: apiKey || undefined,
+                    }),
+                  });
+                  if (transRes.ok) {
+                    const transData = await transRes.json();
+                    if (transData.transcript && transData.transcript.trim()) {
+                      setTranscriptFallback(transData.transcript.trim());
+                      transcriptRef.current = transData.transcript.trim();
+                    }
+                  }
+                } catch (transErr) {
+                  console.warn("Speech transcription request error:", transErr);
+                } finally {
+                  setIsTranscribing(false);
+                }
+              };
+              wavReader.onerror = () => {
+                setIsTranscribing(false);
+              };
+            })
+            .catch((wavErr) => {
+              console.warn("WAV conversion error:", wavErr);
+              setIsTranscribing(false);
+            });
+        }
       };
 
       mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start(250);
       isRecordingRef.current = true;
+      recognitionFailedRef.current = false;
       setIsRecording(true);
       setRecordSeconds(0);
 
@@ -249,21 +295,20 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
           recognition.onerror = (e: any) => {
             console.warn("Browser speech recognition event:", e.error);
-            if (e.error === "network") {
-              setSpeechNotice(
-                "Browser speech recognition is offline or limited, but your microphone recording is capturing high quality audio. Your speech will be fully evaluated when you analyze!"
-              );
-            } else if (e.error !== "no-speech") {
-              setSpeechNotice(`Speech notice (${e.error}): Your voice recording is active.`);
+            if (e.error === "network" || e.error === "not-allowed" || e.error === "service-not-allowed") {
+              // Mark as failed so onend does not enter infinite restart loop.
+              // Do NOT display warning banner — microphone audio recording is capturing fine
+              // and will be automatically transcribed upon stopping.
+              recognitionFailedRef.current = true;
             }
           };
 
           recognition.onend = () => {
-            // If the user is still recording, automatically restart recognition across pauses safely
-            if (isRecordingRef.current) {
+            // Only restart if user is still recording and recognition has not encountered fatal network failure
+            if (isRecordingRef.current && !recognitionFailedRef.current) {
               persistedTranscriptRef.current = transcriptRef.current;
               setTimeout(() => {
-                if (isRecordingRef.current && recognitionRef.current) {
+                if (isRecordingRef.current && !recognitionFailedRef.current && recognitionRef.current) {
                   try {
                     recognitionRef.current.start();
                   } catch (e) {
@@ -280,9 +325,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           recognitionRef.current = recognition;
         } catch (recognitionErr) {
           console.warn("SpeechRecognition start failed:", recognitionErr);
-          setSpeechNotice(
-            "Live browser speech-to-text unavailable in this environment. Your audio recording will be evaluated directly upon submission."
-          );
+          recognitionFailedRef.current = true;
         }
       }
 
@@ -330,11 +373,13 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
   const resetRecording = () => {
     stopRecording();
     isRecordingRef.current = false;
+    recognitionFailedRef.current = false;
     persistedTranscriptRef.current = "";
     transcriptRef.current = "";
     setAudioUrl(null);
     setAudioBase64(null);
     setIsProcessingAudio(false);
+    setIsTranscribing(false);
     setRecordSeconds(0);
     setIsPrepping(false);
     setPrepSecondsRemaining(60);
@@ -736,13 +781,21 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 {isListeningSpeech ? "Listening & transcribing..." : "Recording active..."}
               </span>
             )}
+            {isTranscribing && (
+              <span className="flex items-center gap-1.5 text-amber-500 dark:text-amber-400 text-xs font-medium animate-pulse">
+                <RefreshCw className="w-3 h-3 animate-spin" />
+                Transcribing audio with Gemini 3.8 Flash...
+              </span>
+            )}
           </div>
           <textarea
             value={transcriptFallback}
             onChange={(e) => setTranscriptFallback(e.target.value)}
             placeholder={
               isRecording
-                ? "Speak into your mic — your words will be transcribed here in real time..."
+                ? "Speak into your microphone — your response is being captured..."
+                : isTranscribing
+                ? "Transcribing your spoken words with Gemini 3.8 Flash..."
                 : "Spoken transcript will appear here. You can also edit or paste directly before analyzing..."
             }
             rows={3}
@@ -750,11 +803,13 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
           />
           <div className="flex items-center justify-between text-[11px] text-neutral-500">
             <span>
-              {transcriptFallback.trim()
+              {isTranscribing
+                ? "Transcribing audio..."
+                : transcriptFallback.trim()
                 ? `${transcriptFallback.trim().split(/\s+/).filter(Boolean).length} words captured`
                 : "Ready to record speech"}
             </span>
-            {transcriptFallback.trim() && (
+            {transcriptFallback.trim() && !isTranscribing && (
               <button
                 onClick={() => setTranscriptFallback("")}
                 className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
@@ -777,10 +832,10 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                 <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
                   <div className="font-semibold text-emerald-900 dark:text-emerald-300">
-                    Gemini Multimodal Voice Listening Ready ({formatTime(recordSeconds)})
+                    Gemini 3.8 Flash Voice Evaluation Ready ({formatTime(recordSeconds)})
                   </div>
                   <div className="text-[11px] text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
-                    Gemini 2.5 Flash will listen directly to your audio waveform, transcribing your spoken words and evaluating pronunciation, fluency, stress, and intonation directly from your voice.
+                    Gemini 3.8 Flash will evaluate your speech against official Cambridge IELTS criteria, assessing fluency, lexical resource, grammatical accuracy, and pronunciation.
                   </div>
                 </div>
               </div>
@@ -793,7 +848,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
                       Voice Recording Captured ({formatTime(recordSeconds)})
                     </div>
                     <div className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                      Your voice recording is ready for acoustic examiner evaluation! You can also connect a free Gemini key for verbatim direct audio transcription.
+                      Your voice recording is ready for examiner evaluation. Connect a free Gemini key for enhanced Gemini 3.8 Flash feedback.
                     </div>
                   </div>
                 </div>
@@ -828,7 +883,7 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
 
         <button
           onClick={handleAnalyze}
-          disabled={isAnalyzing || isProcessingAudio || (!audioBase64 && !audioUrl && !transcriptFallback.trim() && recordSeconds < 3)}
+          disabled={isAnalyzing || isProcessingAudio || isTranscribing || (!audioBase64 && !audioUrl && !transcriptFallback.trim() && recordSeconds < 3)}
           className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 cursor-pointer shadow-xs transition-all"
         >
           {isAnalyzing ? (
@@ -840,6 +895,11 @@ export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProp
             <>
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
               Finalizing Audio Recording...
+            </>
+          ) : isTranscribing ? (
+            <>
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              Transcribing Speech...
             </>
           ) : isRecording ? (
             <>

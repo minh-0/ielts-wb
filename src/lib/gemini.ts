@@ -1,7 +1,7 @@
 import { WritingAnalysisResult, SpeakingAnalysisResult, EffectiveFeature } from '@/types/ielts';
 
-const GEMINI_PRIMARY_MODEL = 'gemini-2.5-flash';
-const GEMINI_FALLBACK_MODEL = 'gemini-1.5-flash';
+const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
+const GEMINI_FALLBACK_MODEL = 'gemini-3.0-flash';
 
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_PRIMARY_MODEL}:generateContent`;
 const GEMINI_FALLBACK_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_FALLBACK_MODEL}:generateContent`;
@@ -1178,9 +1178,7 @@ export function generateMockSpeakingAnalysis(
 
     const overallBand = Math.round(((fcScore + lrScore + graScore + prScore) / 4) * 2) / 2;
     const estimatedWpm = 120;
-    const displayTranscript = transcript
-      ? `${transcript} [Speech sample sustained for ${duration}s]`
-      : `[Audio recording captured (${duration}s) • Acoustic evaluation for ${topic}]`;
+    const displayTranscript = transcript.trim() || (duration >= 5 ? 'Candidate spoken response' : '');
 
     return {
       overallBand,
