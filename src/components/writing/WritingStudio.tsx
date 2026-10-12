@@ -599,11 +599,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   };
 
   const handleLoadSampleEssay = () => {
-    setEssayContent(
-      cleanRepeatedWords(
-        `In contemporary society, the trajectory of modern technology presents both remarkable advantages and complex ethical quandaries. Proponents contend that automation substantially enhances productivity, freeing individuals from menial labor. Furthermore, algorithmic efficiencies optimize industrial supply chains and foster global scientific collaboration.\n\nConversely, skeptics caution that unregulated artificial intelligence could exacerbate socioeconomic disparities and induce severe structural unemployment. If machines replace entry-level cognitive tasks, young graduates may encounter unprecedented barriers to workplace integration. In addition, privacy concerns have become increasingly prominent.\n\nOn balance, while technological innovation inevitably disrupts conventional labor markets, proactive regulatory frameworks and comprehensive retraining initiatives can effectively harness these transformations for the collective good.`
-      )
-    );
+    if (selectedPrompt.modelEssay) {
+      setEssayContent(cleanRepeatedWords(selectedPrompt.modelEssay));
+    } else {
+      setEssayContent(
+        `In contemporary society, addressing the challenges surrounding this topic requires a balanced, multifaceted approach.\n\nOn one hand, proactive institutional frameworks ensure that structural obstacles are systematically mitigated. By dedicating resources toward targeted initiatives, communities and organizations can foster sustainable progress.\n\nOn the other hand, individual responsibility and informed decision-making remain equally paramount. Empowering citizens through educational opportunities and transparent policies allows them to contribute constructively to lasting solutions.\n\nIn conclusion, achieving long-term success necessitates thoughtful collaboration between governmental authorities and civil society.`
+      );
+    }
     setViewMode("edit");
     setReplacedItems([]);
     setIgnoredIds([]);
