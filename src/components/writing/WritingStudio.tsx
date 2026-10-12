@@ -32,6 +32,7 @@ import { AnnotatedParagraph } from "./AnnotatedParagraph";
 import { DiagnosticInspector } from "./DiagnosticInspector";
 import { SavedEssaysModal } from "./SavedEssaysModal";
 import { QuestionPickerModal } from "./QuestionPickerModal";
+import { NumberTicker } from "../magicui/number-ticker";
 
 interface WritingStudioProps {
   apiKey: string;
@@ -1072,8 +1073,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 Overall Band Score
               </div>
               <div className="flex items-center justify-center lg:justify-start gap-3.5">
-                <span className="text-5xl sm:text-6xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-                  Band {analysisResult.overallBand.toFixed(1)}
+                <span className="text-5xl sm:text-6xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100 flex items-baseline">
+                  <span>Band&nbsp;</span>
+                  <NumberTicker
+                    value={analysisResult.overallBand}
+                    decimalPlaces={1}
+                    className="font-serif font-bold text-neutral-900 dark:text-neutral-100"
+                  />
                 </span>
                 <BandScoreEmoji score={analysisResult.overallBand} size={54} />
               </div>
@@ -1169,8 +1175,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        Band {analysisResult.criteria.taskAchievement.score.toFixed(1)}
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                        Band&nbsp;
+                        <NumberTicker
+                          value={analysisResult.criteria.taskAchievement.score}
+                          decimalPlaces={1}
+                          className="text-neutral-900 dark:text-neutral-100 text-xs font-semibold"
+                        />
                       </span>
                     </div>
                     <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -1191,8 +1202,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Coherence & Cohesion</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        Band {analysisResult.criteria.coherenceCohesion.score.toFixed(1)}
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                        Band&nbsp;
+                        <NumberTicker
+                          value={analysisResult.criteria.coherenceCohesion.score}
+                          decimalPlaces={1}
+                          className="text-neutral-900 dark:text-neutral-100 text-xs font-semibold"
+                        />
                       </span>
                     </div>
                     <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -1218,8 +1234,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                        Band&nbsp;
+                        <NumberTicker
+                          value={analysisResult.criteria.lexicalResource.score}
+                          decimalPlaces={1}
+                          className="text-neutral-900 dark:text-neutral-100 text-xs font-semibold"
+                        />
                       </span>
                     </div>
                     <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
@@ -1240,8 +1261,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                        Band&nbsp;
+                        <NumberTicker
+                          value={analysisResult.criteria.grammaticalRange.score}
+                          decimalPlaces={1}
+                          className="text-neutral-900 dark:text-neutral-100 text-xs font-semibold"
+                        />
                       </span>
                     </div>
                     <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">

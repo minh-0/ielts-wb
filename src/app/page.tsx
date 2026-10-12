@@ -10,6 +10,7 @@ import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
 import { TaskType } from "@/types/ielts";
+import { Particles } from "@/components/magicui/particles";
 import {
   PenTool,
   Mic,
@@ -74,6 +75,14 @@ export default function Home() {
 
       {/* Memorable Minimalist Hero Section with Refined Atmospheric Gradients */}
       <section className="relative overflow-hidden border-b border-neutral-200/80 dark:border-neutral-800/80 bg-gradient-to-b from-red-50/30 via-white to-neutral-50/60 dark:from-neutral-950 dark:via-neutral-900/40 dark:to-black transition-all duration-300">
+        <Particles
+          className="absolute inset-0 pointer-events-none z-0"
+          quantity={70}
+          ease={70}
+          color="#888888"
+          size={0.5}
+          staticity={35}
+        />
         {/* Subtle Ambient Radial Glow Backdrops */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] sm:w-[1100px] h-[360px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(239,68,68,0.08),rgba(244,63,94,0.03),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(99,102,241,0.14),rgba(0,0,0,0))] pointer-events-none -z-0" />
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-red-500/8 to-transparent dark:from-emerald-500/10 dark:to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
