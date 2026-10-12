@@ -9,6 +9,7 @@ import { CollocationsStudio } from "@/components/collocations/CollocationsStudio
 import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
+import { StartPage } from "@/components/start/StartPage";
 import { TaskType } from "@/types/ielts";
 import { Particles } from "@/components/magicui/particles";
 import {
@@ -23,7 +24,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [category, setCategory] = useState<"practice" | "learn">("practice");
+  const [category, setCategory] = useState<"overview" | "practice" | "learn">("overview");
   const [practiceTab, setPracticeTab] = useState<"writing" | "speaking">("writing");
   const [learnTab, setLearnTab] = useState<"collocations" | "vocabulary" | "rubric">("collocations");
   const [apiKey, setApiKey] = useState<string>("");
@@ -208,85 +209,107 @@ export default function Home() {
 
       {/* Main Expansive Container */}
       <main id="diagnostic-studio" className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-5 sm:py-6">
-        {/* Category Sub-Navigation (Clean Underline Style) */}
-        <div className="flex items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-6">
-          {category === "practice" ? (
-            <>
-              <button
-                onClick={() => setPracticeTab("writing")}
-                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
-                  practiceTab === "writing"
-                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
-                }`}
-              >
-                <PenTool className="w-3.5 h-3.5" />
-                <span>Writing Studio</span>
-              </button>
-              <button
-                onClick={() => setPracticeTab("speaking")}
-                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
-                  practiceTab === "speaking"
-                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
-                }`}
-              >
-                <Mic className="w-3.5 h-3.5" />
-                <span>Speaking Studio</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => setLearnTab("collocations")}
-                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
-                  learnTab === "collocations"
-                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
-                }`}
-              >
-                <BookText className="w-3.5 h-3.5" />
-                <span>Collocations</span>
-              </button>
-              <button
-                onClick={() => setLearnTab("vocabulary")}
-                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
-                  learnTab === "vocabulary"
-                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
-                }`}
-              >
-                <BookA className="w-3.5 h-3.5" />
-                <span>Vocabulary (Oxford)</span>
-              </button>
-              <button
-                onClick={() => setLearnTab("rubric")}
-                className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
-                  learnTab === "rubric"
-                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Band Descriptors</span>
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Tab Content */}
-        {category === "practice" && practiceTab === "writing" && (
-          <WritingStudio apiKey={apiKey} initialTaskType={writingTaskType} />
-        )}
-        {category === "practice" && practiceTab === "speaking" && (
-          <SpeakingStudio
-            apiKey={apiKey}
-            onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+        {/* If Overview, show Magic UI Bento Grid Start Page */}
+        {category === "overview" ? (
+          <StartPage
+            onStartWriting={handleStartWriting}
+            onStartSpeaking={handleStartSpeaking}
+            onOpenLearn={handleOpenLearn}
           />
+        ) : (
+          <>
+            {/* Category Sub-Navigation (Clean Underline Style) */}
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-6">
+              <div className="flex items-center gap-6">
+                {category === "practice" ? (
+                  <>
+                    <button
+                      onClick={() => setPracticeTab("writing")}
+                      className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                        practiceTab === "writing"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      <PenTool className="w-3.5 h-3.5" />
+                      <span>Writing Studio</span>
+                    </button>
+                    <button
+                      onClick={() => setPracticeTab("speaking")}
+                      className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                        practiceTab === "speaking"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      <Mic className="w-3.5 h-3.5" />
+                      <span>Speaking Studio</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setLearnTab("collocations")}
+                      className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                        learnTab === "collocations"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      <BookText className="w-3.5 h-3.5" />
+                      <span>Collocations</span>
+                    </button>
+                    <button
+                      onClick={() => setLearnTab("vocabulary")}
+                      className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                        learnTab === "vocabulary"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      <BookA className="w-3.5 h-3.5" />
+                      <span>Vocabulary (Oxford)</span>
+                    </button>
+                    <button
+                      onClick={() => setLearnTab("rubric")}
+                      className={`flex items-center gap-2 text-xs font-medium pb-1 transition-colors cursor-pointer ${
+                        learnTab === "rubric"
+                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                          : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>Band Descriptors</span>
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <button
+                onClick={() => setCategory("overview")}
+                className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 flex items-center gap-1.5 transition-colors cursor-pointer font-medium"
+                title="Return to start page bento overview"
+              >
+                <span>Overview Hub</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            {category === "practice" && practiceTab === "writing" && (
+              <WritingStudio apiKey={apiKey} initialTaskType={writingTaskType} />
+            )}
+            {category === "practice" && practiceTab === "speaking" && (
+              <SpeakingStudio
+                apiKey={apiKey}
+                onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+              />
+            )}
+            {category === "learn" && learnTab === "collocations" && <CollocationsStudio />}
+            {category === "learn" && learnTab === "vocabulary" && <VocabularyStudio />}
+            {category === "learn" && learnTab === "rubric" && <RubricViewer />}
+          </>
         )}
-        {category === "learn" && learnTab === "collocations" && <CollocationsStudio />}
-        {category === "learn" && learnTab === "vocabulary" && <VocabularyStudio />}
-        {category === "learn" && learnTab === "rubric" && <RubricViewer />}
       </main>
 
       {/* Footer: Simple, quiet line */}

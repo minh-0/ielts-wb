@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { PenTool, Mic, BookOpen, BookA, BookText, Sparkles } from "lucide-react";
+import { PenTool, BookOpen, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
-  activeCategory: "practice" | "learn";
-  onCategoryChange: (category: "practice" | "learn") => void;
+  activeCategory: "overview" | "practice" | "learn";
+  onCategoryChange: (category: "overview" | "practice" | "learn") => void;
   onOpenApiKeyModal: () => void;
   hasApiKey: boolean;
 }
@@ -15,20 +15,36 @@ export function Navbar({ activeCategory, onCategoryChange, onOpenApiKeyModal, ha
   return (
     <header className="sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 backdrop-blur-md">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 h-14 flex items-center justify-between">
-        {/* Brand / Logo - High-contrast editorial serif */}
-        <div className="flex items-center gap-2.5">
-          <span className="font-serif font-semibold text-lg sm:text-xl tracking-tight text-neutral-900 dark:text-neutral-100">
+        {/* Brand / Logo - Clickable to return to Overview */}
+        <button
+          onClick={() => onCategoryChange("overview")}
+          className="flex items-center gap-2.5 text-left cursor-pointer group"
+          title="Return to Start Page Overview"
+        >
+          <span className="font-serif font-semibold text-lg sm:text-xl tracking-tight text-neutral-900 dark:text-neutral-100 group-hover:opacity-80 transition-opacity">
             IELTSpro666
           </span>
           <span className="hidden sm:inline text-xs text-neutral-400 dark:text-neutral-500">
             Examiner Bench
           </span>
-        </div>
+        </button>
 
-        {/* Right Section: Tabs moved to the right + Actions */}
+        {/* Right Section: Tabs + Actions */}
         <div className="flex items-center gap-4 sm:gap-6">
-          {/* Tab Navigation: Only 2 tabs - Practice & Learn */}
-          <nav className="flex items-center gap-5 sm:gap-6 text-xs">
+          {/* Tab Navigation: Overview, Practice, Learn */}
+          <nav className="flex items-center gap-4 sm:gap-6 text-xs">
+            <button
+              onClick={() => onCategoryChange("overview")}
+              className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
+                activeCategory === "overview"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+              }`}
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>Overview</span>
+            </button>
+
             <button
               onClick={() => onCategoryChange("practice")}
               className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
@@ -55,7 +71,7 @@ export function Navbar({ activeCategory, onCategoryChange, onOpenApiKeyModal, ha
           </nav>
 
           {/* Hairline separator */}
-          <div className="h-4 w-px bg-neutral-200 dark:border-neutral-800 hidden sm:block" />
+          <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 hidden sm:block" />
 
           {/* AI Engine Status Button */}
           <button
