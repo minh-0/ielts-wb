@@ -6,1206 +6,1644 @@ import {
   Clock,
   Square,
   Sparkles,
-  Award,
-  Layers,
   Volume2,
-  Share2,
+  VolumeX,
+  Play,
+  Pause,
+  RotateCcw,
   RefreshCw,
-  Sliders,
-  Timer,
-  ChevronDown,
-  AlertCircle,
-  Key,
   Shuffle,
   ChevronRight,
+  ChevronDown,
+  Layers,
+  Zap,
+  BookOpen,
+  Copy,
+  Check,
+  Info,
+  Lightbulb,
+  ArrowUpRight,
+  ArrowDownRight,
+  Target,
+  Compass,
+  MessageSquare,
+  Headphones,
 } from "lucide-react";
 import { SPEAKING_PROMPTS, SpeakingPrompt } from "@/lib/ieltsPromptBank";
-import { SpeakingAnalysisResult, SpeakingPart, SpeakingMode } from "@/types/ielts";
-import { generateMockSpeakingAnalysis } from "@/lib/gemini";
-import { convertAudioBlobToWav } from "@/lib/wavEncoder";
-import { RadarChart } from "../RadarChart";
-import { ScorecardModal } from "../ScorecardModal";
-import { BandScoreEmoji } from "../BandScoreEmoji";
+import {
+  TOPIC_LEXICAL_PACKS,
+  getLexicalPackForTopic,
+  SHADOWING_MODELS,
+  ShadowingModel,
+  AREA_DRILLS,
+  AreaDrillQuestion,
+  BUYING_TIME_FILLERS,
+  BuyingTimeFiller,
+  COLLOCATION_FLASHCARDS,
+  CollocationFlashcard,
+} from "@/lib/speakingPracticeData";
 
 interface SpeakingStudioProps {
-  apiKey: string;
+  apiKey?: string;
   onOpenApiKeyModal?: () => void;
 }
 
+type StudioTab = "cue_card_scaffolder" | "shadowing_intonation" | "fluency_gym";
+type FrameworkType = "four_wh" | "ppf" | "story_arc";
+type GymDrill = "area_builder" | "buying_time_fillers" | "collocation_flashcards";
+
 export function SpeakingStudio({ apiKey, onOpenApiKeyModal }: SpeakingStudioProps) {
-  const [speakingMode, setSpeakingMode] = useState<SpeakingMode>("practice");
-  const [selectedPart, setSelectedPart] = useState<SpeakingPart>("part2_cuecard");
-  const [selectedPrompt, setSelectedPrompt] = useState<SpeakingPrompt>(
-    SPEAKING_PROMPTS.find((p) => p.part === "part2_cuecard") || SPEAKING_PROMPTS[0]
-  );
+  // Main Studio Navigation Tab
+  const [activeTab, setActiveTab] = useState<StudioTab>("cue_card_scaffolder");
+
+  // ==========================================
+  // MODULE 1: CUE CARD SCAFFOLDER STATE
+  // ==========================================
+  const cueCardPrompts = SPEAKING_PROMPTS.filter((p) => p.part === "part2_cuecard");
+  const [selectedPrompt, setSelectedPrompt] = useState<SpeakingPrompt>(cueCardPrompts[0]);
   const [useCustomPrompt, setUseCustomPrompt] = useState<boolean>(false);
   const [customQuestion, setCustomQuestion] = useState<string>("");
+  const [activeFramework, setActiveFramework] = useState<FrameworkType>("four_wh");
 
-  const [customTimerSeconds, setCustomTimerSeconds] = useState<number>(0);
-
+  // 1-Minute Prep Timer
   const [prepSecondsRemaining, setPrepSecondsRemaining] = useState<number>(60);
   const [isPrepping, setIsPrepping] = useState<boolean>(false);
   const [prepNotes, setPrepNotes] = useState<string>("");
+  const prepIntervalRef = useRef<any>(null);
 
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recordSeconds, setRecordSeconds] = useState<number>(0);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [audioBase64, setAudioBase64] = useState<string | null>(null);
-  const [isProcessingAudio, setIsProcessingAudio] = useState<boolean>(false);
-  const [isTranscribing, setIsTranscribing] = useState<boolean>(false);
-  const [transcriptFallback, setTranscriptFallback] = useState<string>("");
-  const [isListeningSpeech, setIsListeningSpeech] = useState<boolean>(false);
-  const [speechNotice, setSpeechNotice] = useState<string | null>(null);
+  // 2-Minute Speaking Delivery Timer & Local Self-Recording
+  const [isSpeakingDelivery, setIsSpeakingDelivery] = useState<boolean>(false);
+  const [deliverySeconds, setDeliverySeconds] = useState<number>(0);
+  const deliveryIntervalRef = useRef<any>(null);
 
+  const [deliveryAudioUrl, setDeliveryAudioUrl] = useState<string | null>(null);
+  const [isRecordingAudio, setIsRecordingAudio] = useState<boolean>(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const recognitionRef = useRef<any>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const timerIntervalRef = useRef<any>(null);
 
-  // Robust recording & recognition lifecycle refs
-  const isRecordingRef = useRef<boolean>(false);
-  const recognitionFailedRef = useRef<boolean>(false);
-  const recordedMimeRef = useRef<string>("audio/webm");
-  const transcriptRef = useRef<string>("");
-  const persistedTranscriptRef = useRef<string>("");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
-  const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const [analysisResult, setAnalysisResult] = useState<SpeakingAnalysisResult | null>(null);
-  const [activeTab, setActiveTab] = useState<"criteria" | "spoken_grammar" | "spoken_idioms" | "speech_metrics" | "model_answer">("criteria");
-  const [showScorecard, setShowScorecard] = useState<boolean>(false);
+  // Topic Lexical Pack for the active prompt
+  const activeLexicalPack = getLexicalPackForTopic(
+    useCustomPrompt ? customQuestion : selectedPrompt.topic + " " + selectedPrompt.question
+  );
 
-  const currentPartPrompts = SPEAKING_PROMPTS.filter((p) => p.part === selectedPart);
-  const currentPromptIndex = currentPartPrompts.findIndex((p) => p.id === selectedPrompt.id);
+  // ==========================================
+  // MODULE 2: BAND 9 SHADOWING & INTONATION STATE
+  // ==========================================
+  const [selectedModel, setSelectedModel] = useState<ShadowingModel>(SHADOWING_MODELS[0]);
+  const [activeSentenceIndex, setActiveSentenceIndex] = useState<number>(0);
+  const [speechSpeed, setSpeechSpeed] = useState<number>(1.0);
+  const [isPlayingFullAudio, setIsPlayingFullAudio] = useState<boolean>(false);
+  const [isPlayingSentenceAudio, setIsPlayingSentenceAudio] = useState<boolean>(false);
 
-  const handlePartChange = (part: SpeakingPart) => {
-    setSelectedPart(part);
-    const available = SPEAKING_PROMPTS.filter((p) => p.part === part);
-    if (available.length > 0) {
-      setSelectedPrompt(available[0]);
+  // Sentence-level recording for self-mirroring
+  const [shadowAudioUrl, setShadowAudioUrl] = useState<string | null>(null);
+  const [isShadowRecording, setIsShadowRecording] = useState<boolean>(false);
+  const shadowMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const shadowAudioChunksRef = useRef<Blob[]>([]);
+
+  // ==========================================
+  // MODULE 3: FLUENCY & REFLEX GYM STATE
+  // ==========================================
+  const [activeGymDrill, setActiveGymDrill] = useState<GymDrill>("area_builder");
+
+  // Drill A: A.R.E.A. Formula Builder
+  const [activeAreaIndex, setActiveAreaIndex] = useState<number>(0);
+  const activeAreaQuestion = AREA_DRILLS[activeAreaIndex] || AREA_DRILLS[0];
+  const [areaAnswerText, setAreaAnswerText] = useState<string>("");
+  const [areaReasonText, setAreaReasonText] = useState<string>("");
+  const [areaExampleText, setAreaExampleText] = useState<string>("");
+  const [areaAltText, setAreaAltText] = useState<string>("");
+  const [showAreaModel, setShowAreaModel] = useState<boolean>(false);
+
+  // Drill B: Buying-Time Fillers
+  const [activeFillerIndex, setActiveFillerIndex] = useState<number>(0);
+  const activeFiller = BUYING_TIME_FILLERS[activeFillerIndex] || BUYING_TIME_FILLERS[0];
+  const [trickyPromptIndex, setTrickyPromptIndex] = useState<number>(0);
+
+  const TRICKY_PROMPTS = [
+    "Do you think artificial intelligence will make human artists completely obsolete in 50 years?",
+    "Why do some people enjoy looking at mirrors while others feel self-conscious?",
+    "Is it better for children to grow up in a multi-generational home with their grandparents?",
+    "Do you think future cities will ban private automobiles entirely?",
+    "Should governments spend funds on preserving minority languages that have fewer than 100 speakers?",
+  ];
+
+  // Drill C: Collocation Flashcards
+  const [flashcardIndex, setFlashcardIndex] = useState<number>(0);
+  const [isCardFlipped, setIsCardFlipped] = useState<boolean>(false);
+  const [masteredCards, setMasteredCards] = useState<Set<string>>(new Set());
+
+  // Copy helper with feedback
+  const handleCopyText = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(id);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
+
+  // Browser Speech Synthesis (Natural TTS with Speed Control)
+  const speakText = (text: string, rate: number = 1.0, onEndCallback?: () => void) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = rate;
+
+    const voices = window.speechSynthesis.getVoices();
+    // Prioritize natural English voice
+    const enVoice = voices.find(
+      (v) =>
+        v.lang.startsWith("en-GB") ||
+        v.lang.startsWith("en-US") ||
+        v.lang.startsWith("en")
+    );
+    if (enVoice) utterance.voice = enVoice;
+
+    if (onEndCallback) {
+      utterance.onend = () => onEndCallback();
+      utterance.onerror = () => onEndCallback();
     }
-    setUseCustomPrompt(false);
-    resetRecording();
+    window.speechSynthesis.speak(utterance);
   };
 
-  const handleNextPrompt = () => {
-    if (currentPartPrompts.length === 0) return;
-    const nextIdx = (currentPromptIndex + 1) % currentPartPrompts.length;
-    setSelectedPrompt(currentPartPrompts[nextIdx]);
-    setUseCustomPrompt(false);
-    resetRecording();
-  };
-
-  const handleShufflePrompt = () => {
-    if (currentPartPrompts.length <= 1) return;
-    let randIdx = Math.floor(Math.random() * currentPartPrompts.length);
-    if (randIdx === currentPromptIndex) {
-      randIdx = (randIdx + 1) % currentPartPrompts.length;
+  const stopSpeaking = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setIsPlayingFullAudio(false);
+      setIsPlayingSentenceAudio(false);
     }
-    setSelectedPrompt(currentPartPrompts[randIdx]);
-    setUseCustomPrompt(false);
-    resetRecording();
   };
 
+  // 1-Minute Prep Countdown Timer
+  useEffect(() => {
+    if (isPrepping && prepSecondsRemaining > 0) {
+      prepIntervalRef.current = setInterval(() => {
+        setPrepSecondsRemaining((prev) => prev - 1);
+      }, 1000);
+    } else if (prepSecondsRemaining === 0) {
+      setIsPrepping(false);
+      if (prepIntervalRef.current) clearInterval(prepIntervalRef.current);
+    }
+    return () => {
+      if (prepIntervalRef.current) clearInterval(prepIntervalRef.current);
+    };
+  }, [isPrepping, prepSecondsRemaining]);
+
+  // 2-Minute Speaking Delivery Timer
+  useEffect(() => {
+    if (isSpeakingDelivery && deliverySeconds < 120) {
+      deliveryIntervalRef.current = setInterval(() => {
+        setDeliverySeconds((prev) => prev + 1);
+      }, 1000);
+    } else if (deliverySeconds >= 120) {
+      stopDeliveryRecording();
+    }
+    return () => {
+      if (deliveryIntervalRef.current) clearInterval(deliveryIntervalRef.current);
+    };
+  }, [isSpeakingDelivery, deliverySeconds]);
+
+  // Clean speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  // Format seconds to MM:SS
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  const handleStartPrep = () => {
-    setIsPrepping(true);
-    setPrepSecondsRemaining(60);
+  // Cue card switcher
+  const handleShufflePrompt = () => {
+    let randIdx = Math.floor(Math.random() * cueCardPrompts.length);
+    setSelectedPrompt(cueCardPrompts[randIdx]);
+    setUseCustomPrompt(false);
+    resetPrepAndDelivery();
   };
 
-  useEffect(() => {
-    let interval: any = null;
-    if (isPrepping && prepSecondsRemaining > 0) {
-      interval = setInterval(() => {
-        setPrepSecondsRemaining((prev) => prev - 1);
-      }, 1000);
-    } else if (isPrepping && prepSecondsRemaining === 0) {
-      setIsPrepping(false);
-    }
-    return () => clearInterval(interval);
-  }, [isPrepping, prepSecondsRemaining]);
+  const handleNextPrompt = () => {
+    const currentIdx = cueCardPrompts.findIndex((p) => p.id === selectedPrompt.id);
+    const nextIdx = (currentIdx + 1) % cueCardPrompts.length;
+    setSelectedPrompt(cueCardPrompts[nextIdx]);
+    setUseCustomPrompt(false);
+    resetPrepAndDelivery();
+  };
 
-  const startRecording = async () => {
+  const resetPrepAndDelivery = () => {
+    setIsPrepping(false);
+    setPrepSecondsRemaining(60);
+    setIsSpeakingDelivery(false);
+    setDeliverySeconds(0);
+    setDeliveryAudioUrl(null);
+    setIsRecordingAudio(false);
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+  };
+
+  // Insert Framework Outline into Scratchpad
+  const handleInsertFrameworkOutline = () => {
+    let outline = "";
+    if (activeFramework === "four_wh") {
+      outline = `[1. WHO / WHAT]\n- Key context: \n\n[2. WHEN / WHERE]\n- Setting & backdrop: \n\n[3. WHY IMPORTANT]\n- Defining reason: \n\n[4. HOW I FELT / REFLECTION]\n- Lasting personal impact: `;
+    } else if (activeFramework === "ppf") {
+      outline = `[PAST BACKGROUND]\n- How it started: \n\n[PRESENT SIGNIFICANCE]\n- Why it matters today: \n\n[FUTURE OUTLOOK]\n- Long-term aspiration / prediction: `;
+    } else {
+      outline = `[SETUP]\n- The objective: \n\n[OBSTACLE / CONFLICT]\n- The unexpected hurdle: \n\n[RESOLUTION & TAKEAWAY]\n- Overcoming it & the lesson: `;
+    }
+    setPrepNotes((prev) => (prev ? prev + "\n\n" + outline : outline));
+  };
+
+  // Start 2-Minute Speaking Delivery Recording (Pure Local Browser Audio)
+  const startDeliveryRecording = async () => {
     try {
-      // Clear previous evaluations, audio and notices for clean fresh attempt
-      setAnalysisResult(null);
-      setSpeechNotice(null);
-      setTranscriptFallback("");
-      setAudioUrl(null);
-      setAudioBase64(null);
-      transcriptRef.current = "";
-      persistedTranscriptRef.current = "";
+      setDeliveryAudioUrl(null);
+      setDeliverySeconds(0);
+      setIsSpeakingDelivery(true);
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
 
-      // Determine supported audio MIME type across browsers (Chrome, Edge, Firefox, Safari)
-      let chosenMime = "audio/webm";
-      let recorderOptions: MediaRecorderOptions = {};
-      if (typeof MediaRecorder !== "undefined") {
-        if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
-          chosenMime = "audio/webm";
-          recorderOptions = { mimeType: "audio/webm;codecs=opus" };
-        } else if (MediaRecorder.isTypeSupported("audio/webm")) {
-          chosenMime = "audio/webm";
-          recorderOptions = { mimeType: "audio/webm" };
-        } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
-          chosenMime = "audio/mp4";
-          recorderOptions = { mimeType: "audio/mp4" };
-        } else if (MediaRecorder.isTypeSupported("audio/ogg")) {
-          chosenMime = "audio/ogg";
-          recorderOptions = { mimeType: "audio/ogg" };
-        }
-      }
-      recordedMimeRef.current = chosenMime;
-
-      const mediaRecorder = new MediaRecorder(stream, recorderOptions);
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
       };
 
       mediaRecorder.onstop = () => {
-        setIsProcessingAudio(true);
         const audioBlob = new Blob(audioChunksRef.current, {
-          type: mediaRecorder.mimeType || chosenMime,
+          type: mediaRecorder.mimeType || "audio/webm",
         });
         const url = URL.createObjectURL(audioBlob);
-        setAudioUrl(url);
-
-        const reader = new FileReader();
-        reader.readAsDataURL(audioBlob);
-        reader.onloadend = () => {
-          const base64String = reader.result as string;
-          const base64Clean = base64String.split(",")[1];
-          setAudioBase64(base64Clean);
-          setIsProcessingAudio(false);
-        };
-        reader.onerror = () => {
-          setIsProcessingAudio(false);
-        };
-
+        setDeliveryAudioUrl(url);
         stream.getTracks().forEach((track) => track.stop());
-
-        // Automated speech transcription: if live browser transcription didn't transcribe or was minimal
-        if (!transcriptRef.current || transcriptRef.current.trim().split(/\s+/).length < 5) {
-          setIsTranscribing(true);
-          convertAudioBlobToWav(audioBlob)
-            .then((wavBlob) => {
-              const wavReader = new FileReader();
-              wavReader.readAsDataURL(wavBlob);
-              wavReader.onloadend = async () => {
-                const wavBase64 = (wavReader.result as string).split(",")[1];
-                try {
-                  const transRes = await fetch("/api/transcribe-speech", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      audioData: wavBase64,
-                      mimeType: "audio/wav",
-                      apiKey: apiKey || undefined,
-                    }),
-                  });
-                  if (transRes.ok) {
-                    const transData = await transRes.json();
-                    if (transData.transcript && transData.transcript.trim()) {
-                      setTranscriptFallback(transData.transcript.trim());
-                      transcriptRef.current = transData.transcript.trim();
-                    }
-                  }
-                } catch (transErr) {
-                  console.warn("Speech transcription request error:", transErr);
-                } finally {
-                  setIsTranscribing(false);
-                }
-              };
-              wavReader.onerror = () => {
-                setIsTranscribing(false);
-              };
-            })
-            .catch((wavErr) => {
-              console.warn("WAV conversion error:", wavErr);
-              setIsTranscribing(false);
-            });
-        }
+        setIsRecordingAudio(false);
       };
 
       mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.start(250);
-      isRecordingRef.current = true;
-      recognitionFailedRef.current = false;
-      setIsRecording(true);
-      setRecordSeconds(0);
-
-      // Clean up any stale speech recognition instance
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.abort();
-        } catch (e) {}
-        recognitionRef.current = null;
-      }
-
-      // Initialize real-time Web Speech Recognition in browser with continuous restart
-      const SpeechRecognition =
-        typeof window !== "undefined"
-          ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-          : null;
-
-      if (SpeechRecognition) {
-        try {
-          const recognition = new SpeechRecognition();
-          recognition.continuous = true;
-          recognition.interimResults = true;
-          recognition.lang = "en-US";
-          recognition.maxAlternatives = 1;
-
-          recognition.onstart = () => {
-            setIsListeningSpeech(true);
-            setSpeechNotice(null);
-          };
-
-          recognition.onresult = (event: any) => {
-            let sessionFinal = "";
-            let sessionInterim = "";
-            for (let i = 0; i < event.results.length; ++i) {
-              if (event.results[i].isFinal) {
-                sessionFinal += event.results[i][0].transcript + " ";
-              } else {
-                sessionInterim += event.results[i][0].transcript;
-              }
-            }
-            const fullTranscript = (
-              (persistedTranscriptRef.current ? persistedTranscriptRef.current + " " : "") +
-              sessionFinal +
-              sessionInterim
-            ).trim();
-
-            if (fullTranscript) {
-              setTranscriptFallback(fullTranscript);
-              transcriptRef.current = fullTranscript;
-            }
-          };
-
-          recognition.onerror = (e: any) => {
-            console.warn("Browser speech recognition event:", e.error);
-            if (e.error === "network" || e.error === "not-allowed" || e.error === "service-not-allowed") {
-              // Mark as failed so onend does not enter infinite restart loop.
-              // Do NOT display warning banner — microphone audio recording is capturing fine
-              // and will be automatically transcribed upon stopping.
-              recognitionFailedRef.current = true;
-            }
-          };
-
-          recognition.onend = () => {
-            // Only restart if user is still recording and recognition has not encountered fatal network failure
-            if (isRecordingRef.current && !recognitionFailedRef.current) {
-              persistedTranscriptRef.current = transcriptRef.current;
-              setTimeout(() => {
-                if (isRecordingRef.current && !recognitionFailedRef.current && recognitionRef.current) {
-                  try {
-                    recognitionRef.current.start();
-                  } catch (e) {
-                    // Ignore if already active or busy
-                  }
-                }
-              }, 150);
-              return;
-            }
-            setIsListeningSpeech(false);
-          };
-
-          recognition.start();
-          recognitionRef.current = recognition;
-        } catch (recognitionErr) {
-          console.warn("SpeechRecognition start failed:", recognitionErr);
-          recognitionFailedRef.current = true;
-        }
-      }
-
-      timerIntervalRef.current = setInterval(() => {
-        setRecordSeconds((prev) => {
-          if (speakingMode === "official_exam" && selectedPart === "part2_cuecard" && prev >= 120) {
-            stopRecording();
-            return 120;
-          }
-          if (speakingMode === "practice" && customTimerSeconds > 0 && prev >= customTimerSeconds) {
-            stopRecording();
-            return customTimerSeconds;
-          }
-          return prev + 1;
-        });
-      }, 1000);
+      mediaRecorder.start();
+      setIsRecordingAudio(true);
     } catch (err) {
-      console.warn("Microphone access denied or unsupported", err);
-      setSpeechNotice(
-        "Microphone access denied or unsupported. Please allow microphone permissions in your browser."
-      );
+      console.warn("Local mic access denied; running delivery timer only", err);
+      setIsSpeakingDelivery(true);
+      setIsRecordingAudio(false);
     }
   };
 
-  const stopRecording = () => {
-    isRecordingRef.current = false;
+  const stopDeliveryRecording = () => {
+    setIsSpeakingDelivery(false);
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.stop();
-      } catch (e) {
-        // ignore
-      }
-      recognitionRef.current = null;
-    }
-    setIsListeningSpeech(false);
-    setIsRecording(false);
-    if (timerIntervalRef.current) {
-      clearInterval(timerIntervalRef.current);
-    }
+    setIsRecordingAudio(false);
   };
 
-  const resetRecording = () => {
-    stopRecording();
-    isRecordingRef.current = false;
-    recognitionFailedRef.current = false;
-    persistedTranscriptRef.current = "";
-    transcriptRef.current = "";
-    setAudioUrl(null);
-    setAudioBase64(null);
-    setIsProcessingAudio(false);
-    setIsTranscribing(false);
-    setRecordSeconds(0);
-    setIsPrepping(false);
-    setPrepSecondsRemaining(60);
-    setTranscriptFallback("");
-    setAnalysisResult(null);
-    setAnalysisError(null);
-    setSpeechNotice(null);
-  };
-
-  const handleAnalyze = async () => {
-    // If candidate is actively recording, stop recording and wait briefly for blob finalization
-    if (isRecordingRef.current) {
-      stopRecording();
-      await new Promise((r) => setTimeout(r, 350));
-    }
-
-    const cleanTranscript = transcriptFallback.trim();
-    if (!audioBase64 && !cleanTranscript && recordSeconds < 3) {
-      setAnalysisError("Please record a voice answer or enter a spoken transcript before analyzing.");
-      return;
-    }
-
-    setIsAnalyzing(true);
-    setAnalysisError(null);
-    setAnalysisResult(null);
-
-    const promptTopic = useCustomPrompt
-      ? (customQuestion.trim() || "Custom Speaking Topic")
-      : `${selectedPrompt.topic}: ${selectedPrompt.question}`;
-
+  // Shadowing sentence self-recording
+  const startShadowRecording = async () => {
     try {
-      const res = await fetch("/api/grade-speaking", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          promptTopic,
-          audioData: audioBase64 || undefined,
-          transcript: cleanTranscript || undefined,
-          durationSeconds: recordSeconds || 0,
-          speakingPart: selectedPart,
-          mimeType: recordedMimeRef.current || "audio/webm",
-          apiKey: apiKey || undefined,
-        }),
-      });
+      setShadowAudioUrl(null);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      shadowAudioChunksRef.current = [];
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Speaking grading API failed");
-      }
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) shadowAudioChunksRef.current.push(e.data);
+      };
 
-      const data: SpeakingAnalysisResult = await res.json();
-      setAnalysisResult(data);
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(shadowAudioChunksRef.current, {
+          type: mediaRecorder.mimeType || "audio/webm",
+        });
+        const url = URL.createObjectURL(audioBlob);
+        setShadowAudioUrl(url);
+        stream.getTracks().forEach((track) => track.stop());
+        setIsShadowRecording(false);
+      };
 
-      // If Gemini transcribed the speech directly from the audio, sync it to the transcript box!
-      if (data.transcript && !data.transcript.startsWith("[")) {
-        setTranscriptFallback(data.transcript);
-        transcriptRef.current = data.transcript;
-      }
-    } catch (err: any) {
-      console.warn("Server speaking grading failed, applying instant examiner evaluation:", err);
-      // Client-side fallback guarantees candidates ALWAYS receive an accurate band evaluation!
-      try {
-        const localResult = generateMockSpeakingAnalysis(
-          promptTopic,
-          cleanTranscript,
-          recordSeconds || 30,
-          selectedPart
-        );
-        setAnalysisResult(localResult);
-      } catch (localErr: any) {
-        setAnalysisError(localErr?.message || "Failed to analyze speaking response. Please try again.");
-      }
-    } finally {
-      setIsAnalyzing(false);
+      shadowMediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      setIsShadowRecording(true);
+    } catch (err) {
+      console.warn("Mic error for shadow recorder", err);
     }
   };
 
-  const handleLoadSampleTranscript = () => {
-    setTranscriptFallback(
-      "Well, to be totally candid, I would like to talk about my high school literature teacher, Mr. David. He was truly an inspirational mentor who changed how I view critical thinking. What set him apart was his unorthodox teaching style. Instead of lecturing for hours, he encouraged debate and challenged us to look at poetry from multiple angles. Even now, whenever I face complex decisions, I recall his advice to always look past surface-level assumptions."
-    );
+  const stopShadowRecording = () => {
+    if (shadowMediaRecorderRef.current && shadowMediaRecorderRef.current.state !== "inactive") {
+      shadowMediaRecorderRef.current.stop();
+    }
+    setIsShadowRecording(false);
   };
+
+  const activeSentence = selectedModel.sentences[activeSentenceIndex] || selectedModel.sentences[0];
 
   return (
     <div className="space-y-8">
-      {/* Section 1: Mode & Part Controls (Unified minimalist toolbar) */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-5 border-b border-neutral-200 dark:border-neutral-800">
-        {/* Part Selection: Minimalist horizontal tabs (no box) */}
-        <div className="flex items-center gap-5 text-xs">
+      {/* Pillar Navigation Tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
-            onClick={() => handlePartChange("part1")}
-            className={`py-1 transition-colors cursor-pointer ${
-              selectedPart === "part1"
-                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+            onClick={() => {
+              setActiveTab("cue_card_scaffolder");
+              stopSpeaking();
+            }}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+              activeTab === "cue_card_scaffolder"
+                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/40"
             }`}
           >
-            Part 1 (Short Q&A)
+            <Layers className="w-3.5 h-3.5" />
+            <span>Part 2 Scaffolder</span>
           </button>
+
           <button
-            onClick={() => handlePartChange("part2_cuecard")}
-            className={`py-1 transition-colors cursor-pointer ${
-              selectedPart === "part2_cuecard"
-                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+            onClick={() => {
+              setActiveTab("shadowing_intonation");
+              stopSpeaking();
+            }}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+              activeTab === "shadowing_intonation"
+                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/40"
             }`}
           >
-            Part 2 (Cue Card)
+            <Headphones className="w-3.5 h-3.5" />
+            <span>Band 9 Shadowing & Intonation</span>
           </button>
+
           <button
-            onClick={() => handlePartChange("part3")}
-            className={`py-1 transition-colors cursor-pointer ${
-              selectedPart === "part3"
-                ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+            onClick={() => {
+              setActiveTab("fluency_gym");
+              stopSpeaking();
+            }}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+              activeTab === "fluency_gym"
+                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-xs"
+                : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/40"
             }`}
           >
-            Part 3 (Discussion)
+            <Zap className="w-3.5 h-3.5 text-amber-500" />
+            <span>Fluency & Reflex Gym</span>
           </button>
         </div>
 
-        {/* Mode Switcher & Practice Timer */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 text-xs">
-            <button
-              onClick={() => {
-                setSpeakingMode("practice");
-                resetRecording();
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                speakingMode === "practice"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
-              }`}
-            >
-              <Sliders className="w-3 h-3" />
-              <span>Practice</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setSpeakingMode("official_exam");
-                resetRecording();
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                speakingMode === "official_exam"
-                  ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 font-medium shadow-xs"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
-              }`}
-            >
-              <Timer className="w-3 h-3" />
-              <span>Exam</span>
-            </button>
-          </div>
-
-          {speakingMode === "official_exam" ? null : (
-            <div className="flex items-center gap-1.5 text-xs border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 px-2.5 py-1.5 rounded-lg">
-              <span className="text-neutral-400 text-[11px]">Timer:</span>
-              <select
-                value={customTimerSeconds}
-                onChange={(e) => setCustomTimerSeconds(Number(e.target.value))}
-                className="bg-transparent font-medium text-neutral-900 dark:text-neutral-100 focus:outline-none cursor-pointer"
-              >
-                <option value={0} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">Unlimited</option>
-                <option value={30} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">30 seconds</option>
-                <option value={60} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">1 minute</option>
-                <option value={120} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">2 minutes</option>
-                <option value={180} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">3 minutes</option>
-              </select>
-            </div>
-          )}
+        <div className="flex items-center gap-2 text-xs text-neutral-500">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+          <span>IELTS Fluency & Coaching Mode</span>
         </div>
       </div>
 
-      {/* Section 2: Cue Card & Question Section (Horizontal line, pure typography) */}
-      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 space-y-4">
-        {/* Top Controls: Bank Header & Quick Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200">
-              Question Bank
-            </span>
-            <span className="text-xs text-neutral-400">
-              ({currentPromptIndex >= 0
-                ? `${currentPromptIndex + 1} of ${currentPartPrompts.length}`
-                : `${currentPartPrompts.length} questions`})
-            </span>
+      {/* ======================================================== */}
+      {/* TAB 1: PART 2 CUE CARD SCAFFOLDER & 2-MINUTE PACER      */}
+      {/* ======================================================== */}
+      {activeTab === "cue_card_scaffolder" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Cue Card Selection Toolbar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                Cue Card Bank
+              </span>
+              <span className="text-neutral-400">
+                ({cueCardPrompts.findIndex((p) => p.id === selectedPrompt.id) + 1} of{" "}
+                {cueCardPrompts.length} authentic cue cards)
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => setUseCustomPrompt(!useCustomPrompt)}
+                className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
+              >
+                {useCustomPrompt ? "Choose from bank" : "+ Custom cue card"}
+              </button>
+              <span className="text-neutral-300 dark:text-neutral-700">|</span>
+              <button
+                onClick={handleShufflePrompt}
+                className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
+              >
+                <Shuffle className="w-3 h-3" />
+                <span>Random</span>
+              </button>
+              <button
+                onClick={handleNextPrompt}
+                className="flex items-center gap-1 px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60 cursor-pointer font-medium text-neutral-700 dark:text-neutral-300"
+              >
+                <span>Next</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setUseCustomPrompt(!useCustomPrompt)}
-              className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
-            >
-              {useCustomPrompt ? "Choose from bank" : "+ Custom question"}
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-700">|</span>
-            <button
-              onClick={handleShufflePrompt}
-              className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
-              title="Pick a random question"
-            >
-              <Shuffle className="w-3 h-3" />
-              <span>Random</span>
-            </button>
-            <button
-              onClick={handleNextPrompt}
-              className="flex items-center gap-1 px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100/60 dark:hover:bg-neutral-800/60 cursor-pointer font-medium text-neutral-700 dark:text-neutral-300 transition-colors"
-              title="Next question"
-            >
-              <span>Next</span>
-              <ChevronRight className="w-3 h-3" />
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-700">|</span>
-            <button
-              onClick={handleLoadSampleTranscript}
-              className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
-            >
-              Sample answer
-            </button>
-          </div>
-        </div>
-
-        {/* Dropdown Question Selector */}
-        {!useCustomPrompt && (
-          <div className="relative">
-            <select
-              value={selectedPrompt.id}
-              onChange={(e) => {
-                const found = SPEAKING_PROMPTS.find((p) => p.id === e.target.value);
-                if (found) {
-                  setSelectedPrompt(found);
-                  resetRecording();
-                }
-              }}
-              className="w-full p-2.5 pr-8 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 appearance-none cursor-pointer focus:outline-none hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors font-medium"
-            >
-              {currentPartPrompts.map((p, idx) => (
-                <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 py-1">
-                  #{idx + 1}: [{p.topic}] {p.question.length > 95 ? p.question.substring(0, 95) + "..." : p.question}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-          </div>
-        )}
-
-        {/* Custom Question Input */}
-        {useCustomPrompt && (
-          <div className="space-y-1">
-            <label className="text-xs text-neutral-500">
-              Custom Speaking Question or Topic:
-            </label>
+          {/* Cue Card Dropdown or Custom Question */}
+          {!useCustomPrompt ? (
+            <div className="relative">
+              <select
+                value={selectedPrompt.id}
+                onChange={(e) => {
+                  const found = cueCardPrompts.find((p) => p.id === e.target.value);
+                  if (found) {
+                    setSelectedPrompt(found);
+                    resetPrepAndDelivery();
+                  }
+                }}
+                className="w-full p-2.5 pr-8 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 appearance-none cursor-pointer focus:outline-none hover:border-neutral-300 dark:hover:border-neutral-700 font-medium"
+              >
+                {cueCardPrompts.map((p, idx) => (
+                  <option key={p.id} value={p.id}>
+                    #{idx + 1}: [{p.topic}] {p.question}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+            </div>
+          ) : (
             <textarea
               value={customQuestion}
               onChange={(e) => setCustomQuestion(e.target.value)}
-              placeholder="Paste or type your own IELTS speaking prompt or cue card here..."
+              placeholder="Paste or type your custom cue card prompt here..."
               rows={2}
-              className="w-full p-2.5 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 font-normal"
+              className="w-full p-2.5 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none"
             />
-          </div>
-        )}
-
-        {/* Question Topic & Text Display: Clean typography */}
-        <div className="space-y-2 pt-1">
-          <div className="flex items-center gap-2 text-xs">
-            <span className="font-medium text-neutral-800 dark:text-neutral-200">
-              {useCustomPrompt ? "Custom Topic" : selectedPrompt.topic}
-            </span>
-            <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <span className="text-neutral-400">
-              Suggested: {selectedPart === "part2_cuecard" ? "2 mins" : selectedPart === "part1" ? "30 secs" : "1 min"}
-            </span>
-          </div>
-
-          <h3 className="text-base sm:text-lg font-serif font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
-            {useCustomPrompt
-              ? customQuestion.trim() || "Your Custom Speaking Topic"
-              : selectedPrompt.question}
-          </h3>
-
-          {!useCustomPrompt && selectedPrompt.bulletPoints && selectedPrompt.bulletPoints.length > 0 && (
-            <div className="pt-2 text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300">
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-1">
-                You should say:
-              </span>
-              {selectedPrompt.bulletPoints.map((b, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
-                  <span>{b}</span>
-                </div>
-              ))}
-            </div>
           )}
-        </div>
 
-        {/* 1-Minute Prep Countdown & Scratchpad */}
-        {speakingMode === "official_exam" && selectedPart === "part2_cuecard" && (
-          <div className="p-3.5 rounded-lg border border-black/10 dark:border-white/15 bg-black/[0.02] dark:bg-white/[0.02] space-y-2">
+          {/* Authentic Cue Card Display Box */}
+          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-4">
             <div className="flex items-center justify-between text-xs">
+              <span className="px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 font-medium text-neutral-800 dark:text-neutral-200">
+                {useCustomPrompt ? "Custom Topic" : selectedPrompt.topic}
+              </span>
+              <span className="text-neutral-400">Target Duration: 2 full minutes</span>
+            </div>
+
+            <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+              {useCustomPrompt
+                ? customQuestion.trim() || "Your Custom Cue Card Prompt"
+                : selectedPrompt.question}
+            </h3>
+
+            {!useCustomPrompt && selectedPrompt.bulletPoints && (
+              <div className="pt-2 text-xs space-y-1.5 text-neutral-700 dark:text-neutral-300 border-t border-neutral-100 dark:border-neutral-800/80">
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-1">
+                  You should say:
+                </span>
+                {selectedPrompt.bulletPoints.map((bullet, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
+                    <span>{bullet}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Scaffolding Framework Selector */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-neutral-500" />
+                Select Story Scaffolding Framework
+              </span>
+              <span className="text-neutral-400">Choose how to structure your 2-minute narrative</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <button
+                onClick={() => setActiveFramework("four_wh")}
+                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                  activeFramework === "four_wh"
+                    ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-xs"
+                    : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+                }`}
+              >
+                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1">
+                  1. The 4-Wh Framework
+                </div>
+                <div className="text-[11px] text-neutral-500 leading-relaxed">
+                  Who/What $\rightarrow$ When/Where $\rightarrow$ Why Important $\rightarrow$ How It Felt. Best for general cue cards and memory recall.
+                </div>
+              </button>
+
+              <button
+                onClick={() => setActiveFramework("ppf")}
+                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                  activeFramework === "ppf"
+                    ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-xs"
+                    : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+                }`}
+              >
+                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1">
+                  2. P.P.F. (Past - Present - Future)
+                </div>
+                <div className="text-[11px] text-neutral-500 leading-relaxed">
+                  How it started in the past $\rightarrow$ Current significance today $\rightarrow$ Future aspirations. Showcases diverse grammatical tenses.
+                </div>
+              </button>
+
+              <button
+                onClick={() => setActiveFramework("story_arc")}
+                className={`p-3.5 rounded-xl border text-left cursor-pointer transition-all ${
+                  activeFramework === "story_arc"
+                    ? "border-neutral-900 bg-neutral-50 dark:border-neutral-100 dark:bg-neutral-900/80 shadow-xs"
+                    : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700"
+                }`}
+              >
+                <div className="font-semibold text-xs text-neutral-900 dark:text-neutral-100 mb-1">
+                  3. Story Arc & Obstacle
+                </div>
+                <div className="text-[11px] text-neutral-500 leading-relaxed">
+                  The goal $\rightarrow$ Unexpected complication or challenge $\rightarrow$ Resolution & life lesson. Creates gripping listener engagement.
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* 1-Minute Prep Planner & Scratchpad */}
+          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="font-medium text-black dark:text-white">1-Minute Preparation:</span>
-                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-                  {formatTime(prepSecondsRemaining)}
+                <Clock className="w-4 h-4 text-neutral-500" />
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  1-Minute Preparation Assistant
+                </span>
+                <span className="text-neutral-400">
+                  (Official exam allows 60s note-taking)
                 </span>
               </div>
-              {!isPrepping && prepSecondsRemaining === 60 && (
-                <button
-                  onClick={handleStartPrep}
-                  className="px-2.5 py-1 text-xs rounded border border-black/15 dark:border-white/20 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black cursor-pointer font-medium"
-                >
-                  Start prep
-                </button>
-              )}
-            </div>
-            <textarea
-              value={prepNotes}
-              onChange={(e) => setPrepNotes(e.target.value)}
-              placeholder="Jot down quick keywords and structure notes..."
-              rows={2}
-              className="w-full p-2 text-xs rounded border border-black/10 dark:border-white/10 bg-white dark:bg-black text-black dark:text-white focus:outline-none"
-            />
-          </div>
-        )}
-      </div>
 
-      {/* Section 3: Audio Recorder (Clean minimalist controls) */}
-      <div className="p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col items-center justify-center space-y-5 text-center">
-        <div className="space-y-1">
-          <div className="text-4xl font-medium text-neutral-900 dark:text-neutral-100">
-            {formatTime(recordSeconds)}
-          </div>
-          <span className="text-xs text-neutral-500">
-            {isRecording ? "Recording active..." : audioUrl ? "Recording captured" : "Click mic to record"}
-          </span>
-        </div>
-
-        {/* Minimal wave pulse */}
-        {isRecording && (
-          <div className="flex items-center gap-1 h-8">
-            {[30, 60, 90, 45, 95, 70, 45, 80, 55, 75].map((h, i) => (
-              <div
-                key={i}
-                className="w-1 bg-neutral-900 dark:bg-neutral-100 rounded-full animate-pulse"
-                style={{ height: `${h}%`, animationDelay: `${(i % 4) * 0.15}s` }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Main Recording Button */}
-        <div className="flex items-center gap-3">
-          {!isRecording ? (
-            <button
-              onClick={startRecording}
-              className="flex items-center justify-center w-14 h-14 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 shadow-xs cursor-pointer transition-transform hover:scale-105"
-              title="Record"
-            >
-              <Mic className="w-6 h-6" />
-            </button>
-          ) : (
-            <button
-              onClick={stopRecording}
-              className="flex items-center justify-center w-14 h-14 rounded-full border border-neutral-300 dark:border-neutral-700 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 shadow-xs cursor-pointer"
-              title="Stop"
-            >
-              <Square className="w-5 h-5" />
-            </button>
-          )}
-
-          {audioUrl && !isRecording && (
-            <button
-              onClick={resetRecording}
-              className="p-2.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer transition-colors"
-              title="Retake"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
-
-        {audioUrl && (
-          <div className="w-full max-w-sm pt-1">
-            <audio src={audioUrl} controls className="w-full h-8" />
-          </div>
-        )}
-
-        {/* Real-time Spoken Transcript Box */}
-        <div className="w-full max-w-xl text-left space-y-2 pt-3 border-t border-neutral-100 dark:border-neutral-800/80">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium flex items-center gap-1.5">
-              <Volume2 className="w-3.5 h-3.5 text-neutral-400" />
-              Candidate spoken transcript
-            </span>
-            {isRecording && (
-              <span className="flex items-center gap-1.5 text-red-500 dark:text-rose-400/80 text-xs animate-pulse font-medium">
-                <span className="w-2 h-2 rounded-full bg-red-500 dark:bg-rose-400/80" />
-                {isListeningSpeech ? "Listening & transcribing..." : "Recording active..."}
-              </span>
-            )}
-            {isTranscribing && (
-              <span className="flex items-center gap-1.5 text-amber-500 dark:text-amber-400 text-xs font-medium animate-pulse">
-                <RefreshCw className="w-3 h-3 animate-spin" />
-                Transcribing audio with Gemini 3.8 Flash...
-              </span>
-            )}
-          </div>
-          <textarea
-            value={transcriptFallback}
-            onChange={(e) => setTranscriptFallback(e.target.value)}
-            placeholder={
-              isRecording
-                ? "Speak into your microphone — your response is being captured..."
-                : isTranscribing
-                ? "Transcribing your spoken words with Gemini 3.8 Flash..."
-                : "Spoken transcript will appear here. You can also edit or paste directly before analyzing..."
-            }
-            rows={3}
-            className="w-full p-3 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
-          />
-          <div className="flex items-center justify-between text-[11px] text-neutral-500">
-            <span>
-              {isTranscribing
-                ? "Transcribing audio..."
-                : transcriptFallback.trim()
-                ? `${transcriptFallback.trim().split(/\s+/).filter(Boolean).length} words captured`
-                : "Ready to record speech"}
-            </span>
-            {transcriptFallback.trim() && !isTranscribing && (
-              <button
-                onClick={() => setTranscriptFallback("")}
-                className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
-              >
-                Clear text
-              </button>
-            )}
-          </div>
-
-          {speechNotice && (
-            <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5 text-xs text-amber-700 dark:text-amber-400 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-              <div>{speechNotice}</div>
-            </div>
-          )}
-
-          {audioUrl && !isRecording && (
-            apiKey ? (
-              <div className="p-3.5 rounded-xl border border-emerald-500/25 bg-emerald-500/5 text-xs text-emerald-950 dark:text-emerald-200 flex items-start gap-2.5">
-                <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                <div className="space-y-0.5">
-                  <div className="font-semibold text-emerald-900 dark:text-emerald-300">
-                    Gemini 3.8 Flash Voice Evaluation Ready ({formatTime(recordSeconds)})
-                  </div>
-                  <div className="text-[11px] text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
-                    Gemini 3.8 Flash will evaluate your speech against official Cambridge IELTS criteria, assessing fluency, lexical resource, grammatical accuracy, and pronunciation.
-                  </div>
+              <div className="flex items-center gap-2">
+                <div className="px-3 py-1 rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+                  {formatTime(prepSecondsRemaining)}
                 </div>
-              </div>
-            ) : (
-              <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-900/40 text-xs text-neutral-800 dark:text-neutral-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-start gap-2.5">
-                  <Sparkles className="w-4 h-4 text-neutral-600 dark:text-neutral-400 shrink-0 mt-0.5" />
-                  <div className="space-y-0.5">
-                    <div className="font-semibold text-neutral-900 dark:text-neutral-100">
-                      Voice Recording Captured ({formatTime(recordSeconds)})
-                    </div>
-                    <div className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                      Your voice recording is ready for examiner evaluation. Connect a free Gemini key for enhanced Gemini 3.8 Flash feedback.
-                    </div>
-                  </div>
-                </div>
-                {onOpenApiKeyModal && (
+
+                {!isPrepping && prepSecondsRemaining === 60 ? (
                   <button
-                    onClick={onOpenApiKeyModal}
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 hover:border-neutral-300 dark:hover:border-neutral-600 cursor-pointer shrink-0 transition-colors shadow-xs"
+                    onClick={() => setIsPrepping(true)}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium cursor-pointer"
                   >
-                    <Key className="w-3.5 h-3.5" />
-                    Connect Free Key
+                    <Play className="w-3 h-3" />
+                    <span>Start 60s Timer</span>
+                  </button>
+                ) : isPrepping ? (
+                  <button
+                    onClick={() => setIsPrepping(false)}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 font-medium cursor-pointer"
+                  >
+                    <Pause className="w-3 h-3" />
+                    <span>Pause</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsPrepping(false);
+                      setPrepSecondsRemaining(60);
+                    }}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Reset</span>
                   </button>
                 )}
               </div>
-            )
-          )}
-        </div>
-
-        {analysisError && (
-          <div className="w-full max-w-xl p-3.5 rounded-xl border border-red-500/25 bg-red-500/5 text-xs text-red-600 dark:text-rose-400 flex items-start justify-between gap-3 text-left">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-500" />
-              <span>{analysisError}</span>
             </div>
-            <button
-              onClick={handleAnalyze}
-              className="text-xs font-semibold underline hover:no-underline shrink-0 cursor-pointer"
-            >
-              Retry
-            </button>
-          </div>
-        )}
 
-        <button
-          onClick={handleAnalyze}
-          disabled={isAnalyzing || isProcessingAudio || isTranscribing || (!audioBase64 && !audioUrl && !transcriptFallback.trim() && recordSeconds < 3)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 cursor-pointer shadow-xs transition-all"
-        >
-          {isAnalyzing ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              Evaluating Speaking Response...
-            </>
-          ) : isProcessingAudio ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              Finalizing Audio Recording...
-            </>
-          ) : isTranscribing ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              Transcribing Speech...
-            </>
-          ) : isRecording ? (
-            <>
-              <Square className="w-3.5 h-3.5 text-red-400" />
-              Finish & Analyze Speaking
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-3.5 h-3.5" />
-              {audioUrl || audioBase64 ? "Analyze Speaking (Evaluate Voice)" : "Analyze Speaking"}
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* Section 4: Results View */}
-      {analysisResult && (
-        <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-6 animate-in fade-in duration-200">
-          <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center md:text-left">
-              <div className="text-xs text-neutral-500 font-medium">
-                Estimated Speaking Score
-              </div>
-              <div className="flex items-center justify-center md:justify-start gap-3.5">
-                <span className="text-5xl font-serif font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-                  Band {analysisResult.overallBand.toFixed(1)}
+            {/* Framework Guidance Hint & Insert Button */}
+            <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
+                  <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                  Framework Blueprint for: {activeLexicalPack.topicName}
                 </span>
-                <BandScoreEmoji score={analysisResult.overallBand} size={50} />
+                <button
+                  onClick={handleInsertFrameworkOutline}
+                  className="flex items-center gap-1 text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                >
+                  <Copy className="w-3 h-3" />
+                  <span>Insert Outline into Scratchpad</span>
+                </button>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-md leading-relaxed">
-                {analysisResult.examinerSummary}
-              </p>
-            </div>
 
-            <div className="flex flex-col items-center">
-              <RadarChart
-                scores={[
-                  { label: "Fluency", score: analysisResult.criteria.fluencyCoherence.score },
-                  { label: "Vocab", score: analysisResult.criteria.lexicalResource.score },
-                  { label: "Grammar", score: analysisResult.criteria.grammaticalRange.score },
-                  { label: "Pronun.", score: analysisResult.criteria.pronunciation.score },
-                ]}
-                size={200}
-                accentColor="#ffffff"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2.5 w-full md:w-auto">
-              <button
-                onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-medium text-xs hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer shadow-xs"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-                Export Share Card
-              </button>
-              <div className="p-3 border-l-2 border-neutral-900 dark:border-neutral-100 bg-neutral-50/60 dark:bg-neutral-900/30 text-xs text-neutral-600 dark:text-neutral-400">
-                <span className="font-semibold text-neutral-900 dark:text-neutral-100 block mb-0.5">Primary Bottleneck:</span>
-                {analysisResult.primaryBottleneck}
-              </div>
-            </div>
-          </div>
-
-          {/* Prominent Transcribed Candidate Speech Card */}
-          <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-2.5">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <Volume2 className="w-4 h-4 text-neutral-400" />
-                <span className="text-xs text-neutral-700 dark:text-neutral-300 font-medium">
-                  Transcribed Candidate Speech
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-neutral-500">
-                  {analysisResult.speechDurationSeconds}s spoken • {analysisResult.wordsPerMinute} WPM
-                </span>
-                {analysisResult.overallBand <= 3.0 && (
-                  <span className="text-xs font-medium text-red-600 dark:text-rose-400">
-                    • Insufficient Language Sample (Band {analysisResult.overallBand.toFixed(1)})
-                  </span>
+              <div className="text-[11px] text-neutral-600 dark:text-neutral-400 grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
+                {activeFramework === "four_wh" && (
+                  <>
+                    <div><strong>Who/What:</strong> {activeLexicalPack.frameworkHints.fourWh.whoWhat}</div>
+                    <div><strong>When/Where:</strong> {activeLexicalPack.frameworkHints.fourWh.whenWhere}</div>
+                    <div><strong>Why:</strong> {activeLexicalPack.frameworkHints.fourWh.why}</div>
+                    <div><strong>How Felt:</strong> {activeLexicalPack.frameworkHints.fourWh.howFelt}</div>
+                  </>
+                )}
+                {activeFramework === "ppf" && (
+                  <>
+                    <div><strong>Past:</strong> {activeLexicalPack.frameworkHints.ppf.past}</div>
+                    <div><strong>Present:</strong> {activeLexicalPack.frameworkHints.ppf.present}</div>
+                    <div className="md:col-span-2"><strong>Future:</strong> {activeLexicalPack.frameworkHints.ppf.future}</div>
+                  </>
+                )}
+                {activeFramework === "story_arc" && (
+                  <>
+                    <div><strong>Setup:</strong> {activeLexicalPack.frameworkHints.storyArc.setup}</div>
+                    <div><strong>Conflict:</strong> {activeLexicalPack.frameworkHints.storyArc.conflict}</div>
+                    <div className="md:col-span-2"><strong>Resolution:</strong> {activeLexicalPack.frameworkHints.storyArc.resolution}</div>
+                  </>
                 )}
               </div>
             </div>
-            <p className="text-sm text-neutral-800 dark:text-neutral-200 bg-neutral-50/70 dark:bg-neutral-900/40 p-3.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 italic">
-              "{analysisResult.transcript}"
+
+            {/* Candidate Scratchpad */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                Your 1-Minute Prep Scratchpad (Keywords & Triggers):
+              </label>
+              <textarea
+                value={prepNotes}
+                onChange={(e) => setPrepNotes(e.target.value)}
+                placeholder="Jot down quick abbreviations, transition keywords, and story triggers..."
+                rows={4}
+                className="w-full p-3 text-xs rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 focus:outline-none font-mono"
+              />
+            </div>
+          </div>
+
+          {/* Target Lexical Pack (Band 8+ Collocations & Idioms) */}
+          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-500" />
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  Target Lexical Pack: Band 8+ Vocabulary for this Cue Card
+                </span>
+              </div>
+              <span className="text-neutral-400 text-[11px]">
+                Challenge: Weave at least 2 of these into your speech!
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+              {activeLexicalPack.items.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                      {item.phrase}
+                    </span>
+                    <button
+                      onClick={() => handleCopyText(item.phrase, `lex-${idx}`)}
+                      className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer text-[11px] flex items-center gap-1"
+                      title="Copy to clipboard"
+                    >
+                      {copiedKey === `lex-${idx}` ? (
+                        <>
+                          <Check className="w-3 h-3 text-emerald-500" />
+                          <span className="text-emerald-500">Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-neutral-500 leading-tight">
+                    {item.meaning}
+                  </p>
+                  <p className="text-[11px] text-neutral-700 dark:text-neutral-300 italic bg-white dark:bg-neutral-950 p-2 rounded-lg border border-neutral-100 dark:border-neutral-900">
+                    "{item.example}"
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 2-Minute Speaking Delivery Pacer & Checkpoints */}
+          <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5 text-center">
+            <div className="space-y-1">
+              <div className="text-4xl font-mono font-medium text-neutral-900 dark:text-neutral-100">
+                {formatTime(deliverySeconds)} / 02:00
+              </div>
+              <span className="text-xs text-neutral-500">
+                {isSpeakingDelivery
+                  ? "Speaking time active — aim to reach 01:50 to 02:00!"
+                  : deliverySeconds > 0
+                  ? "Delivery finished"
+                  : "Click Start Practice to speak continuously for 2 minutes"}
+              </span>
+            </div>
+
+            {/* Checkpoint Timeline (4 x 30s Segments) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-left">
+              <div
+                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                  deliverySeconds >= 0 && deliverySeconds < 30 && isSpeakingDelivery
+                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    : deliverySeconds >= 30
+                    ? "border-neutral-200 dark:border-neutral-800 opacity-60"
+                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                }`}
+              >
+                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                  0:00 - 0:30
+                </div>
+                <div className="font-medium text-[11px]">1. Scene & Setup</div>
+                <div className="text-[10px] text-neutral-500">Context & initial impression</div>
+              </div>
+
+              <div
+                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                  deliverySeconds >= 30 && deliverySeconds < 60 && isSpeakingDelivery
+                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    : deliverySeconds >= 60
+                    ? "border-neutral-200 dark:border-neutral-800 opacity-60"
+                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                }`}
+              >
+                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                  0:30 - 1:00
+                </div>
+                <div className="font-medium text-[11px]">2. Narrative Details</div>
+                <div className="text-[10px] text-neutral-500">Specific actions & people</div>
+              </div>
+
+              <div
+                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                  deliverySeconds >= 60 && deliverySeconds < 90 && isSpeakingDelivery
+                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    : deliverySeconds >= 90
+                    ? "border-neutral-200 dark:border-neutral-800 opacity-60"
+                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                }`}
+              >
+                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                  1:00 - 1:30
+                </div>
+                <div className="font-medium text-[11px]">3. Key Moment</div>
+                <div className="text-[10px] text-neutral-500">Turning point / core reason</div>
+              </div>
+
+              <div
+                className={`p-2.5 rounded-xl border transition-all text-xs ${
+                  deliverySeconds >= 90 && isSpeakingDelivery
+                    ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-200"
+                    : "border-neutral-100 dark:border-neutral-800/80 text-neutral-400"
+                }`}
+              >
+                <div className="text-[10px] font-semibold uppercase tracking-wider mb-0.5">
+                  1:30 - 2:00
+                </div>
+                <div className="font-medium text-[11px]">4. Reflection</div>
+                <div className="text-[10px] text-neutral-500">Lasting feelings & future</div>
+              </div>
+            </div>
+
+            {/* Speaking Controls */}
+            <div className="flex items-center justify-center gap-3">
+              {!isSpeakingDelivery ? (
+                <button
+                  onClick={startDeliveryRecording}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-semibold text-xs cursor-pointer hover:opacity-90 transition-transform hover:scale-105 shadow-xs"
+                >
+                  <Mic className="w-4 h-4 text-red-400" />
+                  <span>Start 2-Minute Practice (Record Voice)</span>
+                </button>
+              ) : (
+                <button
+                  onClick={stopDeliveryRecording}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 text-white font-semibold text-xs cursor-pointer hover:bg-red-700 transition-colors shadow-xs"
+                >
+                  <Square className="w-4 h-4" />
+                  <span>Stop Practice</span>
+                </button>
+              )}
+
+              {deliverySeconds > 0 && !isSpeakingDelivery && (
+                <button
+                  onClick={() => {
+                    setDeliverySeconds(0);
+                    setDeliveryAudioUrl(null);
+                  }}
+                  className="p-2.5 rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                  title="Retake delivery"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Local Voice Playback (Zero External Server Calls) */}
+            {deliveryAudioUrl && (
+              <div className="max-w-md mx-auto p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-left space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                    <Volume2 className="w-3.5 h-3.5 text-neutral-500" />
+                    Listen Back to Your 2-Minute Delivery
+                  </span>
+                  <span className="text-[11px] text-neutral-400">
+                    Delivered: {formatTime(deliverySeconds)}
+                  </span>
+                </div>
+                <audio src={deliveryAudioUrl} controls className="w-full h-8" />
+                <p className="text-[11px] text-neutral-500">
+                  Self-Check: Did you maintain steady pacing without awkward silence? Did you include at least 2 target collocations?
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Official Cambridge Examiner Pro-Tips */}
+          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-3">
+            <div className="flex items-center gap-2 font-semibold text-neutral-900 dark:text-neutral-100">
+              <Info className="w-4 h-4 text-neutral-500" />
+              <span>Examiner Pro-Tips for Part 2 Mastery</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-neutral-600 dark:text-neutral-400 leading-relaxed text-[11px]">
+              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+                <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
+                  1. Tell a Story, Not a List
+                </strong>
+                Examiners penalize answers that sound like reading grocery lists ("First bullet is... second is..."). Connect points naturally with temporal transitions.
+              </div>
+              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+                <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
+                  2. Never Stop Early
+                </strong>
+                If you stop before 1:40, the examiner will wait in silence or prompt you. Keep expanding on personal feelings and reflections until they interrupt you.
+              </div>
+              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+                <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
+                  3. Use Temporal Signposts
+                </strong>
+                Elevate grammar by switching timeframes ("Initially, I assumed...", "Looking back with hindsight...", "Nowadays, I appreciate...").
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 2: BAND 9 SHADOWING & INTONATION MIRROR             */}
+      {/* ======================================================== */}
+      {activeTab === "shadowing_intonation" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Top Model Answer Selector */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                Band 9 Audio Shadowing Models
+              </span>
+              <span className="text-neutral-400">
+                (Native intonation & rhythm playback)
+              </span>
+            </div>
+
+            {/* Speed Control Pill */}
+            <div className="flex items-center gap-2">
+              <span className="text-neutral-400">Playback Speed:</span>
+              <div className="inline-flex rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100/60 dark:bg-neutral-900/60 p-0.5">
+                {[0.85, 1.0, 1.15].map((speed) => (
+                  <button
+                    key={speed}
+                    onClick={() => setSpeechSpeed(speed)}
+                    className={`px-2 py-0.5 rounded-md text-[11px] font-semibold cursor-pointer transition-colors ${
+                      speechSpeed === speed
+                        ? "bg-white text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 shadow-xs"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    }`}
+                  >
+                    {speed}x
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Model Switcher Tabs */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+            {SHADOWING_MODELS.map((model) => (
+              <button
+                key={model.id}
+                onClick={() => {
+                  setSelectedModel(model);
+                  setActiveSentenceIndex(0);
+                  stopSpeaking();
+                  setShadowAudioUrl(null);
+                }}
+                className={`px-3.5 py-2 rounded-xl whitespace-nowrap font-medium cursor-pointer transition-all border ${
+                  selectedModel.id === model.id
+                    ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
+                    : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50"
+                }`}
+              >
+                {model.topic}
+              </button>
+            ))}
+          </div>
+
+          {/* Selected Model Question Banner */}
+          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
+            <span className="text-[11px] uppercase font-semibold tracking-wider text-neutral-400">
+              Exam Prompt ({selectedModel.part.toUpperCase()}):
+            </span>
+            <div className="font-serif text-base font-bold text-neutral-900 dark:text-neutral-100">
+              "{selectedModel.question}"
+            </div>
+            <p className="text-[11px] text-neutral-500 pt-0.5">
+              {selectedModel.contextSummary}
             </p>
           </div>
 
-          {/* Detailed Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 border-b border-neutral-200 dark:border-neutral-800 pb-2">
+          {/* Full Model Answer Audio Control */}
+          <div className="flex items-center justify-between p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs">
+            <div className="flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-neutral-500" />
+              <span className="font-medium text-neutral-800 dark:text-neutral-200">
+                Full Response Audio Overview
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {!isPlayingFullAudio ? (
+                <button
+                  onClick={() => {
+                    setIsPlayingFullAudio(true);
+                    speakText(selectedModel.fullModelAnswer, speechSpeed, () =>
+                      setIsPlayingFullAudio(false)
+                    );
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-semibold cursor-pointer"
+                >
+                  <Play className="w-3 h-3" />
+                  <span>Play Full Model ({speechSpeed}x)</span>
+                </button>
+              ) : (
+                <button
+                  onClick={stopSpeaking}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 font-semibold cursor-pointer"
+                >
+                  <Square className="w-3 h-3 text-red-500" />
+                  <span>Stop</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Sentence-by-Sentence Shadowing Card */}
+          <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-5">
+            {/* Sentence Header & Progress */}
+            <div className="flex items-center justify-between text-xs pb-3 border-b border-neutral-100 dark:border-neutral-800/80">
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                Sentence {activeSentenceIndex + 1} of {selectedModel.sentences.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setActiveSentenceIndex((prev) => Math.max(0, prev - 1));
+                    stopSpeaking();
+                    setShadowAudioUrl(null);
+                  }}
+                  disabled={activeSentenceIndex === 0}
+                  className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 disabled:opacity-30 cursor-pointer font-medium"
+                >
+                  Prev
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveSentenceIndex((prev) =>
+                      Math.min(selectedModel.sentences.length - 1, prev + 1)
+                    );
+                    stopSpeaking();
+                    setShadowAudioUrl(null);
+                  }}
+                  disabled={activeSentenceIndex === selectedModel.sentences.length - 1}
+                  className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 disabled:opacity-30 cursor-pointer font-medium"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+
+            {/* Visual Intonation & Stress Display */}
+            <div className="p-5 rounded-xl border border-neutral-100 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-3">
+              <div className="text-xs text-neutral-400 font-medium">
+                Rhythm & Pitch Contour: (Bold = Stressed Syllables • ↗ Rising Pitch • ↘ Falling Pitch)
+              </div>
+              <div
+                className="text-base sm:text-lg font-serif text-neutral-900 dark:text-neutral-100 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: activeSentence.annotatedText }}
+              />
+            </div>
+
+            {/* Intonation Explanation & Stressed Words */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 space-y-1">
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-blue-500" />
+                  Intonation Logic:
+                </span>
+                <p className="text-[11px] text-neutral-500 leading-relaxed">
+                  {activeSentence.intonationExplanation}
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 space-y-1.5">
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+                  Key Collocations & Fillers:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {activeSentence.keyCollocations.map((col, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-medium text-[11px]"
+                    >
+                      {col}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sentence Listen & Self-Shadowing Recorder */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-neutral-100 dark:border-neutral-800/80">
+              <div className="flex items-center gap-2">
+                {!isPlayingSentenceAudio ? (
+                  <button
+                    onClick={() => {
+                      setIsPlayingSentenceAudio(true);
+                      speakText(activeSentence.text, speechSpeed, () =>
+                        setIsPlayingSentenceAudio(false)
+                      );
+                    }}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-semibold cursor-pointer shadow-xs hover:opacity-90"
+                  >
+                    <Volume2 className="w-3.5 h-3.5" />
+                    <span>Hear Native Sentence ({speechSpeed}x)</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={stopSpeaking}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-semibold cursor-pointer"
+                  >
+                    <Square className="w-3.5 h-3.5 text-red-500" />
+                    <span>Stop Audio</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Self-Mirroring Mic Controls */}
+              <div className="flex items-center gap-2">
+                {!isShadowRecording ? (
+                  <button
+                    onClick={startShadowRecording}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium cursor-pointer"
+                  >
+                    <Mic className="w-3.5 h-3.5 text-red-500" />
+                    <span>Record My Shadowing</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={stopShadowRecording}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-600 text-white text-xs font-semibold cursor-pointer animate-pulse"
+                  >
+                    <Square className="w-3.5 h-3.5" />
+                    <span>Stop Shadowing</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Shadow Audio Playback */}
+            {shadowAudioUrl && (
+              <div className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs space-y-2">
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+                  Compare Your Rhythm Against the Native Model:
+                </span>
+                <audio src={shadowAudioUrl} controls className="w-full h-8" />
+              </div>
+            )}
+          </div>
+
+          {/* Pronunciation & Connected Speech Coaching Guide */}
+          <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-3">
+            <div className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+              <Lightbulb className="w-4 h-4 text-amber-500" />
+              <span>Band 9 Pronunciation & Connected Speech Rules</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-neutral-600 dark:text-neutral-400 text-[11px] leading-relaxed">
+              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+                <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
+                  Liaison (Consonant-to-Vowel Linking)
+                </strong>
+                Native speakers never pause between words. "Turn it off" is pronounced as <em>/tur-ni-toff/</em>. Link final consonants smoothly to following vowels.
+              </div>
+              <div className="p-3 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900">
+                <strong className="text-neutral-900 dark:text-neutral-100 block mb-1">
+                  Intonation & Pitch Variety
+                </strong>
+                Monotone English sounds robotic and triggers Band 5.0 in Pronunciation. Use rising pitch ↗ on clauses to show connection, and firm downward pitch ↘ on final nouns.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 3: FLUENCY & REFLEX GYM (A.R.E.A., FILLERS, FLASHCARDS) */}
+      {/* ======================================================== */}
+      {activeTab === "fluency_gym" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          {/* Sub-drill Switcher */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs border-b border-neutral-100 dark:border-neutral-800/80">
             <button
-              onClick={() => setActiveTab("criteria")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === "criteria"
+              onClick={() => {
+                setActiveGymDrill("area_builder");
+                stopSpeaking();
+              }}
+              className={`px-3.5 py-2 rounded-xl font-semibold cursor-pointer transition-colors ${
+                activeGymDrill === "area_builder"
                   ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
-              Criteria Breakdown
+              1. The A.R.E.A. Formula Builder
             </button>
+
             <button
-              onClick={() => setActiveTab("spoken_grammar")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === "spoken_grammar"
+              onClick={() => {
+                setActiveGymDrill("buying_time_fillers");
+                stopSpeaking();
+              }}
+              className={`px-3.5 py-2 rounded-xl font-semibold cursor-pointer transition-colors ${
+                activeGymDrill === "buying_time_fillers"
                   ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
-              Spoken Grammar ({analysisResult.spokenGrammarErrors?.length || 0})
+              2. "Stall & Buy-Time" Fillers Trainer
             </button>
+
             <button
-              onClick={() => setActiveTab("spoken_idioms")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === "spoken_idioms"
+              onClick={() => {
+                setActiveGymDrill("collocation_flashcards");
+                stopSpeaking();
+              }}
+              className={`px-3.5 py-2 rounded-xl font-semibold cursor-pointer transition-colors ${
+                activeGymDrill === "collocation_flashcards"
                   ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
               }`}
             >
-              Spoken Idioms ({analysisResult.idiomAndPhrasalVerbUpgrades?.length || 0})
-            </button>
-            <button
-              onClick={() => setActiveTab("speech_metrics")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === "speech_metrics"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
-              }`}
-            >
-              Pacing ({analysisResult.wordsPerMinute} WPM)
-            </button>
-            <button
-              onClick={() => setActiveTab("model_answer")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                activeTab === "model_answer"
-                  ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
-              }`}
-            >
-              Model Answer
+              3. Spoken Collocation Upgrade Cards
             </button>
           </div>
 
-          {activeTab === "criteria" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Fluency & Coherence</span>
-                  <span className="text-xs font-semibold">Band {analysisResult.criteria.fluencyCoherence.score.toFixed(1)}</span>
+          {/* DRILL A: A.R.E.A. FORMULA BUILDER */}
+          {activeGymDrill === "area_builder" && (
+            <div className="space-y-6">
+              {/* Question Banner */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  A.R.E.A. Answering Formula (Answer $\rightarrow$ Reason $\rightarrow$ Example $\rightarrow$ Alternative)
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-neutral-400">Drill {activeAreaIndex + 1} of {AREA_DRILLS.length}</span>
+                  <button
+                    onClick={() => {
+                      setActiveAreaIndex((prev) => (prev + 1) % AREA_DRILLS.length);
+                      setShowAreaModel(false);
+                      setAreaAnswerText("");
+                      setAreaReasonText("");
+                      setAreaExampleText("");
+                      setAreaAltText("");
+                    }}
+                    className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium cursor-pointer"
+                  >
+                    Next Prompt
+                  </button>
                 </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.fluencyCoherence.feedback}</p>
               </div>
 
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
-                  <span className="text-xs font-semibold">Band {analysisResult.criteria.lexicalResource.score.toFixed(1)}</span>
+              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-1">
+                <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+                  Discussion Prompt ({activeAreaQuestion.category}):
+                </span>
+                <div className="text-base font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                  "{activeAreaQuestion.question}"
                 </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.lexicalResource.feedback}</p>
               </div>
 
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range & Accuracy</span>
-                  <span className="text-xs font-semibold">Band {analysisResult.criteria.grammaticalRange.score.toFixed(1)}</span>
-                </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.grammaticalRange.feedback}</p>
-              </div>
-
-              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Pronunciation</span>
-                  <span className="text-xs font-semibold">Band {analysisResult.criteria.pronunciation.score.toFixed(1)}</span>
-                </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-400">{analysisResult.criteria.pronunciation.feedback}</p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "spoken_grammar" && (
-            <div className="space-y-3">
-              {analysisResult.spokenGrammarErrors && analysisResult.spokenGrammarErrors.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {analysisResult.spokenGrammarErrors.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2"
+              {/* 4 Interactive Steps */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Step 1: A - Direct Answer */}
+                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 flex items-center justify-center font-mono text-[11px]">
+                        A
+                      </span>
+                      Direct Answer
+                    </span>
+                    <button
+                      onClick={() => setAreaAnswerText(activeAreaQuestion.guidedAnswer.answer.stem)}
+                      className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline cursor-pointer font-medium"
                     >
-                      <div className="text-xs text-neutral-400 line-through">
-                        "{item.spokenSnippet}"
-                      </div>
-                      <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                        "{item.correctedSnippet}"
-                      </div>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400">{item.rule}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-6 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-center space-y-1">
-                  <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                    No Spoken Grammar Slips Detected
+                      Use Stem
+                    </button>
                   </div>
-                  <p className="text-xs text-neutral-500">
-                    {analysisResult.overallBand <= 3.0
-                      ? "Sample too brief to evaluate grammatical clause structures or tense inflections."
-                      : "Candidate demonstrated clear spoken grammatical control without slips."}
-                  </p>
+                  <p className="text-[11px] text-neutral-500">{activeAreaQuestion.guidedAnswer.answer.tip}</p>
+                  <textarea
+                    value={areaAnswerText}
+                    onChange={(e) => setAreaAnswerText(e.target.value)}
+                    placeholder={activeAreaQuestion.guidedAnswer.answer.sample}
+                    rows={2}
+                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                  />
                 </div>
-              )}
-            </div>
-          )}
 
-          {activeTab === "spoken_idioms" && (
-            <div className="space-y-3">
-              {analysisResult.idiomAndPhrasalVerbUpgrades && analysisResult.idiomAndPhrasalVerbUpgrades.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {analysisResult.idiomAndPhrasalVerbUpgrades.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="py-3 border-b border-neutral-200 dark:border-neutral-800 space-y-1.5"
+                {/* Step 2: R - Core Reason */}
+                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-mono text-[11px]">
+                        R
+                      </span>
+                      Underlying Reason
+                    </span>
+                    <button
+                      onClick={() => setAreaReasonText(activeAreaQuestion.guidedAnswer.reason.stem)}
+                      className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer font-medium"
                     >
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-neutral-400 line-through">{item.originalPhrase}</span>
-                        <span className="text-neutral-500 font-medium">
-                          {item.type.replace("_", " ")}
-                        </span>
-                      </div>
-                      <div className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-                        {item.suggestedUpgrade}
-                      </div>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">{item.explanation}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 text-center space-y-1">
-                  <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                    No Spoken Idiom Upgrades
+                      Use Stem
+                    </button>
                   </div>
-                  <p className="text-xs text-neutral-500">
-                    {analysisResult.overallBand <= 3.0
-                      ? "Produce sustained continuous speech (60–120 seconds) to receive tailored conversational idiom suggestions."
-                      : "No specific phrase upgrades needed for this speech snippet."}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === "speech_metrics" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-4 border-y border-neutral-200 dark:border-neutral-800 text-center sm:text-left">
-                <div>
-                  <div className="text-xs text-neutral-500 font-medium">Words per minute</div>
-                  <div className="text-3xl font-serif font-bold mt-1 text-neutral-900 dark:text-neutral-100">{analysisResult.wordsPerMinute}</div>
-                  <div className="text-xs text-neutral-400 mt-0.5">Target: 120–150 WPM</div>
+                  <p className="text-[11px] text-neutral-500">{activeAreaQuestion.guidedAnswer.reason.tip}</p>
+                  <textarea
+                    value={areaReasonText}
+                    onChange={(e) => setAreaReasonText(e.target.value)}
+                    placeholder={activeAreaQuestion.guidedAnswer.reason.sample}
+                    rows={2}
+                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                  />
                 </div>
 
-                <div>
-                  <div className="text-xs text-neutral-500 font-medium">Filler words</div>
-                  <div className="text-3xl font-serif font-bold mt-1 text-neutral-900 dark:text-neutral-100">{analysisResult.fillerWords.totalCount}</div>
-                  <div className="text-xs text-neutral-400 mt-0.5">"um, uh, like"</div>
+                {/* Step 3: E - Concrete Example */}
+                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 flex items-center justify-center font-mono text-[11px]">
+                        E
+                      </span>
+                      Concrete Example
+                    </span>
+                    <button
+                      onClick={() => setAreaExampleText(activeAreaQuestion.guidedAnswer.example.stem)}
+                      className="text-[11px] text-amber-600 dark:text-amber-400 hover:underline cursor-pointer font-medium"
+                    >
+                      Use Stem
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-neutral-500">{activeAreaQuestion.guidedAnswer.example.tip}</p>
+                  <textarea
+                    value={areaExampleText}
+                    onChange={(e) => setAreaExampleText(e.target.value)}
+                    placeholder={activeAreaQuestion.guidedAnswer.example.sample}
+                    rows={2}
+                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                  />
                 </div>
 
-                <div>
-                  <div className="text-xs text-neutral-500 font-medium">Spoken duration</div>
-                  <div className="text-3xl font-serif font-bold mt-1 text-neutral-900 dark:text-neutral-100">{analysisResult.speechDurationSeconds}s</div>
-                  <div className="text-xs text-neutral-400 mt-0.5">Continuous speech</div>
+                {/* Step 4: A - Alternative Perspective */}
+                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 flex items-center justify-center font-mono text-[11px]">
+                        A
+                      </span>
+                      Alternative / Nuance
+                    </span>
+                    <button
+                      onClick={() => setAreaAltText(activeAreaQuestion.guidedAnswer.alternative.stem)}
+                      className="text-[11px] text-purple-600 dark:text-purple-400 hover:underline cursor-pointer font-medium"
+                    >
+                      Use Stem
+                    </button>
+                  </div>
+                  <p className="text-[11px] text-neutral-500">{activeAreaQuestion.guidedAnswer.alternative.tip}</p>
+                  <textarea
+                    value={areaAltText}
+                    onChange={(e) => setAreaAltText(e.target.value)}
+                    placeholder={activeAreaQuestion.guidedAnswer.alternative.sample}
+                    rows={2}
+                    className="w-full p-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-xs text-neutral-900 dark:text-neutral-100 focus:outline-none"
+                  />
                 </div>
               </div>
 
-              <div className="pt-2 space-y-1">
-                <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Transcribed Answer</span>
-                <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 italic leading-relaxed">
-                  "{analysisResult.transcript}"
+              {/* Assembled Response Preview & Model Answer View */}
+              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                    Assembled Fluent Response:
+                  </span>
+                  <button
+                    onClick={() => setShowAreaModel(!showAreaModel)}
+                    className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer underline"
+                  >
+                    {showAreaModel ? "Hide Band 9 Model" : "View Band 9 Model Response"}
+                  </button>
+                </div>
+
+                <div className="p-4 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 text-xs text-neutral-800 dark:text-neutral-200 font-serif leading-relaxed">
+                  {showAreaModel ? (
+                    <span>
+                      <strong className="text-blue-600 dark:text-blue-400">[Answer]</strong>{" "}
+                      {activeAreaQuestion.guidedAnswer.answer.sample}{" "}
+                      <strong className="text-emerald-600 dark:text-emerald-400">[Reason]</strong>{" "}
+                      {activeAreaQuestion.guidedAnswer.reason.sample}{" "}
+                      <strong className="text-amber-600 dark:text-amber-400">[Example]</strong>{" "}
+                      {activeAreaQuestion.guidedAnswer.example.sample}{" "}
+                      <strong className="text-purple-600 dark:text-purple-400">[Alternative]</strong>{" "}
+                      {activeAreaQuestion.guidedAnswer.alternative.sample}
+                    </span>
+                  ) : (
+                    <span>
+                      {areaAnswerText || "(Fill in Answer above)"} {areaReasonText || "(Fill in Reason above)"}{" "}
+                      {areaExampleText || "(Fill in Example above)"} {areaAltText || "(Fill in Alternative above)"}
+                    </span>
+                  )}
+                </div>
+
+                {showAreaModel && (
+                  <div className="flex justify-end pt-1">
+                    <button
+                      onClick={() =>
+                        speakText(
+                          `${activeAreaQuestion.guidedAnswer.answer.sample} ${activeAreaQuestion.guidedAnswer.reason.sample} ${activeAreaQuestion.guidedAnswer.example.sample} ${activeAreaQuestion.guidedAnswer.alternative.sample}`
+                        )
+                      }
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 text-xs font-medium cursor-pointer"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                      <span>Listen to Assembled Model</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* DRILL B: BUYING-TIME NATURAL FILLERS */}
+          {activeGymDrill === "buying_time_fillers" && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  "Stall & Buy-Time" Natural Hesitation Fillers (Eliminate "Umm / Uhh")
+                </span>
+                <span className="text-neutral-400">
+                  Card {activeFillerIndex + 1} of {BUYING_TIME_FILLERS.length}
+                </span>
+              </div>
+
+              {/* Filler Category Navigation */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+                {BUYING_TIME_FILLERS.map((filler, idx) => (
+                  <button
+                    key={filler.id}
+                    onClick={() => {
+                      setActiveFillerIndex(idx);
+                      stopSpeaking();
+                    }}
+                    className={`px-3 py-1.5 rounded-xl whitespace-nowrap font-medium cursor-pointer transition-all border ${
+                      activeFillerIndex === idx
+                        ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
+                        : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/50"
+                    }`}
+                  >
+                    {filler.category}
+                  </button>
+                ))}
+              </div>
+
+              {/* Active Filler Display Card */}
+              <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-4">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="px-2.5 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-semibold text-[11px]">
+                    {activeFiller.category} Strategy
+                  </span>
+                  <button
+                    onClick={() => speakText(activeFiller.phrase)}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold cursor-pointer"
+                  >
+                    <Volume2 className="w-3.5 h-3.5 text-neutral-500" />
+                    <span>Hear Pronunciation</span>
+                  </button>
+                </div>
+
+                <div className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100 leading-snug p-4 rounded-xl bg-neutral-50/50 dark:bg-neutral-900/30 border border-neutral-100 dark:border-neutral-900">
+                  "{activeFiller.phrase}"
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 space-y-1">
+                    <strong className="text-neutral-900 dark:text-neutral-100 block">
+                      Why Examiners Reward This:
+                    </strong>
+                    <p className="text-[11px] text-neutral-500 leading-relaxed">
+                      {activeFiller.whyExaminersLoveIt}
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-900 bg-white dark:bg-neutral-950 space-y-1">
+                    <strong className="text-neutral-900 dark:text-neutral-100 block">
+                      When to Deploy:
+                    </strong>
+                    <p className="text-[11px] text-neutral-500 leading-relaxed">
+                      {activeFiller.usageContext}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Interactive Practice Prompt: Deploy this filler! */}
+              <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 text-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-amber-500" />
+                    Reflex Challenge: Launch your answer using this filler!
+                  </span>
+                  <button
+                    onClick={() =>
+                      setTrickyPromptIndex((prev) => (prev + 1) % TRICKY_PROMPTS.length)
+                    }
+                    className="flex items-center gap-1 text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                  >
+                    <Shuffle className="w-3 h-3" />
+                    <span>Try Different Tricky Question</span>
+                  </button>
+                </div>
+
+                <div className="p-4 rounded-xl bg-white dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-900 font-serif text-sm font-semibold text-neutral-800 dark:text-neutral-200">
+                  "{TRICKY_PROMPTS[trickyPromptIndex]}"
+                </div>
+
+                <p className="text-[11px] text-neutral-500 italic">
+                  Say aloud right now: <strong>"{activeFiller.phrase}"</strong> followed by your spontaneous point!
                 </p>
               </div>
             </div>
           )}
 
-          {activeTab === "model_answer" && (
-            <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif italic whitespace-pre-line space-y-2">
-              <span className="font-sans text-xs font-medium text-neutral-500 not-italic block">
-                Sample Examiner Transcript
-              </span>
-              <p>"{analysisResult.sampleBand9Response}"</p>
+          {/* DRILL C: SPOKEN COLLOCATION FLASHCARDS */}
+          {activeGymDrill === "collocation_flashcards" && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs border-b border-neutral-100 dark:border-neutral-800/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                    Spoken Collocation Upgrade Flashcards
+                  </span>
+                  <span className="text-neutral-400">
+                    ({masteredCards.size} of {COLLOCATION_FLASHCARDS.length} mastered)
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setFlashcardIndex((prev) =>
+                        (prev - 1 + COLLOCATION_FLASHCARDS.length) % COLLOCATION_FLASHCARDS.length
+                      );
+                      setIsCardFlipped(false);
+                    }}
+                    className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 font-medium cursor-pointer"
+                  >
+                    Prev
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFlashcardIndex((prev) => (prev + 1) % COLLOCATION_FLASHCARDS.length);
+                      setIsCardFlipped(false);
+                    }}
+                    className="px-2.5 py-1 rounded border border-neutral-200 dark:border-neutral-800 font-medium cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+
+              {/* Flashcard Main Box */}
+              {(() => {
+                const currentCard = COLLOCATION_FLASHCARDS[flashcardIndex] || COLLOCATION_FLASHCARDS[0];
+                const isMastered = masteredCards.has(currentCard.id);
+
+                return (
+                  <div className="max-w-xl mx-auto space-y-4">
+                    <div
+                      onClick={() => setIsCardFlipped(!isCardFlipped)}
+                      className={`min-h-[220px] p-6 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between select-none ${
+                        isCardFlipped
+                          ? "border-emerald-500/50 bg-emerald-50/20 dark:bg-emerald-950/20 shadow-xs"
+                          : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-neutral-300 dark:hover:border-neutral-700 shadow-xs"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between text-xs text-neutral-400">
+                        <span className="px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 font-semibold text-[10px] text-neutral-700 dark:text-neutral-300">
+                          {currentCard.category}
+                        </span>
+                        <span>Click card to {isCardFlipped ? "see basic phrase" : "reveal Band 8+ upgrade"}</span>
+                      </div>
+
+                      <div className="text-center py-6 space-y-2">
+                        {!isCardFlipped ? (
+                          <>
+                            <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block">
+                              Common Candidate Cliché:
+                            </span>
+                            <div className="text-xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                              "{currentCard.basicPhrase}"
+                            </div>
+                            <span className="text-xs text-neutral-400 block pt-1">
+                              (Tap to reveal high-band collocation)
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">
+                              {currentCard.registerLevel} Spoken Upgrade:
+                            </span>
+                            <div className="text-xl font-serif font-bold text-emerald-700 dark:text-emerald-300">
+                              "{currentCard.upgradedCollocation}"
+                            </div>
+                            <p className="text-xs text-neutral-500 pt-1">{currentCard.definition}</p>
+                            <p className="text-xs italic text-neutral-700 dark:text-neutral-300 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                              "{currentCard.exampleIeltsSentence}"
+                            </p>
+                          </>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 dark:border-neutral-900">
+                        <span>Card {flashcardIndex + 1} of {COLLOCATION_FLASHCARDS.length}</span>
+                        {isCardFlipped && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              speakText(currentCard.exampleIeltsSentence);
+                            }}
+                            className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+                          >
+                            <Volume2 className="w-3 h-3" />
+                            <span>Hear in Sentence</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Mastered & Navigation Controls */}
+                    <div className="flex items-center justify-between">
+                      <button
+                        onClick={() => {
+                          const nextSet = new Set(masteredCards);
+                          if (isMastered) nextSet.delete(currentCard.id);
+                          else nextSet.add(currentCard.id);
+                          setMasteredCards(nextSet);
+                        }}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border transition-colors ${
+                          isMastered
+                            ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
+                            : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                        }`}
+                      >
+                        <Check className="w-3.5 h-3.5" />
+                        <span>{isMastered ? "Mastered" : "Mark as Mastered"}</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          const rand = Math.floor(Math.random() * COLLOCATION_FLASHCARDS.length);
+                          setFlashcardIndex(rand);
+                          setIsCardFlipped(false);
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-xs font-medium cursor-pointer"
+                      >
+                        <Shuffle className="w-3.5 h-3.5" />
+                        <span>Shuffle</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
         </div>
-      )}
-
-      {analysisResult && (
-        <ScorecardModal
-          isOpen={showScorecard}
-          onClose={() => setShowScorecard(false)}
-          title={`IELTS Speaking ${selectedPart === "part2_cuecard" ? "Part 2" : selectedPart === "part1" ? "Part 1" : "Part 3"}`}
-          type="Speaking"
-          overallBand={analysisResult.overallBand}
-          scores={[
-            { label: "Fluency", score: analysisResult.criteria.fluencyCoherence.score },
-            { label: "Vocab", score: analysisResult.criteria.lexicalResource.score },
-            { label: "Grammar", score: analysisResult.criteria.grammaticalRange.score },
-            { label: "Pronun.", score: analysisResult.criteria.pronunciation.score },
-          ]}
-          primaryBottleneck={analysisResult.primaryBottleneck}
-          examinerHighlight={analysisResult.criteria.fluencyCoherence.feedback}
-        />
       )}
     </div>
   );
