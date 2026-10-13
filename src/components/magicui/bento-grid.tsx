@@ -14,7 +14,7 @@ export const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[14rem] sm:auto-rows-[15.5rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5",
+        "grid w-full auto-rows-[13rem] sm:auto-rows-[14rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4",
         className,
       )}
     >
@@ -46,41 +46,37 @@ export const BentoCard = ({
     key={name}
     onClick={onClick}
     className={cn(
-      "group relative col-span-3 flex flex-col justify-between overflow-hidden border transition-all duration-200 select-none",
-      // Editorial hairline styling
-      "border-neutral-200 dark:border-neutral-800 bg-white/40 dark:bg-neutral-950/40 hover:border-neutral-900 dark:hover:border-neutral-100 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30",
+      "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-2xl border transition-all duration-300 select-none",
+      "border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 backdrop-blur-xs hover:border-neutral-400 dark:hover:border-neutral-600 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60 shadow-2xs",
       onClick ? "cursor-pointer" : "",
       className,
     )}
   >
     {background && <div className="absolute inset-0 z-0 overflow-hidden">{background}</div>}
 
-    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2 p-5 sm:p-6 transition-all duration-200 group-hover:-translate-y-5">
+    <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-2.5 p-6 transition-all duration-300 group-hover:-translate-y-4">
       {Icon && (
-        <div className="w-9 h-9 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center bg-transparent transition-colors duration-200 group-hover:border-neutral-900 dark:group-hover:border-neutral-100">
-          <Icon className="h-4.5 w-4.5 text-neutral-800 dark:text-neutral-200" />
+        <div className="w-9 h-9 rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 flex items-center justify-center bg-white dark:bg-neutral-900 transition-colors duration-300 group-hover:border-neutral-400 dark:group-hover:border-neutral-600">
+          <Icon className="h-4 w-4 text-neutral-800 dark:text-neutral-200" />
         </div>
       )}
       <h3 className="text-lg font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100 mt-0.5">
         {name}
       </h3>
-      <p className="max-w-md text-xs sm:text-[13px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
+      <p className="max-w-md text-xs sm:text-[13px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
         {description}
       </p>
     </div>
 
     <div
       className={cn(
-        "pointer-events-none z-10 flex w-full translate-y-8 transform-gpu flex-row items-center p-6 sm:p-7 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100",
+        "pointer-events-none z-10 flex w-full translate-y-6 transform-gpu flex-row items-center px-6 pb-5 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100",
       )}
     >
-      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-neutral-100 border-b border-neutral-900 dark:border-neutral-100 pb-0.5">
-        {cta || "Launch studio"}
-        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-900 dark:text-neutral-100">
+        {cta || "Enter"}
+        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
       </span>
     </div>
-
-    {/* Subtle interactive hover highlight layer */}
-    <div className="pointer-events-none absolute inset-0 transition-opacity duration-200 group-hover:bg-neutral-900/[0.015] group-hover:dark:bg-white/[0.015]" />
   </div>
 );

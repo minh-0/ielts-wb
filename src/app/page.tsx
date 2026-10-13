@@ -107,29 +107,24 @@ export default function Home() {
       <div className="min-h-screen flex flex-col bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-neutral-200 dark:selection:bg-neutral-800 relative overflow-hidden">
         <Particles
           className="absolute inset-0 pointer-events-none z-0"
-          quantity={60}
+          quantity={50}
           ease={70}
           color="#888888"
           size={0.5}
           staticity={35}
         />
-        {/* Minimal Entrance Header */}
-        <header className="relative z-10 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 backdrop-blur-md">
-          <div className="max-w-5xl mx-auto px-4 sm:px-8 h-14 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <span className="font-serif font-semibold text-lg sm:text-xl tracking-tight text-neutral-900 dark:text-neutral-100">
-                IELTSpro666
-              </span>
-              <span className="text-xs text-neutral-400 dark:text-neutral-500 hidden sm:inline">
-                Examiner Bench
-              </span>
-            </div>
+        {/* Minimal Entrance Top Bar */}
+        <header className="relative z-10 w-full">
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+            <span className="font-serif font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
+              IELTSpro666
+            </span>
             <ThemeToggle />
           </div>
         </header>
 
         {/* Main Start Portal */}
-        <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 sm:py-12">
+        <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-8 py-6">
           <StartPage
             onStartWriting={(taskType = "task2") => enterWorkbench("practice", "writing", taskType)}
             onStartSpeaking={() => enterWorkbench("practice", "speaking")}
@@ -138,15 +133,12 @@ export default function Home() {
         </main>
 
         {/* Quiet Minimalist Footnote */}
-        <footer className="relative z-10 border-t border-neutral-200 dark:border-neutral-800 py-4 bg-transparent text-xs text-neutral-400 dark:text-neutral-600">
-          <div className="max-w-5xl mx-auto px-4 sm:px-8 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-              <span className="text-[11px] text-neutral-600 dark:text-neutral-400">rkrh • light</span>
-            </div>
-            <div className="text-[11px] text-neutral-500">
+        <footer className="relative z-10 py-5 text-xs text-neutral-400 dark:text-neutral-600">
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 flex items-center justify-between">
+            <span className="text-[11px] text-neutral-400 dark:text-neutral-600">rkrh • light</span>
+            <span className="text-[11px] text-neutral-400 dark:text-neutral-600">
               Le Tuan Minh K67 FDA NEU
-            </div>
+            </span>
           </div>
         </footer>
       </div>
