@@ -322,9 +322,13 @@ export function DiagnosticInspector({
           const isSelected = selectedId === id;
           const isExpanded = Boolean(expandedIds[id] || isSelected);
           const isItemIgnored = ignoredIds.includes(id);
-          const isReplaced = replacedItems.some(
+          const matchedReplacement = replacedItems.find(
             (r) => r.originalText === err.original || r.replacedText === err.rewritten
           );
+          const isReplaced = Boolean(matchedReplacement);
+          const cleanRewritten = err.rewritten.includes("/")
+            ? err.rewritten.split("/")[0].trim()
+            : err.rewritten;
 
           const issueLabel = isItemIgnored
             ? "Ignored"
@@ -414,7 +418,7 @@ export function DiagnosticInspector({
                       "{err.original}"
                     </div>
                     <div className="py-1 text-xs font-medium text-neutral-900 dark:text-neutral-100">
-                      "{err.rewritten}"
+                      "{matchedReplacement?.replacedText || cleanRewritten}"
                     </div>
                   </div>
 
@@ -479,7 +483,7 @@ export function DiagnosticInspector({
                     ) : isReplaced ? (
                       <button
                         type="button"
-                        onClick={(e) => handleRevert(err.original, err.rewritten, e)}
+                        onClick={(e) => handleRevert(err.original, matchedReplacement?.replacedText || cleanRewritten, e)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors cursor-pointer shadow-xs"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
@@ -503,7 +507,7 @@ export function DiagnosticInspector({
                         )}
                         <button
                           type="button"
-                          onClick={(e) => handleApply(err, err.original, err.rewritten, e)}
+                          onClick={(e) => handleApply(err, err.original, cleanRewritten, e)}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
                         >
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -524,9 +528,13 @@ export function DiagnosticInspector({
           const isSelected = selectedId === id;
           const isExpanded = Boolean(expandedIds[id] || isSelected);
           const isItemIgnored = ignoredIds.includes(id);
-          const isReplaced = replacedItems.some(
+          const matchedReplacement = replacedItems.find(
             (r) => r.originalText === sug.originalPhrase || r.replacedText === sug.suggestedUpgrade
           );
+          const isReplaced = Boolean(matchedReplacement);
+          const cleanUpgrade = sug.suggestedUpgrade.includes("/")
+            ? sug.suggestedUpgrade.split("/")[0].trim()
+            : sug.suggestedUpgrade;
 
           const upgradeLabel = isItemIgnored
             ? "Ignored"
@@ -616,7 +624,7 @@ export function DiagnosticInspector({
                       "{sug.originalPhrase}"
                     </div>
                     <div className="py-1 text-xs font-medium text-neutral-900 dark:text-neutral-100">
-                      "{sug.suggestedUpgrade}"
+                      "{matchedReplacement?.replacedText || cleanUpgrade}"
                     </div>
                   </div>
 
@@ -681,7 +689,7 @@ export function DiagnosticInspector({
                     ) : isReplaced ? (
                       <button
                         type="button"
-                        onClick={(e) => handleRevert(sug.originalPhrase, sug.suggestedUpgrade, e)}
+                        onClick={(e) => handleRevert(sug.originalPhrase, matchedReplacement?.replacedText || cleanUpgrade, e)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-black/10 dark:border-white/15 bg-white dark:bg-black text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white transition-colors cursor-pointer shadow-xs"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
@@ -705,7 +713,7 @@ export function DiagnosticInspector({
                         )}
                         <button
                           type="button"
-                          onClick={(e) => handleApply(sug, sug.originalPhrase, sug.suggestedUpgrade, e)}
+                          onClick={(e) => handleApply(sug, sug.originalPhrase, cleanUpgrade, e)}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
                         >
                           <ArrowRight className="w-3.5 h-3.5" />

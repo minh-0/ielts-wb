@@ -87,13 +87,16 @@ export function AnnotatedParagraph({
       if (!err.original || !content.includes(err.original)) return;
       let startIdx = 0;
       while ((startIdx = content.indexOf(err.original, startIdx)) !== -1) {
+        const cleanRew = err.rewritten.includes("/")
+          ? err.rewritten.split("/")[0].trim()
+          : err.rewritten;
         rawMatches.push({
           id: errId,
           kind: "error",
           start: startIdx,
           end: startIdx + err.original.length,
           original: err.original,
-          replacement: err.rewritten,
+          replacement: cleanRew,
           label: `${err.issueType.replace("_", " ")} error`,
           explanation: err.explanation,
           tip: err.bandUpgradeTip,
@@ -113,13 +116,16 @@ export function AnnotatedParagraph({
       if (!sug.originalPhrase || !content.includes(sug.originalPhrase)) return;
       let startIdx = 0;
       while ((startIdx = content.indexOf(sug.originalPhrase, startIdx)) !== -1) {
+        const cleanUpg = sug.suggestedUpgrade.includes("/")
+          ? sug.suggestedUpgrade.split("/")[0].trim()
+          : sug.suggestedUpgrade;
         rawMatches.push({
           id: sugId,
           kind: "suggestion",
           start: startIdx,
           end: startIdx + sug.originalPhrase.length,
           original: sug.originalPhrase,
-          replacement: sug.suggestedUpgrade,
+          replacement: cleanUpg,
           label: `${sug.type.replace("_", " ")} upgrade`,
           explanation: sug.explanation,
           tip: sug.exampleInSentence,
@@ -256,10 +262,6 @@ export function AnnotatedParagraph({
             <span className="text-[11px] text-neutral-400">({replacedCount})</span>
           </div>
         </div>
-
-        <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden lg:inline">
-          Click any highlighted text for examiner rationale
-        </span>
       </div>
 
       {/* Main Annotated Text Container */}
@@ -373,9 +375,6 @@ export function AnnotatedParagraph({
               <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                 {selectedMatch.explanation}
               </p>
-              <div className="text-[11px] text-neutral-400 dark:text-neutral-500 italic pt-1 border-t border-neutral-200 dark:border-neutral-800">
-                Note: Pointing out candidate strengths does not alter or inflate the IELTS band score rating.
-              </div>
             </div>
           ) : (
             <>

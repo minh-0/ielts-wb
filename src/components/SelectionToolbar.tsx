@@ -10,7 +10,11 @@ import {
   X,
   Palette,
 } from "lucide-react";
-import { HIGHLIGHT_COLORS, HighlightColorId, lookupOxfordWord } from "@/lib/oxfordDictionary";
+import {
+  HIGHLIGHT_COLORS,
+  HighlightColorId,
+  isValidOxfordSelection,
+} from "@/lib/oxfordDictionary";
 import { OxfordModal } from "./OxfordModal";
 
 function unwrapElement(el: HTMLElement) {
@@ -271,12 +275,17 @@ export function SelectionToolbar() {
   };
 
   const handleOpenOxford = () => {
-    const cleanWord = selectedText.replace(/[^a-zA-Z\s]/g, "").trim();
+    const cleanWord = selectedText
+      .trim()
+      .replace(/^[^a-zA-Z]+|[^a-zA-Z]+$/g, "")
+      .replace(/\s+/g, " ");
     setOxfordWord(cleanWord);
     setPosition(null);
   };
 
   if (!position && !oxfordWord) return null;
+
+  const canLookupOxford = isValidOxfordSelection(selectedText);
 
   return (
     <>
@@ -287,15 +296,17 @@ export function SelectionToolbar() {
           style={{ top: `${position.top}px`, left: `${position.left}px` }}
           className="fixed z-50 flex items-center gap-1.5 p-1 rounded-full bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border border-black/15 dark:border-white/15 shadow-2xl text-xs animate-in fade-in zoom-in-95 duration-150 select-none pointer-events-auto"
         >
-          {/* Oxford Dictionary Lookup Button */}
-          <button
-            onClick={handleOpenOxford}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-medium cursor-pointer transition-colors shadow-xs"
-            title={`Look up "${selectedText}" in Oxford Learner's Dictionaries`}
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Oxford</span>
-          </button>
+          {/* Oxford Dictionary Lookup Button - only shown for valid dictionary words/collocations */}
+          {canLookupOxford && (
+            <button
+              onClick={handleOpenOxford}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-medium cursor-pointer transition-colors shadow-xs"
+              title={`Look up "${selectedText}" in Oxford Learner's Dictionaries`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Oxford</span>
+            </button>
+          )}
 
           {/* British Pronunciation Button */}
           <button

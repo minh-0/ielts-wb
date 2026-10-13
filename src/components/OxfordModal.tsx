@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  BookOpen,
   Volume2,
   ExternalLink,
   X,
@@ -10,7 +9,11 @@ import {
   Check,
   Copy,
 } from "lucide-react";
-import { lookupOxfordWord, OxfordDictionaryEntry } from "@/lib/oxfordDictionary";
+import {
+  lookupOxfordWord,
+  enrichOxfordEntry,
+  OxfordDictionaryEntry,
+} from "@/lib/oxfordDictionary";
 
 interface OxfordModalProps {
   isOpen: boolean;
@@ -20,14 +23,32 @@ interface OxfordModalProps {
 
 export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
   const [entry, setEntry] = useState<OxfordDictionaryEntry | null>(null);
+  const [isLoadingDef, setIsLoadingDef] = useState(false);
   const [copied, setCopied] = useState(false);
   const [accent, setAccent] = useState<"uk" | "us">("uk");
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     if (word) {
-      setEntry(lookupOxfordWord(word));
+      const initial = lookupOxfordWord(word);
+      setEntry(initial);
+
+      if (initial.needsLiveEnrichment) {
+        setIsLoadingDef(true);
+        enrichOxfordEntry(initial).then((enriched) => {
+          if (!cancelled) {
+            setEntry(enriched);
+            setIsLoadingDef(false);
+          }
+        });
+      } else {
+        setIsLoadingDef(false);
+      }
     }
+    return () => {
+      cancelled = true;
+    };
   }, [word]);
 
   useEffect(() => {
@@ -47,9 +68,8 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(entry.word);
     utterance.lang = lang;
-    utterance.rate = 0.88; // Slightly measured examiner pace
+    utterance.rate = 0.88;
 
-    // Look for matching voice
     const voices = window.speechSynthesis.getVoices();
     const targetVoice = voices.find((v) =>
       lang === "en-GB"
@@ -96,10 +116,12 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
             </div>
             <div>
               <div className="text-xs font-semibold tracking-tight text-black dark:text-white flex items-center gap-1.5">
-                Oxford Learner's Dictionaries
-                <span className="text-xs text-neutral-400 font-normal">
-                  • Built-in
-                </span>
+                Oxford Learner&apos;s Dictionaries
+                {entry.sourceList && (
+                  <span className="text-xs text-neutral-400 font-normal">
+                    • {entry.sourceList}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -132,20 +154,25 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
             </span>
             <span
               className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
-                entry.cefrLevel === "C2"
+                entry.cefrLevel === "C2" || entry.cefrLevel === "C1"
                   ? "bg-purple-500/15 text-purple-700 dark:text-purple-300/80 dark:bg-purple-950/40 border border-purple-500/25 dark:border-purple-800/30"
-                  : entry.cefrLevel === "C1"
+                  : entry.cefrLevel === "B2"
                   ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25"
                   : "bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-500/25"
               }`}
             >
               CEFR {entry.cefrLevel}
             </span>
+            {entry.matchedQuery && (
+              <span className="text-[11px] text-neutral-400 dark:text-neutral-500">
+                (selected: &ldquo;{entry.matchedQuery}&rdquo;)
+              </span>
+            )}
           </div>
 
           {/* Pronunciation audio controls */}
           <div className="flex items-center gap-3 pt-1">
-            <span className="text-sm text-neutral-600 dark:text-neutral-400">
+            <span className="text-sm text-neutral-600 dark:text-neutral-400 font-mono">
               {entry.phonetic}
             </span>
 
@@ -186,22 +213,46 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
         </div>
 
         {/* Definition */}
-        <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-1">
+        <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-2">
           <div className="text-xs text-neutral-500 font-medium">
             Definition
           </div>
-          <p className="text-sm text-neutral-900 dark:text-neutral-100 leading-relaxed font-normal">
-            {entry.definition}
-          </p>
+          {isLoadingDef && !entry.definition ? (
+            <div className="space-y-1.5 py-1 animate-pulse">
+              <div className="h-3.5 bg-neutral-200 dark:bg-neutral-800 rounded w-11/12" />
+              <div className="h-3.5 bg-neutral-200 dark:bg-neutral-800 rounded w-3/4" />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-sm text-neutral-900 dark:text-neutral-100 leading-relaxed font-normal">
+                {entry.definition}
+              </p>
+              {entry.additionalDefinitions && entry.additionalDefinitions.length > 0 && (
+                <div className="space-y-1.5 pt-1">
+                  {entry.additionalDefinitions.map((ad, idx) => (
+                    <p
+                      key={idx}
+                      className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed"
+                    >
+                      <span className="italic text-neutral-400 dark:text-neutral-500 mr-1.5">
+                        ({ad.pos})
+                      </span>
+                      {ad.definition}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* IELTS Example Sentence */}
         <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-1.5">
           <div className="text-xs text-neutral-500 font-medium">
-            Authentic Example
+            Example
           </div>
           <div className="pl-3 border-l-2 border-neutral-300 dark:border-neutral-700 text-xs text-neutral-800 dark:text-neutral-200 italic leading-relaxed">
-            "{entry.example}"
+            &ldquo;{entry.example}&rdquo;
           </div>
         </div>
 
@@ -210,7 +261,7 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
           <div className="py-3 border-b border-neutral-100 dark:border-neutral-800 space-y-2">
             <div className="text-xs text-neutral-500 font-medium flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-neutral-400" />
-              High-scoring collocations
+              Collocations
             </div>
             <div className="flex flex-wrap gap-1.5">
               {entry.collocations.map((c, i) => (

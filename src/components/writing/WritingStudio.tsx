@@ -58,6 +58,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   const [analysisResult, setAnalysisResult] = useState<WritingAnalysisResult | null>(null);
   const [baseAnalysisResult, setBaseAnalysisResult] = useState<WritingAnalysisResult | null>(null);
   const [activeTab, setActiveTab] = useState<"criteria" | "model_answer">("criteria");
+  const [hasViewedModelEssay, setHasViewedModelEssay] = useState(false);
   const [showScorecard, setShowScorecard] = useState(false);
   const [isQuestionPickerOpen, setIsQuestionPickerOpen] = useState(false);
 
@@ -443,6 +444,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
     setSelectedAnnotationId(null);
     setReplacedItems([]);
     setIgnoredIds([]);
+    setHasViewedModelEssay(false);
 
     const activePromptText = useCustomPrompt
       ? customPrompt
@@ -476,9 +478,27 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
     }
   };
 
+  // Pick only one option when an upgrade string contains slash-separated alternatives (e.g. "pivotal / paramount")
+  const pickSingleOption = (replacement: string, original?: string): string => {
+    const firstChoice = replacement.includes("/")
+      ? replacement.split("/")[0].trim()
+      : replacement.trim();
+    const cleaned = cleanRepeatedWords(firstChoice);
+    if (
+      original &&
+      original.length > 0 &&
+      original[0] === original[0].toUpperCase() &&
+      original[0] !== original[0].toLowerCase() &&
+      cleaned.length > 0
+    ) {
+      return cleaned[0].toUpperCase() + cleaned.slice(1);
+    }
+    return cleaned;
+  };
+
   const handleApplyFix = (original: string, replacement: string, meta?: any) => {
     const cleanOrig = cleanRepeatedWords(original);
-    const cleanRepl = cleanRepeatedWords(replacement);
+    const cleanRepl = pickSingleOption(replacement, cleanOrig);
 
     setEssayContent((prev) => {
       const cleanedPrev = cleanRepeatedWords(prev);
@@ -514,8 +534,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   };
 
   const handleRevertFix = (replacedText: string, originalText: string) => {
-    const cleanRep = cleanRepeatedWords(replacedText);
     const cleanOrig = cleanRepeatedWords(originalText);
+    const matchedItem = replacedItems.find(
+      (r) => r.originalText === cleanOrig || r.replacedText === replacedText
+    );
+    const actualReplaced = matchedItem ? matchedItem.replacedText : pickSingleOption(replacedText, cleanOrig);
+    const cleanRep = cleanRepeatedWords(actualReplaced);
 
     setEssayContent((prev) => {
       const cleanedPrev = cleanRepeatedWords(prev);
@@ -530,7 +554,10 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
     setReplacedItems((prev) => {
       const updated = prev.filter(
-        (r) => r.replacedText !== cleanRep && r.replacedText !== replacedText
+        (r) =>
+          r.originalText !== cleanOrig &&
+          r.replacedText !== cleanRep &&
+          r.replacedText !== replacedText
       );
       if (baseAnalysisResult) {
         setAnalysisResult(computeUpgradedResult(baseAnalysisResult, updated));
@@ -548,7 +575,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       const sugId = sug.id || `sug-${idx + 1}`;
       if (ignoredIds.includes(sugId)) return;
       const orig = cleanRepeatedWords(sug.originalPhrase);
-      const upgrade = cleanRepeatedWords(sug.suggestedUpgrade);
+      const upgrade = pickSingleOption(sug.suggestedUpgrade, orig);
       if (updated.includes(orig)) {
         updated = cleanRepeatedWords(updated.replace(orig, upgrade));
         if (!newReplaced.some((r) => r.replacedText === upgrade)) {
@@ -569,7 +596,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       const errId = err.id || `err-${idx + 1}`;
       if (ignoredIds.includes(errId)) return;
       const orig = cleanRepeatedWords(err.original);
-      const rew = cleanRepeatedWords(err.rewritten);
+      const rew = pickSingleOption(err.rewritten, orig);
       if (updated.includes(orig)) {
         updated = cleanRepeatedWords(updated.replace(orig, rew));
         if (!newReplaced.some((r) => r.replacedText === rew)) {
@@ -1156,7 +1183,10 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               Criteria Breakdown
             </button>
             <button
-              onClick={() => setActiveTab("model_answer")}
+              onClick={() => {
+                setActiveTab("model_answer");
+                setHasViewedModelEssay(true);
+              }}
               className={`py-1 text-xs transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
                 activeTab === "model_answer"
                   ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
@@ -1164,12 +1194,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               }`}
             >
               <span>Model Essay</span>
-              <span className="relative flex h-2 w-2">
-                {activeTab !== "model_answer" && (
+              {!hasViewedModelEssay && activeTab !== "model_answer" && (
+                <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 dark:bg-emerald-400 opacity-75" />
-                )}
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 dark:bg-emerald-500" />
-              </span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 dark:bg-emerald-500" />
+                </span>
+              )}
             </button>
           </div>
 
@@ -1195,7 +1225,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </p>
                   </div>
                   <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
-                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
                         <li key={i}>{r}</li>
@@ -1222,7 +1252,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </p>
                   </div>
                   <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
-                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.coherenceCohesion.keyRecommendations?.map((r, i) => (
                         <li key={i}>{r}</li>
@@ -1254,7 +1284,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </p>
                   </div>
                   <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
-                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.lexicalResource.keyRecommendations?.map((r, i) => (
                         <li key={i}>{r}</li>
@@ -1281,7 +1311,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </p>
                   </div>
                   <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
-                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Examiner Advice:</div>
+                    <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.grammaticalRange.keyRecommendations?.map((r, i) => (
                         <li key={i}>{r}</li>
@@ -1291,37 +1321,29 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </div>
               </div>
 
-              {/* Band 8.0 → 9.0 Advanced Mastery Roadmap */}
+              {/* Band 8–9 Assessment Standards */}
               <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-2 border-b border-neutral-200 dark:border-neutral-800">
-                  <div className="space-y-0.5">
-                    <h4 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
-                      Band 8.0 → 9.0 Advanced Mastery Roadmap
-                    </h4>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                      Examiner strategies to push an already strong essay (Band 7.0–7.5) to Band 8.5–9.0.
-                    </p>
-                  </div>
-                  <div className="text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
-                    Official Descriptors Calibration
-                  </div>
+                <div className="pb-2 border-b border-neutral-200 dark:border-neutral-800 space-y-0.5">
+                  <h4 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                    <BookOpen className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
+                    Band 8–9 Assessment Standards
+                  </h4>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Linguistic distinctions between Band 7 and Band 9 scripts.
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
                   {/* Pillar 1: Academic Hedging (TR) */}
                   <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                         <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                           1. Academic Hedging (TR)
                         </span>
-                        <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase">
-                          Probabilistic Nuance
-                        </span>
                       </div>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Band 7.5 essays often rely on categorical absolutes (e.g., <em>&ldquo;will always lead to&rdquo;</em>). Band 9 examiners reward probabilistic nuance and epistemic modesty.
+                        Band 7 scripts often rely on categorical absolutes (e.g., <em>&ldquo;will always lead to&rdquo;</em>). Band 9 responses maintain cautious, qualified claims.
                       </p>
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
@@ -1336,19 +1358,16 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </div>
                   </div>
 
-                  {/* Pillar 2: Organic Thematic Referencing (CC) */}
+                  {/* Pillar 2: Thematic Referencing (CC) */}
                   <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                         <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                           2. Thematic Referencing (CC)
                         </span>
-                        <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase">
-                          Invisible Flow
-                        </span>
                       </div>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Band 8+ cohesion &ldquo;attracts no attention&rdquo;. Replace mechanical sentence starters (<em>&ldquo;Furthermore&rdquo;, &ldquo;In addition&rdquo;</em>) with noun-phrase bridging and demonstratives.
+                        Band 8+ cohesion attracts no attention. Replace mechanical linkers (<em>&ldquo;Furthermore&rdquo;, &ldquo;In addition&rdquo;</em>) with demonstrative noun-phrase bridging.
                       </p>
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
@@ -1366,16 +1385,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   {/* Pillar 3: Syntactic Inversion & Clefting (GRA) */}
                   <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                         <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                           3. Inversion & Clefting (GRA)
                         </span>
-                        <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase">
-                          Rhetorical Syntax
-                        </span>
                       </div>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Showcase rare grammatical forms naturally: inverted conditionals (<em>&ldquo;Were [subject] to [verb]&rdquo;</em>) and wh-cleft sentences for persuasive focus.
+                        Incorporate advanced clause structures naturally, such as inverted conditionals (<em>&ldquo;Were [subject] to [verb]&rdquo;</em>) and cleft constructions.
                       </p>
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
@@ -1393,16 +1409,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   {/* Pillar 4: Connotative Precision (LR) */}
                   <div className="space-y-3 pb-4 flex flex-col justify-between">
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
                         <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                          4. Connotative Precision (LR)
-                        </span>
-                        <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase">
-                          C1/C2 Nuance
+                          4. Lexical Precision (LR)
                         </span>
                       </div>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Band 8.5+ relies on precise connotation rather than generic synonyms. Pair analytical verbs with specific abstract nouns instead of loose conversational phrasing.
+                        Band 8.5+ relies on precise collocation rather than generic synonyms. Pair analytical verbs with specific abstract nouns.
                       </p>
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
@@ -1472,16 +1485,6 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       {p.trim()}
                     </p>
                   ))}
-                </div>
-
-                {/* Examiner commentary footer */}
-                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-400 space-y-1 font-sans">
-                  <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-xs">
-                    Examiner Commentary
-                  </div>
-                  <p className="leading-relaxed">
-                    This response satisfies all official descriptor criteria: it addresses all parts of the task fully, demonstrates a fully developed position with well-supported ideas, uses cohesion in such a way that it attracts no attention, and utilizes a wide range of vocabulary and syntactic structures with full flexibility and precision.
-                  </p>
                 </div>
               </div>
             );

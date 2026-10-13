@@ -151,6 +151,7 @@ export default function Home() {
       <Navbar
         activeCategory={category}
         onCategoryChange={setCategory}
+        onOpenStartPage={() => setHasEntered(false)}
         onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
         hasApiKey={Boolean(apiKey)}
       />
