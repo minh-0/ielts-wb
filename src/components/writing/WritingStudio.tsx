@@ -1441,12 +1441,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             const paragraphs = modelEssayText.split(/\n\s*\n/).filter((p) => p.trim());
 
             return (
-              <div
-                data-paragraph="true"
-                className="ielts-paragraph pt-3 space-y-5"
-              >
-                {/* Header info: Minimal typography with horizontal hairline divider */}
-                <div className="flex flex-wrap items-baseline justify-between gap-3 pb-3 border-b border-neutral-200 dark:border-neutral-800">
+              <div className="pt-3 space-y-5">
+                {/* Header info: Minimal typography with horizontal hairline divider (non-selectable) */}
+                <div className="flex flex-wrap items-baseline justify-between gap-3 pb-3 border-b border-neutral-200 dark:border-neutral-800 select-none">
                   <div className="space-y-0.5">
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       Topic: <span className="text-neutral-800 dark:text-neutral-200 font-medium">{selectedPrompt.title}</span>
@@ -1469,7 +1466,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
                 {/* Reference Graph / Image (for Task 1) */}
                 {selectedPrompt.imageUrl && (
-                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center max-w-xl mx-auto">
+                  <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 p-2 shadow-xs flex justify-center max-w-xl mx-auto select-none">
                     <img
                       src={selectedPrompt.imageUrl}
                       alt={selectedPrompt.title}
@@ -1478,8 +1475,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   </div>
                 )}
 
-                {/* Essay Paragraphs */}
-                <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif">
+                {/* Essay Paragraphs - only the essay body itself is highlightable */}
+                <div
+                  data-paragraph="true"
+                  className="ielts-paragraph space-y-4 text-xs sm:text-sm leading-relaxed text-neutral-800 dark:text-neutral-200 font-serif"
+                >
                   {paragraphs.map((p, pIdx) => (
                     <p key={pIdx} className="leading-relaxed">
                       {p.trim()}
