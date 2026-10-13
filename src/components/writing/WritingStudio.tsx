@@ -1157,13 +1157,19 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             </button>
             <button
               onClick={() => setActiveTab("model_answer")}
-              className={`py-1 text-xs transition-colors cursor-pointer ${
+              className={`py-1 text-xs transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
                 activeTab === "model_answer"
                   ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
                   : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
               }`}
             >
-              Model Essay
+              <span>Model Essay</span>
+              <span className="relative flex h-2 w-2">
+                {activeTab !== "model_answer" && (
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 dark:bg-emerald-400 opacity-75" />
+                )}
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 dark:bg-emerald-500" />
+              </span>
             </button>
           </div>
 
