@@ -1348,11 +1348,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
                       <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
                         &ldquo;AI will inevitably replace all human labor in the foreseeable future.&rdquo;
                       </div>
                       <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
                         &ldquo;While AI is arguably poised to displace routine clerical roles, it tends to complement high-order analytical occupations.&rdquo;
                       </div>
                     </div>
@@ -1372,11 +1372,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
                       <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
                         &ldquo;Furthermore, the environment is being damaged. In addition, governments must act.&rdquo;
                       </div>
                       <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
                         &ldquo;This escalating ecological strain in turn necessitates decisive, synchronized state intervention.&rdquo;
                       </div>
                     </div>
@@ -1396,11 +1396,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
                       <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
                         &ldquo;If authorities subsidize public transport, commuters will stop driving cars.&rdquo;
                       </div>
                       <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
                         &ldquo;Were authorities to heavily subsidize municipal transit, commuters would be markedly more inclined to forgo private transport.&rdquo;
                       </div>
                     </div>
@@ -1420,11 +1420,11 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     </div>
                     <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
                       <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
                         &ldquo;This will solve the problem and have a positive impact on the economy.&rdquo;
                       </div>
                       <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-mono font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
+                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
                         &ldquo;This systematically alleviates underlying structural friction, thereby yielding palpable macroeconomic dividends.&rdquo;
                       </div>
                     </div>

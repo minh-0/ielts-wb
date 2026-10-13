@@ -172,7 +172,7 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
 
           {/* Pronunciation audio controls */}
           <div className="flex items-center gap-3 pt-1">
-            <span className="text-sm text-neutral-600 dark:text-neutral-400 font-mono">
+            <span className="text-sm text-neutral-600 dark:text-neutral-400 font-sans">
               {entry.phonetic}
             </span>
 
