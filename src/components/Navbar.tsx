@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PenTool, BookOpen, LayoutGrid } from "lucide-react";
+import { PenTool, BookOpen } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
@@ -38,17 +38,8 @@ export function Navbar({
 
         {/* Right Section: Tabs + Actions */}
         <div className="flex items-center gap-4 sm:gap-6">
-          {/* Tab Navigation: Start, Practice, Learn */}
+          {/* Tab Navigation: Practice, Learn */}
           <nav className="flex items-center gap-4 sm:gap-6 text-xs">
-            <button
-              onClick={onOpenStartPage}
-              className="py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-              title="Go to Start Page"
-            >
-              <LayoutGrid className="w-3 h-3" />
-              <span>Start</span>
-            </button>
-
             <button
               onClick={() => onCategoryChange("practice")}
               className={`py-1.5 transition-colors cursor-pointer flex items-center gap-1.5 ${
