@@ -663,9 +663,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Section 1: Task Switcher & Prompt (Clean minimalist toolbar) */}
-      <div className="space-y-3 pb-5 border-b border-neutral-200 dark:border-neutral-800">
+    <div className="space-y-6">
+      {/* Section 1: Task Switcher & Prompt (Clean borderless layout) */}
+      <div className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Task Type Switcher: Minimalist horizontal tabs (no box) */}
           <div className="flex items-center gap-5 text-xs">
@@ -712,14 +712,14 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               <Bookmark className="w-3.5 h-3.5 text-neutral-500" />
               <span>Saved ({savedEssays.length})</span>
             </button>
-            <span className="text-neutral-300 dark:text-neutral-700">|</span>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
             <button
               onClick={() => setUseCustomPrompt(!useCustomPrompt)}
               className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
             >
               {useCustomPrompt ? "Choose from bank" : "+ Custom topic"}
             </button>
-            <span className="text-neutral-300 dark:text-neutral-700">|</span>
+            <span className="text-neutral-300 dark:text-neutral-700">•</span>
             <button
               onClick={handleLoadSampleEssay}
               className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
@@ -730,7 +730,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
         </div>
 
         {/* Prompt selector & question card */}
-        <div className="space-y-2 pt-0.5">
+        <div className="space-y-2">
           {useCustomPrompt ? (
             <div className="space-y-2">
               <textarea
@@ -803,7 +803,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               )}
             </div>
           ) : (
-            <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4 space-y-3">
+            <div className="pt-1 space-y-2">
               {/* Question Header: Text metadata with dot separators & Action Buttons */}
               <div className="flex flex-wrap items-center justify-between gap-2.5">
                 <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
@@ -842,7 +842,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               </div>
 
               {/* Title & Prompt Text: Pure typography, no nested card boxes */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <h3 className="text-base sm:text-lg font-serif font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
                   {selectedPrompt.title}
                 </h3>
@@ -869,9 +869,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       {/* Section 2: Split View (Paragraph Box on Left, Diagnostic Inspector on Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN: Paragraph Box (pushed to left, col-span-7) */}
-        <div className="lg:col-span-7 space-y-3">
-          {/* Editor / Review Toolbar: Minimalist row with horizontal divider (no chunky boxes) */}
-          <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 text-xs pb-2.5 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="lg:col-span-7 space-y-2.5">
+          {/* Editor / Review Toolbar: Minimalist row */}
+          <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 text-xs">
             {/* Left side: Word count, View tabs, Alternative words action, and Text actions */}
             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
               {/* Word count */}
@@ -1442,8 +1442,8 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
             return (
               <div className="pt-3 space-y-5">
-                {/* Header info: Minimal typography with horizontal hairline divider (non-selectable) */}
-                <div className="flex flex-wrap items-baseline justify-between gap-3 pb-3 border-b border-neutral-200 dark:border-neutral-800 select-none">
+                {/* Header info: Minimal typography with horizontal hairline divider */}
+                <div className="flex flex-wrap items-baseline justify-between gap-3 pb-3 border-b border-neutral-200 dark:border-neutral-800">
                   <div className="space-y-0.5">
                     <p className="text-xs text-neutral-500 dark:text-neutral-400">
                       Topic: <span className="text-neutral-800 dark:text-neutral-200 font-medium">{selectedPrompt.title}</span>

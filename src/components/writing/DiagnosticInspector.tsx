@@ -95,9 +95,9 @@ export function DiagnosticInspector({
   // If no feedback items exist yet, show clean minimal empty state
   if (totalItems === 0) {
     return (
-      <div className="h-full py-4 border-t border-neutral-200 dark:border-neutral-800 flex flex-col justify-between">
+      <div className="h-full flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center justify-between pb-2.5 border-b border-neutral-200 dark:border-neutral-800">
             <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
               Inspector
             </h3>
