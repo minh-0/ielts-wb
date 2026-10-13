@@ -23,6 +23,7 @@ import {
   FileText,
   ArrowRight,
 } from "lucide-react";
+import { DynamicText, ParticleButton, SmoothTab } from "@/components/kokonutui";
 
 export default function Home() {
   const [hasEntered, setHasEntered] = useState<boolean | null>(null);
@@ -181,26 +182,37 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Primary Headline & Description */}
+            {/* Primary Headline with Dynamic Text & Description */}
             <div className="max-w-3xl space-y-3">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight font-serif leading-[1.15] bg-gradient-to-r from-neutral-950 via-neutral-900 to-red-800 dark:from-white dark:via-neutral-100 dark:to-neutral-400 bg-clip-text text-transparent">
-                The IELTS companion
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight font-serif leading-[1.15] text-neutral-950 dark:text-white flex flex-wrap items-baseline gap-x-3">
+                <span className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-red-800 dark:from-white dark:via-neutral-100 dark:to-neutral-400 bg-clip-text text-transparent">
+                  The IELTS companion for
+                </span>
+                <DynamicText
+                  words={[
+                    "Task 2 Essays",
+                    "Task 1 Charts",
+                    "Speaking Cue Cards",
+                    "Cambridge Collocations",
+                    "Oxford Lexicon",
+                  ]}
+                />
               </h1>
               <p className="text-sm sm:text-[15px] text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl">
                 An examiner-calibrated workbench for IELTS candidates. Practice Writing with 50 Task 1 visual charts and 100 Task 2 prompts, build Speaking fluency with structured cue cards and native shadowing, and study Cambridge collocations and Oxford 3000/5000 vocabulary.
               </p>
             </div>
 
-            {/* Minimalist Action Buttons */}
+            {/* Minimalist Action Buttons with Micro-Particle Burst */}
             <div className="flex flex-wrap items-center gap-3 pt-1">
-              <button
+              <ParticleButton
                 onClick={() => handleStartWriting("task2")}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 text-white dark:from-white dark:via-neutral-100 dark:to-neutral-200 dark:hover:from-neutral-100 dark:hover:to-white dark:text-neutral-950 text-xs font-medium tracking-tight transition-all duration-200 shadow-sm shadow-black/10 dark:shadow-white/5 cursor-pointer"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 text-white dark:from-white dark:via-neutral-100 dark:to-neutral-200 dark:hover:from-neutral-100 dark:hover:to-white dark:text-neutral-950 text-xs font-medium tracking-tight shadow-sm shadow-black/10 dark:shadow-white/5"
+                icon={<ArrowRight className="w-3.5 h-3.5 opacity-70" />}
               >
                 <PenTool className="w-3.5 h-3.5" />
                 <span>Start Writing</span>
-                <ArrowRight className="w-3.5 h-3.5 opacity-70" />
-              </button>
+              </ParticleButton>
 
               <button
                 onClick={() => handleStartWriting("task1_academic")}
@@ -228,69 +240,53 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Integrated Studio Navigation Tabs (sits directly on the section border) */}
-          <div className="flex items-center gap-6 -mb-px">
+          {/* Integrated Studio Navigation with SmoothTab Spring Physics */}
+          <div className="flex items-center -mb-px">
             {category === "practice" ? (
-              <>
-                <button
-                  onClick={() => setPracticeTab("writing")}
-                  className={`flex items-center gap-2 text-xs pb-3 transition-colors cursor-pointer ${
-                    practiceTab === "writing"
-                      ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-                  }`}
-                >
-                  <PenTool className="w-3.5 h-3.5" />
-                  <span>Writing Studio</span>
-                </button>
-                <button
-                  onClick={() => setPracticeTab("speaking")}
-                  className={`flex items-center gap-2 text-xs pb-3 transition-colors cursor-pointer ${
-                    practiceTab === "speaking"
-                      ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-                  }`}
-                >
-                  <Mic className="w-3.5 h-3.5" />
-                  <span>Speaking Studio</span>
-                </button>
-              </>
+              <SmoothTab
+                items={[
+                  {
+                    id: "writing",
+                    label: "Writing Studio",
+                    icon: <PenTool className="w-3.5 h-3.5" />,
+                  },
+                  {
+                    id: "speaking",
+                    label: "Speaking Studio",
+                    icon: <Mic className="w-3.5 h-3.5" />,
+                  },
+                ]}
+                value={practiceTab}
+                onChange={(id) => setPracticeTab(id as "writing" | "speaking")}
+                layoutId="practice-studio-tabs"
+                className="pb-2.5"
+              />
             ) : (
-              <>
-                <button
-                  onClick={() => setLearnTab("collocations")}
-                  className={`flex items-center gap-2 text-xs pb-3 transition-colors cursor-pointer ${
-                    learnTab === "collocations"
-                      ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-                  }`}
-                >
-                  <BookText className="w-3.5 h-3.5" />
-                  <span>Collocations</span>
-                </button>
-                <button
-                  onClick={() => setLearnTab("vocabulary")}
-                  className={`flex items-center gap-2 text-xs pb-3 transition-colors cursor-pointer ${
-                    learnTab === "vocabulary"
-                      ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-                  }`}
-                >
-                  <BookA className="w-3.5 h-3.5" />
-                  <span>Vocabulary (Oxford)</span>
-                </button>
-                <button
-                  onClick={() => setLearnTab("rubric")}
-                  className={`flex items-center gap-2 text-xs pb-3 transition-colors cursor-pointer ${
-                    learnTab === "rubric"
-                      ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-                  }`}
-                >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  <span>Band Descriptors</span>
-                </button>
-              </>
+              <SmoothTab
+                items={[
+                  {
+                    id: "collocations",
+                    label: "Collocations",
+                    icon: <BookText className="w-3.5 h-3.5" />,
+                  },
+                  {
+                    id: "vocabulary",
+                    label: "Vocabulary (Oxford)",
+                    icon: <BookA className="w-3.5 h-3.5" />,
+                  },
+                  {
+                    id: "rubric",
+                    label: "Band Descriptors",
+                    icon: <BookOpen className="w-3.5 h-3.5" />,
+                  },
+                ]}
+                value={learnTab}
+                onChange={(id) =>
+                  setLearnTab(id as "collocations" | "vocabulary" | "rubric")
+                }
+                layoutId="learn-studio-tabs"
+                className="pb-2.5"
+              />
             )}
           </div>
         </div>

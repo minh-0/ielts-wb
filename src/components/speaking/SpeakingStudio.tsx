@@ -23,6 +23,7 @@ import {
   BUYING_TIME_FILLERS,
   COLLOCATION_FLASHCARDS,
 } from "@/lib/speakingPracticeData";
+import { CardFlip, ParticleButton } from "@/components/kokonutui";
 
 interface SpeakingStudioProps {
   apiKey?: string;
@@ -1324,71 +1325,34 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       </div>
                     </div>
 
-                    <div
-                      onClick={() => setIsCardFlipped(!isCardFlipped)}
-                      className="min-h-[200px] p-6 sm:p-8 rounded-xl border border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors cursor-pointer flex flex-col justify-between select-none"
-                    >
-                      <div className="flex items-center justify-between text-xs text-neutral-400">
-                        <span>{currentCard.category}</span>
-                        <span>{isCardFlipped ? "Band 8+ Collocation" : "Basic Phrase"}</span>
-                      </div>
+                    <CardFlip
+                      key={currentCard.id}
+                      category={currentCard.category}
+                      basicPhrase={currentCard.basicPhrase}
+                      upgradedCollocation={currentCard.upgradedCollocation}
+                      registerLevel={currentCard.registerLevel}
+                      definition={currentCard.definition}
+                      exampleSentence={currentCard.exampleIeltsSentence}
+                      onPlayAudio={() => speakText(currentCard.exampleIeltsSentence)}
+                    />
 
-                      <div className="text-center py-6 space-y-2">
-                        {!isCardFlipped ? (
-                          <div className="text-xl sm:text-2xl font-serif text-neutral-900 dark:text-neutral-100">
-                            &ldquo;{currentCard.basicPhrase}&rdquo;
-                          </div>
-                        ) : (
-                          <>
-                            <div className="text-xl sm:text-2xl font-serif text-emerald-700 dark:text-emerald-300">
-                              &ldquo;{currentCard.upgradedCollocation}&rdquo;
-                            </div>
-                            <p className="text-xs text-neutral-500 pt-1">
-                              {currentCard.definition}
-                            </p>
-                            <p className="text-xs italic font-serif text-neutral-700 dark:text-neutral-300 pt-3 border-t border-neutral-200 dark:border-neutral-800">
-                              &ldquo;{currentCard.exampleIeltsSentence}&rdquo;
-                            </p>
-                          </>
-                        )}
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-neutral-400 pt-2 border-t border-neutral-200 dark:border-neutral-800">
-                        <span>Click card to flip</span>
-                        {isCardFlipped && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              speakText(currentCard.exampleIeltsSentence);
-                            }}
-                            className="inline-flex items-center gap-1 text-neutral-700 dark:text-neutral-300 font-medium hover:underline cursor-pointer"
-                          >
-                            <Volume2 className="w-3.5 h-3.5" />
-                            <span>Listen</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs">
-                      <button
-                        type="button"
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <ParticleButton
                         onClick={() => {
                           const nextSet = new Set(masteredCards);
                           if (isMastered) nextSet.delete(currentCard.id);
                           else nextSet.add(currentCard.id);
                           setMasteredCards(nextSet);
                         }}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-medium cursor-pointer transition-colors ${
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border font-medium transition-colors ${
                           isMastered
-                            ? "border-emerald-500/50 text-emerald-700 dark:text-emerald-300"
+                            ? "border-emerald-500/50 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300"
                             : "border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
                         }`}
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>{isMastered ? "Mastered" : "Mark mastered"}</span>
-                      </button>
+                      </ParticleButton>
 
                       <button
                         type="button"
@@ -1397,7 +1361,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                             Math.random() * COLLOCATION_FLASHCARDS.length
                           );
                           setFlashcardIndex(rand);
-                          setIsCardFlipped(false);
                         }}
                         className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium cursor-pointer transition-colors"
                       >

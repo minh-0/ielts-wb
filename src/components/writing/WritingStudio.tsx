@@ -33,6 +33,7 @@ import { DiagnosticInspector } from "./DiagnosticInspector";
 import { SavedEssaysModal } from "./SavedEssaysModal";
 import { QuestionPickerModal } from "./QuestionPickerModal";
 import { NumberTicker } from "../magicui/number-ticker";
+import { IeltsActivityRings, SmoothTab, ParticleButton } from "@/components/kokonutui";
 
 interface WritingStudioProps {
   apiKey: string;
@@ -58,6 +59,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   const [analysisResult, setAnalysisResult] = useState<WritingAnalysisResult | null>(null);
   const [baseAnalysisResult, setBaseAnalysisResult] = useState<WritingAnalysisResult | null>(null);
   const [activeTab, setActiveTab] = useState<"criteria" | "model_answer">("criteria");
+  const [chartView, setChartView] = useState<"rings" | "radar">("rings");
   const [hasViewedModelEssay, setHasViewedModelEssay] = useState(false);
   const [showScorecard, setShowScorecard] = useState(false);
   const [isQuestionPickerOpen, setIsQuestionPickerOpen] = useState(false);
@@ -1050,23 +1052,23 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               </span>
             )}
 
-            <button
+            <ParticleButton
               onClick={handleAnalyze}
               disabled={isAnalyzing || !essayContent.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all cursor-pointer shadow-xs"
+              className="px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all shadow-xs"
             >
               {isAnalyzing ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  Analyzing mistakes...
+                  <span>Analyzing mistakes...</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-3.5 h-3.5" />
-                  {analysisResult ? "Re-analyze" : "Analyze"}
+                  <span>{analysisResult ? "Re-analyze" : "Analyze"}</span>
                 </>
               )}
-            </button>
+            </ParticleButton>
           </div>
         </div>
 
@@ -1093,9 +1095,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       {analysisResult && (
         <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800 space-y-8 animate-in fade-in duration-200">
           {/* Header Score Overview: Expansive 3-column dashboard */}
-          <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="py-6 border-b border-neutral-200 dark:border-neutral-800 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             {/* Panel 1: Band Score & Summary */}
-            <div className="lg:col-span-5 space-y-2 text-center lg:text-left">
+            <div className="lg:col-span-4 space-y-2 text-center lg:text-left">
               <div className="text-xs text-neutral-500 font-medium">
                 Overall Band Score
               </div>
@@ -1115,22 +1117,64 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               </p>
             </div>
 
-            {/* Panel 2: Center Radar Chart */}
-            <div className="lg:col-span-3 flex flex-col items-center justify-center">
-              <RadarChart
-                scores={[
-                  { label: "Task Resp.", score: analysisResult.criteria.taskAchievement.score },
-                  { label: "Coherence", score: analysisResult.criteria.coherenceCohesion.score },
-                  { label: "Lexical", score: analysisResult.criteria.lexicalResource.score },
-                  { label: "Grammar", score: analysisResult.criteria.grammaticalRange.score },
-                ]}
-                size={220}
-                accentColor="#ffffff"
-              />
+            {/* Panel 2: Four-Criteria Activity Rings / Radar View */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center">
+              <div className="w-full flex items-center justify-between mb-2 px-1">
+                <span className="text-[11px] text-neutral-400 font-medium">
+                  {chartView === "rings" ? "Criteria Activity Rings" : "Examiner Radar Profile"}
+                </span>
+                <div className="inline-flex items-center gap-1 text-[11px]">
+                  <button
+                    type="button"
+                    onClick={() => setChartView("rings")}
+                    className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
+                      chartView === "rings"
+                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    }`}
+                  >
+                    Rings
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChartView("radar")}
+                    className={`px-2 py-0.5 rounded cursor-pointer transition-colors ${
+                      chartView === "radar"
+                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-medium"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    }`}
+                  >
+                    Radar
+                  </button>
+                </div>
+              </div>
+
+              {chartView === "rings" ? (
+                <IeltsActivityRings
+                  overallScore={analysisResult.overallBand}
+                  taskResponseScore={analysisResult.criteria.taskAchievement.score}
+                  coherenceScore={analysisResult.criteria.coherenceCohesion.score}
+                  lexicalScore={analysisResult.criteria.lexicalResource.score}
+                  grammarScore={analysisResult.criteria.grammaticalRange.score}
+                  isTask1={selectedTaskType === "task1_academic"}
+                  className="w-full bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800"
+                />
+              ) : (
+                <RadarChart
+                  scores={[
+                    { label: "Task Resp.", score: analysisResult.criteria.taskAchievement.score },
+                    { label: "Coherence", score: analysisResult.criteria.coherenceCohesion.score },
+                    { label: "Lexical", score: analysisResult.criteria.lexicalResource.score },
+                    { label: "Grammar", score: analysisResult.criteria.grammaticalRange.score },
+                  ]}
+                  size={200}
+                  accentColor="#ffffff"
+                />
+              )}
             </div>
 
             {/* Panel 3: Bottleneck & Share Card Action */}
-            <div className="lg:col-span-4 flex flex-col gap-3 justify-center">
+            <div className="lg:col-span-3 flex flex-col gap-3 justify-center">
               <div
                 className={`p-4 border-l-2 text-xs leading-relaxed space-y-1 ${
                   analysisResult.criteria.taskAchievement.score <= 3.0
@@ -1160,47 +1204,40 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </p>
               </div>
 
-              <button
+              <ParticleButton
                 onClick={() => setShowScorecard(true)}
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-medium text-xs sm:text-sm hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer shadow-xs"
+                className="w-full py-2.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-medium text-xs sm:text-sm hover:border-neutral-300 dark:hover:border-neutral-700 shadow-xs"
+                icon={<Share2 className="w-4 h-4 ml-1" />}
               >
-                <Share2 className="w-4 h-4" />
-                Export Share Card
-              </button>
+                <span>Export Share Card</span>
+              </ParticleButton>
             </div>
           </div>
 
-          {/* Tab Navigation for Detailed Feedback: Minimal horizontal underline tabs (no box) */}
-          <div className="flex items-center gap-6 border-b border-neutral-200 dark:border-neutral-800 pb-2">
-            <button
-              onClick={() => setActiveTab("criteria")}
-              className={`py-1 text-xs transition-colors cursor-pointer ${
-                activeTab === "criteria"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-              }`}
-            >
-              Criteria Breakdown
-            </button>
-            <button
-              onClick={() => {
-                setActiveTab("model_answer");
-                setHasViewedModelEssay(true);
+          {/* Tab Navigation for Detailed Feedback: SmoothTab Physics */}
+          <div className="border-b border-neutral-200 dark:border-neutral-800 pb-2 -mb-px">
+            <SmoothTab
+              items={[
+                { id: "criteria", label: "Criteria Breakdown" },
+                {
+                  id: "model_answer",
+                  label: "Model Essay",
+                  badge:
+                    !hasViewedModelEssay && activeTab !== "model_answer" ? (
+                      <span className="relative flex h-2 w-2 ml-1">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 dark:bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 dark:bg-emerald-500" />
+                      </span>
+                    ) : undefined,
+                },
+              ]}
+              value={activeTab}
+              onChange={(id) => {
+                setActiveTab(id as "criteria" | "model_answer");
+                if (id === "model_answer") setHasViewedModelEssay(true);
               }}
-              className={`py-1 text-xs transition-colors cursor-pointer inline-flex items-center gap-1.5 ${
-                activeTab === "model_answer"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-              }`}
-            >
-              <span>Model Essay</span>
-              {!hasViewedModelEssay && activeTab !== "model_answer" && (
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 dark:bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 dark:bg-emerald-500" />
-                </span>
-              )}
-            </button>
+              layoutId="writing-studio-feedback-tabs"
+            />
           </div>
 
           {/* TAB 1: Criteria (Clean column layout with hairline borders) */}
