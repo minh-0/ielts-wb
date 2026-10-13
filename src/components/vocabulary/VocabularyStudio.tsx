@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { OXFORD_VOCAB_LIST, OxfordVocabItem, CefrLevel } from "@/lib/oxfordVocabData";
 import { Search, Volume2, Star, ExternalLink, Check, X } from "lucide-react";
+import { FlipCard3D, ParticleButton } from "@/components/kokonutui";
 
 export function VocabularyStudio() {
   const [activeMode, setActiveMode] = useState<"flashcards" | "explorer">("flashcards");
@@ -274,57 +275,60 @@ export function VocabularyStudio() {
           ) : (
             <>
               {currentCard && (
-                <div
-                  onClick={() => setIsFlipped(!isFlipped)}
-                  className="min-h-[280px] sm:min-h-[300px] p-6 sm:p-7 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-col justify-between cursor-pointer select-none transition-colors hover:border-neutral-300 dark:hover:border-neutral-700 shadow-xs"
-                >
-                  {/* Top card bar */}
-                  <div className="flex items-center justify-between text-xs text-neutral-400">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                        {currentCard.level}
-                      </span>
-                      <span>•</span>
-                      <span className="capitalize">{currentCard.pos}</span>
-                    </div>
+                <FlipCard3D
+                  isFlipped={isFlipped}
+                  onFlip={() => setIsFlipped(!isFlipped)}
+                  minHeight="min-h-[290px] sm:min-h-[310px]"
+                  front={
+                    <>
+                      {/* Top card bar */}
+                      <div className="flex items-center justify-between text-xs text-neutral-400">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                            {currentCard.level}
+                          </span>
+                          <span>•</span>
+                          <span className="capitalize">{currentCard.pos}</span>
+                        </div>
 
-                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                      <button
-                        onClick={(e) => playAudio(currentCard.word, e)}
-                        className="p-1 rounded-md text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
-                        title="Pronounce"
-                      >
-                        <Volume2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={(e) => toggleStar(currentCard.id, e)}
-                        className="p-1 rounded-md text-neutral-400 hover:text-amber-500 transition-colors cursor-pointer"
-                        title="Star"
-                      >
-                        <Star
-                          className={`w-3.5 h-3.5 ${
-                            starredIds.has(currentCard.id) ? "fill-amber-400 text-amber-500" : ""
-                          }`}
-                        />
-                      </button>
-                      <button
-                        onClick={(e) => toggleMaster(currentCard.id, e)}
-                        className="p-1 rounded-md text-neutral-400 hover:text-emerald-500 transition-colors cursor-pointer"
-                        title="Mastered"
-                      >
-                        <Check
-                          className={`w-3.5 h-3.5 ${
-                            masteredIds.has(currentCard.id) ? "text-emerald-500" : ""
-                          }`}
-                        />
-                      </button>
-                    </div>
-                  </div>
+                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={(e) => playAudio(currentCard.word, e)}
+                            className="p-1 rounded-md text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                            title="Pronounce"
+                          >
+                            <Volume2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => toggleStar(currentCard.id, e)}
+                            className="p-1 rounded-md text-neutral-400 hover:text-amber-500 transition-colors cursor-pointer"
+                            title="Star"
+                          >
+                            <Star
+                              className={`w-3.5 h-3.5 ${
+                                starredIds.has(currentCard.id) ? "fill-amber-400 text-amber-500" : ""
+                              }`}
+                            />
+                          </button>
+                          <ParticleButton
+                            type="button"
+                            onClick={(e) => toggleMaster(currentCard.id, e)}
+                            className="p-1 rounded-md text-neutral-400 hover:text-emerald-500 transition-colors"
+                            title="Mastered"
+                          >
+                            <Check
+                              className={`w-3.5 h-3.5 ${
+                                masteredIds.has(currentCard.id) ? "text-emerald-500" : ""
+                              }`}
+                            />
+                          </ParticleButton>
+                        </div>
+                      </div>
 
-                  {/* Center content */}
-                  <div className="my-auto py-4">
-                    {!isFlipped ? (
-                      <div className="text-center space-y-2">
+                      {/* Center content */}
+                      <div className="my-auto py-4 text-center space-y-2">
                         <h2 className="text-3xl sm:text-4xl font-serif font-medium tracking-tight text-neutral-900 dark:text-neutral-100">
                           {currentCard.word}
                         </h2>
@@ -332,11 +336,65 @@ export function VocabularyStudio() {
                           {currentCard.phonetic}
                         </p>
                         <p className="text-[11px] text-neutral-400/70 pt-3">
-                          Space to flip
+                          Tap to flip or press space
                         </p>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
+
+                      {/* Card bottom */}
+                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 dark:border-neutral-900">
+                        <span>
+                          {cardIndex + 1} of {flashcardPool.length}
+                        </span>
+                        <a
+                          href={currentCard.oxfordUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors flex items-center gap-1"
+                        >
+                          Oxford <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      </div>
+                    </>
+                  }
+                  back={
+                    <>
+                      {/* Top card bar */}
+                      <div className="flex items-center justify-between text-xs text-neutral-400">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                            {currentCard.level}
+                          </span>
+                          <span>•</span>
+                          <span className="capitalize">{currentCard.pos}</span>
+                        </div>
+
+                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            type="button"
+                            onClick={(e) => playAudio(currentCard.word, e)}
+                            className="p-1 rounded-md text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                            title="Pronounce"
+                          >
+                            <Volume2 className="w-3.5 h-3.5" />
+                          </button>
+                          <ParticleButton
+                            type="button"
+                            onClick={(e) => toggleMaster(currentCard.id, e)}
+                            className="p-1 rounded-md text-neutral-400 hover:text-emerald-500 transition-colors"
+                            title="Mastered"
+                          >
+                            <Check
+                              className={`w-3.5 h-3.5 ${
+                                masteredIds.has(currentCard.id) ? "text-emerald-500" : ""
+                              }`}
+                            />
+                          </ParticleButton>
+                        </div>
+                      </div>
+
+                      {/* Back Center content */}
+                      <div className="my-auto py-2 space-y-3 text-left">
                         <div>
                           <span className="text-base font-semibold text-neutral-900 dark:text-neutral-100 block">
                             {currentCard.word}
@@ -348,7 +406,7 @@ export function VocabularyStudio() {
 
                         {currentCard.example && (
                           <p className="text-xs text-neutral-500 italic leading-relaxed pt-1">
-                            "{currentCard.example}"
+                            &ldquo;{currentCard.example}&rdquo;
                           </p>
                         )}
 
@@ -365,25 +423,23 @@ export function VocabularyStudio() {
                           </div>
                         )}
                       </div>
-                    )}
-                  </div>
 
-                  {/* Card bottom */}
-                  <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 dark:border-neutral-900">
-                    <span>
-                      {cardIndex + 1} of {flashcardPool.length}
-                    </span>
-                    <a
-                      href={currentCard.oxfordUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors flex items-center gap-1"
-                    >
-                      Oxford <ExternalLink className="w-2.5 h-2.5" />
-                    </a>
-                  </div>
-                </div>
+                      {/* Card bottom */}
+                      <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-2 border-t border-neutral-100 dark:border-neutral-900">
+                        <span>Tap to flip back</span>
+                        <a
+                          href={currentCard.oxfordUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors flex items-center gap-1"
+                        >
+                          Oxford <ExternalLink className="w-2.5 h-2.5" />
+                        </a>
+                      </div>
+                    </>
+                  }
+                />
               )}
 
               {/* Navigation controls */}

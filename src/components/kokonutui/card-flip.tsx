@@ -129,4 +129,69 @@ export function CardFlip({
   );
 }
 
+export interface FlipCard3DProps {
+  isFlipped: boolean;
+  onFlip?: () => void;
+  front: React.ReactNode;
+  back: React.ReactNode;
+  className?: string;
+  frontClassName?: string;
+  backClassName?: string;
+  minHeight?: string;
+}
+
+export function FlipCard3D({
+  isFlipped,
+  onFlip,
+  front,
+  back,
+  className,
+  frontClassName,
+  backClassName,
+  minHeight = "min-h-[280px]",
+}: FlipCard3DProps) {
+  return (
+    <div
+      onClick={onFlip}
+      className={cn(
+        "group relative w-full cursor-pointer select-none [perspective:1400px]",
+        minHeight,
+        className
+      )}
+    >
+      <div
+        className={cn(
+          "relative h-full w-full rounded-2xl transition-transform duration-500 [transform-style:preserve-3d]",
+          minHeight,
+          isFlipped ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"
+        )}
+      >
+        {/* FRONT FACE */}
+        <div
+          className={cn(
+            "absolute inset-0 h-full w-full rounded-2xl [backface-visibility:hidden] flex flex-col justify-between",
+            "border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950",
+            "hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors shadow-xs p-6 sm:p-8",
+            frontClassName
+          )}
+        >
+          {front}
+        </div>
+
+        {/* BACK FACE */}
+        <div
+          className={cn(
+            "absolute inset-0 h-full w-full rounded-2xl [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-between",
+            "border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950",
+            "hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors shadow-xs p-6 sm:p-8",
+            backClassName
+          )}
+        >
+          {back}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default CardFlip;

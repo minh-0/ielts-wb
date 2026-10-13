@@ -8,6 +8,7 @@ export interface DynamicTextProps {
   words?: string[];
   interval?: number;
   className?: string;
+  gradientClassName?: string;
   prefix?: string;
 }
 
@@ -25,6 +26,7 @@ export function DynamicText({
   words = DEFAULT_WORDS,
   interval = 2600,
   className,
+  gradientClassName,
   prefix,
 }: DynamicTextProps) {
   const [index, setIndex] = useState(0);
@@ -51,7 +53,10 @@ export function DynamicText({
             animate={{ y: 0, opacity: 1 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { y: -18, opacity: 0 }}
             transition={{ duration: 0.35, ease: EASE_OUT }}
-            className="inline-block whitespace-nowrap bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 dark:from-red-400 dark:via-rose-300 dark:to-amber-300 bg-clip-text text-transparent font-serif"
+            className={cn(
+              "inline-block whitespace-nowrap bg-gradient-to-r from-red-700 via-rose-700 to-red-800 dark:from-rose-300 dark:via-red-300 dark:to-rose-200 bg-clip-text text-transparent font-serif",
+              gradientClassName
+            )}
           >
             {currentWord}
           </motion.span>

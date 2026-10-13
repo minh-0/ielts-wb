@@ -28,6 +28,7 @@ import {
   ExternalLink,
   HelpCircle,
 } from "lucide-react";
+import { FlipCard3D, ParticleButton } from "@/components/kokonutui";
 
 export function CollocationsStudio() {
   // Navigation modes: Explorer | Cards | Practice
@@ -574,28 +575,32 @@ export function CollocationsStudio() {
                 </div>
               </div>
 
-              {/* Minimalist Study Card (Hairline borders, no bulky container box) */}
-              <div
-                onClick={() => setIsFlipped(!isFlipped)}
-                className="min-h-[280px] p-8 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:border-neutral-300 dark:hover:border-neutral-700 transition-all cursor-pointer flex flex-col justify-between"
-              >
-                {/* Top Badge Row */}
-                <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
-                  <span>{currentCard.unit}</span>
-                  <span className="font-serif">{currentCard.bandImpact}</span>
-                </div>
+              {/* 3D KokonutUI Study Card */}
+              <FlipCard3D
+                isFlipped={isFlipped}
+                onFlip={() => setIsFlipped(!isFlipped)}
+                minHeight="min-h-[290px]"
+                front={
+                  <>
+                    {/* Top Badge Row */}
+                    <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
+                      <span>{currentCard.unit}</span>
+                      <span className="font-serif">{currentCard.bandImpact}</span>
+                    </div>
 
-                {/* Center Content */}
-                <div className="my-auto text-center space-y-4 py-4">
-                  {!isFlipped ? (
-                    <div className="space-y-3">
+                    {/* Center Content */}
+                    <div className="my-auto text-center space-y-3 py-4">
                       <div className="flex items-center justify-center gap-2.5">
                         <h2 className="text-2xl sm:text-3xl font-serif text-neutral-950 dark:text-neutral-50 tracking-tight">
                           {currentCard.collocation}
                         </h2>
                         <button
-                          onClick={(e) => playAudio(currentCard.collocation, e)}
-                          className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors p-1"
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playAudio(currentCard.collocation, e);
+                          }}
+                          className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors p-1 cursor-pointer"
                         >
                           <Volume2 className="w-4 h-4" />
                         </button>
@@ -605,12 +610,42 @@ export function CollocationsStudio() {
                         {currentCard.typeLabel} • {currentCard.topicLabel}
                       </div>
 
-                      <div className="pt-3 text-[11px] text-neutral-400 dark:text-neutral-500">
+                      <div className="pt-2 text-[11px] text-neutral-400 dark:text-neutral-500">
                         Click or press space to reveal definition & IELTS context
                       </div>
                     </div>
-                  ) : (
-                    <div className="space-y-4 text-left animate-in fade-in duration-150">
+
+                    {/* Bottom Card Footer */}
+                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                      <span className="text-[11px]">Tap to flip</span>
+                      <ParticleButton
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMaster(currentCard.id, e);
+                        }}
+                        className={`flex items-center gap-1 transition-colors px-2 py-0.5 rounded ${
+                          masteredIds.has(currentCard.id)
+                            ? "text-emerald-600 dark:text-emerald-400 font-medium"
+                            : "text-neutral-400 hover:text-emerald-600"
+                        }`}
+                      >
+                        <Check className="w-3 h-3" />
+                        <span>{masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}</span>
+                      </ParticleButton>
+                    </div>
+                  </>
+                }
+                back={
+                  <>
+                    {/* Top Badge Row */}
+                    <div className="flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
+                      <span>{currentCard.unit}</span>
+                      <span className="font-serif">{currentCard.bandImpact}</span>
+                    </div>
+
+                    {/* Back Center Content */}
+                    <div className="my-auto text-left space-y-3 py-2">
                       <div>
                         <div className="text-xs text-neutral-400 mb-0.5">Meaning:</div>
                         <p className="text-sm text-neutral-900 dark:text-neutral-100 leading-relaxed font-medium">
@@ -636,28 +671,29 @@ export function CollocationsStudio() {
                         )}
                       </div>
                     </div>
-                  )}
-                </div>
 
-                {/* Bottom Card Footer */}
-                <div className="flex items-center justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-100 dark:border-neutral-800">
-                  <span className="text-[11px]">
-                    {isFlipped ? "Showing answers & advice" : "Tap to flip"}
-                  </span>
-
-                  <button
-                    onClick={(e) => toggleMaster(currentCard.id, e)}
-                    className={`flex items-center gap-1 transition-colors cursor-pointer ${
-                      masteredIds.has(currentCard.id)
-                        ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                        : "text-neutral-400 hover:text-emerald-600"
-                    }`}
-                  >
-                    <Check className="w-3 h-3" />
-                    <span>{masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}</span>
-                  </button>
-                </div>
-              </div>
+                    {/* Bottom Card Footer */}
+                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                      <span className="text-[11px]">Showing answers & advice</span>
+                      <ParticleButton
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMaster(currentCard.id, e);
+                        }}
+                        className={`flex items-center gap-1 transition-colors px-2 py-0.5 rounded ${
+                          masteredIds.has(currentCard.id)
+                            ? "text-emerald-600 dark:text-emerald-400 font-medium"
+                            : "text-neutral-400 hover:text-emerald-600"
+                        }`}
+                      >
+                        <Check className="w-3 h-3" />
+                        <span>{masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}</span>
+                      </ParticleButton>
+                    </div>
+                  </>
+                }
+              />
 
               {/* Navigation Controls */}
               <div className="flex items-center justify-center gap-4 pt-1">
