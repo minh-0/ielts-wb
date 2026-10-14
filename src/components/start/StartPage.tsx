@@ -23,23 +23,23 @@ export function StartPage({
   onOpenLearn,
 }: StartPageProps) {
   return (
-    <div className="space-y-8 py-2 animate-in fade-in duration-300 max-w-4xl mx-auto w-full">
+    <div className="space-y-5 sm:space-y-8 py-1 sm:py-2 animate-in fade-in duration-300 max-w-4xl mx-auto w-full">
       {/* Super Short Big Welcome Message */}
-      <div className="space-y-1.5">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100">
+      <div className="space-y-1">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100">
           Welcome.
         </h1>
-        <p className="text-sm text-neutral-400 dark:text-neutral-500">
+        <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500">
           Choose a studio to begin.
         </p>
       </div>
 
       {/* Minimalist Bento Grid with Rounded Boxes */}
       <BentoGrid className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {/* CARD 1: Writing Studio */}
+        {/* CARD 1: Writing Studio (spans 2 cols on tablet/desktop) */}
         <BentoCard
           name="Writing Studio"
-          className="col-span-1 md:col-span-2 lg:col-span-2"
+          className="col-span-1 md:col-span-2"
           Icon={PenTool}
           description="Task 1 & Task 2 practice with instant examiner scoring and Band 8.0+ lexical upgrades."
           cta="Enter Writing"

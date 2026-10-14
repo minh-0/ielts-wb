@@ -101,7 +101,7 @@ export default function Home() {
 
   if (!hasEntered) {
     return (
-      <div className="min-h-screen flex flex-col bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-neutral-200 dark:selection:bg-neutral-800 relative overflow-hidden">
+      <div className="min-h-screen flex flex-col bg-white dark:bg-black text-neutral-900 dark:text-neutral-100 selection:bg-neutral-200 dark:selection:bg-neutral-800 relative overflow-x-hidden">
         <Particles
           className="absolute inset-0 pointer-events-none z-0"
           quantity={50}
@@ -111,7 +111,7 @@ export default function Home() {
           staticity={35}
         />
         {/* Minimal Entrance Top Bar */}
-        <header className="relative z-10 w-full">
+        <header className="relative z-10 w-full shrink-0">
           <div className="max-w-4xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
             <span className="font-serif font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
               IELTSpro666
@@ -121,7 +121,7 @@ export default function Home() {
         </header>
 
         {/* Main Start Portal */}
-        <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-8 py-6">
+        <main className="relative z-10 flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-8 py-4 sm:py-8">
           <StartPage
             onStartWriting={(taskType = "task2") => enterWorkbench("practice", "writing", taskType)}
             onStartSpeaking={() => enterWorkbench("practice", "speaking")}
