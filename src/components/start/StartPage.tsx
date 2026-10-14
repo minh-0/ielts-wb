@@ -41,7 +41,7 @@ export function StartPage({
           name="Writing Studio"
           className="col-span-1 md:col-span-2 lg:col-span-2"
           Icon={PenTool}
-          description="Task 1 & Task 2 practice with instant examiner scoring and C1/C2 upgrades."
+          description="Task 1 & Task 2 practice with instant examiner scoring and Band 8.0+ lexical upgrades."
           cta="Enter Writing"
           onClick={() => onStartWriting("task2")}
         />
@@ -61,7 +61,7 @@ export function StartPage({
           name="Collocations"
           className="col-span-1 md:col-span-1 lg:col-span-1"
           Icon={BookText}
-          description="500+ C1/C2 expressions from official Cambridge In Use books."
+          description="500+ advanced academic collocations from official Cambridge In Use books."
           cta="Browse Collocations"
           onClick={() => onOpenLearn("collocations")}
         />

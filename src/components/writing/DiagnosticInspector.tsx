@@ -536,11 +536,26 @@ export function DiagnosticInspector({
             ? sug.suggestedUpgrade.split("/")[0].trim()
             : sug.suggestedUpgrade;
 
+          const getFormalUpgradeLabel = (type: string) => {
+            switch (type) {
+              case "academic_c1_c2":
+                return "Advanced Lexical Precision";
+              case "collocation":
+                return "Academic Collocation";
+              case "idiom":
+                return "Idiomatic Precision";
+              case "phrasal_verb":
+                return "Academic Phrasal Verb";
+              default:
+                return "Lexical Resource Upgrade";
+            }
+          };
+
           const upgradeLabel = isItemIgnored
             ? "Ignored"
             : isReplaced
             ? "Alternative word in essay"
-            : `${sug.type.replace("_", " ")} Upgrade`;
+            : getFormalUpgradeLabel(sug.type);
 
           return (
             <div
@@ -574,7 +589,7 @@ export function DiagnosticInspector({
                     }`}
                   />
                   <span
-                    className={`text-xs font-medium shrink-0 capitalize ${
+                    className={`text-xs font-medium shrink-0 ${
                       isItemIgnored
                         ? "text-neutral-500"
                         : isReplaced

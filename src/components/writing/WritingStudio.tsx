@@ -294,7 +294,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
     const isHigher = newOverall > base.overallBand;
 
     const updatedSummary = isHigher
-      ? `Upgraded to Band ${newOverall.toFixed(1)}! Applying advanced C1/C2 upgrades (${recentWords}) elevated lexical precision and syntactic range beyond Band ${base.overallBand.toFixed(1)}.`
+      ? `Upgraded to Band ${newOverall.toFixed(1)}! Incorporating advanced lexical refinements (${recentWords}) elevated lexical precision and syntactic range beyond Band ${base.overallBand.toFixed(1)}.`
       : `Incorporated ${count} advanced upgrade(s) (${recentWords}). Lexical precision is elevated to Band ${newLR.toFixed(1)} (+${lrBoost.toFixed(1)}). Adopt remaining inspector suggestions to push toward Band ${(base.overallBand + 0.5).toFixed(1)}.`;
 
     const updatedBottleneck =
@@ -317,9 +317,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           score: newLR,
           bandLabel: `Band ${newLR.toFixed(1)} (${
             newLR >= 8.5
-              ? "Masterly C2 Precision"
+              ? "Sophisticated Lexical Control (Band 8.5–9.0)"
               : newLR >= 7.5
-              ? "Advanced C1/C2 Academic Vocabulary"
+              ? "Advanced Lexical Resource (Band 7.5–8.0)"
               : "Strong Collocations"
           })`,
           feedback: `Incorporated ${count} advanced academic collocation(s): ${recentWords}. Lexical precision and stylistic register are heightened.`,
@@ -518,7 +518,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       replacedText: cleanRepl,
       higherRatedWordExplanation:
         meta?.higherRatedWordExplanation ||
-        "Upgrades phrasing to formal C1/C2 academic register favored by examiners.",
+        "Elevates phrasing to formal academic register calibrated to Band 8.0+ descriptor standards.",
       higherRatedWords: meta?.higherRatedWords || [],
     };
 
