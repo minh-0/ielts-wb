@@ -23,7 +23,7 @@ import {
   FileText,
   ArrowRight,
 } from "lucide-react";
-import { DynamicText, ParticleButton, SmoothTab } from "@/components/kokonutui";
+import { DynamicText, ParticleButton } from "@/components/kokonutui";
 
 export default function Home() {
   const [hasEntered, setHasEntered] = useState<boolean>(false);
@@ -147,7 +147,17 @@ export default function Home() {
       {/* Top Navigation */}
       <Navbar
         activeCategory={category}
+        practiceTab={practiceTab}
+        learnTab={learnTab}
         onCategoryChange={setCategory}
+        onSelectPracticeTab={(tab) => {
+          setCategory("practice");
+          setPracticeTab(tab);
+        }}
+        onSelectLearnTab={(tab) => {
+          setCategory("learn");
+          setLearnTab(tab);
+        }}
         onOpenStartPage={() => setHasEntered(false)}
         onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
         hasApiKey={Boolean(apiKey)}
@@ -239,56 +249,6 @@ export default function Home() {
                 <span>Public Descriptors</span>
               </button>
             </div>
-          </div>
-
-          {/* Integrated Studio Navigation with SmoothTab Spring Physics */}
-          <div className="flex items-center -mb-px overflow-x-auto no-scrollbar">
-            {category === "practice" ? (
-              <SmoothTab
-                items={[
-                  {
-                    id: "writing",
-                    label: "Writing Studio",
-                    icon: <PenTool className="w-3.5 h-3.5" />,
-                  },
-                  {
-                    id: "speaking",
-                    label: "Speaking Studio",
-                    icon: <Mic className="w-3.5 h-3.5" />,
-                  },
-                ]}
-                value={practiceTab}
-                onChange={(id) => setPracticeTab(id as "writing" | "speaking")}
-                layoutId="practice-studio-tabs"
-                className="pb-2.5"
-              />
-            ) : (
-              <SmoothTab
-                items={[
-                  {
-                    id: "collocations",
-                    label: "Collocations",
-                    icon: <BookText className="w-3.5 h-3.5" />,
-                  },
-                  {
-                    id: "vocabulary",
-                    label: "Vocabulary (Oxford)",
-                    icon: <BookA className="w-3.5 h-3.5" />,
-                  },
-                  {
-                    id: "rubric",
-                    label: "Band Descriptors",
-                    icon: <BookOpen className="w-3.5 h-3.5" />,
-                  },
-                ]}
-                value={learnTab}
-                onChange={(id) =>
-                  setLearnTab(id as "collocations" | "vocabulary" | "rubric")
-                }
-                layoutId="learn-studio-tabs"
-                className="pb-2.5"
-              />
-            )}
           </div>
         </div>
       </section>
