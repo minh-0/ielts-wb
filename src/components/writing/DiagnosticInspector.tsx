@@ -95,38 +95,17 @@ export function DiagnosticInspector({
   // If no feedback items exist yet, show clean minimal empty state
   if (totalItems === 0) {
     return (
-      <div className="h-full flex flex-col justify-between">
-        <div>
-          <div className="flex items-center justify-between pb-2.5 border-b border-neutral-200 dark:border-neutral-800">
-            <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-              Inspector
-            </h3>
-          </div>
-
-          <div className="py-14 text-center">
-            <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-[240px] mx-auto leading-relaxed">
-              Submit your response to view sentence diagnostics and lexical refinements.
-            </p>
-          </div>
+      <div className="h-full flex flex-col justify-start">
+        <div className="flex items-center justify-between pb-2.5 border-b border-neutral-200 dark:border-neutral-800">
+          <h3 className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            Inspector
+          </h3>
         </div>
 
-        <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-around text-[11px] text-neutral-400 dark:text-neutral-500">
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-500/70" />
-            Grammar
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-500/70" />
-            Lexical
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500/70" />
-            Effective phrasing
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70" />
-            Alternative words
-          </span>
+        <div className="py-16 text-center">
+          <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-[240px] mx-auto leading-relaxed">
+            Submit your response to view sentence diagnostics and lexical refinements.
+          </p>
         </div>
       </div>
     );
@@ -236,28 +215,32 @@ export function DiagnosticInspector({
             >
               All ({activeCount + effectiveCount})
             </button>
-            <button
-              onClick={() => setFilter("errors")}
-              className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
-                filter === "errors"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-              }`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-rose-400/80" />
-              Errors ({activeErrors.length})
-            </button>
-            <button
-              onClick={() => setFilter("suggestions")}
-              className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
-                filter === "suggestions"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                  : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-              }`}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
-              Vocab ({activeSuggestions.length})
-            </button>
+            {activeErrors.length > 0 && (
+              <button
+                onClick={() => setFilter("errors")}
+                className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
+                  filter === "errors"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+                }`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-rose-400/80" />
+                Errors ({activeErrors.length})
+              </button>
+            )}
+            {activeSuggestions.length > 0 && (
+              <button
+                onClick={() => setFilter("suggestions")}
+                className={`py-1 transition-colors flex items-center gap-1 cursor-pointer shrink-0 ${
+                  filter === "suggestions"
+                    ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+                }`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-purple-400/80" />
+                Vocab ({activeSuggestions.length})
+              </button>
+            )}
             {effectiveCount > 0 && (
               <button
                 onClick={() => setFilter("effective")}

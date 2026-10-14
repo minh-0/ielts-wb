@@ -216,53 +216,8 @@ export function AnnotatedParagraph({
 
   const selectedMatch = allMatches.find((m) => m.id === selectedId) || activeTooltip;
 
-  const replacedCount = allMatches.filter((m) => m.kind === "replaced").length;
-  const errorCount = allMatches.filter((m) => m.kind === "error").length;
-  const suggestionCount = allMatches.filter((m) => m.kind === "suggestion").length;
-  const effectiveCount = allMatches.filter((m) => m.kind === "effective").length;
-
   return (
     <div className="space-y-3">
-      {/* 4-Category Visual Legend: Minimal horizontal hairline divider (no box) */}
-      <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4 py-2 border-b border-neutral-200 dark:border-neutral-800 text-xs">
-        <div className="flex flex-wrap items-center gap-3 sm:gap-5">
-          {/* 1. Red Wavy: Mistakes */}
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-red-500 dark:bg-rose-400/80" />
-            <span className="underline decoration-wavy decoration-red-500 dark:decoration-rose-400/50 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Grammar mistakes
-            </span>
-            <span className="text-[11px] text-neutral-400">({errorCount})</span>
-          </div>
-
-          {/* 2. Violet Dashed: Upgrades */}
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-violet-500 dark:bg-purple-400/80" />
-            <span className="underline decoration-dashed decoration-violet-500 dark:decoration-purple-400/50 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Lexical refinements
-            </span>
-            <span className="text-[11px] text-neutral-400">({suggestionCount})</span>
-          </div>
-
-          {/* 3. Sky Dotted: Effective Phrasing */}
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-sky-500 ring-2 ring-sky-500/20" />
-            <span className="underline decoration-dotted decoration-sky-500 underline-offset-4 font-medium text-neutral-800 dark:text-neutral-200">
-              Effective phrasing
-            </span>
-            <span className="text-[11px] text-neutral-400">({effectiveCount})</span>
-          </div>
-
-          {/* 4. Emerald Solid: Alternative Words */}
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="underline decoration-solid decoration-emerald-500 underline-offset-4 font-medium text-emerald-800 dark:text-emerald-300">
-              Alternative words
-            </span>
-            <span className="text-[11px] text-neutral-400">({replacedCount})</span>
-          </div>
-        </div>
-      </div>
 
       {/* Main Annotated Text Container */}
       <div

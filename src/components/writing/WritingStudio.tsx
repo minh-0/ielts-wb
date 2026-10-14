@@ -886,7 +886,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               {/* View Mode when analysis exists: Minimal text underline tabs */}
               {analysisResult && (
                 <>
-                  <span className="text-neutral-200 dark:text-neutral-800 hidden sm:inline">|</span>
+                  <span className="h-3 w-px bg-neutral-200 dark:bg-neutral-800 hidden sm:inline-block" />
                   <div className="flex items-center gap-3 text-xs">
                     <button
                       type="button"
@@ -919,7 +919,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               {/* Alternative words action */}
               {analysisResult && (
                 <>
-                  <span className="text-neutral-200 dark:text-neutral-800 hidden sm:inline">|</span>
+                  <span className="h-3 w-px bg-neutral-200 dark:bg-neutral-800 hidden sm:inline-block" />
                   {replacedItems.length > 0 ? (
                     <button
                       type="button"
@@ -944,21 +944,21 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </>
               )}
 
-              {analysisResult && (
-                <span className="text-neutral-200 dark:text-neutral-800 hidden sm:inline">|</span>
-              )}
+              <span className="h-3 w-px bg-neutral-200 dark:bg-neutral-800 hidden sm:inline-block" />
 
               {/* Quick Text Actions: Minimal text buttons */}
               <div className="flex items-center gap-3 text-xs">
-                <button
-                  type="button"
-                  onClick={handlePasteFromClipboard}
-                  className="inline-flex items-center gap-1 text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
-                  title="Paste paragraph from clipboard"
-                >
-                  <ClipboardPaste className="w-3.5 h-3.5" />
-                  <span>Paste</span>
-                </button>
+                {(!analysisResult || viewMode === "edit") && (
+                  <button
+                    type="button"
+                    onClick={handlePasteFromClipboard}
+                    className="inline-flex items-center gap-1 text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
+                    title="Paste paragraph from clipboard"
+                  >
+                    <ClipboardPaste className="w-3.5 h-3.5" />
+                    <span>Paste</span>
+                  </button>
+                )}
 
                 <button
                   type="button"
