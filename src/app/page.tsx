@@ -26,7 +26,7 @@ import {
 import { DynamicText, ParticleButton, SmoothTab } from "@/components/kokonutui";
 
 export default function Home() {
-  const [hasEntered, setHasEntered] = useState<boolean | null>(null);
+  const [hasEntered, setHasEntered] = useState<boolean>(false);
   const [category, setCategory] = useState<"practice" | "learn">("practice");
   const [practiceTab, setPracticeTab] = useState<"writing" | "speaking">("writing");
   const [learnTab, setLearnTab] = useState<"collocations" | "vocabulary" | "rubric">("collocations");
@@ -98,10 +98,6 @@ export default function Home() {
       studioEl.scrollIntoView({ behavior: "smooth" });
     }
   };
-
-  if (hasEntered === null) {
-    return <div className="min-h-screen bg-white dark:bg-black" />;
-  }
 
   if (!hasEntered) {
     return (
