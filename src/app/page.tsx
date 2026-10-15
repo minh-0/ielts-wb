@@ -12,6 +12,7 @@ import { SelectionToolbar } from "@/components/SelectionToolbar";
 import { StartPage } from "@/components/start/StartPage";
 import { TaskType } from "@/types/ielts";
 import { Particles } from "@/components/magicui/particles";
+import { Dock, DockIcon } from "@/components/magicui/dock";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   PenTool,
@@ -22,6 +23,7 @@ import {
   BarChart2,
   FileText,
   ArrowRight,
+  Home as HomeIcon,
 } from "lucide-react";
 import { DynamicText, ParticleButton } from "@/components/kokonutui";
 
@@ -254,7 +256,7 @@ export default function Home() {
       </section>
 
       {/* Main Expansive Container */}
-      <main id="diagnostic-studio" className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-6">
+      <main id="diagnostic-studio" className="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-8 xl:px-12 py-6 pb-28 sm:pb-32">
 
         {/* Tab Content */}
         {category === "practice" && practiceTab === "writing" && (
@@ -271,8 +273,83 @@ export default function Home() {
         {category === "learn" && learnTab === "rubric" && <RubricViewer />}
       </main>
 
+      {/* Floating Magic UI Dock for Rapid Module Switching */}
+      <aside
+        aria-label="Module Quick Dock"
+        className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1.5rem)] pointer-events-auto"
+      >
+        <Dock className="shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 border border-neutral-200/90 dark:border-neutral-800/90 bg-white/85 dark:bg-neutral-950/85 backdrop-blur-2xl">
+          <DockIcon
+            title="Start Portal"
+            onClick={() => setHasEntered(false)}
+            className="text-neutral-500 hover:text-neutral-950 dark:hover:text-neutral-100"
+          >
+            <HomeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          </DockIcon>
+
+          <div className="h-5 w-px bg-neutral-200 dark:bg-neutral-800 mx-0.5 shrink-0" />
+
+          <DockIcon
+            title="Writing Studio"
+            isActive={category === "practice" && practiceTab === "writing"}
+            onClick={() => {
+              setCategory("practice");
+              setPracticeTab("writing");
+            }}
+          >
+            <PenTool className="w-4 h-4 sm:w-5 sm:h-5" />
+          </DockIcon>
+
+          <DockIcon
+            title="Speaking Studio"
+            isActive={category === "practice" && practiceTab === "speaking"}
+            onClick={() => {
+              setCategory("practice");
+              setPracticeTab("speaking");
+            }}
+          >
+            <Mic className="w-4 h-4 sm:w-5 sm:h-5" />
+          </DockIcon>
+
+          <div className="h-5 w-px bg-neutral-200 dark:bg-neutral-800 mx-0.5 shrink-0" />
+
+          <DockIcon
+            title="Cambridge Collocations"
+            isActive={category === "learn" && learnTab === "collocations"}
+            onClick={() => {
+              setCategory("learn");
+              setLearnTab("collocations");
+            }}
+          >
+            <BookText className="w-4 h-4 sm:w-5 sm:h-5" />
+          </DockIcon>
+
+          <DockIcon
+            title="Oxford Vocabulary"
+            isActive={category === "learn" && learnTab === "vocabulary"}
+            onClick={() => {
+              setCategory("learn");
+              setLearnTab("vocabulary");
+            }}
+          >
+            <BookA className="w-4 h-4 sm:w-5 sm:h-5" />
+          </DockIcon>
+
+          <DockIcon
+            title="Band Descriptors"
+            isActive={category === "learn" && learnTab === "rubric"}
+            onClick={() => {
+              setCategory("learn");
+              setLearnTab("rubric");
+            }}
+          >
+            <BarChart2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          </DockIcon>
+        </Dock>
+      </aside>
+
       {/* Footer: Simple, quiet line */}
-      <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-transparent mt-12 text-xs text-neutral-400 dark:text-neutral-600">
+      <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 pb-24 sm:pb-20 bg-transparent mt-12 text-xs text-neutral-400 dark:text-neutral-600">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
