@@ -7,7 +7,6 @@ import {
   BookText,
   BookA,
   BarChart2,
-  Home as HomeIcon,
 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Dock, DockIcon } from "@/components/magicui/dock";
@@ -46,17 +45,6 @@ export function Navbar({
         isMobile ? "h-10 gap-0.5 px-0" : "h-11 gap-1 px-0"
       )}
     >
-      {/* Start Portal */}
-      <DockIcon
-        title="Start Portal"
-        onClick={onOpenStartPage}
-        className="text-neutral-400 hover:text-neutral-950 dark:text-neutral-500 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60"
-      >
-        <HomeIcon className={isMobile ? "w-3.5 h-3.5" : "w-4 h-4"} />
-      </DockIcon>
-
-      <div className="h-4 w-px bg-neutral-200/80 dark:bg-neutral-800/80 mx-1 shrink-0" />
-
       {/* Writing Studio */}
       <DockIcon
         title="Writing Studio (Task 1 & 2)"
