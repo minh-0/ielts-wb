@@ -210,7 +210,7 @@ export function SpeakingQuestionPickerModal({
             )}
           </div>
 
-          <span className="ml-auto text-[11px] font-mono text-neutral-400 dark:text-neutral-500 shrink-0">
+          <span className="ml-auto text-[11px] text-neutral-400 dark:text-neutral-500 shrink-0">
             {filteredPrompts.length} {filteredPrompts.length === 1 ? "prompt" : "prompts"}
           </span>
         </div>
@@ -239,18 +239,18 @@ export function SpeakingQuestionPickerModal({
                 >
                   <div className="flex items-center justify-between gap-2 mb-1.5">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="px-1.5 py-0.5 text-[10px] font-mono rounded bg-neutral-200/60 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                      <span className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-neutral-200/60 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
                         Part {p.part}
                       </span>
                       <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400">
                         {p.topic}
                       </span>
-                      <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">
+                      <span className="text-[10px] text-neutral-400 dark:text-neutral-500">
                         • {p.sourceBadge}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[10px] font-mono text-neutral-400 shrink-0">
+                    <div className="flex items-center gap-1 text-[10px] text-neutral-400 shrink-0">
                       <Clock className="w-3 h-3" />
                       <span>{p.targetDurationSec}s</span>
                     </div>
