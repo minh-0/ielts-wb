@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   COLLOCATIONS_DATASET,
   COLLOCATIONS_QUIZ_QUESTIONS,
@@ -19,6 +19,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Shuffle,
   RotateCw,
   BookOpen,
@@ -29,6 +30,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { FlipCard3D, ParticleButton } from "@/components/kokonutui";
+import { cn } from "@/lib/utils";
 
 export function CollocationsStudio() {
   // Navigation modes: Explorer | Cards | Practice
@@ -40,6 +42,10 @@ export function CollocationsStudio() {
   const [selectedType, setSelectedType] = useState<CollocationType | "ALL">("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<"all" | "starred" | "mastered">("all");
+
+  // Topic Popout State
+  const [isTopicPopoutOpen, setIsTopicPopoutOpen] = useState<boolean>(false);
+  const topicDropdownRef = useRef<HTMLDivElement>(null);
 
   // Local storage state
   const [starredIds, setStarredIds] = useState<Set<string>>(new Set());
@@ -74,6 +80,31 @@ export function CollocationsStudio() {
       if (savedMastered) setMasteredIds(new Set(JSON.parse(savedMastered)));
     } catch {}
   }, []);
+
+  // Click outside to close topic popout
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (topicDropdownRef.current && !topicDropdownRef.current.contains(event.target as Node)) {
+        setIsTopicPopoutOpen(false);
+      }
+    }
+    if (isTopicPopoutOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isTopicPopoutOpen]);
+
+  // Topic item counts dynamically filtered by selected level
+  const topicCounts = useMemo(() => {
+    const counts: Record<string, number> = { ALL: 0 };
+    for (const item of COLLOCATIONS_DATASET) {
+      if (selectedLevel === "ALL" || item.level === selectedLevel) {
+        counts.ALL = (counts.ALL || 0) + 1;
+        counts[item.topic] = (counts[item.topic] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [selectedLevel]);
 
   const toggleStar = useCallback((id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -311,6 +342,107 @@ export function CollocationsStudio() {
               ))}
             </div>
 
+            {/* Topic Popout Selector */}
+            <div className="relative" ref={topicDropdownRef}>
+              <button
+                onClick={() => setIsTopicPopoutOpen((prev) => !prev)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md border transition-colors cursor-pointer select-none",
+                  selectedTopic !== "ALL"
+                    ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-950 font-medium"
+                    : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-600"
+                )}
+                title="Filter Collocations by Topic"
+              >
+                <span className={cn(
+                  "text-[11px]",
+                  selectedTopic !== "ALL" ? "opacity-70" : "text-neutral-400 dark:text-neutral-500"
+                )}>
+                  Topic:
+                </span>
+                <span className="max-w-[130px] sm:max-w-[160px] truncate">
+                  {selectedTopic === "ALL" ? "All Topics" : COLLOCATION_TOPIC_LABELS[selectedTopic]}
+                </span>
+                <ChevronDown
+                  className={cn(
+                    "w-3 h-3 transition-transform duration-200",
+                    selectedTopic !== "ALL" ? "opacity-70" : "text-neutral-400",
+                    isTopicPopoutOpen && "rotate-180"
+                  )}
+                />
+              </button>
+
+              {isTopicPopoutOpen && (
+                <div className="absolute left-0 sm:right-0 sm:left-auto mt-1.5 w-72 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-xl z-50 p-1.5 space-y-0.5">
+                  <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-neutral-400 border-b border-neutral-100 dark:border-neutral-800 mb-1 flex items-center justify-between">
+                    <span>Filter by Topic</span>
+                    {selectedTopic !== "ALL" && (
+                      <button
+                        onClick={() => {
+                          setSelectedTopic("ALL");
+                          setIsTopicPopoutOpen(false);
+                        }}
+                        className="text-[10px] text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 cursor-pointer font-normal"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+
+                  {/* All Topics Option */}
+                  <button
+                    onClick={() => {
+                      setSelectedTopic("ALL");
+                      setIsTopicPopoutOpen(false);
+                    }}
+                    className={cn(
+                      "w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left cursor-pointer",
+                      selectedTopic === "ALL"
+                        ? "bg-neutral-100 dark:bg-neutral-900 font-semibold text-neutral-950 dark:text-neutral-50"
+                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900/60"
+                    )}
+                  >
+                    <span>All Topics</span>
+                    <div className="flex items-center gap-1.5 text-[11px] text-neutral-400">
+                      <span>{topicCounts.ALL || 0}</span>
+                      {selectedTopic === "ALL" && (
+                        <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
+                      )}
+                    </div>
+                  </button>
+
+                  {/* Each Topic Option */}
+                  {(Object.keys(COLLOCATION_TOPIC_LABELS) as CollocationTopic[]).map((topicKey) => {
+                    const isSelected = selectedTopic === topicKey;
+                    const count = topicCounts[topicKey] || 0;
+                    return (
+                      <button
+                        key={topicKey}
+                        onClick={() => {
+                          setSelectedTopic(topicKey);
+                          setIsTopicPopoutOpen(false);
+                        }}
+                        className={cn(
+                          "w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-lg transition-colors text-left cursor-pointer",
+                          isSelected
+                            ? "bg-neutral-100 dark:bg-neutral-900 font-semibold text-neutral-950 dark:text-neutral-50"
+                            : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900/60"
+                        )}
+                      >
+                        <span className="truncate pr-2">{COLLOCATION_TOPIC_LABELS[topicKey]}</span>
+                        <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 shrink-0">
+                          <span>{count}</span>
+                          {isSelected && (
+                            <Check className="w-3.5 h-3.5 text-neutral-900 dark:text-neutral-100" />
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             {/* Quick Starred & Mastered filters */}
             <div className="flex items-center gap-1">
               <button
@@ -358,34 +490,6 @@ export function CollocationsStudio() {
               )}
             </div>
           </div>
-        </div>
-
-        {/* Secondary Category Filters: Subtle horizontal selection */}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-neutral-500 dark:text-neutral-400 pt-0.5">
-          <span className="text-neutral-400 dark:text-neutral-500">Topic:</span>
-          <button
-            onClick={() => setSelectedTopic("ALL")}
-            className={`transition-colors cursor-pointer ${
-              selectedTopic === "ALL"
-                ? "text-neutral-900 dark:text-neutral-100 font-semibold underline underline-offset-4"
-                : "hover:text-neutral-900 dark:hover:text-neutral-200"
-            }`}
-          >
-            All Topics
-          </button>
-          {(Object.keys(COLLOCATION_TOPIC_LABELS) as CollocationTopic[]).map((topicKey) => (
-            <button
-              key={topicKey}
-              onClick={() => setSelectedTopic(topicKey)}
-              className={`transition-colors cursor-pointer ${
-                selectedTopic === topicKey
-                  ? "text-neutral-900 dark:text-neutral-100 font-semibold underline underline-offset-4"
-                  : "hover:text-neutral-900 dark:hover:text-neutral-200"
-              }`}
-            >
-              {COLLOCATION_TOPIC_LABELS[topicKey]}
-            </button>
-          ))}
         </div>
       </div>
 
