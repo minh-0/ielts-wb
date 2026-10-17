@@ -1,6 +1,8 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-10 19:29*
+*Last updated: 2026-10-17 17:02*
+
+> **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
 ---
 
@@ -106,18 +108,28 @@
 #### B. Speaking Studio (`src/components/speaking/SpeakingStudio.tsx` & `src/lib/speakingAuthenticData.ts`)
 - **Deterministic Architecture (Strictly Zero AI Grading)**: Automated AI speech grading and synthetic band estimation eliminated in favor of active scaffolding, deterministic acoustic telemetry, and authentic human examiner comparison.
 - **Authentic Human Material**: Every question, Band 6.0 candidate transcript, and Band 9.0 model transcript is 100% authentic human material sourced strictly from Simon Corcoran (`ielts-simon.com`), official Cambridge IELTS Practice Books (11–19), and IDP/British Council examiner sample logs with explicit `sourceBadge` attribution.
-- **Top Studio Bar**: Sentence-case Part Switcher (Part 1, Part 2, Part 3) + Timer Mode toggle (`Standard`, `Exam`, and `4-3-2 Drill` shrinking timer from 2:00 -> 1:30 -> 1:00 for fluency automaticity) + Command-Palette question browser modal (`SpeakingQuestionPickerModal.tsx`) with search, Part, and Topic filters.
-- **Active Scaffolding Strip**: Real-time detection of target C1/C2 collocations (violet to emerald transition) with manual verification toggle + grammar formula target.
-- **Part 2 Scratchpad**: 60-second prep countdown timer + 4-cell inline structure (Context, Core detail, Impact, Outcome).
-- **Segmented Pacing Bar**: Timeline visualization mapping speech progression against structured milestones (e.g. Context -> Core -> Impact -> Reflection) so candidates maintain structural continuity throughout 2 minutes.
-- **Deterministic Acoustic & Transcript Telemetry**:
-  - Live & final WPM (Words Per Minute) calculation with 120–150 WPM benchmark range.
-  - Hesitation counter detecting silent gaps > 2.0s via Web Audio `AudioContext` / `AnalyserNode` RMS volume analysis.
-  - Filler / crutch word detector matching spoken fillers (`um, uh, like, you know, basically, actually, so yeah`).
-  - Target collocations hit counter (`usedCount / totalCount`).
-- **Post-Recording Workspace**:
-  - **Tab 1 (Transcript & Audit)**: Minimalist audio playback scrubber (1x / 1.25x speed, retry), annotated candidate transcript with soft rose filler underlines and emerald collocation highlights (`data-paragraph="true" .ielts-paragraph`), and 4-point self-audit checklist (FC, LR, GRA, PR).
-  - **Tab 2 (Authentic Models)**: Side-by-side comparative grid of Authentic Band 6.0 Candidate Transcript vs. Authentic Band 9.0 Model Transcript with UK Examiner TTS listen button, exact word counts, and context collocation highlights. Oxford Dictionary & Selection Toolbar integrated.
+- **Top Studio Bar**:
+  - Sentence-case Part Switcher (`Part 1`, `Part 2`, `Part 3`).
+  - Timer Mode Toggle:
+    - `Standard`: Open practice without forced cutoff.
+    - `Exam`: Strict exam conditions with automatic cutoff at duration limit.
+    - `4-3-2 Drill`: Fluency automaticity drill across 3 shrinking rounds (2:00 -> 1:30 -> 1:00) requiring the candidate to deliver the same cue card answer in less time, forcing condensation of hesitation, elimination of filler words, and rapid syntactic retrieval.
+  - **Dynamic Micro-Explainer**: Minimalist, single-line guide situated directly beneath the mode buttons (`Standard • Open practice without forced cutoff`, `Exam • Strict test conditions with auto-cutoff at time limit`, `4-3-2 Drill • 3 shrinking rounds (2:00 → 1:30 → 1:00) for fluency`), providing instant context without taking vertical space.
+  - **Command-Palette Question Browser Modal (`SpeakingQuestionPickerModal.tsx`)**: High-contrast modal with instant topic/keyword search, popout Part & Topic dropdowns, shuffle button, and scannable prompt rows.
+- **Active Scaffolding Strip**: Real-time target C1/C2 collocations (violet to emerald transition upon check/recognition) with manual verification toggle + grammar target formula.
+- **Card-Based Minimalist Architecture (Zero Cluttered Inner Small Boxes)**:
+  - **Part 2 Scratchpad**: 60-second prep countdown timer + 4 frameless keyword inputs (`1. Context`, `2. Core Detail`, `3. Impact`, `4. Outcome`) with subtle bottom border indicators (`border-b border-neutral-200 dark:border-neutral-800`).
+  - **Pacing Timeline**: Frameless multi-segment progress bar with high-contrast pills (`bg-neutral-300 dark:bg-neutral-700` inactive, `bg-neutral-500` past, `bg-emerald-500` active) and clear readable timestamps (`0:00 - 0:30`, etc.) and milestone titles without washed-out opacity.
+- **Recording Console & User Voice Playback**:
+  - **Synthetic Audio Purged**: Removed all examiner TTS / audio playback buttons so candidates focus purely on active speaking.
+  - **High-Visibility Playback Button**: Prominent "Play Voice" / "Pause Voice" button (`Play` / `Pause` icon) that appears immediately after recording, accompanied by an interactive scrub bar (scrubber slider, elapsed/total timestamps, and 1x/1.25x/1.5x speed toggle).
+  - **Responsive Waveform Box**: HTML5 canvas live waveform visualization dynamically adapting to light mode (`bg-neutral-50/80` with emerald stroke `#059669`) and dark mode (`bg-neutral-950` with emerald stroke `#10b981`), eliminating harsh black rectangles in light mode.
+- **Progressive Reveal Workspace**:
+  - **Candidate Spoken Transcript**: Live acoustic speech-to-text transcript card with word count, selection highlight toolbar, and Oxford Dictionary lookup.
+  - **Examiner Rubric Self-Audit**: Collapsible 4-point self-audit checklist (Cambridge FC, LR, GRA, PR).
+  - **Authentic Examiner Model Answers**: Collapsible progressive accordion ("Reveal Models" / "Hide Models") to prevent visual clutter. Comparative grid displaying Authentic Band 6.0 Candidate Transcript vs. Authentic Band 9.0 Model with identical typography, examiner critiques, and contextual C1/C2 highlights.
+- **Light Mode Contrast Optimization**:
+  - Comprehensive contrast tuning: secondary labels, timestamps, placeholders, borders, and indicators elevated from washed-out gray (`text-neutral-400`) to crisp `text-neutral-600` / `text-neutral-700` (`dark:text-neutral-300` / `dark:text-neutral-400`), meeting WCAG contrast standards.
 
 #### C. Official Public Band Descriptors Rubric (`src/components/rubric/RubricViewer.tsx` & `src/lib/officialRubricData.ts`)
 - Complete official public band descriptor tables for:
@@ -136,6 +148,7 @@
 - **Two Dedicated Minimalist Learning Modes**:
   1. **Flashcards**: Active recall study card with 3D flip, keyboard controls (Space to flip, arrows to navigate, M to master, S to star), UK audio pronunciation (`SpeechSynthesis`), definition, IELTS usage example, collocations, and Oxford Dictionary direct link.
   2. **Word Explorer**: Instant search, alphabetical A-Z quick jump, POS filter, paginated grid, and detailed word inspection modal.
+- **Topic Selection Popout Dropdown**: Replaced horizontal overflowing button strips in Collocations with a sleek popout dropdown (`ChevronDown` toggle, outside click dismissal, item search/selection), matching the Question Picker modal style.
 - **Progress Persistence**: Starred (`oxford_starred`) and Mastered (`oxford_mastered`) word state stored in `localStorage`.
 
 ---
@@ -148,8 +161,10 @@
 - `src/components/writing/SavedEssaysModal.tsx`: Minimalist modal to view, reload, and manage saved essays and estimated scores.
 - `src/components/writing/AnnotatedParagraph.tsx`: Non-overlapping in-text underlines and fix applicator.
 - `src/components/writing/DiagnosticInspector.tsx`: Side panel for criteria breakdown and sentence diffs.
-- `src/components/speaking/SpeakingStudio.tsx`: Speaking recording, waveform, 75+ prompt bank, and evaluation cards.
-- `src/components/vocabulary/VocabularyStudio.tsx`: Vocabulary learning studio (Flashcards & Word Explorer).
+- `src/components/speaking/SpeakingStudio.tsx`: Speaking recording workbench, adaptive waveform canvas, 75+ prompt bank, scratchpad, pacing timeline, and comparative model views.
+- `src/components/speaking/SpeakingQuestionPickerModal.tsx`: Minimalist question bank browser modal with keyword search, Part & Topic filters, and random prompt drawer.
+- `src/lib/speakingAuthenticData.ts`: 75+ authentic human speaking prompts (Parts 1, 2, 3), Band 6.0 audio logs, and Band 9.0 model transcripts with C1/C2 collocations.
+- `src/components/vocabulary/VocabularyStudio.tsx`: Vocabulary learning studio (Flashcards, Word Explorer, and Collocation popout dropdown).
 - `src/lib/oxfordVocabData.ts`: Oxford 3000/5000 metadata and lookup helpers.
 - `src/lib/oxfordVocabList.json`: Pre-compiled Oxford word database.
 - `src/components/rubric/RubricViewer.tsx`: Pure minimalist table for Bands 9 to 0.
@@ -164,21 +179,21 @@
 ---
 
 ### 5. Git Status & Recent History
-- **Branch**: `master`
+- **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
-  - `style: replace boxed containers with horizontal hairline dividers and sentence-case typography`
-  - `feat(writing): add ignore button to dismiss suggestions in-text and in inspector with restore capability`
-  - `refactor(ui): update footer watermark to 'rkrh • light' and add 'Le Tuan Minh K67 FDA NEU'`
-  - `feat(writing): restrict enlarge to button click and add online essay & estimated band score saving with API persistence`
-  - `refactor(writing): remove duplicate paste button, minimize button, redundant word counts, and simplify placeholder to 'Start writing...'`
-  - `feat(writing): add enlarged popup writing studio with Task 1 side layout, Task 2 top layout, and visible paste button`
-  - `refactor(ui): minimalist redesign of vocabulary studio with compact toolbar and quiet cards`
-  - `refactor(vocab): remove quick quiz mode to keep vocabulary studio clean and focused on flashcards and word explorer`
-  - `feat(vocab): add dedicated Oxford 3000 & 5000 vocabulary learning studio with flashcards, explorer, and quiz modes`
-  - `refactor(ui): streamline inspector empty state with minimal placeholder and compact legend`
-  - `feat: allow image upload for custom Task 1 questions and remove inspector pop-down subtitle`
-  - `refactor(ui): purge all boilerplate disclaimers, subtitles, and fluff text for pure minimalist experience`
-  - `fix: remove jump-to pills from rubric and update browser tab title to slayer6767`
-  - `feat: restore IELTSlayer666 brand, isolate highlighting to paragraphs, and expand rubric to Band 9`
-  - `refactor(ui): streamline studio interface with modern minimalist aesthetic`
+  - `dfe4458`: `fix(speaking): make waveform box background adapt to light mode`
+  - `631bbc5`: `fix(speaking): optimize contrast and readability for light mode`
+  - `584892b`: `feat(speaking): add subtle mode micro-explainer right below mode selection tab`
+  - `83eb32c`: `feat(collocations): convert horizontal topic filter into sleek popout dropdown`
+  - `bf522a1`: `refactor(speaking): remove telemetry counters strip and streamline recording console`
+  - `bba285f`: `fix(speaking): continuous speech recognition, voice activity sensitivity, and real-time telemetry updates`
+  - `2b5a6fd`: `style(speaking): remove nested inner boxes inside scratchpad, pacing, and model cards`
+  - `96ce3b8`: `style(speaking): replace naked divider lines with clean rounded cards`
+  - `23291c5`: `fix(speaking): expose playback button, purge synthetic audio, unify typography, and collapse secondary sections`
+  - `a4039ee`: `style(speaking): clean up top bar mode selector and integrate 4-3-2 drill progression into workbench`
+  - `bb276a9`: `style(speaking): replace cluttered rounded edge boxes with clean hairline dividers and minimalist line-based layout`
+  - `9bf66ea`: `style(speaking): purge font-mono in favor of clean sans-serif typography`
+  - `66577cf`: `feat(speaking): rebuild Speaking Studio into deterministic practice & authentic human comparison workbench`
+  - `fd89e03`: `refactor(nav): remove home icon from top dock`
+  - `04a3c7a`: `style(nav): remove dock outline and blend dock container with theme background`
