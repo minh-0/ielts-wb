@@ -751,12 +751,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           )}
         </div>
 
-        {/* Active Scaffolding Strip (Clean Hairline Line, Zero Box) */}
+        {/* Active Scaffolding Strip (Clean Rounded Box) */}
         {showScaffoldStrip && (
-          <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
             {/* Target Collocations Line Tags */}
-            <div className="flex items-center gap-x-4 gap-y-2 flex-wrap text-xs">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 shrink-0">
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 shrink-0 mr-1">
                 Target Chunks:
               </span>
               {selectedPrompt.targetCollocations.map((colloc, idx) => {
@@ -769,10 +769,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     onClick={() => toggleCollocationCheck(colloc.phrase)}
                     title={`Context: "${colloc.contextSnippet}" (Click to toggle)`}
                     className={cn(
-                      "inline-flex items-center gap-1.5 py-0.5 border-b transition-colors cursor-pointer",
+                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border transition-colors cursor-pointer",
                       isChecked
-                        ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold"
-                        : "border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                        ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold"
+                        : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-600"
                     )}
                   >
                     {isChecked ? (
@@ -789,7 +789,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </div>
 
             {/* Grammar Target Formula */}
-            <div className="flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400 pt-1 border-t border-dashed border-neutral-200 dark:border-neutral-800">
+            <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400">
               <span className="font-medium text-neutral-500 shrink-0">
                 Target Grammar:
               </span>
@@ -808,9 +808,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* SECTION C: RECORDING & PACING WORKBENCH                  */}
       {/* ======================================================== */}
       <div className="space-y-4">
-        {/* 4-3-2 Fluency Drill Progression Strip (Seamless, Line-Divided) */}
+        {/* 4-3-2 Fluency Drill Progression Strip (Clean Card) */}
         {timerMode === "drill_432" && (
-          <div className="py-2.5 border-b border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2">
               <Flame className="w-3.5 h-3.5 text-rose-500 shrink-0" />
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">
@@ -822,8 +822,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </span>
             </div>
 
-            {/* Step rounds: Round 1 (2:00) -> Round 2 (1:30) -> Round 3 (1:00) */}
-            <div className="flex items-center gap-1">
+            {/* Step rounds */}
+            <div className="flex items-center gap-1.5 bg-white dark:bg-neutral-950 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
               {([1, 2, 3] as const).map((round) => {
                 const duration = round === 1 ? "2:00" : round === 2 ? "1:30" : "1:00";
                 const isCurrent = drillAttempt === round;
@@ -835,10 +835,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       resetRecording();
                     }}
                     className={cn(
-                      "px-2.5 py-1 text-xs transition-colors cursor-pointer border-b-2 flex items-center gap-1.5",
+                      "px-2.5 py-1 text-xs rounded-md transition-colors cursor-pointer flex items-center gap-1.5",
                       isCurrent
-                        ? "border-neutral-900 dark:border-neutral-100 text-neutral-950 dark:text-neutral-50 font-semibold"
-                        : "border-transparent text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 font-normal"
+                        ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-normal"
                     )}
                   >
                     <span>Round {round}</span>
@@ -846,7 +846,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       className={cn(
                         "text-[11px]",
                         isCurrent
-                          ? "text-neutral-600 dark:text-neutral-400"
+                          ? "text-neutral-300 dark:text-neutral-600"
                           : "text-neutral-400"
                       )}
                     >
@@ -859,19 +859,19 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         )}
 
-        {/* Part 2 Scratchpad (60s prep + 4-cell bottom-line structure) */}
+        {/* Part 2 Scratchpad (Card with Rounded Inputs) */}
         {activePart === 2 && (
-          <div className="py-3 border-y border-neutral-200 dark:border-neutral-800 space-y-3">
-            <div className="flex items-center justify-between gap-3">
+          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <FileText className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                   Part 2 60s Scratchpad
                 </span>
               </div>
 
               {/* Prep Timer & Controls */}
-              <div className="flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-2.5 text-xs">
                 <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                   {formatTime(prepSecondsRemaining)}
                 </span>
@@ -896,8 +896,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </div>
             </div>
 
-            {/* 4-Cell Bottom-Line Keyword Scratchpad (Zero Rounded Boxes) */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {/* 4-Cell Keyword Scratchpad (Clean Rounded Input Boxes) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div>
                 <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                   1. Context
@@ -907,7 +907,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.context}
                   onChange={(e) => setScratchpad({ ...scratchpad, context: e.target.value })}
                   placeholder="Who, where, setting..."
-                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
+                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
                 />
               </div>
 
@@ -920,7 +920,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.core}
                   onChange={(e) => setScratchpad({ ...scratchpad, core: e.target.value })}
                   placeholder="Key event, action..."
-                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
+                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
                 />
               </div>
 
@@ -933,7 +933,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.impact}
                   onChange={(e) => setScratchpad({ ...scratchpad, impact: e.target.value })}
                   placeholder="Why significant, feelings..."
-                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
+                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
                 />
               </div>
 
@@ -946,20 +946,23 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.outcome}
                   onChange={(e) => setScratchpad({ ...scratchpad, outcome: e.target.value })}
                   placeholder="Reflection, legacy..."
-                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
+                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* Linear Pacing Progress & Vertical Dividers (Zero Rounded Boxes) */}
-        <div className="space-y-2">
+        {/* Pacing Timeline (Clean Rounded Card) */}
+        <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
           <div className="flex items-center justify-between text-xs text-neutral-500">
-            <span className="font-semibold uppercase tracking-wider text-[11px] text-neutral-400">
-              Pacing Timeline
-            </span>
-            <span>
+            <div className="flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-neutral-400" />
+              <span className="font-semibold uppercase tracking-wider text-[11px] text-neutral-400">
+                Pacing Timeline
+              </span>
+            </div>
+            <span className="text-xs">
               Segment {activePacingIndex + 1}/{selectedPrompt.pacingSegments.length}:{" "}
               <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">
                 {selectedPrompt.pacingSegments[activePacingIndex]?.label}
@@ -967,8 +970,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </span>
           </div>
 
-          {/* Linear Progress Multi-Segment Bar */}
-          <div className="w-full h-1 bg-neutral-200/80 dark:bg-neutral-800 flex overflow-hidden">
+          {/* Multi-Segment Pill Progress Bar */}
+          <div className="w-full h-1.5 bg-neutral-200/80 dark:bg-neutral-800 rounded-full flex gap-1 overflow-hidden p-0.5">
             {selectedPrompt.pacingSegments.map((seg, idx) => {
               const segDuration = seg.endSec - seg.startSec;
               const widthPct = (segDuration / effectiveTargetDuration) * 100;
@@ -979,20 +982,20 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   key={idx}
                   style={{ width: `${widthPct}%` }}
                   className={cn(
-                    "h-full border-r border-white dark:border-neutral-950 transition-colors",
+                    "h-full rounded-full transition-all duration-300",
                     isActive
                       ? "bg-emerald-500"
                       : isPast
                       ? "bg-neutral-400 dark:bg-neutral-600"
-                      : "bg-neutral-200 dark:bg-neutral-800"
+                      : "bg-neutral-300/60 dark:bg-neutral-700/50"
                   )}
                 />
               );
             })}
           </div>
 
-          {/* Segment Labels */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1.5">
+          {/* 4 Segment Badges */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {selectedPrompt.pacingSegments.map((seg, idx) => {
               const isActive = idx === activePacingIndex && isRecording;
               const isPast = elapsedSeconds >= seg.endSec;
@@ -1000,15 +1003,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <div
                   key={idx}
                   className={cn(
-                    "text-left transition-colors",
+                    "p-2 rounded-lg text-left transition-colors border",
                     isActive
-                      ? "text-emerald-600 dark:text-emerald-400"
+                      ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300"
                       : isPast
-                      ? "text-neutral-400 dark:text-neutral-500"
-                      : "text-neutral-600 dark:text-neutral-400"
+                      ? "bg-white/40 dark:bg-neutral-950/40 border-neutral-200/40 dark:border-neutral-800/40 text-neutral-400 dark:text-neutral-500"
+                      : "bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300"
                   )}
                 >
-                  <div className="text-[10px] font-medium leading-none mb-0.5">
+                  <div className="text-[10px] font-medium leading-none mb-1 opacity-70">
                     {seg.label.split("•")[0].trim()}
                   </div>
                   <div className="text-xs truncate font-medium">
@@ -1020,218 +1023,221 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         </div>
 
-        {/* Live Audio Waveform Canvas (Hairline Top/Bottom Line, Zero Rounded Corners) */}
-        <div className="relative border-y border-neutral-200 dark:border-neutral-800 bg-neutral-950 overflow-hidden h-20 flex items-center justify-center">
-          <canvas
-            ref={canvasRef}
-            width={720}
-            height={80}
-            className="w-full h-full block"
-          />
+        {/* Unified Recording Console (Waveform + Controls + Audio Scrub Bar) */}
+        <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 shadow-sm">
+          {/* Live Audio Waveform Canvas */}
+          <div className="relative h-20 flex items-center justify-center bg-neutral-950">
+            <canvas
+              ref={canvasRef}
+              width={720}
+              height={80}
+              className="w-full h-full block"
+            />
 
-          {!isRecording && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-medium text-neutral-500">
-              {audioUrl ? "Audio recorded • ready for playback" : "Microphone idle • click to record"}
-            </div>
-          )}
-
-          {isRecording && (
-            <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-              <span>LIVE</span>
-            </div>
-          )}
-        </div>
-
-        {/* Recording Controls & Deterministic Telemetry Toolbar */}
-        <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-4">
-          {/* Main Action: Record / Playback / Stop */}
-          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-            {!isRecording ? (
-              <button
-                onClick={startRecording}
-                className="flex items-center gap-2 px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-neutral-950 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
-              >
-                <Mic className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
-                <span>{audioUrl ? "Record Again" : "Start Speaking"}</span>
-              </button>
-            ) : (
-              <button
-                onClick={stopRecording}
-                className="flex items-center gap-2 px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold tracking-tight transition-colors cursor-pointer"
-              >
-                <Square className="w-3.5 h-3.5 fill-current" />
-                <span>Finish Response</span>
-              </button>
+            {!isRecording && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-medium text-neutral-500">
+                {audioUrl ? "Audio recorded • ready for playback" : "Microphone idle • click to record"}
+              </div>
             )}
 
-            {/* HIGH-VISIBILITY PLAYBACK BUTTON (Directly in toolbar when recorded) */}
-            {audioUrl && !isRecording && (
+            {isRecording && (
+              <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                <span>LIVE</span>
+              </div>
+            )}
+          </div>
+
+          {/* Recording Controls & Deterministic Telemetry Toolbar */}
+          <div className="p-3 sm:p-4 bg-white dark:bg-neutral-900/80 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-4">
+            {/* Main Action: Record / Playback / Stop */}
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+              {!isRecording ? (
+                <button
+                  onClick={startRecording}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-neutral-950 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
+                >
+                  <Mic className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                  <span>{audioUrl ? "Record Again" : "Start Speaking"}</span>
+                </button>
+              ) : (
+                <button
+                  onClick={stopRecording}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold tracking-tight transition-colors cursor-pointer"
+                >
+                  <Square className="w-3.5 h-3.5 fill-current" />
+                  <span>Finish Response</span>
+                </button>
+              )}
+
+              {/* HIGH-VISIBILITY PLAYBACK BUTTON */}
+              {audioUrl && !isRecording && (
+                <button
+                  onClick={togglePlayAudio}
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:hover:border-neutral-100 bg-neutral-50 dark:bg-neutral-900 text-neutral-950 dark:text-neutral-50 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
+                  title={isPlayingAudio ? "Pause Your Voice" : "Play Your Voice"}
+                >
+                  {isPlayingAudio ? (
+                    <>
+                      <Pause className="w-3.5 h-3.5 fill-current text-emerald-600 dark:text-emerald-400" />
+                      <span>Pause Voice</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-3.5 h-3.5 fill-current ml-0.5 text-emerald-600 dark:text-emerald-400" />
+                      <span>Play Voice</span>
+                    </>
+                  )}
+                </button>
+              )}
+
+              {/* Recording Timer */}
+              <div className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 pl-1">
+                {formatTime(elapsedSeconds)}{" "}
+                <span className="text-neutral-400 text-xs font-normal">
+                  / {formatTime(effectiveTargetDuration)}
+                </span>
+              </div>
+
+              {audioUrl && !isRecording && (
+                <button
+                  onClick={resetRecording}
+                  className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+                  title="Reset Recording"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                </button>
+              )}
+
+              {timerMode === "drill_432" && audioUrl && !isRecording && drillAttempt < 3 && (
+                <button
+                  onClick={() => {
+                    setDrillAttempt((prev) => (prev === 1 ? 2 : 3));
+                    resetRecording();
+                  }}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer pl-2"
+                >
+                  <span>Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"}) →</span>
+                </button>
+              )}
+            </div>
+
+            {/* Telemetry Stats (Clean spacing without vertical divider lines) */}
+            <div className="flex items-center gap-4 sm:gap-6 flex-wrap text-xs font-medium">
+              {/* WPM Counter */}
+              <div className="flex items-baseline gap-1">
+                <span className="text-neutral-400">Pace:</span>
+                <span
+                  className={cn(
+                    "font-semibold",
+                    currentWpm >= 120 && currentWpm <= 150
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : currentWpm > 0
+                      ? "text-neutral-900 dark:text-neutral-100"
+                      : "text-neutral-400"
+                  )}
+                >
+                  {currentWpm} WPM
+                </span>
+                <span className="text-[10px] text-neutral-400">(120–150 target)</span>
+              </div>
+
+              {/* Hesitation >2.0s Pauses */}
+              <div className="flex items-baseline gap-1">
+                <span className="text-neutral-400">Pauses &gt;2s:</span>
+                <span
+                  className={cn(
+                    "font-semibold",
+                    hesitationCount === 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-rose-600 dark:text-rose-400"
+                  )}
+                >
+                  {hesitationCount}
+                </span>
+              </div>
+
+              {/* Filler Words Count */}
+              <div className="flex items-baseline gap-1">
+                <span className="text-neutral-400">Fillers:</span>
+                <span
+                  className={cn(
+                    "font-semibold",
+                    detectedFillers.length === 0
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-amber-600 dark:text-amber-400"
+                  )}
+                >
+                  {detectedFillers.length}
+                </span>
+              </div>
+
+              {/* Collocations Hit */}
+              <div className="flex items-baseline gap-1">
+                <span className="text-neutral-400">Collocations:</span>
+                <span className="font-semibold text-purple-600 dark:text-purple-400">
+                  {usedCollocations.length}/{selectedPrompt.targetCollocations.length}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Dedicated Audio Playback Scrub Bar */}
+          {audioUrl && !isRecording && (
+            <div className="px-4 py-2.5 bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
+              <audio
+                ref={audioPlayerRef}
+                src={audioUrl}
+                onTimeUpdate={handleAudioTimeUpdate}
+                onLoadedMetadata={handleAudioLoadedMetadata}
+                onEnded={() => setIsPlayingAudio(false)}
+              />
+
               <button
                 onClick={togglePlayAudio}
-                className="flex items-center gap-2 px-3.5 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:hover:border-neutral-100 bg-neutral-50 dark:bg-neutral-900 text-neutral-950 dark:text-neutral-50 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
+                className="p-1.5 text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer shrink-0"
                 title={isPlayingAudio ? "Pause Your Voice" : "Play Your Voice"}
               >
                 {isPlayingAudio ? (
-                  <>
-                    <Pause className="w-3.5 h-3.5 fill-current text-emerald-600 dark:text-emerald-400" />
-                    <span>Pause Voice</span>
-                  </>
+                  <Pause className="w-4 h-4 fill-current text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 fill-current ml-0.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Play Voice</span>
-                  </>
+                  <Play className="w-4 h-4 fill-current ml-0.5 text-emerald-600 dark:text-emerald-400" />
                 )}
               </button>
-            )}
 
-            {/* Recording Timer */}
-            <div className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 pl-1">
-              {formatTime(elapsedSeconds)}{" "}
-              <span className="text-neutral-400 text-xs font-normal">
-                / {formatTime(effectiveTargetDuration)}
-              </span>
-            </div>
+              <div className="flex-1 flex items-center gap-2">
+                <input
+                  type="range"
+                  min={0}
+                  max={audioDuration || 1}
+                  step={0.1}
+                  value={audioCurrentTime}
+                  onChange={handleAudioSeek}
+                  className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full"
+                />
+                <span className="text-[11px] font-medium text-neutral-500 shrink-0">
+                  {formatTime(Math.floor(audioCurrentTime))} / {formatTime(Math.floor(audioDuration))}
+                </span>
+              </div>
 
-            {audioUrl && !isRecording && (
               <button
-                onClick={resetRecording}
-                className="p-1.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors cursor-pointer"
-                title="Reset Recording"
+                onClick={handleToggleSpeed}
+                className="text-[11px] font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                {playbackSpeed}x
               </button>
-            )}
-
-            {timerMode === "drill_432" && audioUrl && !isRecording && drillAttempt < 3 && (
-              <button
-                onClick={() => {
-                  setDrillAttempt((prev) => (prev === 1 ? 2 : 3));
-                  resetRecording();
-                }}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer pl-2"
-              >
-                <span>Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"}) →</span>
-              </button>
-            )}
-          </div>
-
-          {/* Telemetry Stats (Clean spacing without vertical divider lines) */}
-          <div className="flex items-center gap-4 sm:gap-6 flex-wrap text-xs font-medium">
-            {/* WPM Counter */}
-            <div className="flex items-baseline gap-1">
-              <span className="text-neutral-400">Pace:</span>
-              <span
-                className={cn(
-                  "font-semibold",
-                  currentWpm >= 120 && currentWpm <= 150
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : currentWpm > 0
-                    ? "text-neutral-900 dark:text-neutral-100"
-                    : "text-neutral-400"
-                )}
-              >
-                {currentWpm} WPM
-              </span>
-              <span className="text-[10px] text-neutral-400">(120–150 target)</span>
             </div>
-
-            {/* Hesitation >2.0s Pauses */}
-            <div className="flex items-baseline gap-1">
-              <span className="text-neutral-400">Pauses &gt;2s:</span>
-              <span
-                className={cn(
-                  "font-semibold",
-                  hesitationCount === 0
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-rose-600 dark:text-rose-400"
-                )}
-              >
-                {hesitationCount}
-              </span>
-            </div>
-
-            {/* Filler Words Count */}
-            <div className="flex items-baseline gap-1">
-              <span className="text-neutral-400">Fillers:</span>
-              <span
-                className={cn(
-                  "font-semibold",
-                  detectedFillers.length === 0
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-amber-600 dark:text-amber-400"
-                )}
-              >
-                {detectedFillers.length}
-              </span>
-            </div>
-
-            {/* Collocations Hit */}
-            <div className="flex items-baseline gap-1">
-              <span className="text-neutral-400">Collocations:</span>
-              <span className="font-semibold text-purple-600 dark:text-purple-400">
-                {usedCollocations.length}/{selectedPrompt.targetCollocations.length}
-              </span>
-            </div>
-          </div>
+          )}
         </div>
-
-        {/* Dedicated Audio Playback Scrub Bar (Prominent & Always Accessible) */}
-        {audioUrl && !isRecording && (
-          <div className="py-2.5 flex items-center gap-3 border-b border-neutral-200 dark:border-neutral-800">
-            <audio
-              ref={audioPlayerRef}
-              src={audioUrl}
-              onTimeUpdate={handleAudioTimeUpdate}
-              onLoadedMetadata={handleAudioLoadedMetadata}
-              onEnded={() => setIsPlayingAudio(false)}
-            />
-
-            <button
-              onClick={togglePlayAudio}
-              className="p-1.5 text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer shrink-0"
-              title={isPlayingAudio ? "Pause Your Voice" : "Play Your Voice"}
-            >
-              {isPlayingAudio ? (
-                <Pause className="w-4 h-4 fill-current text-emerald-600 dark:text-emerald-400" />
-              ) : (
-                <Play className="w-4 h-4 fill-current ml-0.5 text-emerald-600 dark:text-emerald-400" />
-              )}
-            </button>
-
-            <div className="flex-1 flex items-center gap-2">
-              <input
-                type="range"
-                min={0}
-                max={audioDuration || 1}
-                step={0.1}
-                value={audioCurrentTime}
-                onChange={handleAudioSeek}
-                className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer h-1 bg-neutral-200 dark:bg-neutral-800"
-              />
-              <span className="text-[11px] font-medium text-neutral-500 shrink-0">
-                {formatTime(Math.floor(audioCurrentTime))} / {formatTime(Math.floor(audioDuration))}
-              </span>
-            </div>
-
-            <button
-              onClick={handleToggleSpeed}
-              className="text-[11px] font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 px-1 py-0.5"
-            >
-              {playbackSpeed}x
-            </button>
-          </div>
-        )}
       </div>
 
       {/* ======================================================== */}
       {/* SECTION D: TRANSCRIPT & PROGRESSIVE AUDIT / MODELS       */}
       {/* ======================================================== */}
-      <div className="space-y-4 pt-2">
-        {/* Candidate Transcript (Revealed as soon as speech is captured or recorded) */}
+      <div className="space-y-4 pt-1">
+        {/* Candidate Transcript (Clean Card) */}
         {(activeTranscriptText || audioUrl) && (
-          <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 space-y-2">
+          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2">
             <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
               <span className="font-semibold uppercase tracking-wider text-[11px]">
                 Spoken Transcript (Live Acoustic Log)
@@ -1251,12 +1257,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         )}
 
-        {/* Examiner Rubric Self-Audit (Progressively Disclosed) */}
+        {/* Examiner Rubric Self-Audit (Clean Card) */}
         {(activeTranscriptText || audioUrl) && (
-          <div className="py-2 space-y-2">
+          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2">
             <button
               onClick={() => setShowRubricAudit(!showRubricAudit)}
-              className="flex items-center justify-between w-full text-left py-1 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
+              className="flex items-center justify-between w-full text-left py-0.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -1274,7 +1280,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </button>
 
             {showRubricAudit && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 pt-2 pb-1 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 pt-2 text-xs">
                 <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -1335,11 +1341,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         )}
 
-        {/* Authentic Examiner Model Answers (Progressively Disclosed - Clean Hairline Reveal) */}
-        <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+        {/* Authentic Examiner Model Answers (Clean Card) */}
+        <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
           <button
             onClick={() => setShowModelAnswers(!showModelAnswers)}
-            className="w-full flex items-center justify-between text-left py-1 text-xs font-semibold text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
+            className="w-full flex items-center justify-between text-left py-0.5 text-xs font-semibold text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
           >
             <div className="flex items-center gap-2">
               <BookOpen className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
@@ -1365,14 +1371,14 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           {showModelAnswers && (
             <div
               className={cn(
-                "grid grid-cols-1 gap-8 pt-3",
+                "grid grid-cols-1 gap-4 pt-2",
                 selectedPrompt.transcripts.band6 ? "lg:grid-cols-2" : ""
               )}
             >
-              {/* Band 6.0 Candidate Transcript */}
+              {/* Band 6.0 Candidate Transcript Card */}
               {selectedPrompt.transcripts.band6 && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs">
+                <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200/80 dark:border-neutral-800/80 text-xs">
                     <span className="font-semibold text-amber-700 dark:text-amber-400">
                       {selectedPrompt.transcripts.band6.band}
                     </span>
@@ -1389,15 +1395,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     {selectedPrompt.transcripts.band6.text}
                   </div>
 
-                  <div className="pt-2 text-[11px] text-neutral-500 italic">
+                  <div className="pt-2 text-[11px] text-neutral-500 italic border-t border-neutral-100 dark:border-neutral-900">
                     Examiner critique: Adequate message transmission, but limited by short, repetitive sentence structures, simple vocabulary, and hesitations.
                   </div>
                 </div>
               )}
 
-              {/* Band 9.0 Model Transcript */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs">
+              {/* Band 9.0 Model Transcript Card */}
+              <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
+                <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200/80 dark:border-neutral-800/80 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-purple-700 dark:text-purple-400">
                       {selectedPrompt.transcripts.band9.band}
@@ -1424,7 +1430,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   </button>
                 </div>
 
-                {/* Verbatim Band 9 Text - Matching Exact Typography (No Serif, Same Size/Color) */}
+                {/* Verbatim Band 9 Text - Matching Exact Typography */}
                 <div
                   data-paragraph="true"
                   className="ielts-paragraph text-sm sm:text-base leading-relaxed text-neutral-800 dark:text-neutral-200 whitespace-pre-line select-text"
@@ -1432,7 +1438,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   {renderModelWithHighlights(selectedPrompt.transcripts.band9.text)}
                 </div>
 
-                <div className="pt-2 text-[11px] text-neutral-500 flex items-center justify-between">
+                <div className="pt-2 text-[11px] text-neutral-500 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
                   <span>
                     Highlighted terms denote authentic C1/C2 collocations used in context.
                   </span>
