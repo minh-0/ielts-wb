@@ -140,6 +140,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   const streamRef = useRef<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
+  const isRecordingRef = useRef(false);
+  const finalTranscriptRef = useRef("");
+  const sessionFinalTranscriptRef = useRef("");
 
   // Acoustic Pause Tracking Refs
   const silenceStartRef = useRef<number | null>(null);
@@ -208,8 +211,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     return segments.length - 1;
   }, [elapsedSeconds, selectedPrompt.pacingSegments]);
 
-  // Filler words detected in current transcript
-  const activeTranscriptText = finalTranscript || liveTranscript;
+  // Filler words detected in current transcript (combining both finalized and live interim words)
+  const activeTranscriptText = useMemo(() => {
+    return [finalTranscript, liveTranscript].filter(Boolean).join(" ").trim();
+  }, [finalTranscript, liveTranscript]);
+
   const detectedFillers = useMemo(() => {
     if (!activeTranscriptText) return [];
     const matches = activeTranscriptText.match(FILLER_REGEX) || [];
@@ -227,7 +233,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   // Live / Final Words Per Minute
   const currentWpm = useMemo(() => {
     const words = activeTranscriptText.trim().split(/\s+/).filter(Boolean).length;
-    if (elapsedSeconds <= 3 || words === 0) return 0;
+    if (elapsedSeconds <= 2 || words === 0) return 0;
     const mins = elapsedSeconds / 60;
     return Math.round(words / mins);
   }, [activeTranscriptText, elapsedSeconds]);
@@ -275,6 +281,20 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
       mediaRecorder.start(100);
 
+      // Reset Telemetry & State
+      setIsRecording(true);
+      isRecordingRef.current = true;
+      setElapsedSeconds(0);
+      setHesitationCount(0);
+      setAudioUrl(null);
+      setFinalTranscript("");
+      setLiveTranscript("");
+      finalTranscriptRef.current = "";
+      sessionFinalTranscriptRef.current = "";
+      silenceStartRef.current = null;
+      hasSpokenRef.current = false;
+      pauseRecordedRef.current = false;
+
       // Web Speech API
       const SpeechRecognition =
         (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -286,24 +306,45 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
         recognition.interimResults = true;
         recognition.lang = "en-US";
 
-        let accumulatedFinal = "";
-
         recognition.onresult = (event: any) => {
-          let interim = "";
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-              accumulatedFinal += transcript + " ";
+          let currentSessionFinal = "";
+          let currentSessionInterim = "";
+
+          for (let i = 0; i < event.results.length; i++) {
+            const res = event.results[i];
+            if (res.isFinal) {
+              currentSessionFinal += res[0].transcript + " ";
             } else {
-              interim += transcript;
+              currentSessionInterim += res[0].transcript + " ";
             }
           }
-          setFinalTranscript(accumulatedFinal.trim());
-          setLiveTranscript(interim.trim());
+
+          const combinedFinal = [sessionFinalTranscriptRef.current, currentSessionFinal]
+            .filter(Boolean)
+            .join(" ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+          finalTranscriptRef.current = combinedFinal;
+          setFinalTranscript(combinedFinal);
+          setLiveTranscript(currentSessionInterim.trim());
+          hasSpokenRef.current = true;
+        };
+
+        recognition.onend = () => {
+          // If the recording is still ongoing, auto-restart recognition seamlessly
+          if (isRecordingRef.current) {
+            sessionFinalTranscriptRef.current = finalTranscriptRef.current;
+            try {
+              recognition.start();
+            } catch (e) {
+              // already starting or active
+            }
+          }
         };
 
         recognition.onerror = () => {
-          // ignore recognized audio errors silently
+          // silently allow onend to restart if needed
         };
 
         try {
@@ -312,17 +353,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           // ignore already started error
         }
       }
-
-      // Reset Telemetry
-      setIsRecording(true);
-      setElapsedSeconds(0);
-      setHesitationCount(0);
-      setAudioUrl(null);
-      setFinalTranscript("");
-      setLiveTranscript("");
-      silenceStartRef.current = null;
-      hasSpokenRef.current = false;
-      pauseRecordedRef.current = false;
 
       // Timer Interval
       timerIntervalRef.current = setInterval(() => {
@@ -365,8 +395,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       }
       const rms = Math.sqrt(sum / bufferLength);
 
-      // Threshold for voice activity
-      const VOICE_THRESHOLD = 0.018;
+      // Sensitive threshold for voice activity on laptop/headset mics
+      const VOICE_THRESHOLD = 0.008;
 
       if (rms > VOICE_THRESHOLD) {
         hasSpokenRef.current = true;
@@ -419,6 +449,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   // STOP RECORDING
   const stopRecording = () => {
     setIsRecording(false);
+    isRecordingRef.current = false;
     clearInterval(timerIntervalRef.current);
 
     if (animFrameRef.current) {
@@ -453,6 +484,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   // RESET
   const resetRecording = () => {
     stopRecording();
+    isRecordingRef.current = false;
+    finalTranscriptRef.current = "";
+    sessionFinalTranscriptRef.current = "";
     setElapsedSeconds(0);
     setAudioUrl(null);
     setLiveTranscript("");
@@ -1041,10 +1075,22 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             )}
 
             {isRecording && (
-              <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                <span>LIVE</span>
-              </div>
+              <>
+                <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-800">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                  <span>LIVE</span>
+                </div>
+                <div className="absolute bottom-2 left-3 right-16 truncate text-xs font-mono text-neutral-400 pointer-events-none">
+                  {activeTranscriptText ? (
+                    <span className="text-neutral-300">
+                      <span className="text-emerald-400 mr-1.5 font-bold">●</span>
+                      {activeTranscriptText.slice(-65)}
+                    </span>
+                  ) : (
+                    <span className="text-neutral-500 italic">Listening for speech...</span>
+                  )}
+                </div>
+              </>
             )}
           </div>
 
