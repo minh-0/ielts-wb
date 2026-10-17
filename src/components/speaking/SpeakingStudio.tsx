@@ -107,14 +107,13 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     outcome: "",
   });
 
-  // Recording State & Acoustic Telemetry
+  // Recording State & Transcript
   const [isRecording, setIsRecording] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [liveTranscript, setLiveTranscript] = useState("");
   const [finalTranscript, setFinalTranscript] = useState("");
   const [manuallyCheckedCollocs, setManuallyCheckedCollocs] = useState<string[]>([]);
-  const [hesitationCount, setHesitationCount] = useState(0);
 
   // Audio Playback State (Only for user's own recorded voice)
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -143,11 +142,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   const isRecordingRef = useRef(false);
   const finalTranscriptRef = useRef("");
   const sessionFinalTranscriptRef = useRef("");
-
-  // Acoustic Pause Tracking Refs
-  const silenceStartRef = useRef<number | null>(null);
-  const hasSpokenRef = useRef(false);
-  const pauseRecordedRef = useRef(false);
 
   // Timer Interval Ref
   const timerIntervalRef = useRef<any>(null);
@@ -211,16 +205,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     return segments.length - 1;
   }, [elapsedSeconds, selectedPrompt.pacingSegments]);
 
-  // Filler words detected in current transcript (combining both finalized and live interim words)
+  // Active Transcript (combining both finalized and live interim words)
   const activeTranscriptText = useMemo(() => {
     return [finalTranscript, liveTranscript].filter(Boolean).join(" ").trim();
   }, [finalTranscript, liveTranscript]);
-
-  const detectedFillers = useMemo(() => {
-    if (!activeTranscriptText) return [];
-    const matches = activeTranscriptText.match(FILLER_REGEX) || [];
-    return matches.map((m) => m.toLowerCase());
-  }, [activeTranscriptText]);
 
   // Target collocations used (detected or manually checked)
   const usedCollocations = useMemo(() => {
@@ -229,14 +217,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       (c) => textLower.includes(c.phrase.toLowerCase()) || manuallyCheckedCollocs.includes(c.phrase)
     );
   }, [activeTranscriptText, selectedPrompt.targetCollocations, manuallyCheckedCollocs]);
-
-  // Live / Final Words Per Minute
-  const currentWpm = useMemo(() => {
-    const words = activeTranscriptText.trim().split(/\s+/).filter(Boolean).length;
-    if (elapsedSeconds <= 2 || words === 0) return 0;
-    const mins = elapsedSeconds / 60;
-    return Math.round(words / mins);
-  }, [activeTranscriptText, elapsedSeconds]);
 
   // Toggle Manual Collocation Check
   const toggleCollocationCheck = (phrase: string) => {
@@ -281,19 +261,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
       mediaRecorder.start(100);
 
-      // Reset Telemetry & State
+      // Reset State
       setIsRecording(true);
       isRecordingRef.current = true;
       setElapsedSeconds(0);
-      setHesitationCount(0);
       setAudioUrl(null);
       setFinalTranscript("");
       setLiveTranscript("");
       finalTranscriptRef.current = "";
       sessionFinalTranscriptRef.current = "";
-      silenceStartRef.current = null;
-      hasSpokenRef.current = false;
-      pauseRecordedRef.current = false;
 
       // Web Speech API
       const SpeechRecognition =
@@ -328,7 +304,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           finalTranscriptRef.current = combinedFinal;
           setFinalTranscript(combinedFinal);
           setLiveTranscript(currentSessionInterim.trim());
-          hasSpokenRef.current = true;
         };
 
         recognition.onend = () => {
@@ -365,15 +340,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
         });
       }, 1000);
 
-      // Start Audio Waveform & Pause Detection Loop
-      drawWaveformAndDetectPauses();
+      // Start Audio Waveform Animation Loop
+      drawWaveform();
     } catch (err) {
       console.error("Microphone access error:", err);
     }
   };
 
-  // WAVEFORM & HESITATION MONITOR LOOP
-  const drawWaveformAndDetectPauses = () => {
+  // WAVEFORM DRAWING LOOP
+  const drawWaveform = () => {
     if (!analyserRef.current || !canvasRef.current) return;
 
     const analyser = analyserRef.current;
@@ -387,35 +362,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     const checkFrame = () => {
       analyser.getByteTimeDomainData(dataArray);
 
-      // 1. Calculate RMS volume
-      let sum = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        const norm = (dataArray[i] - 128) / 128;
-        sum += norm * norm;
-      }
-      const rms = Math.sqrt(sum / bufferLength);
-
-      // Sensitive threshold for voice activity on laptop/headset mics
-      const VOICE_THRESHOLD = 0.008;
-
-      if (rms > VOICE_THRESHOLD) {
-        hasSpokenRef.current = true;
-        silenceStartRef.current = null;
-        pauseRecordedRef.current = false;
-      } else if (hasSpokenRef.current) {
-        const now = performance.now();
-        if (silenceStartRef.current === null) {
-          silenceStartRef.current = now;
-        } else {
-          const pauseDuration = now - silenceStartRef.current;
-          if (pauseDuration >= 2000 && !pauseRecordedRef.current) {
-            setHesitationCount((c) => c + 1);
-            pauseRecordedRef.current = true;
-          }
-        }
-      }
-
-      // 2. Draw Waveform on Canvas
+      // Draw Waveform on Canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = 1.5;
       ctx.strokeStyle = "#10b981"; // emerald line
@@ -491,7 +438,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     setAudioUrl(null);
     setLiveTranscript("");
     setFinalTranscript("");
-    setHesitationCount(0);
     setIsPlayingAudio(false);
   };
 
@@ -1075,22 +1021,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             )}
 
             {isRecording && (
-              <>
-                <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-800">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                  <span>LIVE</span>
-                </div>
-                <div className="absolute bottom-2 left-3 right-16 truncate text-xs font-mono text-neutral-400 pointer-events-none">
-                  {activeTranscriptText ? (
-                    <span className="text-neutral-300">
-                      <span className="text-emerald-400 mr-1.5 font-bold">●</span>
-                      {activeTranscriptText.slice(-65)}
-                    </span>
-                  ) : (
-                    <span className="text-neutral-500 italic">Listening for speech...</span>
-                  )}
-                </div>
-              </>
+              <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                <span>LIVE</span>
+              </div>
             )}
           </div>
 
@@ -1166,65 +1100,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   <span>Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"}) →</span>
                 </button>
               )}
-            </div>
-
-            {/* Telemetry Stats (Clean spacing without vertical divider lines) */}
-            <div className="flex items-center gap-4 sm:gap-6 flex-wrap text-xs font-medium">
-              {/* WPM Counter */}
-              <div className="flex items-baseline gap-1">
-                <span className="text-neutral-400">Pace:</span>
-                <span
-                  className={cn(
-                    "font-semibold",
-                    currentWpm >= 120 && currentWpm <= 150
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : currentWpm > 0
-                      ? "text-neutral-900 dark:text-neutral-100"
-                      : "text-neutral-400"
-                  )}
-                >
-                  {currentWpm} WPM
-                </span>
-                <span className="text-[10px] text-neutral-400">(120–150 target)</span>
-              </div>
-
-              {/* Hesitation >2.0s Pauses */}
-              <div className="flex items-baseline gap-1">
-                <span className="text-neutral-400">Pauses &gt;2s:</span>
-                <span
-                  className={cn(
-                    "font-semibold",
-                    hesitationCount === 0
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-rose-600 dark:text-rose-400"
-                  )}
-                >
-                  {hesitationCount}
-                </span>
-              </div>
-
-              {/* Filler Words Count */}
-              <div className="flex items-baseline gap-1">
-                <span className="text-neutral-400">Fillers:</span>
-                <span
-                  className={cn(
-                    "font-semibold",
-                    detectedFillers.length === 0
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-amber-600 dark:text-amber-400"
-                  )}
-                >
-                  {detectedFillers.length}
-                </span>
-              </div>
-
-              {/* Collocations Hit */}
-              <div className="flex items-baseline gap-1">
-                <span className="text-neutral-400">Collocations:</span>
-                <span className="font-semibold text-purple-600 dark:text-purple-400">
-                  {usedCollocations.length}/{selectedPrompt.targetCollocations.length}
-                </span>
-              </div>
             </div>
           </div>
 
