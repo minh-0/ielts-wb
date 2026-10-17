@@ -103,17 +103,21 @@
 - **Scorecard Modal (`ScorecardModal.tsx`)**:
   - Generates downloadable 1080x1350 PNG report with band scores, primary bottleneck, and candidate summary branded `slayer6767`.
 
-#### B. Speaking Studio (`src/components/speaking/SpeakingStudio.tsx`)
-- **Part Navigation**: Part 1 (Introduction & Interview), Part 2 (Cue Card with 1-min prep countdown), Part 3 (Two-way Discussion).
-- **Mode Switcher**: `Practice` mode (flexible timer) vs `Exam` mode (strict test timer).
-- **75+ Question Bank**: Comprehensive collection of authentic IELTS Online Tests (IOT) prompts across Parts 1-3 with a question navigator and shuffle button.
-- **Live Recording & Transcription**:
-  - Real-time audio waveform visualizer and live timer.
-  - Microphone recording via `MediaRecorder` + live STT transcription via Web Speech recognition.
-  - Audio playback bar to listen back to the candidate's speech.
-  - Pacing metrics: Word count, duration, and calculated words per minute (WPM).
-- **Strict Examiner Anti-Cheating Protocol**:
-  - Short/trivial speech inputs (e.g., saying only "hello", < 12 words) trigger an **Insufficient Language Sample** penalty (Band 2.0-2.5) with empty error arrays. It will never hallucinate fake speeches or invent imaginary errors.
+#### B. Speaking Studio (`src/components/speaking/SpeakingStudio.tsx` & `src/lib/speakingAuthenticData.ts`)
+- **Deterministic Architecture (Strictly Zero AI Grading)**: Automated AI speech grading and synthetic band estimation eliminated in favor of active scaffolding, deterministic acoustic telemetry, and authentic human examiner comparison.
+- **Authentic Human Material**: Every question, Band 6.0 candidate transcript, and Band 9.0 model transcript is 100% authentic human material sourced strictly from Simon Corcoran (`ielts-simon.com`), official Cambridge IELTS Practice Books (11–19), and IDP/British Council examiner sample logs with explicit `sourceBadge` attribution.
+- **Top Studio Bar**: Sentence-case Part Switcher (Part 1, Part 2, Part 3) + Timer Mode toggle (`Standard`, `Exam`, and `4-3-2 Drill` shrinking timer from 2:00 -> 1:30 -> 1:00 for fluency automaticity) + Command-Palette question browser modal (`SpeakingQuestionPickerModal.tsx`) with search, Part, and Topic filters.
+- **Active Scaffolding Strip**: Real-time detection of target C1/C2 collocations (violet to emerald transition) with manual verification toggle + grammar formula target.
+- **Part 2 Scratchpad**: 60-second prep countdown timer + 4-cell inline structure (Context, Core detail, Impact, Outcome).
+- **Segmented Pacing Bar**: Timeline visualization mapping speech progression against structured milestones (e.g. Context -> Core -> Impact -> Reflection) so candidates maintain structural continuity throughout 2 minutes.
+- **Deterministic Acoustic & Transcript Telemetry**:
+  - Live & final WPM (Words Per Minute) calculation with 120–150 WPM benchmark range.
+  - Hesitation counter detecting silent gaps > 2.0s via Web Audio `AudioContext` / `AnalyserNode` RMS volume analysis.
+  - Filler / crutch word detector matching spoken fillers (`um, uh, like, you know, basically, actually, so yeah`).
+  - Target collocations hit counter (`usedCount / totalCount`).
+- **Post-Recording Workspace**:
+  - **Tab 1 (Transcript & Audit)**: Minimalist audio playback scrubber (1x / 1.25x speed, retry), annotated candidate transcript with soft rose filler underlines and emerald collocation highlights (`data-paragraph="true" .ielts-paragraph`), and 4-point self-audit checklist (FC, LR, GRA, PR).
+  - **Tab 2 (Authentic Models)**: Side-by-side comparative grid of Authentic Band 6.0 Candidate Transcript vs. Authentic Band 9.0 Model Transcript with UK Examiner TTS listen button, exact word counts, and context collocation highlights. Oxford Dictionary & Selection Toolbar integrated.
 
 #### C. Official Public Band Descriptors Rubric (`src/components/rubric/RubricViewer.tsx` & `src/lib/officialRubricData.ts`)
 - Complete official public band descriptor tables for:
