@@ -42,20 +42,20 @@ export function Navbar({
       iconMagnification={isMobile ? 38 : 44}
       iconDistance={85}
       className={cn(
-        "items-center rounded-xl border border-neutral-200/90 dark:border-neutral-800/90 bg-neutral-100/70 dark:bg-neutral-900/70 shadow-none backdrop-blur-md select-none",
-        isMobile ? "h-10 gap-1 px-1.5" : "h-11 gap-1.5 px-2"
+        "items-center border-0 border-transparent bg-transparent dark:bg-transparent shadow-none backdrop-blur-none select-none",
+        isMobile ? "h-10 gap-0.5 px-0" : "h-11 gap-1 px-0"
       )}
     >
       {/* Start Portal */}
       <DockIcon
         title="Start Portal"
         onClick={onOpenStartPage}
-        className="text-neutral-500 hover:text-neutral-950 dark:hover:text-neutral-100"
+        className="text-neutral-400 hover:text-neutral-950 dark:text-neutral-500 dark:hover:text-neutral-100 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60"
       >
         <HomeIcon className={isMobile ? "w-3.5 h-3.5" : "w-4 h-4"} />
       </DockIcon>
 
-      <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 mx-0.5 shrink-0" />
+      <div className="h-4 w-px bg-neutral-200/80 dark:bg-neutral-800/80 mx-1 shrink-0" />
 
       {/* Writing Studio */}
       <DockIcon
@@ -75,7 +75,7 @@ export function Navbar({
         <Mic className={isMobile ? "w-3.5 h-3.5" : "w-4 h-4"} />
       </DockIcon>
 
-      <div className="h-4 w-px bg-neutral-200 dark:bg-neutral-800 mx-0.5 shrink-0" />
+      <div className="h-4 w-px bg-neutral-200/80 dark:bg-neutral-800/80 mx-1 shrink-0" />
 
       {/* Collocations */}
       <DockIcon
