@@ -368,8 +368,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
       // Draw Waveform on Canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = "#10b981"; // emerald line
+      ctx.lineWidth = 1.75;
+      const isDark = typeof document !== "undefined" && document.documentElement.classList.contains("dark");
+      ctx.strokeStyle = isDark ? "#10b981" : "#059669"; // emerald line (crisper on light)
       ctx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;
@@ -1036,9 +1037,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
         </div>
 
         {/* Unified Recording Console (Waveform + Controls + Audio Scrub Bar) */}
-        <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-950 shadow-sm">
+        <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-white dark:bg-neutral-950 shadow-sm">
           {/* Live Audio Waveform Canvas */}
-          <div className="relative h-20 flex items-center justify-center bg-neutral-950">
+          <div className="relative h-20 flex items-center justify-center bg-neutral-50/80 dark:bg-neutral-950">
             <canvas
               ref={canvasRef}
               width={720}
@@ -1047,13 +1048,13 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             />
 
             {!isRecording && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-medium text-neutral-500">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-xs font-medium text-neutral-600 dark:text-neutral-400">
                 {audioUrl ? "Audio recorded • ready for playback" : "Microphone idle • click to record"}
               </div>
             )}
 
             {isRecording && (
-              <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-800">
+              <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-600 dark:text-rose-400 text-[10px] font-semibold tracking-wider bg-rose-50 dark:bg-rose-950/80 px-2 py-0.5 rounded-full border border-rose-200 dark:border-rose-800">
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
                 <span>LIVE</span>
               </div>
