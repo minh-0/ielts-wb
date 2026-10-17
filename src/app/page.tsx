@@ -164,7 +164,7 @@ export default function Home() {
       />
 
       {/* Minimalist Hero Header with Atmospheric Colored Gradients & Integrated Studio Tabs */}
-      <section className="relative overflow-hidden border-b border-neutral-200/80 dark:border-neutral-800/80 bg-gradient-to-b from-emerald-50/20 via-white to-neutral-50/60 dark:from-neutral-950 dark:via-neutral-900/40 dark:to-black transition-all duration-300">
+      <section className="relative overflow-hidden border-b border-neutral-200/80 dark:border-neutral-800/80 bg-gradient-to-b from-red-50/35 via-white to-neutral-50/60 dark:from-neutral-950 dark:via-neutral-900/40 dark:to-black transition-all duration-300">
         <Particles
           className="absolute inset-0 pointer-events-none z-0"
           quantity={65}
@@ -173,16 +173,16 @@ export default function Home() {
           size={0.5}
           staticity={35}
         />
-        {/* Ambient Colored Radial Glow Backdrops (Harmonized Emerald & Teal Aurora) */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] sm:w-[1100px] h-[360px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(16,185,129,0.06),rgba(6,182,212,0.04),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(16,185,129,0.12),rgba(6,182,212,0.08),rgba(0,0,0,0))] pointer-events-none -z-0" />
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-transparent dark:from-emerald-500/15 dark:to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
-        <div className="absolute top-10 -right-32 w-96 h-96 bg-gradient-to-bl from-teal-500/10 to-transparent dark:from-cyan-500/12 dark:to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+        {/* Ambient Colored Radial Glow Backdrops: Red in Light Mode, Emerald/Cyan Aurora in Dark Mode */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] sm:w-[1100px] h-[360px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(239,68,68,0.08),rgba(244,63,94,0.04),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(16,185,129,0.12),rgba(6,182,212,0.08),rgba(0,0,0,0))] pointer-events-none -z-0" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-gradient-to-br from-red-500/10 to-transparent dark:from-emerald-500/15 dark:to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
+        <div className="absolute top-10 -right-32 w-96 h-96 bg-gradient-to-bl from-rose-500/10 to-transparent dark:from-cyan-500/12 dark:to-transparent rounded-full blur-3xl pointer-events-none -z-0" />
 
         <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 pt-5 sm:pt-12">
           <div className="space-y-3.5 sm:space-y-5 pb-5 sm:pb-10">
             {/* Subtle Gradient Metadata Pill (Hidden on mobile to save vertical space) */}
-            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200/60 dark:border-neutral-800/80 bg-gradient-to-r from-emerald-50/70 via-white to-teal-50/40 dark:from-neutral-900/90 dark:via-neutral-900/60 dark:to-neutral-950 shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-emerald-400 dark:to-cyan-400 shadow-xs shadow-emerald-500/40 dark:shadow-emerald-500/50" />
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-200/60 dark:border-neutral-800/80 bg-gradient-to-r from-red-50/80 via-white to-rose-50/40 dark:from-neutral-900/90 dark:via-neutral-900/60 dark:to-neutral-950 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-red-500 to-rose-500 dark:from-emerald-400 dark:to-cyan-400 shadow-xs shadow-red-500/40 dark:shadow-emerald-500/50" />
               <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
                 Cambridge & IDP Assessment Standards • Official Descriptors
               </span>
@@ -191,7 +191,7 @@ export default function Home() {
             {/* Primary Headline with Dynamic Text & Description */}
             <div className="max-w-3xl space-y-2 sm:space-y-3">
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-normal tracking-tight font-serif leading-snug sm:leading-[1.15] text-neutral-950 dark:text-white flex flex-wrap items-baseline gap-x-2 sm:gap-x-3">
-                <span className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-700 dark:from-white dark:via-neutral-100 dark:to-neutral-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-red-800 dark:from-white dark:via-neutral-100 dark:to-neutral-300 bg-clip-text text-transparent">
                   The IELTS companion for
                 </span>
                 <DynamicText
@@ -202,7 +202,7 @@ export default function Home() {
                     "Cambridge Collocations",
                     "Oxford Lexicon",
                   ]}
-                  gradientClassName="from-emerald-600 via-teal-600 to-cyan-700 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400"
+                  gradientClassName="from-red-700 via-rose-700 to-red-800 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400"
                 />
               </h1>
               <p className="text-xs sm:text-[15px] text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl">

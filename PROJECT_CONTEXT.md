@@ -36,8 +36,8 @@
 - **Top Navigation Layout**: Navigation tabs (`Writing`, `Speaking`, `Vocabulary`, `Rubric`) are right-aligned alongside utility actions (`AI Mode` and `ThemeToggle`), leaving the left cleanly anchored to the brand title.
 - **Palette & Atmospheric Hero Gradient Theme**:
   - Pure monochrome neutral scales for core workbenches (`border-neutral-200 dark:border-neutral-800`, `bg-white dark:bg-neutral-950`, `bg-neutral-50/80 dark:bg-neutral-900/40`).
-  - **Cohesive Aurora Palette**: Replaced dissonant salmon pink / red text and mismatched backgrounds with a unified **Emerald-Teal-Cyan** gradient system.
-  - The rotating dynamic headline text ("Task 2 Essays", "Task 1 Charts", "Speaking Cue Cards", etc.) shines with `from-emerald-600 via-teal-600 to-cyan-700` in light mode and `dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400` in dark mode, perfectly matching the ambient emerald (`emerald-500/15`) and cyan (`cyan-500/12`) background aurora glows and metadata pill dots.
+  - **Light Mode Academic Red Accents**: Retains the rich British academic red/crimson aesthetic in light mode (`bg-gradient-to-b from-red-50/35 via-white to-neutral-50/60`, red/rose ambient radial glows, `border-red-200/60` metadata pill with red/rose indicator, and dynamic text shining in `from-red-700 via-rose-700 to-red-800`).
+  - **Dark Mode Cosmic Aurora Palette**: Harmonizes dark mode with an **Emerald-Teal-Cyan** gradient system (`dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400`), perfectly matching the ambient emerald (`emerald-500/15`) and cyan (`cyan-500/12`) background glows and pill dot without harsh pink dissonance.
 - **Dark Mode Comfort**: High-contrast glare eliminated. Grammar mistakes use softened muted rose/red (`dark:text-rose-300/80 dark:bg-rose-950/30`), vocabulary upgrades use soft violet (`dark:text-purple-300/80 dark:bg-purple-950/30`), and replaced words use soft emerald.
 - **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, `SpeakingQuestionPickerModal`, and the Writing Popup Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.
 
@@ -185,6 +185,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `style(hero): keep classic red accent in light mode while preserving emerald-teal-cyan in dark mode`
   - `7d49507`: `style(hero): harmonize dynamic text and ambient gradient theme to emerald-teal-cyan palette`
   - `8456c64`: `docs: update PROJECT_CONTEXT.md with Speaking Studio architecture, light mode contrast, and collocations dropdown`
   - `dfe4458`: `fix(speaking): make waveform box background adapt to light mode`

@@ -54,7 +54,7 @@ export function DynamicText({
             exit={shouldReduceMotion ? { opacity: 0 } : { y: -18, opacity: 0 }}
             transition={{ duration: 0.35, ease: EASE_OUT }}
             className={cn(
-              "inline-block whitespace-nowrap bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400 bg-clip-text text-transparent font-serif",
+              "inline-block whitespace-nowrap bg-gradient-to-r from-red-700 via-rose-700 to-red-800 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400 bg-clip-text text-transparent font-serif",
               gradientClassName
             )}
           >
