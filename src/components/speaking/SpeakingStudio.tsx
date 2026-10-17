@@ -85,7 +85,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
   // Timer Modes
   const [timerMode, setTimerMode] = useState<TimerMode>("standard");
+  const [hoveredMode, setHoveredMode] = useState<TimerMode | null>(null);
   const [drillAttempt, setDrillAttempt] = useState<1 | 2 | 3>(1);
+
+  // Active or hovered mode for micro-copy description
+  const activeExplainingMode = hoveredMode || timerMode;
 
   // Target duration based on mode and prompt
   const effectiveTargetDuration = useMemo(() => {
@@ -580,7 +584,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* ======================================================== */}
       {/* SECTION A: TOP STUDIO BAR (Hairline Divided)             */}
       {/* ======================================================== */}
-      <div className="border-b border-neutral-200 dark:border-neutral-800 pb-2 flex flex-wrap items-center justify-between gap-4">
+      <div className="border-b border-neutral-200 dark:border-neutral-800 pb-2 flex flex-wrap items-end justify-between gap-4">
         {/* Left: Part Switcher Minimalist Tabs */}
         <div className="flex items-center gap-6 text-xs font-medium">
           {([1, 2, 3] as const).map((part) => (
@@ -604,77 +608,98 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           ))}
         </div>
 
-        {/* Right: Timer Mode Selector & Question Actions */}
-        <div className="flex items-center gap-4 text-xs">
-          {/* Timer Modes */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setTimerMode("standard")}
-              className={cn(
-                "py-1 transition-colors cursor-pointer",
-                timerMode === "standard"
-                  ? "text-neutral-950 dark:text-white font-semibold"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+        {/* Right: Timer Mode Selector, Micro-copy Explainer & Question Actions */}
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-4 text-xs">
+            {/* Timer Modes */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setTimerMode("standard")}
+                onMouseEnter={() => setHoveredMode("standard")}
+                onMouseLeave={() => setHoveredMode(null)}
+                className={cn(
+                  "py-1 transition-colors cursor-pointer",
+                  timerMode === "standard"
+                    ? "text-neutral-950 dark:text-white font-semibold"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                )}
+              >
+                Standard
+              </button>
+              <span className="text-neutral-300 dark:text-neutral-700 font-light">/</span>
+              <button
+                onClick={() => setTimerMode("exam")}
+                onMouseEnter={() => setHoveredMode("exam")}
+                onMouseLeave={() => setHoveredMode(null)}
+                className={cn(
+                  "py-1 transition-colors cursor-pointer",
+                  timerMode === "exam"
+                    ? "text-neutral-950 dark:text-white font-semibold"
+                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                )}
+              >
+                Exam
+              </button>
+              {activePart === 2 && (
+                <>
+                  <span className="text-neutral-300 dark:text-neutral-700 font-light">/</span>
+                  <button
+                    onClick={() => setTimerMode("drill_432")}
+                    onMouseEnter={() => setHoveredMode("drill_432")}
+                    onMouseLeave={() => setHoveredMode(null)}
+                    className={cn(
+                      "py-1 transition-colors cursor-pointer inline-flex items-center gap-1",
+                      timerMode === "drill_432"
+                        ? "text-rose-600 dark:text-rose-400 font-semibold"
+                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                    )}
+                  >
+                    <Flame className="w-3 h-3 text-rose-500" />
+                    <span>4-3-2 Drill</span>
+                  </button>
+                </>
               )}
-            >
-              Standard
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-700 font-light">/</span>
+            </div>
+
+            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
+
+            {/* Question Controls */}
             <button
-              onClick={() => setTimerMode("exam")}
-              className={cn(
-                "py-1 transition-colors cursor-pointer",
-                timerMode === "exam"
-                  ? "text-neutral-950 dark:text-white font-semibold"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
-              )}
+              onClick={() => {
+                if (promptsForPart.length <= 1) return;
+                let nextIdx = Math.floor(Math.random() * promptsForPart.length);
+                while (promptsForPart[nextIdx].id === selectedPrompt.id) {
+                  nextIdx = Math.floor(Math.random() * promptsForPart.length);
+                }
+                setSelectedPrompt(promptsForPart[nextIdx]);
+              }}
+              title="Random Question"
+              className="p-1 text-neutral-500 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer"
             >
-              Exam
+              <Shuffle className="w-3.5 h-3.5" />
             </button>
-            {activePart === 2 && (
-              <>
-                <span className="text-neutral-300 dark:text-neutral-700 font-light">/</span>
-                <button
-                  onClick={() => setTimerMode("drill_432")}
-                  className={cn(
-                    "py-1 transition-colors cursor-pointer inline-flex items-center gap-1",
-                    timerMode === "drill_432"
-                      ? "text-rose-600 dark:text-rose-400 font-semibold"
-                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
-                  )}
-                >
-                  <Flame className="w-3 h-3 text-rose-500" />
-                  <span>4-3-2 Drill</span>
-                </button>
-              </>
-            )}
+
+            <button
+              onClick={() => setIsQuestionPickerOpen(true)}
+              className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
+            >
+              <Search className="w-3.5 h-3.5 text-neutral-400" />
+              <span>Browse Bank</span>
+            </button>
           </div>
 
-          <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
-
-          {/* Question Controls */}
-          <button
-            onClick={() => {
-              if (promptsForPart.length <= 1) return;
-              let nextIdx = Math.floor(Math.random() * promptsForPart.length);
-              while (promptsForPart[nextIdx].id === selectedPrompt.id) {
-                nextIdx = Math.floor(Math.random() * promptsForPart.length);
-              }
-              setSelectedPrompt(promptsForPart[nextIdx]);
-            }}
-            title="Random Question"
-            className="p-1 text-neutral-500 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer"
-          >
-            <Shuffle className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            onClick={() => setIsQuestionPickerOpen(true)}
-            className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
-          >
-            <Search className="w-3.5 h-3.5 text-neutral-400" />
-            <span>Browse Bank</span>
-          </button>
+          {/* Micro-explainer right below the mode selection tab */}
+          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 font-normal select-none">
+            {activeExplainingMode === "standard" && (
+              <span>Standard • Open practice without forced cutoff</span>
+            )}
+            {activeExplainingMode === "exam" && (
+              <span>Exam • Strict test conditions with auto-cutoff at time limit</span>
+            )}
+            {activeExplainingMode === "drill_432" && (
+              <span>4-3-2 Drill • 3 shrinking rounds (2:00 → 1:30 → 1:00) for fluency</span>
+            )}
+          </div>
         </div>
       </div>
 
