@@ -789,7 +789,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </div>
 
             {/* Grammar Target Formula */}
-            <div className="p-2.5 rounded-lg bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400 pt-1">
               <span className="font-medium text-neutral-500 shrink-0">
                 Target Grammar:
               </span>
@@ -823,7 +823,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </div>
 
             {/* Step rounds */}
-            <div className="flex items-center gap-1.5 bg-white dark:bg-neutral-950 p-1 rounded-lg border border-neutral-200 dark:border-neutral-800">
+            <div className="flex items-center gap-1">
               {([1, 2, 3] as const).map((round) => {
                 const duration = round === 1 ? "2:00" : round === 2 ? "1:30" : "1:00";
                 const isCurrent = drillAttempt === round;
@@ -859,9 +859,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         )}
 
-        {/* Part 2 Scratchpad (Card with Rounded Inputs) */}
+        {/* Part 2 Scratchpad (Card without Inner Small Boxes) */}
         {activePart === 2 && (
-          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
+          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <FileText className="w-3.5 h-3.5 text-neutral-400" />
@@ -896,8 +896,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </div>
             </div>
 
-            {/* 4-Cell Keyword Scratchpad (Clean Rounded Input Boxes) */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* 4 Frameless Keyword Inputs (Zero Nested Small Boxes) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
                 <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                   1. Context
@@ -907,7 +907,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.context}
                   onChange={(e) => setScratchpad({ ...scratchpad, context: e.target.value })}
                   placeholder="Who, where, setting..."
-                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
+                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
 
@@ -920,7 +920,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.core}
                   onChange={(e) => setScratchpad({ ...scratchpad, core: e.target.value })}
                   placeholder="Key event, action..."
-                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
+                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
 
@@ -933,7 +933,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.impact}
                   onChange={(e) => setScratchpad({ ...scratchpad, impact: e.target.value })}
                   placeholder="Why significant, feelings..."
-                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
+                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
 
@@ -946,15 +946,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.outcome}
                   onChange={(e) => setScratchpad({ ...scratchpad, outcome: e.target.value })}
                   placeholder="Reflection, legacy..."
-                  className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-colors"
+                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* Pacing Timeline (Clean Rounded Card) */}
-        <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
+        {/* Pacing Timeline (Card without Inner Small Boxes) */}
+        <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
           <div className="flex items-center justify-between text-xs text-neutral-500">
             <div className="flex items-center gap-2">
               <Clock className="w-3.5 h-3.5 text-neutral-400" />
@@ -994,8 +994,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             })}
           </div>
 
-          {/* 4 Segment Badges */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {/* 4 Segment Labels (Clean Frameless Typography, Zero Inner Small Boxes) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-1">
             {selectedPrompt.pacingSegments.map((seg, idx) => {
               const isActive = idx === activePacingIndex && isRecording;
               const isPast = elapsedSeconds >= seg.endSec;
@@ -1003,12 +1003,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <div
                   key={idx}
                   className={cn(
-                    "p-2 rounded-lg text-left transition-colors border",
+                    "text-left transition-colors",
                     isActive
-                      ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300"
+                      ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                       : isPast
-                      ? "bg-white/40 dark:bg-neutral-950/40 border-neutral-200/40 dark:border-neutral-800/40 text-neutral-400 dark:text-neutral-500"
-                      : "bg-white dark:bg-neutral-950 border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300"
+                      ? "text-neutral-400 dark:text-neutral-500"
+                      : "text-neutral-600 dark:text-neutral-400"
                   )}
                 >
                   <div className="text-[10px] font-medium leading-none mb-1 opacity-70">
@@ -1375,9 +1375,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 selectedPrompt.transcripts.band6 ? "lg:grid-cols-2" : ""
               )}
             >
-              {/* Band 6.0 Candidate Transcript Card */}
+              {/* Band 6.0 Candidate Transcript */}
               {selectedPrompt.transcripts.band6 && (
-                <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200/80 dark:border-neutral-800/80 text-xs">
                     <span className="font-semibold text-amber-700 dark:text-amber-400">
                       {selectedPrompt.transcripts.band6.band}
@@ -1401,8 +1401,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 </div>
               )}
 
-              {/* Band 9.0 Model Transcript Card */}
-              <div className="p-3.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
+              {/* Band 9.0 Model Transcript */}
+              <div className="space-y-3">
                 <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200/80 dark:border-neutral-800/80 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-purple-700 dark:text-purple-400">
