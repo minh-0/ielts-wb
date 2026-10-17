@@ -21,7 +21,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-8 h-8 rounded-lg border border-black/10 dark:border-white/15 bg-transparent" />
+      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-transparent" />
     );
   }
 
@@ -34,7 +34,7 @@ export function ThemeToggle() {
       }}
       variant="circle"
       duration={450}
-      className="relative flex items-center justify-center w-8 h-8 rounded-lg border border-black/10 dark:border-white/15 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 transition-colors cursor-pointer"
+      className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-neutral-800 dark:text-neutral-200 transition-colors cursor-pointer"
       title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     />
   );

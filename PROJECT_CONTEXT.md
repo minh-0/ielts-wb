@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-17 17:07*
+*Last updated: 2026-10-17 17:39*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -98,6 +98,14 @@
 - **Interactive In-Text Paragraph View (`AnnotatedParagraph.tsx`)**:
   - Highlights grammar errors (red wavy), vocabulary upgrades (violet dashed), and replaced words (emerald solid).
   - Clicking any underlined span displays an interactive popover with examiner rationale, 1-click **"Apply Higher-Rated Word"** or **"Revert"** button, and an **"Ignore"** button (`EyeOff` icon) to dismiss the suggestion.
+  - **Edit Mode Popup Hint**: When users rapidly click or double-click on the essay text while in Annotated mode, the studio detects that they may be trying to edit the text and displays a small popover tooltip directly above the "Edit" button ("Click here to edit essay"). Clicking the tooltip or the Edit button immediately switches the view to Edit mode.
+- **Criteria Breakdown & Band 8–9 Assessment Standards Redesign**:
+  - Balanced lines vs. boxes: removed harsh cage-like vertical column dividers (`xl:border-r`) and header underlines, relying on generous grid spacing (`gap-6`).
+  - Encapsulated actionable Recommendations and Band 7.0 vs Band 8.5+ comparison quotes in subtle muted cards (`bg-neutral-50/80 dark:bg-neutral-900/40 rounded-xl p-3`).
+  - **Removed Red & Green Vertical Lines**: Replaced harsh `border-l-2` colored vertical bars on Band 7.0 / 8.5+ quotes with subtle contrast badge pills (`[Band 7.0]` and `[Band 8.5+]`) and soft hairline row dividers.
+- **Theme Toggle Button (`ThemeToggle.tsx` & `animated-theme-toggler.tsx`)**:
+  - Removed border around the theme switch button (`border border-black/10 dark:border-white/15` removed).
+  - Increased button dimensions to `w-9 h-9 sm:w-10 sm:h-10 rounded-xl` and scaled icons to `w-4.5 h-4.5` for better proportion and hit area.
   - Ignoring a suggestion removes its underline from the paragraph and hides it from active inspector counts.
 - **Inspector Panel (`DiagnosticInspector.tsx`)**:
   - Minimalist pre-submission empty state with quiet target indicator and compact color legend (no loud boxes or verbose tutorials).
@@ -185,6 +193,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `Pending`: `feat(writing): add edit mode popup hint, redesign criteria standards without vertical colored lines, and enlarge borderless theme toggle`
   - `e39bea7`: `style(hero): keep classic red accent in light mode while preserving emerald-teal-cyan in dark mode`
   - `7d49507`: `style(hero): harmonize dynamic text and ambient gradient theme to emerald-teal-cyan palette`
   - `8456c64`: `docs: update PROJECT_CONTEXT.md with Speaking Studio architecture, light mode contrast, and collocations dropdown`

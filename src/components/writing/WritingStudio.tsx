@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   PenTool,
   Clock,
@@ -68,6 +68,49 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
   const [viewMode, setViewMode] = useState<"annotated" | "edit">("edit");
   const [replacedItems, setReplacedItems] = useState<ReplacedWordItem[]>([]);
   const [ignoredIds, setIgnoredIds] = useState<string[]>([]);
+
+  // Edit mode reminder popup state
+  const [showEditHint, setShowEditHint] = useState(false);
+  const clickTrackerRef = useRef<{ count: number; lastTime: number; timer?: any }>({
+    count: 0,
+    lastTime: 0,
+  });
+
+  const triggerEditHint = useCallback(() => {
+    setShowEditHint(true);
+    if (clickTrackerRef.current.timer) {
+      clearTimeout(clickTrackerRef.current.timer);
+    }
+    clickTrackerRef.current.timer = setTimeout(() => {
+      setShowEditHint(false);
+    }, 4000);
+  }, []);
+
+  const handleAnnotatedAreaClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement | null;
+    // Don't trigger if user was clicking an interactive button
+    if (target?.closest("button")) {
+      return;
+    }
+    const now = Date.now();
+    const tracker = clickTrackerRef.current;
+    if (now - tracker.lastTime < 900) {
+      tracker.count += 1;
+    } else {
+      tracker.count = 1;
+    }
+    tracker.lastTime = now;
+
+    if (tracker.count >= 2) {
+      triggerEditHint();
+    }
+  };
+
+  const handleAnnotatedAreaDoubleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("button")) return;
+    triggerEditHint();
+  };
 
   // Focus/Enlarged Writing Popup State
   const [isWritingModalOpen, setIsWritingModalOpen] = useState(false);
@@ -900,18 +943,42 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       <Highlighter className="w-3.5 h-3.5" />
                       <span>Annotated</span>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setViewMode("edit")}
-                      className={`py-0.5 transition-colors cursor-pointer flex items-center gap-1 ${
-                        viewMode === "edit"
-                          ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
-                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
-                      }`}
-                    >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Edit</span>
-                    </button>
+                    <div className="relative inline-flex items-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setViewMode("edit");
+                          setShowEditHint(false);
+                        }}
+                        className={`py-0.5 transition-colors cursor-pointer flex items-center gap-1 ${
+                          viewMode === "edit"
+                            ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                            : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 font-medium"
+                        }`}
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+
+                      {/* Small pop up on top of the edit button */}
+                      {showEditHint && viewMode === "annotated" && (
+                        <div
+                          onClick={() => {
+                            setViewMode("edit");
+                            setShowEditHint(false);
+                          }}
+                          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-40 cursor-pointer select-none transition-all duration-200"
+                          role="tooltip"
+                        >
+                          <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 text-xs font-medium shadow-xl whitespace-nowrap hover:opacity-95 transition-opacity">
+                            <Edit3 className="w-3.5 h-3.5 text-emerald-400 dark:text-emerald-600 shrink-0" />
+                            <span>Click here to edit essay</span>
+                            {/* Downward triangle arrow */}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-neutral-900 dark:border-t-white" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </>
               )}
@@ -1020,19 +1087,25 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
 
           {/* Conditional View: Annotated in-text highlighting vs Textarea */}
           {analysisResult && viewMode === "annotated" ? (
-            <AnnotatedParagraph
-              content={essayContent}
-              errors={analysisResult.sentenceFeedbacks}
-              suggestions={analysisResult.vocabularySuggestions}
-              effectiveFeatures={analysisResult.effectiveFeatures}
-              replacedItems={replacedItems}
-              selectedId={selectedAnnotationId}
-              onSelect={setSelectedAnnotationId}
-              onApplyFix={handleApplyFix}
-              onRevertFix={handleRevertFix}
-              ignoredIds={ignoredIds}
-              onIgnore={handleIgnore}
-            />
+            <div
+              onClick={handleAnnotatedAreaClick}
+              onDoubleClick={handleAnnotatedAreaDoubleClick}
+              className="relative cursor-text"
+            >
+              <AnnotatedParagraph
+                content={essayContent}
+                errors={analysisResult.sentenceFeedbacks}
+                suggestions={analysisResult.vocabularySuggestions}
+                effectiveFeatures={analysisResult.effectiveFeatures}
+                replacedItems={replacedItems}
+                selectedId={selectedAnnotationId}
+                onSelect={setSelectedAnnotationId}
+                onApplyFix={handleApplyFix}
+                onRevertFix={handleRevertFix}
+                ignoredIds={ignoredIds}
+                onIgnore={handleIgnore}
+              />
+            </div>
           ) : (
             <textarea
               value={essayContent}
@@ -1197,15 +1270,16 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             />
           </div>
 
-          {/* TAB 1: Criteria (Clean column layout with hairline borders) */}
+          {/* TAB 1: Criteria (Balanced boxes and whitespace, minimal divider lines) */}
           {activeTab === "criteria" && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
-                <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
+                {/* Criterion 1: Task Response */}
+                <div className="space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 rounded-md">
                         Band&nbsp;
                         <NumberTicker
                           value={analysisResult.criteria.taskAchievement.score}
@@ -1218,7 +1292,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       {analysisResult.criteria.taskAchievement.feedback}
                     </p>
                   </div>
-                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                  <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.taskAchievement.keyRecommendations.map((r, i) => (
@@ -1228,11 +1302,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   </div>
                 </div>
 
-                <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
+                {/* Criterion 2: Coherence & Cohesion */}
+                <div className="space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Coherence & Cohesion</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 rounded-md">
                         Band&nbsp;
                         <NumberTicker
                           value={analysisResult.criteria.coherenceCohesion.score}
@@ -1245,7 +1320,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       {analysisResult.criteria.coherenceCohesion.feedback}
                     </p>
                   </div>
-                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                  <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.coherenceCohesion.keyRecommendations?.map((r, i) => (
@@ -1253,18 +1328,19 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       ))}
                     </ul>
                     {analysisResult.cohesionAnalysis.overusedLinkers.length > 0 && (
-                      <div className="text-[11px] text-amber-700 dark:text-amber-400 border-l-2 border-amber-500 pl-2 mt-1">
+                      <div className="text-[11px] text-amber-800 dark:text-amber-300 bg-amber-500/10 px-2 py-1 rounded-md mt-1">
                         Overused linkers: {analysisResult.cohesionAnalysis.overusedLinkers.join(", ")}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
+                {/* Criterion 3: Lexical Resource */}
+                <div className="space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Lexical Resource</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 rounded-md">
                         Band&nbsp;
                         <NumberTicker
                           value={analysisResult.criteria.lexicalResource.score}
@@ -1277,7 +1353,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       {analysisResult.criteria.lexicalResource.feedback}
                     </p>
                   </div>
-                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                  <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.lexicalResource.keyRecommendations?.map((r, i) => (
@@ -1287,11 +1363,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   </div>
                 </div>
 
-                <div className="space-y-3 pb-4 flex flex-col justify-between">
+                {/* Criterion 4: Grammatical Range & Accuracy */}
+                <div className="space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
+                    <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Grammatical Range</span>
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 rounded-md">
                         Band&nbsp;
                         <NumberTicker
                           value={analysisResult.criteria.grammaticalRange.score}
@@ -1304,7 +1381,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                       {analysisResult.criteria.grammaticalRange.feedback}
                     </p>
                   </div>
-                  <div className="pt-2 text-xs space-y-1 text-neutral-500 dark:text-neutral-400 border-t border-neutral-200 dark:border-neutral-800">
+                  <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
                     <ul className="list-disc list-inside space-y-0.5 text-[11px]">
                       {analysisResult.criteria.grammaticalRange.keyRecommendations?.map((r, i) => (
@@ -1315,9 +1392,9 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </div>
               </div>
 
-              {/* Band 8–9 Assessment Standards */}
+              {/* Band 8–9 Assessment Standards: Clean section divider line */}
               <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
-                <div className="pb-2 border-b border-neutral-200 dark:border-neutral-800 space-y-0.5">
+                <div className="space-y-0.5">
                   <h4 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
                     <BookOpen className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
                     Band 8–9 Assessment Standards
@@ -1327,99 +1404,123 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-1">
                   {/* Pillar 1: Academic Hedging (TR) */}
-                  <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                        <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                          1. Academic Hedging (TR)
-                        </span>
-                      </div>
+                  <div className="space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        1. Academic Hedging (TR)
+                      </span>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                         Band 7 scripts often rely on categorical absolutes (e.g., <em>&ldquo;will always lead to&rdquo;</em>). Band 9 responses maintain cautious, qualified claims.
                       </p>
                     </div>
-                    <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
-                      <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
-                        &ldquo;AI will inevitably replace all human labor in the foreseeable future.&rdquo;
+                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
+                      <div className="space-y-1">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                          Band 7.0
+                        </span>
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
+                          &ldquo;AI will inevitably replace all human labor in the foreseeable future.&rdquo;
+                        </p>
                       </div>
-                      <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
-                        &ldquo;While AI is arguably poised to displace routine clerical roles, it tends to complement high-order analytical occupations.&rdquo;
+                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                          Band 8.5+
+                        </span>
+                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
+                          &ldquo;While AI is arguably poised to displace routine clerical roles, it tends to complement high-order analytical occupations.&rdquo;
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Pillar 2: Thematic Referencing (CC) */}
-                  <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                        <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                          2. Thematic Referencing (CC)
-                        </span>
-                      </div>
+                  <div className="space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        2. Thematic Referencing (CC)
+                      </span>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                         Band 8+ cohesion attracts no attention. Replace mechanical linkers (<em>&ldquo;Furthermore&rdquo;, &ldquo;In addition&rdquo;</em>) with demonstrative noun-phrase bridging.
                       </p>
                     </div>
-                    <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
-                      <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
-                        &ldquo;Furthermore, the environment is being damaged. In addition, governments must act.&rdquo;
+                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
+                      <div className="space-y-1">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                          Band 7.0
+                        </span>
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
+                          &ldquo;Furthermore, the environment is being damaged. In addition, governments must act.&rdquo;
+                        </p>
                       </div>
-                      <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
-                        &ldquo;This escalating ecological strain in turn necessitates decisive, synchronized state intervention.&rdquo;
+                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                          Band 8.5+
+                        </span>
+                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
+                          &ldquo;This escalating ecological strain in turn necessitates decisive, synchronized state intervention.&rdquo;
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Pillar 3: Syntactic Inversion & Clefting (GRA) */}
-                  <div className="space-y-3 pb-4 border-b xl:border-b-0 xl:border-r border-neutral-200 dark:border-neutral-800 xl:pr-6 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                        <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                          3. Inversion & Clefting (GRA)
-                        </span>
-                      </div>
+                  <div className="space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        3. Inversion & Clefting (GRA)
+                      </span>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                         Incorporate advanced clause structures naturally, such as inverted conditionals (<em>&ldquo;Were [subject] to [verb]&rdquo;</em>) and cleft constructions.
                       </p>
                     </div>
-                    <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
-                      <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
-                        &ldquo;If authorities subsidize public transport, commuters will stop driving cars.&rdquo;
+                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
+                      <div className="space-y-1">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                          Band 7.0
+                        </span>
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
+                          &ldquo;If authorities subsidize public transport, commuters will stop driving cars.&rdquo;
+                        </p>
                       </div>
-                      <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
-                        &ldquo;Were authorities to heavily subsidize municipal transit, commuters would be markedly more inclined to forgo private transport.&rdquo;
+                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                          Band 8.5+
+                        </span>
+                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
+                          &ldquo;Were authorities to heavily subsidize municipal transit, commuters would be markedly more inclined to forgo private transport.&rdquo;
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Pillar 4: Connotative Precision (LR) */}
-                  <div className="space-y-3 pb-4 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <div className="pb-1.5 border-b border-neutral-200 dark:border-neutral-800">
-                        <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                          4. Lexical Precision (LR)
-                        </span>
-                      </div>
+                  <div className="space-y-3 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        4. Lexical Precision (LR)
+                      </span>
                       <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                         Band 8.5+ relies on precise collocation rather than generic synonyms. Pair analytical verbs with specific abstract nouns.
                       </p>
                     </div>
-                    <div className="pt-2 text-xs space-y-2 border-t border-neutral-200 dark:border-neutral-800">
-                      <div className="border-l-2 border-rose-400/80 dark:border-rose-500/80 pl-2.5 py-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-rose-500 mr-1.5 block sm:inline">Band 7.0:</span>
-                        &ldquo;This will solve the problem and have a positive impact on the economy.&rdquo;
+                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
+                      <div className="space-y-1">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                          Band 7.0
+                        </span>
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
+                          &ldquo;This will solve the problem and have a positive impact on the economy.&rdquo;
+                        </p>
                       </div>
-                      <div className="border-l-2 border-emerald-500 dark:border-emerald-400 pl-2.5 py-0.5 text-xs text-neutral-900 dark:text-neutral-100 font-medium">
-                        <span className="text-[10px] font-sans font-semibold uppercase text-emerald-600 dark:text-emerald-400 mr-1.5 block sm:inline">Band 8.5+:</span>
-                        &ldquo;This systematically alleviates underlying structural friction, thereby yielding palpable macroeconomic dividends.&rdquo;
+                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                          Band 8.5+
+                        </span>
+                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
+                          &ldquo;This systematically alleviates underlying structural friction, thereby yielding palpable macroeconomic dividends.&rdquo;
+                        </p>
                       </div>
                     </div>
                   </div>
