@@ -215,8 +215,8 @@ export function SpeakingQuestionPickerModal({
           </span>
         </div>
 
-        {/* List of prompts */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2">
+        {/* List of prompts (Clean Hairline Divided, Zero Rounded Card Boxes) */}
+        <div className="flex-1 overflow-y-auto divide-y divide-neutral-200 dark:divide-neutral-800">
           {filteredPrompts.length === 0 ? (
             <div className="py-12 text-center text-xs text-neutral-400">
               No matching speaking prompts found. Try another search keyword or clear filters.
@@ -231,26 +231,28 @@ export function SpeakingQuestionPickerModal({
                     onSelectPrompt(p);
                     onClose();
                   }}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer text-left ${
+                  className={`p-3.5 transition-colors cursor-pointer text-left ${
                     isSelected
-                      ? "border-neutral-900 dark:border-neutral-100 bg-neutral-50 dark:bg-neutral-900/50 shadow-xs"
-                      : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-white dark:bg-neutral-950"
+                      ? "bg-neutral-100/70 dark:bg-neutral-900/60 border-l-2 border-neutral-900 dark:border-neutral-100 pl-3"
+                      : "hover:bg-neutral-50 dark:hover:bg-neutral-900/30"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-neutral-200/60 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="flex items-center gap-2 flex-wrap text-xs">
+                      <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                         Part {p.part}
                       </span>
-                      <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400">
+                      <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+                      <span className="font-medium text-neutral-600 dark:text-neutral-400">
                         {p.topic}
                       </span>
-                      <span className="text-[10px] text-neutral-400 dark:text-neutral-500">
-                        • {p.sourceBadge}
+                      <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+                      <span className="text-neutral-400 dark:text-neutral-500">
+                        {p.sourceBadge}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[10px] text-neutral-400 shrink-0">
+                    <div className="flex items-center gap-1 text-[11px] text-neutral-400 shrink-0">
                       <Clock className="w-3 h-3" />
                       <span>{p.targetDurationSec}s</span>
                     </div>
@@ -261,23 +263,21 @@ export function SpeakingQuestionPickerModal({
                   </p>
 
                   {p.cueCardBullets && p.cueCardBullets.length > 0 && (
-                    <ul className="mt-1.5 pl-3.5 space-y-0.5 text-[11px] text-neutral-500 dark:text-neutral-400 list-disc">
+                    <div className="border-l-2 border-neutral-200 dark:border-neutral-800 pl-3 my-1.5 space-y-0.5">
                       {p.cueCardBullets.map((b, i) => (
-                        <li key={i}>{b}</li>
+                        <div key={i} className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                          – {b}
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   )}
 
-                  {/* Collocation pills preview */}
-                  <div className="mt-2 flex items-center gap-1 flex-wrap">
-                    {p.targetCollocations.map((c, i) => (
-                      <span
-                        key={i}
-                        className="px-1.5 py-0.5 text-[10px] rounded bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300/80 border border-purple-200/40 dark:border-purple-800/30"
-                      >
-                        {c.phrase}
-                      </span>
-                    ))}
+                  {/* Collocation preview */}
+                  <div className="mt-1.5 flex items-center gap-2 flex-wrap text-[11px] text-neutral-400">
+                    <span className="font-medium text-neutral-500">Chunks:</span>
+                    <span>
+                      {p.targetCollocations.map((c) => c.phrase).join(" • ")}
+                    </span>
                   </div>
                 </div>
               );

@@ -634,18 +634,18 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* ======================================================== */}
       {/* SECTION A: TOP STUDIO BAR (Hairline Divided)             */}
       {/* ======================================================== */}
-      <div className="border-b border-neutral-200 dark:border-neutral-800 pb-3 flex flex-wrap items-center justify-between gap-3">
-        {/* Left: Part Switcher Tabs */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-neutral-100/80 dark:bg-neutral-900/80 border border-neutral-200/80 dark:border-neutral-800/80">
+      <div className="border-b border-neutral-200 dark:border-neutral-800 pb-2 flex flex-wrap items-center justify-between gap-4">
+        {/* Left: Part Switcher Minimalist Tabs (Underline, No Box) */}
+        <div className="flex items-center gap-6 text-xs font-medium">
           {([1, 2, 3] as const).map((part) => (
             <button
               key={part}
               onClick={() => setActivePart(part)}
               className={cn(
-                "px-3 py-1 text-xs font-medium rounded-lg transition-all cursor-pointer",
+                "pb-2 pt-1 -mb-[9px] transition-colors border-b-2 cursor-pointer",
                 activePart === part
-                  ? "bg-white dark:bg-neutral-800 text-neutral-950 dark:text-neutral-50 shadow-xs"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
+                  ? "border-neutral-900 dark:border-neutral-100 text-neutral-950 dark:text-neutral-50 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
               )}
             >
               Part {part}
@@ -653,60 +653,64 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           ))}
         </div>
 
-        {/* Right: Timer Mode Toggle & Question Controls */}
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {/* Mode Switcher */}
-          <div className="flex items-center gap-1 p-0.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-xs">
+        {/* Right: Timer Mode & Question Controls (Lines & Ghost Actions) */}
+        <div className="flex items-center gap-3 text-xs">
+          {/* Timer Modes */}
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setTimerMode("standard")}
               className={cn(
-                "px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer",
+                "py-1 transition-colors cursor-pointer",
                 timerMode === "standard"
-                  ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-950 dark:text-white"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
+                  ? "text-neutral-950 dark:text-white font-semibold"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
               )}
             >
               Standard
             </button>
+            <span className="text-neutral-300 dark:text-neutral-700 font-light">/</span>
             <button
               onClick={() => setTimerMode("exam")}
               className={cn(
-                "px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer",
+                "py-1 transition-colors cursor-pointer",
                 timerMode === "exam"
-                  ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-950 dark:text-white"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
+                  ? "text-neutral-950 dark:text-white font-semibold"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
               )}
             >
               Exam
             </button>
             {activePart === 2 && (
-              <button
-                onClick={() => setTimerMode("drill_432")}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1",
-                  timerMode === "drill_432"
-                    ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-950 dark:text-white"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
-                )}
-              >
-                <Flame className="w-3 h-3 text-rose-500" />
-                <span>4-3-2 Drill</span>
-              </button>
+              <>
+                <span className="text-neutral-300 dark:text-neutral-700 font-light">/</span>
+                <button
+                  onClick={() => setTimerMode("drill_432")}
+                  className={cn(
+                    "py-1 transition-colors cursor-pointer inline-flex items-center gap-1",
+                    timerMode === "drill_432"
+                      ? "text-neutral-950 dark:text-white font-semibold"
+                      : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                  )}
+                >
+                  <Flame className="w-3 h-3 text-rose-500" />
+                  <span>4-3-2 Drill</span>
+                </button>
+              </>
             )}
           </div>
 
-          {/* 4-3-2 Drill Attempt Pills */}
+          {/* 4-3-2 Drill Attempt Underlines */}
           {timerMode === "drill_432" && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5 pl-1 border-l border-neutral-200 dark:border-neutral-800">
               {([1, 2, 3] as const).map((att) => (
                 <button
                   key={att}
                   onClick={() => setDrillAttempt(att)}
                   className={cn(
-                    "px-2 py-0.5 text-[10px] font-medium rounded border transition-colors cursor-pointer",
+                    "text-[11px] px-1 py-0.5 border-b transition-colors cursor-pointer",
                     drillAttempt === att
-                      ? "border-neutral-900 dark:border-neutral-100 bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 font-semibold"
-                      : "border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:border-neutral-300"
+                      ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100 font-semibold"
+                      : "border-transparent text-neutral-400 hover:text-neutral-700"
                   )}
                 >
                   #{att} ({att === 1 ? "2:00" : att === 2 ? "1:30" : "1:00"})
@@ -714,6 +718,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               ))}
             </div>
           )}
+
+          <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
 
           {/* Question Controls */}
           <button
@@ -726,14 +732,14 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               setSelectedPrompt(promptsForPart[nextIdx]);
             }}
             title="Random Question"
-            className="p-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer"
+            className="p-1 text-neutral-500 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer"
           >
             <Shuffle className="w-3.5 h-3.5" />
           </button>
 
           <button
             onClick={() => setIsQuestionPickerOpen(true)}
-            className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
           >
             <Search className="w-3.5 h-3.5 text-neutral-400" />
             <span>Browse</span>
@@ -747,36 +753,39 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       <div className="space-y-4">
         {/* Question Metadata & TTS */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-neutral-100 dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 border border-neutral-200/80 dark:border-neutral-800/80">
+          <div className="flex items-center gap-2 text-xs flex-wrap">
+            <span className="font-semibold text-neutral-900 dark:text-neutral-100">
               {selectedPrompt.topic}
             </span>
-            <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+            <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+            <span className="text-neutral-400 dark:text-neutral-500 font-medium">
               {selectedPrompt.sourceBadge}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 text-xs">
             <button
               onClick={handleReadQuestion}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
               title="Listen to UK Examiner voice"
             >
               <Volume2 className="w-3.5 h-3.5 text-neutral-500" />
               <span className="text-[11px] font-medium">Examiner Audio</span>
             </button>
 
+            <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+
             <button
               onClick={() => setShowScaffoldStrip(!showScaffoldStrip)}
               className={cn(
-                "flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded-md border transition-colors cursor-pointer",
+                "inline-flex items-center gap-1.5 text-xs font-medium transition-colors cursor-pointer",
                 showScaffoldStrip
-                  ? "border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 text-neutral-950 dark:text-neutral-100"
-                  : "border-neutral-200 dark:border-neutral-800 text-neutral-500"
+                  ? "text-purple-600 dark:text-purple-400 underline underline-offset-4"
+                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
               )}
             >
               <Sparkles className="w-3 h-3 text-purple-500" />
-              <span>Scaffold</span>
+              <span>Scaffold ({usedCollocations.length}/{selectedPrompt.targetCollocations.length})</span>
             </button>
           </div>
         </div>
@@ -788,20 +797,28 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </h2>
 
           {selectedPrompt.cueCardBullets && selectedPrompt.cueCardBullets.length > 0 && (
-            <ul className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 space-y-1 pl-4 list-disc marker:text-neutral-400">
-              {selectedPrompt.cueCardBullets.map((bullet, idx) => (
-                <li key={idx}>{bullet}</li>
-              ))}
-            </ul>
+            <div className="border-l-2 border-neutral-300 dark:border-neutral-700 pl-4 py-1 space-y-1.5 my-2">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+                You should say:
+              </div>
+              <ul className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 space-y-1">
+                {selectedPrompt.cueCardBullets.map((bullet, idx) => (
+                  <li key={idx} className="flex items-baseline gap-2">
+                    <span className="text-neutral-400">–</span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
 
-        {/* Active Scaffolding Strip */}
+        {/* Active Scaffolding Strip (Clean Hairline Line, Zero Box) */}
         {showScaffoldStrip && (
-          <div className="p-3 rounded-xl border border-neutral-200/90 dark:border-neutral-800/90 bg-neutral-50/50 dark:bg-neutral-900/30 space-y-2.5">
-            {/* Target Collocations Pills */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[11px] font-medium text-neutral-500 mr-1 shrink-0">
+          <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+            {/* Target Collocations Line Tags */}
+            <div className="flex items-center gap-x-4 gap-y-2 flex-wrap text-xs">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 shrink-0">
                 Target Chunks:
               </span>
               {selectedPrompt.targetCollocations.map((colloc, idx) => {
@@ -814,17 +831,17 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     onClick={() => toggleCollocationCheck(colloc.phrase)}
                     title={`Context: "${colloc.contextSnippet}" (Click to toggle)`}
                     className={cn(
-                      "flex items-center gap-1 px-2 py-0.5 text-xs rounded-lg border transition-all cursor-pointer",
+                      "inline-flex items-center gap-1.5 py-0.5 border-b transition-colors cursor-pointer",
                       isChecked
-                        ? "text-emerald-700 bg-emerald-50 dark:text-emerald-300/90 dark:bg-emerald-950/40 border-emerald-300/80 dark:border-emerald-800/60 font-medium"
-                        : "text-purple-700 bg-purple-50 dark:text-purple-300/90 dark:bg-purple-950/40 border-purple-200/60 dark:border-purple-800/40 hover:border-purple-300"
+                        ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold"
+                        : "border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200"
                     )}
                   >
                     {isChecked ? (
                       <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     ) : (
-                      <span className="text-[9px] font-semibold px-1 rounded bg-purple-200/50 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200">
-                        {colloc.cefr}
+                      <span className="text-[10px] text-purple-600 dark:text-purple-400 font-medium">
+                        [{colloc.cefr}]
                       </span>
                     )}
                     <span>{colloc.phrase}</span>
@@ -834,7 +851,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </div>
 
             {/* Grammar Target Formula */}
-            <div className="flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400">
+            <div className="flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400 pt-1 border-t border-dashed border-neutral-200 dark:border-neutral-800">
               <span className="font-medium text-neutral-500 shrink-0">
                 Target Grammar:
               </span>
@@ -853,45 +870,47 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* SECTION C: RECORDING & PACING WORKBENCH                  */}
       {/* ======================================================== */}
       <div className="space-y-4">
-        {/* Part 2 Scratchpad (60s prep + 4-cell inline structure) */}
+        {/* Part 2 Scratchpad (60s prep + 4-cell bottom-line structure) */}
         {activePart === 2 && (
-          <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2.5">
+          <div className="py-3 border-y border-neutral-200 dark:border-neutral-800 space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <FileText className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
+                <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                   Part 2 60s Scratchpad
                 </span>
               </div>
 
-              {/* Prep Timer */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+              {/* Prep Timer & Controls */}
+              <div className="flex items-center gap-3 text-xs">
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                   {formatTime(prepSecondsRemaining)}
                 </span>
+                <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
                 <button
                   onClick={() => setIsPrepping(!isPrepping)}
-                  className="px-2 py-0.5 text-[11px] font-medium rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer"
+                  className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
                   {isPrepping ? "Pause" : "Start 1m Prep"}
                 </button>
+                <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
                 <button
                   onClick={() => {
                     setIsPrepping(false);
                     setPrepSecondsRemaining(60);
                   }}
-                  className="p-1 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer"
+                  className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors cursor-pointer"
                   title="Reset Prep Timer"
                 >
-                  <RotateCcw className="w-3 h-3" />
+                  Reset
                 </button>
               </div>
             </div>
 
-            {/* 4-Cell Inline Keyword Scratchpad */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+            {/* 4-Cell Bottom-Line Keyword Scratchpad (Zero Rounded Boxes) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
-                <label className="text-[10px] font-medium text-neutral-400 uppercase">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                   1. Context
                 </label>
                 <input
@@ -899,12 +918,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.context}
                   onChange={(e) => setScratchpad({ ...scratchpad, context: e.target.value })}
                   placeholder="Who, where, setting..."
-                  className="w-full text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 outline-none"
+                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-medium text-neutral-400 uppercase">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                   2. Core Detail
                 </label>
                 <input
@@ -912,12 +931,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.core}
                   onChange={(e) => setScratchpad({ ...scratchpad, core: e.target.value })}
                   placeholder="Key event, action..."
-                  className="w-full text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 outline-none"
+                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-medium text-neutral-400 uppercase">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                   3. Impact
                 </label>
                 <input
@@ -925,12 +944,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.impact}
                   onChange={(e) => setScratchpad({ ...scratchpad, impact: e.target.value })}
                   placeholder="Why significant, feelings..."
-                  className="w-full text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 outline-none"
+                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-medium text-neutral-400 uppercase">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
                   4. Outcome
                 </label>
                 <input
@@ -938,26 +957,53 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.outcome}
                   onChange={(e) => setScratchpad({ ...scratchpad, outcome: e.target.value })}
                   placeholder="Reflection, legacy..."
-                  className="w-full text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 text-neutral-900 dark:text-neutral-100 outline-none"
+                  className="w-full text-xs py-1.5 border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 bg-transparent rounded-none text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-400 transition-colors"
                 />
               </div>
             </div>
           </div>
         )}
 
-        {/* Segmented Pacing Progress Bar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] font-medium text-neutral-500">
-            <span>Pacing Breakdown</span>
+        {/* Linear Pacing Progress & Vertical Dividers (Zero Rounded Boxes) */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-neutral-500">
+            <span className="font-semibold uppercase tracking-wider text-[11px] text-neutral-400">
+              Pacing Timeline
+            </span>
             <span>
               Segment {activePacingIndex + 1}/{selectedPrompt.pacingSegments.length}:{" "}
-              <strong className="text-neutral-900 dark:text-neutral-100">
+              <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">
                 {selectedPrompt.pacingSegments[activePacingIndex]?.label}
               </strong>
             </span>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
+          {/* Linear Progress Multi-Segment Bar */}
+          <div className="w-full h-1 bg-neutral-200/80 dark:bg-neutral-800 flex overflow-hidden">
+            {selectedPrompt.pacingSegments.map((seg, idx) => {
+              const segDuration = seg.endSec - seg.startSec;
+              const widthPct = (segDuration / effectiveTargetDuration) * 100;
+              const isActive = idx === activePacingIndex && isRecording;
+              const isPast = elapsedSeconds >= seg.endSec;
+              return (
+                <div
+                  key={idx}
+                  style={{ width: `${widthPct}%` }}
+                  className={cn(
+                    "h-full border-r border-white dark:border-neutral-950 transition-colors",
+                    isActive
+                      ? "bg-emerald-500"
+                      : isPast
+                      ? "bg-neutral-400 dark:bg-neutral-600"
+                      : "bg-neutral-200 dark:bg-neutral-800"
+                  )}
+                />
+              );
+            })}
+          </div>
+
+          {/* Segment Labels with Vertical Line Dividers */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-neutral-200 dark:divide-neutral-800 pt-1">
             {selectedPrompt.pacingSegments.map((seg, idx) => {
               const isActive = idx === activePacingIndex && isRecording;
               const isPast = elapsedSeconds >= seg.endSec;
@@ -965,15 +1011,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <div
                   key={idx}
                   className={cn(
-                    "p-1.5 rounded-lg border text-left transition-colors",
+                    "px-2.5 first:pl-0 text-left transition-colors",
                     isActive
-                      ? "border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-200 font-medium"
+                      ? "text-emerald-600 dark:text-emerald-400"
                       : isPast
-                      ? "border-neutral-200 dark:border-neutral-800 bg-neutral-100/50 dark:bg-neutral-900/20 text-neutral-400"
-                      : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400"
+                      ? "text-neutral-400 dark:text-neutral-500"
+                      : "text-neutral-600 dark:text-neutral-400"
                   )}
                 >
-                  <div className="text-[10px] font-medium leading-none mb-0.5 opacity-80">
+                  <div className="text-[10px] font-medium leading-none mb-0.5">
                     {seg.label.split("•")[0].trim()}
                   </div>
                   <div className="text-xs truncate font-medium">
@@ -985,12 +1031,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         </div>
 
-        {/* Live Audio Waveform Canvas */}
-        <div className="relative rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-950 overflow-hidden h-24 flex items-center justify-center">
+        {/* Live Audio Waveform Canvas (Hairline Top/Bottom Line, Zero Rounded Corners) */}
+        <div className="relative border-y border-neutral-200 dark:border-neutral-800 bg-neutral-950 overflow-hidden h-20 flex items-center justify-center">
           <canvas
             ref={canvasRef}
             width={720}
-            height={96}
+            height={80}
             className="w-full h-full block"
           />
 
@@ -1001,21 +1047,21 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           )}
 
           {isRecording && (
-            <div className="absolute top-2 right-3 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[10px] font-semibold tracking-wider">
+            <div className="absolute top-2 right-3 flex items-center gap-1.5 text-rose-400 text-[10px] font-semibold tracking-wider">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
               <span>LIVE</span>
             </div>
           )}
         </div>
 
-        {/* Recording Controls & Deterministic Telemetry Bar */}
-        <div className="p-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 flex flex-wrap items-center justify-between gap-4">
+        {/* Recording Controls & Deterministic Telemetry Toolbar (Line Divided, Zero Box) */}
+        <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-4">
           {/* Main Action: Record / Stop */}
           <div className="flex items-center gap-3">
             {!isRecording ? (
               <button
                 onClick={startRecording}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-neutral-950 text-xs font-medium tracking-tight transition-colors cursor-pointer"
+                className="flex items-center gap-2 px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-neutral-950 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
               >
                 <Mic className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
                 <span>Start Speaking</span>
@@ -1023,7 +1069,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             ) : (
               <button
                 onClick={stopRecording}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-medium tracking-tight transition-colors cursor-pointer"
+                className="flex items-center gap-2 px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold tracking-tight transition-colors cursor-pointer"
               >
                 <Square className="w-3.5 h-3.5 fill-current" />
                 <span>Finish Response</span>
@@ -1041,7 +1087,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             {audioUrl && !isRecording && (
               <button
                 onClick={resetRecording}
-                className="p-2 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer"
+                className="p-1.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors cursor-pointer"
                 title="Reset Recording"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -1049,7 +1095,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             )}
           </div>
 
-          {/* Telemetry Stats (Zero AI) */}
+          {/* Telemetry Stats Divided by Vertical Lines */}
           <div className="flex items-center gap-3 sm:gap-4 flex-wrap text-xs font-medium">
             {/* WPM Counter */}
             <div className="flex items-baseline gap-1">
@@ -1069,6 +1115,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               <span className="text-[10px] text-neutral-400">(120–150 target)</span>
             </div>
 
+            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
+
             {/* Hesitation >2.0s Pauses */}
             <div className="flex items-baseline gap-1">
               <span className="text-neutral-400">Pauses &gt;2s:</span>
@@ -1084,6 +1132,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </span>
             </div>
 
+            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
+
             {/* Filler Words Count */}
             <div className="flex items-baseline gap-1">
               <span className="text-neutral-400">Fillers:</span>
@@ -1098,6 +1148,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 {detectedFillers.length}
               </span>
             </div>
+
+            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
 
             {/* Collocations Hit */}
             <div className="flex items-baseline gap-1">
@@ -1139,8 +1191,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           >
             <span>Authentic Examiner Models</span>
             {selectedPrompt.transcripts.band6 && (
-              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
-                Band 6 vs 9
+              <span className="text-[10px] font-medium text-neutral-400">
+                (Band 6 vs 9)
               </span>
             )}
           </button>
@@ -1149,9 +1201,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
         {/* TAB 1: TRANSCRIPT & AUDIT */}
         {postTab === "transcript_audit" && (
           <div className="space-y-4">
-            {/* Minimalist Audio Playback Scrub Bar */}
+            {/* Minimalist Audio Playback Scrub Bar (Line Divided, Zero Box) */}
             {audioUrl && (
-              <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center gap-3">
+              <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
                 <audio
                   ref={audioPlayerRef}
                   src={audioUrl}
@@ -1162,12 +1214,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
                 <button
                   onClick={togglePlayAudio}
-                  className="p-2 rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 cursor-pointer shrink-0"
+                  className="p-1.5 text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer shrink-0"
                 >
                   {isPlayingAudio ? (
-                    <Pause className="w-3.5 h-3.5 fill-current" />
+                    <Pause className="w-4 h-4 fill-current" />
                   ) : (
-                    <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                    <Play className="w-4 h-4 fill-current ml-0.5" />
                   )}
                 </button>
 
@@ -1188,24 +1240,28 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
                 <button
                   onClick={handleToggleSpeed}
-                  className="px-2 py-1 text-[11px] font-medium rounded border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer shrink-0"
+                  className="text-[11px] font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 py-1"
                 >
                   {playbackSpeed}x
                 </button>
 
+                <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+
                 <button
                   onClick={resetRecording}
-                  className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer shrink-0"
+                  className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0"
                 >
                   Retry
                 </button>
               </div>
             )}
 
-            {/* Annotated Candidate Transcript Box */}
-            <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-2">
+            {/* Candidate Transcript (Clean Line Divided, Zero Box) */}
+            <div className="py-4 border-b border-neutral-200 dark:border-neutral-800 space-y-2.5">
               <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
-                <span>Spoken Transcript (Live Acoustic Log)</span>
+                <span className="font-semibold uppercase tracking-wider text-[11px]">
+                  Spoken Transcript (Live Acoustic Log)
+                </span>
                 <span>
                   {activeTranscriptText.trim().split(/\s+/).filter(Boolean).length} words
                 </span>
@@ -1220,15 +1276,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </div>
             </div>
 
-            {/* 4-Point Self-Audit Checklist */}
-            <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/40 dark:bg-neutral-900/20 space-y-2.5">
-              <div className="flex items-center gap-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+            {/* 4-Point Self-Audit Checklist (Linear Divided List, Zero Box Cards) */}
+            <div className="py-3 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 pb-1">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>Examiner Rubric Self-Audit (Cambridge FC, LR, GRA, PR)</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <label className="flex items-center gap-2 p-2 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 cursor-pointer select-none">
+              <div className="divide-y divide-neutral-200 dark:divide-neutral-800 border-y border-neutral-200 dark:border-neutral-800">
+                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
                   <input
                     type="checkbox"
                     checked={checklist.answeredDirectly}
@@ -1237,12 +1293,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-neutral-700 dark:text-neutral-300">
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
                     Answered directly without repeating prompt words verbatim
                   </span>
                 </label>
 
-                <label className="flex items-center gap-2 p-2 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 cursor-pointer select-none">
+                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
                   <input
                     type="checkbox"
                     checked={checklist.zeroPauses}
@@ -1251,12 +1307,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-neutral-700 dark:text-neutral-300">
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
                     Spoke without noticeable pauses exceeding 2.0s
                   </span>
                 </label>
 
-                <label className="flex items-center gap-2 p-2 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 cursor-pointer select-none">
+                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
                   <input
                     type="checkbox"
                     checked={checklist.usedCollocations}
@@ -1265,12 +1321,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-neutral-700 dark:text-neutral-300">
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
                     Integrated at least 2 target academic collocations naturally
                   </span>
                 </label>
 
-                <label className="flex items-center gap-2 p-2 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 bg-white dark:bg-neutral-950 cursor-pointer select-none">
+                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
                   <input
                     type="checkbox"
                     checked={checklist.complexClause}
@@ -1279,7 +1335,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-neutral-700 dark:text-neutral-300">
+                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
                     Included complex sentence clause (concession, condition, cleft)
                   </span>
                 </label>
@@ -1288,19 +1344,24 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
         )}
 
-        {/* TAB 2: AUTHENTIC MODELS (Verbatim Human Transcripts) */}
+        {/* TAB 2: AUTHENTIC MODELS (Verbatim Human Transcripts with Vertical Hairline Split) */}
         {postTab === "authentic_models" && (
           <div className="space-y-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div
+              className={cn(
+                "grid grid-cols-1 gap-8 pt-2",
+                selectedPrompt.transcripts.band6
+                  ? "lg:grid-cols-2 lg:divide-x divide-neutral-200 dark:divide-neutral-800"
+                  : ""
+              )}
+            >
               {/* Band 6.0 Candidate Transcript (if exists) */}
               {selectedPrompt.transcripts.band6 && (
-                <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-neutral-900">
-                    <div>
-                      <span className="px-2 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/40">
-                        {selectedPrompt.transcripts.band6.band}
-                      </span>
-                    </div>
+                <div className="space-y-3 lg:pr-6">
+                  <div className="flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-800 text-xs">
+                    <span className="font-semibold text-amber-700 dark:text-amber-400">
+                      {selectedPrompt.transcripts.band6.band}
+                    </span>
                     <span className="text-[11px] font-medium text-neutral-400">
                       Cambridge Audio Log
                     </span>
@@ -1323,35 +1384,38 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               {/* Band 9.0 Model Transcript */}
               <div
                 className={cn(
-                  "p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 space-y-3",
-                  !selectedPrompt.transcripts.band6 && "lg:col-span-2"
+                  "space-y-3",
+                  selectedPrompt.transcripts.band6 ? "lg:pl-6" : ""
                 )}
               >
-                <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-neutral-900">
+                <div className="flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-800 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/60 dark:border-purple-800/40">
+                    <span className="font-semibold text-purple-700 dark:text-purple-400">
                       {selectedPrompt.transcripts.band9.band}
                     </span>
-                    <span className="text-xs font-medium text-neutral-400">
+                    <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+                    <span className="text-neutral-400 font-medium">
                       {selectedPrompt.transcripts.band9.wordCount} words
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={handleReadModel}
-                      className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                      className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
                       title="Listen to Model"
                     >
                       <Volume2 className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">Listen</span>
+                      <span>Listen</span>
                     </button>
+
+                    <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
 
                     <button
                       onClick={() =>
                         handleCopyText(selectedPrompt.transcripts.band9.text, "band9")
                       }
-                      className="flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer"
+                      className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
                       title="Copy Model Transcript"
                     >
                       {copiedKey === "band9" ? (
@@ -1359,7 +1423,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       ) : (
                         <Copy className="w-3.5 h-3.5" />
                       )}
-                      <span className="hidden sm:inline">Copy</span>
+                      <span>Copy</span>
                     </button>
                   </div>
                 </div>
