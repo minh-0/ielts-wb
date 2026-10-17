@@ -493,7 +493,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   const renderAnnotatedTranscript = (text: string) => {
     if (!text.trim()) {
       return (
-        <span className="text-neutral-400 italic">
+        <span className="text-neutral-600 dark:text-neutral-400 italic">
           (No speech detected yet. Click the record button below to speak your response).
         </span>
       );
@@ -600,7 +600,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 "pb-2 pt-1 -mb-[9px] transition-colors border-b-2 cursor-pointer",
                 activePart === part
                   ? "border-neutral-900 dark:border-neutral-100 text-neutral-950 dark:text-neutral-50 font-semibold"
-                  : "border-transparent text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
+                  : "border-transparent text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-200"
               )}
             >
               Part {part}
@@ -621,7 +621,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   "py-1 transition-colors cursor-pointer",
                   timerMode === "standard"
                     ? "text-neutral-950 dark:text-white font-semibold"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-200 font-normal"
                 )}
               >
                 Standard
@@ -635,7 +635,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   "py-1 transition-colors cursor-pointer",
                   timerMode === "exam"
                     ? "text-neutral-950 dark:text-white font-semibold"
-                    : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-200 font-normal"
                 )}
               >
                 Exam
@@ -651,7 +651,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       "py-1 transition-colors cursor-pointer inline-flex items-center gap-1",
                       timerMode === "drill_432"
                         ? "text-rose-600 dark:text-rose-400 font-semibold"
-                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
+                        : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-200 font-normal"
                     )}
                   >
                     <Flame className="w-3 h-3 text-rose-500" />
@@ -674,22 +674,22 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 setSelectedPrompt(promptsForPart[nextIdx]);
               }}
               title="Random Question"
-              className="p-1 text-neutral-500 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+              className="p-1 text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer"
             >
               <Shuffle className="w-3.5 h-3.5" />
             </button>
 
             <button
               onClick={() => setIsQuestionPickerOpen(true)}
-              className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
+              className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
             >
-              <Search className="w-3.5 h-3.5 text-neutral-400" />
+              <Search className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
               <span>Browse Bank</span>
             </button>
           </div>
 
           {/* Micro-explainer right below the mode selection tab */}
-          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 font-normal select-none">
+          <div className="text-[11px] text-neutral-600 dark:text-neutral-400 font-normal select-none">
             {activeExplainingMode === "standard" && (
               <span>Standard • Open practice without forced cutoff</span>
             )}
@@ -714,7 +714,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               {selectedPrompt.topic}
             </span>
             <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-            <span className="text-neutral-400 dark:text-neutral-500 font-medium">
+            <span className="text-neutral-600 dark:text-neutral-400 font-medium">
               {selectedPrompt.sourceBadge}
             </span>
           </div>
@@ -725,7 +725,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               "inline-flex items-center gap-1.5 text-xs font-medium transition-colors cursor-pointer",
               showScaffoldStrip
                 ? "text-purple-600 dark:text-purple-400 underline underline-offset-4"
-                : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
+                : "text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-200"
             )}
           >
             <Sparkles className="w-3 h-3 text-purple-500" />
@@ -741,13 +741,13 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
           {selectedPrompt.cueCardBullets && selectedPrompt.cueCardBullets.length > 0 && (
             <div className="border-l-2 border-neutral-300 dark:border-neutral-700 pl-4 py-1 space-y-1.5 my-2">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              <div className="text-[11px] font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
                 You should say:
               </div>
-              <ul className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 space-y-1">
+              <ul className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 space-y-1">
                 {selectedPrompt.cueCardBullets.map((bullet, idx) => (
                   <li key={idx} className="flex items-baseline gap-2">
-                    <span className="text-neutral-400">–</span>
+                    <span className="text-neutral-500 dark:text-neutral-400">–</span>
                     <span>{bullet}</span>
                   </li>
                 ))}
@@ -758,10 +758,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
         {/* Active Scaffolding Strip (Clean Rounded Box) */}
         {showScaffoldStrip && (
-          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
+          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-3">
             {/* Target Collocations Line Tags */}
             <div className="flex items-center gap-2 flex-wrap text-xs">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 shrink-0 mr-1">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 shrink-0 mr-1">
                 Target Chunks:
               </span>
               {selectedPrompt.targetCollocations.map((colloc, idx) => {
@@ -777,7 +777,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border transition-colors cursor-pointer",
                       isChecked
                         ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold"
-                        : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400 hover:border-neutral-400 dark:hover:border-neutral-600"
+                        : "border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-600"
                     )}
                   >
                     {isChecked ? (
@@ -795,13 +795,13 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
             {/* Grammar Target Formula */}
             <div className="flex items-baseline gap-2 text-xs text-neutral-600 dark:text-neutral-400 pt-1">
-              <span className="font-medium text-neutral-500 shrink-0">
+              <span className="font-medium text-neutral-600 dark:text-neutral-400 shrink-0">
                 Target Grammar:
               </span>
               <span className="text-neutral-900 dark:text-neutral-200 font-semibold">
                 {selectedPrompt.grammarTarget.label}
               </span>
-              <span className="hidden md:inline text-neutral-400 font-sans italic truncate">
+              <span className="hidden md:inline text-neutral-600 dark:text-neutral-400 font-sans italic truncate">
                 — "{selectedPrompt.grammarTarget.exampleFromModel}"
               </span>
             </div>
@@ -815,14 +815,14 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       <div className="space-y-4">
         {/* 4-3-2 Fluency Drill Progression Strip (Clean Card) */}
         {timerMode === "drill_432" && (
-          <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2">
               <Flame className="w-3.5 h-3.5 text-rose-500 shrink-0" />
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">
                 4-3-2 Fluency Drill
               </span>
               <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-              <span className="text-neutral-500 hidden sm:inline">
+              <span className="text-neutral-600 dark:text-neutral-400 hidden sm:inline">
                 Repeat the same answer across 3 rounds with decreasing time limits
               </span>
             </div>
@@ -843,7 +843,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       "px-2.5 py-1 text-xs rounded-md transition-colors cursor-pointer flex items-center gap-1.5",
                       isCurrent
                         ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 font-semibold"
-                        : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 font-normal"
+                        : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 font-normal"
                     )}
                   >
                     <span>Round {round}</span>
@@ -852,7 +852,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                         "text-[11px]",
                         isCurrent
                           ? "text-neutral-300 dark:text-neutral-600"
-                          : "text-neutral-400"
+                          : "text-neutral-500 dark:text-neutral-400"
                       )}
                     >
                       ({duration})
@@ -866,11 +866,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
         {/* Part 2 Scratchpad (Card without Inner Small Boxes) */}
         {activePart === 2 && (
-          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
+          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-3">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                <FileText className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400" />
+                <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                   Part 2 60s Scratchpad
                 </span>
               </div>
@@ -883,7 +883,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
                 <button
                   onClick={() => setIsPrepping(!isPrepping)}
-                  className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
+                  className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
                 >
                   {isPrepping ? "Pause" : "Start 1m Prep"}
                 </button>
@@ -893,7 +893,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     setIsPrepping(false);
                     setPrepSecondsRemaining(60);
                   }}
-                  className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+                  className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors cursor-pointer"
                   title="Reset Prep Timer"
                 >
                   Reset
@@ -904,7 +904,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             {/* 4 Frameless Keyword Inputs (Zero Nested Small Boxes) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 block mb-1.5">
                   1. Context
                 </label>
                 <input
@@ -912,12 +912,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.context}
                   onChange={(e) => setScratchpad({ ...scratchpad, context: e.target.value })}
                   placeholder="Who, where, setting..."
-                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
+                  className="w-full text-xs py-1.5 bg-transparent border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 block mb-1.5">
                   2. Core Detail
                 </label>
                 <input
@@ -925,12 +925,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.core}
                   onChange={(e) => setScratchpad({ ...scratchpad, core: e.target.value })}
                   placeholder="Key event, action..."
-                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
+                  className="w-full text-xs py-1.5 bg-transparent border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 block mb-1.5">
                   3. Impact
                 </label>
                 <input
@@ -938,12 +938,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.impact}
                   onChange={(e) => setScratchpad({ ...scratchpad, impact: e.target.value })}
                   placeholder="Why significant, feelings..."
-                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
+                  className="w-full text-xs py-1.5 bg-transparent border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 block mb-1">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 block mb-1.5">
                   4. Outcome
                 </label>
                 <input
@@ -951,7 +951,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   value={scratchpad.outcome}
                   onChange={(e) => setScratchpad({ ...scratchpad, outcome: e.target.value })}
                   placeholder="Reflection, legacy..."
-                  className="w-full text-xs py-1 bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
+                  className="w-full text-xs py-1.5 bg-transparent border-b border-neutral-200 dark:border-neutral-800 focus:border-neutral-900 dark:focus:border-neutral-100 text-neutral-900 dark:text-neutral-100 outline-none placeholder:text-neutral-500 transition-colors"
                 />
               </div>
             </div>
@@ -959,11 +959,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
         )}
 
         {/* Pacing Timeline (Card without Inner Small Boxes) */}
-        <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
-          <div className="flex items-center justify-between text-xs text-neutral-500">
+        <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-3">
+          <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400">
             <div className="flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-neutral-400" />
-              <span className="font-semibold uppercase tracking-wider text-[11px] text-neutral-400">
+              <Clock className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400" />
+              <span className="font-semibold uppercase tracking-wider text-[11px] text-neutral-700 dark:text-neutral-300">
                 Pacing Timeline
               </span>
             </div>
@@ -976,7 +976,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           </div>
 
           {/* Multi-Segment Pill Progress Bar */}
-          <div className="w-full h-1.5 bg-neutral-200/80 dark:bg-neutral-800 rounded-full flex gap-1 overflow-hidden p-0.5">
+          <div className="w-full h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full flex gap-1 overflow-hidden p-0.5">
             {selectedPrompt.pacingSegments.map((seg, idx) => {
               const segDuration = seg.endSec - seg.startSec;
               const widthPct = (segDuration / effectiveTargetDuration) * 100;
@@ -991,8 +991,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     isActive
                       ? "bg-emerald-500"
                       : isPast
-                      ? "bg-neutral-400 dark:bg-neutral-600"
-                      : "bg-neutral-300/60 dark:bg-neutral-700/50"
+                      ? "bg-neutral-500 dark:bg-neutral-600"
+                      : "bg-neutral-300 dark:bg-neutral-700"
                   )}
                 />
               );
@@ -1010,13 +1010,20 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   className={cn(
                     "text-left transition-colors",
                     isActive
-                      ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                      ? "text-emerald-700 dark:text-emerald-400 font-semibold"
                       : isPast
-                      ? "text-neutral-400 dark:text-neutral-500"
-                      : "text-neutral-600 dark:text-neutral-400"
+                      ? "text-neutral-500 dark:text-neutral-500"
+                      : "text-neutral-800 dark:text-neutral-200"
                   )}
                 >
-                  <div className="text-[10px] font-medium leading-none mb-1 opacity-70">
+                  <div
+                    className={cn(
+                      "text-[10px] font-semibold leading-none mb-1",
+                      isActive
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-neutral-500 dark:text-neutral-400"
+                    )}
+                  >
                     {seg.label.split("•")[0].trim()}
                   </div>
                   <div className="text-xs truncate font-medium">
@@ -1099,7 +1106,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               {/* Recording Timer */}
               <div className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 pl-1">
                 {formatTime(elapsedSeconds)}{" "}
-                <span className="text-neutral-400 text-xs font-normal">
+                <span className="text-neutral-500 dark:text-neutral-400 text-xs font-medium">
                   / {formatTime(effectiveTargetDuration)}
                 </span>
               </div>
@@ -1107,7 +1114,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               {audioUrl && !isRecording && (
                 <button
                   onClick={resetRecording}
-                  className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-md text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors cursor-pointer"
                   title="Reset Recording"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -1161,14 +1168,14 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   onChange={handleAudioSeek}
                   className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer h-1.5 bg-neutral-200 dark:bg-neutral-800 rounded-full"
                 />
-                <span className="text-[11px] font-medium text-neutral-500 shrink-0">
+                <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400 shrink-0">
                   {formatTime(Math.floor(audioCurrentTime))} / {formatTime(Math.floor(audioDuration))}
                 </span>
               </div>
 
               <button
                 onClick={handleToggleSpeed}
-                className="text-[11px] font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800"
+                className="text-[11px] font-medium text-neutral-600 hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 px-2 py-0.5 rounded border border-neutral-300 dark:border-neutral-700"
               >
                 {playbackSpeed}x
               </button>
@@ -1183,8 +1190,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       <div className="space-y-4 pt-1">
         {/* Candidate Transcript (Clean Card) */}
         {(activeTranscriptText || audioUrl) && (
-          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2">
-            <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
+          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-2">
+            <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400 font-medium">
               <span className="font-semibold uppercase tracking-wider text-[11px]">
                 Spoken Transcript (Live Acoustic Log)
               </span>
@@ -1205,7 +1212,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
         {/* Examiner Rubric Self-Audit (Clean Card) */}
         {(activeTranscriptText || audioUrl) && (
-          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-2">
+          <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-2">
             <button
               onClick={() => setShowRubricAudit(!showRubricAudit)}
               className="flex items-center justify-between w-full text-left py-0.5 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
@@ -1214,7 +1221,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Examiner Rubric Self-Audit (Cambridge FC, LR, GRA, PR)</span>
               </div>
-              <div className="flex items-center gap-1 text-[11px] text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
+              <div className="flex items-center gap-1 text-[11px] text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-950 dark:group-hover:text-neutral-200">
                 <span>{showRubricAudit ? "Hide" : "Audit"}</span>
                 <ChevronDown
                   className={cn(
@@ -1288,22 +1295,24 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
         )}
 
         {/* Authentic Examiner Model Answers (Clean Card) */}
-        <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/40 space-y-3">
+        <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-3">
           <button
             onClick={() => setShowModelAnswers(!showModelAnswers)}
             className="w-full flex items-center justify-between text-left py-0.5 text-xs font-semibold text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
           >
             <div className="flex items-center gap-2">
-              <BookOpen className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
-              <span>Authentic Examiner Model Answers</span>
+              <BookOpen className="w-3.5 h-3.5 text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-950 dark:group-hover:text-neutral-100 transition-colors" />
+              <span className="text-neutral-900 dark:text-neutral-100 font-semibold">
+                Authentic Examiner Model Answers
+              </span>
               {selectedPrompt.transcripts.band6 && (
-                <span className="text-[11px] font-normal text-neutral-400">
+                <span className="text-[11px] font-normal text-neutral-600 dark:text-neutral-400">
                   (Band 6.0 Candidate vs. Band 9.0 Model)
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-1.5 text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 text-[11px] font-medium">
+            <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-950 dark:group-hover:text-neutral-100 text-[11px] font-semibold">
               <span>{showModelAnswers ? "Hide Models" : "Reveal Models"}</span>
               <ChevronDown
                 className={cn(
@@ -1328,7 +1337,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     <span className="font-semibold text-amber-700 dark:text-amber-400">
                       {selectedPrompt.transcripts.band6.band}
                     </span>
-                    <span className="text-[11px] font-medium text-neutral-400">
+                    <span className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400">
                       Cambridge Audio Log
                     </span>
                   </div>
@@ -1341,7 +1350,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     {selectedPrompt.transcripts.band6.text}
                   </div>
 
-                  <div className="pt-2 text-[11px] text-neutral-500 italic border-t border-neutral-100 dark:border-neutral-900">
+                  <div className="pt-2 text-[11px] text-neutral-600 dark:text-neutral-400 italic border-t border-neutral-100 dark:border-neutral-900">
                     Examiner critique: Adequate message transmission, but limited by short, repetitive sentence structures, simple vocabulary, and hesitations.
                   </div>
                 </div>
@@ -1355,7 +1364,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                       {selectedPrompt.transcripts.band9.band}
                     </span>
                     <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-                    <span className="text-neutral-400 font-medium">
+                    <span className="text-neutral-600 dark:text-neutral-400 font-medium">
                       {selectedPrompt.transcripts.band9.wordCount} words
                     </span>
                   </div>
@@ -1364,7 +1373,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     onClick={() =>
                       handleCopyText(selectedPrompt.transcripts.band9.text, "band9")
                     }
-                    className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer"
                     title="Copy Model Transcript"
                   >
                     {copiedKey === "band9" ? (
@@ -1384,11 +1393,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   {renderModelWithHighlights(selectedPrompt.transcripts.band9.text)}
                 </div>
 
-                <div className="pt-2 text-[11px] text-neutral-500 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
+                <div className="pt-2 text-[11px] text-neutral-600 dark:text-neutral-400 flex items-center justify-between border-t border-neutral-100 dark:border-neutral-900">
                   <span>
                     Highlighted terms denote authentic C1/C2 collocations used in context.
                   </span>
-                  <span className="text-neutral-400 font-medium">
+                  <span className="text-neutral-600 dark:text-neutral-400 font-medium">
                     {selectedPrompt.sourceBadge}
                   </span>
                 </div>

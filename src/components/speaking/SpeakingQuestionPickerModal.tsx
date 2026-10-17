@@ -108,13 +108,13 @@ export function SpeakingQuestionPickerModal({
         {/* Header / Search row */}
         <div className="p-3 sm:p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-2.5">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by topic, question, or collocations..."
-              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-700 outline-none transition-colors text-neutral-900 dark:text-neutral-100"
+              className="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-700 outline-none transition-colors text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-500"
               autoFocus
             />
           </div>
@@ -130,7 +130,7 @@ export function SpeakingQuestionPickerModal({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -148,7 +148,7 @@ export function SpeakingQuestionPickerModal({
               className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer"
             >
               <span>{selectedPart === "All" ? "All Parts" : `Part ${selectedPart}`}</span>
-              <ChevronDown className="w-3 h-3 text-neutral-400" />
+              <ChevronDown className="w-3 h-3 text-neutral-500 dark:text-neutral-400" />
             </button>
 
             {isPartOpen && (
@@ -162,8 +162,8 @@ export function SpeakingQuestionPickerModal({
                     }}
                     className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
                       selectedPart === part
-                        ? "bg-neutral-100 dark:bg-neutral-900 font-medium text-neutral-950 dark:text-neutral-50"
-                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
+                        ? "bg-neutral-100 dark:bg-neutral-900 font-semibold text-neutral-950 dark:text-neutral-50"
+                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900/50"
                     }`}
                   >
                     <span>{part === "All" ? "All Parts" : `Part ${part}`}</span>
@@ -184,7 +184,7 @@ export function SpeakingQuestionPickerModal({
               className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer"
             >
               <span className="truncate max-w-[150px]">{selectedTopic === "All" ? "All Topics" : selectedTopic}</span>
-              <ChevronDown className="w-3 h-3 text-neutral-400 shrink-0" />
+              <ChevronDown className="w-3 h-3 text-neutral-500 dark:text-neutral-400 shrink-0" />
             </button>
 
             {isTopicOpen && (
@@ -198,8 +198,8 @@ export function SpeakingQuestionPickerModal({
                     }}
                     className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
                       selectedTopic === t
-                        ? "bg-neutral-100 dark:bg-neutral-900 font-medium text-neutral-950 dark:text-neutral-50"
-                        : "text-neutral-600 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
+                        ? "bg-neutral-100 dark:bg-neutral-900 font-semibold text-neutral-950 dark:text-neutral-50"
+                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900/50"
                     }`}
                   >
                     <span className="truncate">{t}</span>
@@ -210,7 +210,7 @@ export function SpeakingQuestionPickerModal({
             )}
           </div>
 
-          <span className="ml-auto text-[11px] text-neutral-400 dark:text-neutral-500 shrink-0">
+          <span className="ml-auto text-[11px] text-neutral-600 dark:text-neutral-400 font-medium shrink-0">
             {filteredPrompts.length} {filteredPrompts.length === 1 ? "prompt" : "prompts"}
           </span>
         </div>
@@ -218,7 +218,7 @@ export function SpeakingQuestionPickerModal({
         {/* List of prompts (Clean Hairline Divided, Zero Rounded Card Boxes) */}
         <div className="flex-1 overflow-y-auto divide-y divide-neutral-200 dark:divide-neutral-800">
           {filteredPrompts.length === 0 ? (
-            <div className="py-12 text-center text-xs text-neutral-400">
+            <div className="py-12 text-center text-xs text-neutral-600 dark:text-neutral-400">
               No matching speaking prompts found. Try another search keyword or clear filters.
             </div>
           ) : (
@@ -243,16 +243,16 @@ export function SpeakingQuestionPickerModal({
                         Part {p.part}
                       </span>
                       <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-                      <span className="font-medium text-neutral-600 dark:text-neutral-400">
+                      <span className="font-semibold text-neutral-700 dark:text-neutral-300">
                         {p.topic}
                       </span>
                       <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-                      <span className="text-neutral-400 dark:text-neutral-500">
+                      <span className="text-neutral-600 dark:text-neutral-400 font-medium">
                         {p.sourceBadge}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[11px] text-neutral-400 shrink-0">
+                    <div className="flex items-center gap-1 text-[11px] text-neutral-600 dark:text-neutral-400 font-medium shrink-0">
                       <Clock className="w-3 h-3" />
                       <span>{p.targetDurationSec}s</span>
                     </div>
@@ -265,7 +265,7 @@ export function SpeakingQuestionPickerModal({
                   {p.cueCardBullets && p.cueCardBullets.length > 0 && (
                     <div className="border-l-2 border-neutral-200 dark:border-neutral-800 pl-3 my-1.5 space-y-0.5">
                       {p.cueCardBullets.map((b, i) => (
-                        <div key={i} className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                        <div key={i} className="text-[11px] text-neutral-600 dark:text-neutral-400">
                           – {b}
                         </div>
                       ))}
@@ -273,8 +273,8 @@ export function SpeakingQuestionPickerModal({
                   )}
 
                   {/* Collocation preview */}
-                  <div className="mt-1.5 flex items-center gap-2 flex-wrap text-[11px] text-neutral-400">
-                    <span className="font-medium text-neutral-500">Chunks:</span>
+                  <div className="mt-1.5 flex items-center gap-2 flex-wrap text-[11px] text-neutral-600 dark:text-neutral-400">
+                    <span className="font-semibold text-neutral-700 dark:text-neutral-300">Chunks:</span>
                     <span>
                       {p.targetCollocations.map((c) => c.phrase).join(" • ")}
                     </span>
