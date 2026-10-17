@@ -16,6 +16,7 @@ export interface DockProps {
   iconMagnification?: number;
   iconDistance?: number;
   direction?: "top" | "middle" | "bottom";
+  tooltipPosition?: "top" | "bottom";
   children: React.ReactNode;
 }
 
@@ -28,6 +29,7 @@ interface DockContextType {
   iconSize: number;
   iconMagnification: number;
   iconDistance: number;
+  tooltipPosition: "top" | "bottom";
 }
 
 const DockContext = createContext<DockContextType | null>(null);
@@ -39,12 +41,19 @@ export function Dock({
   iconMagnification = DEFAULT_MAGNIFICATION,
   iconDistance = DEFAULT_DISTANCE,
   direction = "middle",
+  tooltipPosition = "bottom",
 }: DockProps) {
   const mouseX = useMotionValue(Infinity);
 
   return (
     <DockContext.Provider
-      value={{ mouseX, iconSize, iconMagnification, iconDistance }}
+      value={{
+        mouseX,
+        iconSize,
+        iconMagnification,
+        iconDistance,
+        tooltipPosition,
+      }}
     >
       <motion.div
         onMouseMove={(e) => mouseX.set(e.clientX)}
@@ -79,6 +88,7 @@ export interface DockIconProps {
   onClick?: () => void;
   title?: string;
   isActive?: boolean;
+  tooltipPosition?: "top" | "bottom";
 }
 
 export function DockIcon({
@@ -91,10 +101,13 @@ export function DockIcon({
   onClick,
   title,
   isActive = false,
+  tooltipPosition,
 }: DockIconProps) {
   const ref = useRef<HTMLDivElement>(null);
   const context = useContext(DockContext);
 
+  const effectiveTooltipPosition =
+    tooltipPosition ?? context?.tooltipPosition ?? "bottom";
   const effectiveMouseX = customMouseX ?? context?.mouseX;
   const effectiveSize = size ?? context?.iconSize ?? DEFAULT_SIZE;
   const effectiveMagnification =
@@ -137,7 +150,12 @@ export function DockIcon({
     >
       {/* Tooltip on hover */}
       {title && (
-        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-neutral-900 dark:bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-white dark:text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shadow-md z-30">
+        <span
+          className={cn(
+            "pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-neutral-900 dark:bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-white dark:text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity duration-150 shadow-md z-50",
+            effectiveTooltipPosition === "top" ? "-top-8" : "top-full mt-2",
+          )}
+        >
           {title}
         </span>
       )}
