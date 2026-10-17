@@ -185,7 +185,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
-  - `style(hero): keep classic red accent in light mode while preserving emerald-teal-cyan in dark mode`
+  - `e39bea7`: `style(hero): keep classic red accent in light mode while preserving emerald-teal-cyan in dark mode`
   - `7d49507`: `style(hero): harmonize dynamic text and ambient gradient theme to emerald-teal-cyan palette`
   - `8456c64`: `docs: update PROJECT_CONTEXT.md with Speaking Studio architecture, light mode contrast, and collocations dropdown`
   - `dfe4458`: `fix(speaking): make waveform box background adapt to light mode`
