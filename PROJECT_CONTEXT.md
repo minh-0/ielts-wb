@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-17 17:02*
+*Last updated: 2026-10-17 17:07*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -34,9 +34,12 @@
   - **High-Contrast Editorial Serif (`--font-serif` & `--font-display` / `Playfair Display`)**: Inspired by Paradose (Wasabib Studio) and Playfair Display (Claus Eggers Sørensen). Used across the hero headline, brand title, model essays, and scorecard titles to provide a high-end, classic British publishing aesthetic.
   - **Tailwind v4 Theme Binding**: Explicit `@theme` mapping in `globals.css` ensuring `font-sans`, `font-mono`, `font-serif`, and `font-display` utilities resolve to Google Fonts on Windows and all platforms rather than falling back to system defaults.
 - **Top Navigation Layout**: Navigation tabs (`Writing`, `Speaking`, `Vocabulary`, `Rubric`) are right-aligned alongside utility actions (`AI Mode` and `ThemeToggle`), leaving the left cleanly anchored to the brand title.
-- **Palette**: Pure monochrome neutral scales (`border-neutral-200 dark:border-neutral-800`, `bg-white dark:bg-neutral-950`, `bg-neutral-50/50 dark:bg-neutral-900/30`).
+- **Palette & Atmospheric Hero Gradient Theme**:
+  - Pure monochrome neutral scales for core workbenches (`border-neutral-200 dark:border-neutral-800`, `bg-white dark:bg-neutral-950`, `bg-neutral-50/80 dark:bg-neutral-900/40`).
+  - **Cohesive Aurora Palette**: Replaced dissonant salmon pink / red text and mismatched backgrounds with a unified **Emerald-Teal-Cyan** gradient system.
+  - The rotating dynamic headline text ("Task 2 Essays", "Task 1 Charts", "Speaking Cue Cards", etc.) shines with `from-emerald-600 via-teal-600 to-cyan-700` in light mode and `dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400` in dark mode, perfectly matching the ambient emerald (`emerald-500/15`) and cyan (`cyan-500/12`) background aurora glows and metadata pill dots.
 - **Dark Mode Comfort**: High-contrast glare eliminated. Grammar mistakes use softened muted rose/red (`dark:text-rose-300/80 dark:bg-rose-950/30`), vocabulary upgrades use soft violet (`dark:text-purple-300/80 dark:bg-purple-950/30`), and replaced words use soft emerald.
-- **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, and the Writing Popup Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.
+- **Modals**: All modals (`ApiKeyModal`, `OxfordModal`, `ScorecardModal`, `SpeakingQuestionPickerModal`, and the Writing Popup Modal) close cleanly on outside blank-space backdrop click or `Escape` key press.
 
 ---
 
@@ -182,6 +185,8 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `style(hero): harmonize dynamic text and ambient gradient theme to emerald-teal-cyan palette`
+  - `8456c64`: `docs: update PROJECT_CONTEXT.md with Speaking Studio architecture, light mode contrast, and collocations dropdown`
   - `dfe4458`: `fix(speaking): make waveform box background adapt to light mode`
   - `631bbc5`: `fix(speaking): optimize contrast and readability for light mode`
   - `584892b`: `feat(speaking): add subtle mode micro-explainer right below mode selection tab`
