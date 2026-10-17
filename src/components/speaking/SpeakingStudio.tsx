@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Mic,
   Square,
-  Volume2,
   Play,
   Pause,
   RotateCcw,
@@ -39,7 +38,6 @@ interface SpeakingStudioProps {
 }
 
 type TimerMode = "standard" | "exam" | "drill_432";
-type PostTab = "transcript_audit" | "authentic_models";
 
 const FILLER_WORDS = [
   "um",
@@ -81,7 +79,9 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
 
   // Modals & Strips
   const [isQuestionPickerOpen, setIsQuestionPickerOpen] = useState(false);
-  const [showScaffoldStrip, setShowScaffoldStrip] = useState(true);
+  const [showScaffoldStrip, setShowScaffoldStrip] = useState(false);
+  const [showModelAnswers, setShowModelAnswers] = useState(false);
+  const [showRubricAudit, setShowRubricAudit] = useState(false);
 
   // Timer Modes
   const [timerMode, setTimerMode] = useState<TimerMode>("standard");
@@ -116,15 +116,14 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   const [manuallyCheckedCollocs, setManuallyCheckedCollocs] = useState<string[]>([]);
   const [hesitationCount, setHesitationCount] = useState(0);
 
-  // Audio Playback State
+  // Audio Playback State (Only for user's own recorded voice)
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [audioDuration, setAudioDuration] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState<1 | 1.25>(1);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
 
-  // Post-recording tabs & checklists
-  const [postTab, setPostTab] = useState<PostTab>("transcript_audit");
+  // Rubric checklist
   const [checklist, setChecklist] = useState({
     answeredDirectly: false,
     zeroPauses: false,
@@ -163,6 +162,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     setManuallyCheckedCollocs([]);
     setFinalTranscript("");
     setLiveTranscript("");
+    setShowModelAnswers(false);
     setChecklist({
       answeredDirectly: false,
       zeroPauses: false,
@@ -189,40 +189,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     }
     return () => clearInterval(prepIntervalRef.current);
   }, [isPrepping, prepSecondsRemaining]);
-
-  // UK TTS Reader for Examiner Prompt
-  const handleReadQuestion = () => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-
-    let fullText = selectedPrompt.question;
-    if (selectedPrompt.cueCardBullets && selectedPrompt.cueCardBullets.length > 0) {
-      fullText += ". You should say: " + selectedPrompt.cueCardBullets.join(". ");
-    }
-
-    const utterance = new SpeechSynthesisUtterance(fullText);
-    const voices = window.speechSynthesis.getVoices();
-    const ukVoice = voices.find(
-      (v) => v.lang === "en-GB" || v.name.includes("UK") || v.name.includes("British")
-    );
-    if (ukVoice) utterance.voice = ukVoice;
-    utterance.rate = 0.95;
-    window.speechSynthesis.speak(utterance);
-  };
-
-  // UK TTS Reader for Band 9 Model Transcript
-  const handleReadModel = () => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(selectedPrompt.transcripts.band9.text);
-    const voices = window.speechSynthesis.getVoices();
-    const ukVoice = voices.find(
-      (v) => v.lang === "en-GB" || v.name.includes("UK") || v.name.includes("British")
-    );
-    if (ukVoice) utterance.voice = ukVoice;
-    utterance.rate = 0.92;
-    window.speechSynthesis.speak(utterance);
-  };
 
   // Copy Model Transcript
   const handleCopyText = (text: string, key: string) => {
@@ -736,7 +702,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* SECTION B: QUESTION HEADER & ACTIVE SCAFFOLDING STRIP    */}
       {/* ======================================================== */}
       <div className="space-y-4">
-        {/* Question Metadata & TTS */}
+        {/* Question Metadata & Scaffold Toggle */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-xs flex-wrap">
             <span className="font-semibold text-neutral-900 dark:text-neutral-100">
@@ -748,31 +714,18 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-xs">
-            <button
-              onClick={handleReadQuestion}
-              className="inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
-              title="Listen to UK Examiner voice"
-            >
-              <Volume2 className="w-3.5 h-3.5 text-neutral-500" />
-              <span className="text-[11px] font-medium">Examiner Audio</span>
-            </button>
-
-            <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-
-            <button
-              onClick={() => setShowScaffoldStrip(!showScaffoldStrip)}
-              className={cn(
-                "inline-flex items-center gap-1.5 text-xs font-medium transition-colors cursor-pointer",
-                showScaffoldStrip
-                  ? "text-purple-600 dark:text-purple-400 underline underline-offset-4"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
-              )}
-            >
-              <Sparkles className="w-3 h-3 text-purple-500" />
-              <span>Scaffold ({usedCollocations.length}/{selectedPrompt.targetCollocations.length})</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setShowScaffoldStrip(!showScaffoldStrip)}
+            className={cn(
+              "inline-flex items-center gap-1.5 text-xs font-medium transition-colors cursor-pointer",
+              showScaffoldStrip
+                ? "text-purple-600 dark:text-purple-400 underline underline-offset-4"
+                : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
+            )}
+          >
+            <Sparkles className="w-3 h-3 text-purple-500" />
+            <span>Scaffold ({usedCollocations.length}/{selectedPrompt.targetCollocations.length})</span>
+          </button>
         </div>
 
         {/* Prompt Text */}
@@ -1038,8 +991,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             })}
           </div>
 
-          {/* Segment Labels with Vertical Line Dividers */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-neutral-200 dark:divide-neutral-800 pt-1">
+          {/* Segment Labels */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1.5">
             {selectedPrompt.pacingSegments.map((seg, idx) => {
               const isActive = idx === activePacingIndex && isRecording;
               const isPast = elapsedSeconds >= seg.endSec;
@@ -1047,7 +1000,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <div
                   key={idx}
                   className={cn(
-                    "px-2.5 first:pl-0 text-left transition-colors",
+                    "text-left transition-colors",
                     isActive
                       ? "text-emerald-600 dark:text-emerald-400"
                       : isPast
@@ -1090,17 +1043,17 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           )}
         </div>
 
-        {/* Recording Controls & Deterministic Telemetry Toolbar (Line Divided, Zero Box) */}
+        {/* Recording Controls & Deterministic Telemetry Toolbar */}
         <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-4">
-          {/* Main Action: Record / Stop */}
-          <div className="flex items-center gap-3">
+          {/* Main Action: Record / Playback / Stop */}
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
             {!isRecording ? (
               <button
                 onClick={startRecording}
                 className="flex items-center gap-2 px-3.5 py-1.5 bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:hover:bg-neutral-100 dark:text-neutral-950 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
               >
                 <Mic className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
-                <span>Start Speaking</span>
+                <span>{audioUrl ? "Record Again" : "Start Speaking"}</span>
               </button>
             ) : (
               <button
@@ -1112,8 +1065,29 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </button>
             )}
 
+            {/* HIGH-VISIBILITY PLAYBACK BUTTON (Directly in toolbar when recorded) */}
+            {audioUrl && !isRecording && (
+              <button
+                onClick={togglePlayAudio}
+                className="flex items-center gap-2 px-3.5 py-1.5 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-900 dark:hover:border-neutral-100 bg-neutral-50 dark:bg-neutral-900 text-neutral-950 dark:text-neutral-50 text-xs font-semibold tracking-tight transition-colors cursor-pointer"
+                title={isPlayingAudio ? "Pause Your Voice" : "Play Your Voice"}
+              >
+                {isPlayingAudio ? (
+                  <>
+                    <Pause className="w-3.5 h-3.5 fill-current text-emerald-600 dark:text-emerald-400" />
+                    <span>Pause Voice</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3.5 h-3.5 fill-current ml-0.5 text-emerald-600 dark:text-emerald-400" />
+                    <span>Play Voice</span>
+                  </>
+                )}
+              </button>
+            )}
+
             {/* Recording Timer */}
-            <div className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100">
+            <div className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 pl-1">
               {formatTime(elapsedSeconds)}{" "}
               <span className="text-neutral-400 text-xs font-normal">
                 / {formatTime(effectiveTargetDuration)}
@@ -1136,16 +1110,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   setDrillAttempt((prev) => (prev === 1 ? 2 : 3));
                   resetRecording();
                 }}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer pl-3 border-l border-neutral-200 dark:border-neutral-800"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer pl-2"
               >
-                <span>Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"})</span>
-                <span>→</span>
+                <span>Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"}) →</span>
               </button>
             )}
           </div>
 
-          {/* Telemetry Stats Divided by Vertical Lines */}
-          <div className="flex items-center gap-3 sm:gap-4 flex-wrap text-xs font-medium">
+          {/* Telemetry Stats (Clean spacing without vertical divider lines) */}
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap text-xs font-medium">
             {/* WPM Counter */}
             <div className="flex items-baseline gap-1">
               <span className="text-neutral-400">Pace:</span>
@@ -1164,8 +1137,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               <span className="text-[10px] text-neutral-400">(120–150 target)</span>
             </div>
 
-            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
-
             {/* Hesitation >2.0s Pauses */}
             <div className="flex items-baseline gap-1">
               <span className="text-neutral-400">Pauses &gt;2s:</span>
@@ -1180,8 +1151,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 {hesitationCount}
               </span>
             </div>
-
-            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
 
             {/* Filler Words Count */}
             <div className="flex items-baseline gap-1">
@@ -1198,8 +1167,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </span>
             </div>
 
-            <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
-
             {/* Collocations Hit */}
             <div className="flex items-baseline gap-1">
               <span className="text-neutral-400">Collocations:</span>
@@ -1209,146 +1176,106 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             </div>
           </div>
         </div>
+
+        {/* Dedicated Audio Playback Scrub Bar (Prominent & Always Accessible) */}
+        {audioUrl && !isRecording && (
+          <div className="py-2.5 flex items-center gap-3 border-b border-neutral-200 dark:border-neutral-800">
+            <audio
+              ref={audioPlayerRef}
+              src={audioUrl}
+              onTimeUpdate={handleAudioTimeUpdate}
+              onLoadedMetadata={handleAudioLoadedMetadata}
+              onEnded={() => setIsPlayingAudio(false)}
+            />
+
+            <button
+              onClick={togglePlayAudio}
+              className="p-1.5 text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer shrink-0"
+              title={isPlayingAudio ? "Pause Your Voice" : "Play Your Voice"}
+            >
+              {isPlayingAudio ? (
+                <Pause className="w-4 h-4 fill-current text-emerald-600 dark:text-emerald-400" />
+              ) : (
+                <Play className="w-4 h-4 fill-current ml-0.5 text-emerald-600 dark:text-emerald-400" />
+              )}
+            </button>
+
+            <div className="flex-1 flex items-center gap-2">
+              <input
+                type="range"
+                min={0}
+                max={audioDuration || 1}
+                step={0.1}
+                value={audioCurrentTime}
+                onChange={handleAudioSeek}
+                className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer h-1 bg-neutral-200 dark:bg-neutral-800"
+              />
+              <span className="text-[11px] font-medium text-neutral-500 shrink-0">
+                {formatTime(Math.floor(audioCurrentTime))} / {formatTime(Math.floor(audioDuration))}
+              </span>
+            </div>
+
+            <button
+              onClick={handleToggleSpeed}
+              className="text-[11px] font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 px-1 py-0.5"
+            >
+              {playbackSpeed}x
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ======================================================== */}
-      {/* SECTION D: POST-RECORDING WORKSPACE (2 Hairline Tabs)    */}
+      {/* SECTION D: TRANSCRIPT & PROGRESSIVE AUDIT / MODELS       */}
       {/* ======================================================== */}
-      <div className="border-t border-neutral-200 dark:border-neutral-800 pt-6 space-y-4">
-        {/* Tab Switcher */}
-        <div className="flex items-center gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-2">
-          <button
-            onClick={() => setPostTab("transcript_audit")}
-            className={cn(
-              "text-xs sm:text-sm font-medium pb-2 -mb-2 border-b-2 transition-all cursor-pointer",
-              postTab === "transcript_audit"
-                ? "border-neutral-900 dark:border-neutral-100 text-neutral-950 dark:text-neutral-50 font-semibold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
-            )}
-          >
-            Transcript & Audit
-          </button>
-
-          <button
-            onClick={() => setPostTab("authentic_models")}
-            className={cn(
-              "text-xs sm:text-sm font-medium pb-2 -mb-2 border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
-              postTab === "authentic_models"
-                ? "border-neutral-900 dark:border-neutral-100 text-neutral-950 dark:text-neutral-50 font-semibold"
-                : "border-transparent text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300"
-            )}
-          >
-            <span>Authentic Examiner Models</span>
-            {selectedPrompt.transcripts.band6 && (
-              <span className="text-[10px] font-medium text-neutral-400">
-                (Band 6 vs 9)
+      <div className="space-y-4 pt-2">
+        {/* Candidate Transcript (Revealed as soon as speech is captured or recorded) */}
+        {(activeTranscriptText || audioUrl) && (
+          <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 space-y-2">
+            <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
+              <span className="font-semibold uppercase tracking-wider text-[11px]">
+                Spoken Transcript (Live Acoustic Log)
               </span>
-            )}
-          </button>
-        </div>
-
-        {/* TAB 1: TRANSCRIPT & AUDIT */}
-        {postTab === "transcript_audit" && (
-          <div className="space-y-4">
-            {/* Minimalist Audio Playback Scrub Bar (Line Divided, Zero Box) */}
-            {audioUrl && (
-              <div className="py-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
-                <audio
-                  ref={audioPlayerRef}
-                  src={audioUrl}
-                  onTimeUpdate={handleAudioTimeUpdate}
-                  onLoadedMetadata={handleAudioLoadedMetadata}
-                  onEnded={() => setIsPlayingAudio(false)}
-                />
-
-                <button
-                  onClick={togglePlayAudio}
-                  className="p-1.5 text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer shrink-0"
-                >
-                  {isPlayingAudio ? (
-                    <Pause className="w-4 h-4 fill-current" />
-                  ) : (
-                    <Play className="w-4 h-4 fill-current ml-0.5" />
-                  )}
-                </button>
-
-                <div className="flex-1 flex items-center gap-2">
-                  <input
-                    type="range"
-                    min={0}
-                    max={audioDuration || 1}
-                    step={0.1}
-                    value={audioCurrentTime}
-                    onChange={handleAudioSeek}
-                    className="w-full accent-neutral-900 dark:accent-neutral-100 cursor-pointer"
-                  />
-                  <span className="text-[11px] font-medium text-neutral-500 shrink-0">
-                    {formatTime(Math.floor(audioCurrentTime))} / {formatTime(Math.floor(audioDuration))}
-                  </span>
-                </div>
-
-                <button
-                  onClick={handleToggleSpeed}
-                  className="text-[11px] font-medium text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0 py-1"
-                >
-                  {playbackSpeed}x
-                </button>
-
-                <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-
-                <button
-                  onClick={resetRecording}
-                  className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer shrink-0"
-                >
-                  Retry
-                </button>
-
-                {timerMode === "drill_432" && drillAttempt < 3 && (
-                  <>
-                    <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-                    <button
-                      onClick={() => {
-                        setDrillAttempt((prev) => (prev === 1 ? 2 : 3));
-                        resetRecording();
-                      }}
-                      className="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline transition-colors cursor-pointer shrink-0"
-                    >
-                      Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"}) →
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
-
-            {/* Candidate Transcript (Clean Line Divided, Zero Box) */}
-            <div className="py-4 border-b border-neutral-200 dark:border-neutral-800 space-y-2.5">
-              <div className="flex items-center justify-between text-xs text-neutral-400 font-medium">
-                <span className="font-semibold uppercase tracking-wider text-[11px]">
-                  Spoken Transcript (Live Acoustic Log)
-                </span>
-                <span>
-                  {activeTranscriptText.trim().split(/\s+/).filter(Boolean).length} words
-                </span>
-              </div>
-
-              {/* SelectionToolbar & Oxford Modal Contract */}
-              <div
-                data-paragraph="true"
-                className="ielts-paragraph text-sm sm:text-base leading-relaxed text-neutral-900 dark:text-neutral-100 select-text"
-              >
-                {renderAnnotatedTranscript(activeTranscriptText)}
-              </div>
+              <span>
+                {activeTranscriptText.trim().split(/\s+/).filter(Boolean).length} words
+              </span>
             </div>
 
-            {/* 4-Point Self-Audit Checklist (Linear Divided List, Zero Box Cards) */}
-            <div className="py-3 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 pb-1">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            {/* SelectionToolbar & Oxford Modal Contract */}
+            <div
+              data-paragraph="true"
+              className="ielts-paragraph text-sm sm:text-base leading-relaxed text-neutral-900 dark:text-neutral-100 select-text"
+            >
+              {renderAnnotatedTranscript(activeTranscriptText)}
+            </div>
+          </div>
+        )}
+
+        {/* Examiner Rubric Self-Audit (Progressively Disclosed) */}
+        {(activeTranscriptText || audioUrl) && (
+          <div className="py-2 space-y-2">
+            <button
+              onClick={() => setShowRubricAudit(!showRubricAudit)}
+              className="flex items-center justify-between w-full text-left py-1 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Examiner Rubric Self-Audit (Cambridge FC, LR, GRA, PR)</span>
               </div>
+              <div className="flex items-center gap-1 text-[11px] text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
+                <span>{showRubricAudit ? "Hide" : "Audit"}</span>
+                <ChevronDown
+                  className={cn(
+                    "w-3 h-3 transition-transform duration-200",
+                    showRubricAudit && "rotate-180"
+                  )}
+                />
+              </div>
+            </button>
 
-              <div className="divide-y divide-neutral-200 dark:divide-neutral-800 border-y border-neutral-200 dark:border-neutral-800">
-                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
+            {showRubricAudit && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 pt-2 pb-1 text-xs">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={checklist.answeredDirectly}
@@ -1357,12 +1284,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     Answered directly without repeating prompt words verbatim
                   </span>
                 </label>
 
-                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={checklist.zeroPauses}
@@ -1371,12 +1298,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     Spoke without noticeable pauses exceeding 2.0s
                   </span>
                 </label>
 
-                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={checklist.usedCollocations}
@@ -1385,12 +1312,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     Integrated at least 2 target academic collocations naturally
                   </span>
                 </label>
 
-                <label className="flex items-center gap-3 py-2.5 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 cursor-pointer select-none transition-colors">
+                <label className="flex items-center gap-2.5 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={checklist.complexClause}
@@ -1399,30 +1326,53 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     }
                     className="accent-neutral-900 dark:accent-neutral-100 w-3.5 h-3.5"
                   />
-                  <span className="text-xs text-neutral-700 dark:text-neutral-300">
+                  <span className="text-neutral-700 dark:text-neutral-300">
                     Included complex sentence clause (concession, condition, cleft)
                   </span>
                 </label>
               </div>
-            </div>
+            )}
           </div>
         )}
 
-        {/* TAB 2: AUTHENTIC MODELS (Verbatim Human Transcripts with Vertical Hairline Split) */}
-        {postTab === "authentic_models" && (
-          <div className="space-y-4">
+        {/* Authentic Examiner Model Answers (Progressively Disclosed - Clean Hairline Reveal) */}
+        <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+          <button
+            onClick={() => setShowModelAnswers(!showModelAnswers)}
+            className="w-full flex items-center justify-between text-left py-1 text-xs font-semibold text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer group"
+          >
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+              <span>Authentic Examiner Model Answers</span>
+              {selectedPrompt.transcripts.band6 && (
+                <span className="text-[11px] font-normal text-neutral-400">
+                  (Band 6.0 Candidate vs. Band 9.0 Model)
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1.5 text-neutral-500 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 text-[11px] font-medium">
+              <span>{showModelAnswers ? "Hide Models" : "Reveal Models"}</span>
+              <ChevronDown
+                className={cn(
+                  "w-3.5 h-3.5 transition-transform duration-200",
+                  showModelAnswers && "rotate-180"
+                )}
+              />
+            </div>
+          </button>
+
+          {showModelAnswers && (
             <div
               className={cn(
-                "grid grid-cols-1 gap-8 pt-2",
-                selectedPrompt.transcripts.band6
-                  ? "lg:grid-cols-2 lg:divide-x divide-neutral-200 dark:divide-neutral-800"
-                  : ""
+                "grid grid-cols-1 gap-8 pt-3",
+                selectedPrompt.transcripts.band6 ? "lg:grid-cols-2" : ""
               )}
             >
-              {/* Band 6.0 Candidate Transcript (if exists) */}
+              {/* Band 6.0 Candidate Transcript */}
               {selectedPrompt.transcripts.band6 && (
-                <div className="space-y-3 lg:pr-6">
-                  <div className="flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-800 text-xs">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs">
                     <span className="font-semibold text-amber-700 dark:text-amber-400">
                       {selectedPrompt.transcripts.band6.band}
                     </span>
@@ -1431,28 +1381,23 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     </span>
                   </div>
 
-                  {/* Verbatim Candidate Text */}
+                  {/* Verbatim Candidate Text - Matching Exact Typography */}
                   <div
                     data-paragraph="true"
-                    className="ielts-paragraph text-xs sm:text-sm leading-relaxed text-neutral-700 dark:text-neutral-300 whitespace-pre-line select-text"
+                    className="ielts-paragraph text-sm sm:text-base leading-relaxed text-neutral-800 dark:text-neutral-200 whitespace-pre-line select-text"
                   >
                     {selectedPrompt.transcripts.band6.text}
                   </div>
 
-                  <div className="pt-2 border-t border-neutral-100 dark:border-neutral-900 text-[11px] text-neutral-500 font-sans italic">
-                    Note examiner critique: Adequate message transmission, but limited by short, repetitive sentence structures, simple vocabulary, and hesitations.
+                  <div className="pt-2 text-[11px] text-neutral-500 italic">
+                    Examiner critique: Adequate message transmission, but limited by short, repetitive sentence structures, simple vocabulary, and hesitations.
                   </div>
                 </div>
               )}
 
               {/* Band 9.0 Model Transcript */}
-              <div
-                className={cn(
-                  "space-y-3",
-                  selectedPrompt.transcripts.band6 ? "lg:pl-6" : ""
-                )}
-              >
-                <div className="flex items-center justify-between pb-2 border-b border-neutral-200 dark:border-neutral-800 text-xs">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-purple-700 dark:text-purple-400">
                       {selectedPrompt.transcripts.band9.band}
@@ -1463,56 +1408,42 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={handleReadModel}
-                      className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
-                      title="Listen to Model"
-                    >
-                      <Volume2 className="w-3.5 h-3.5" />
-                      <span>Listen</span>
-                    </button>
-
-                    <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
-
-                    <button
-                      onClick={() =>
-                        handleCopyText(selectedPrompt.transcripts.band9.text, "band9")
-                      }
-                      className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
-                      title="Copy Model Transcript"
-                    >
-                      {copiedKey === "band9" ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-500" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5" />
-                      )}
-                      <span>Copy</span>
-                    </button>
-                  </div>
+                  <button
+                    onClick={() =>
+                      handleCopyText(selectedPrompt.transcripts.band9.text, "band9")
+                    }
+                    className="inline-flex items-center gap-1 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+                    title="Copy Model Transcript"
+                  >
+                    {copiedKey === "band9" ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-500" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                    <span>Copy</span>
+                  </button>
                 </div>
 
-                {/* Verbatim Band 9 Text with Highlighted Collocations */}
+                {/* Verbatim Band 9 Text - Matching Exact Typography (No Serif, Same Size/Color) */}
                 <div
                   data-paragraph="true"
-                  className="ielts-paragraph font-serif text-sm sm:text-base leading-relaxed text-neutral-900 dark:text-neutral-100 whitespace-pre-line select-text"
+                  className="ielts-paragraph text-sm sm:text-base leading-relaxed text-neutral-800 dark:text-neutral-200 whitespace-pre-line select-text"
                 >
                   {renderModelWithHighlights(selectedPrompt.transcripts.band9.text)}
                 </div>
 
-                {/* Collocation In-Context Legend */}
-                <div className="pt-2 border-t border-neutral-100 dark:border-neutral-900 text-[11px] text-neutral-500 font-sans flex items-center justify-between">
+                <div className="pt-2 text-[11px] text-neutral-500 flex items-center justify-between">
                   <span>
                     Highlighted terms denote authentic C1/C2 collocations used in context.
                   </span>
-                  <span className="text-xs font-medium text-neutral-400">
+                  <span className="text-neutral-400 font-medium">
                     {selectedPrompt.sourceBadge}
                   </span>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Speaking Question Picker Modal */}
