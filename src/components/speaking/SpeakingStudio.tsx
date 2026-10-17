@@ -635,12 +635,17 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* SECTION A: TOP STUDIO BAR (Hairline Divided)             */}
       {/* ======================================================== */}
       <div className="border-b border-neutral-200 dark:border-neutral-800 pb-2 flex flex-wrap items-center justify-between gap-4">
-        {/* Left: Part Switcher Minimalist Tabs (Underline, No Box) */}
+        {/* Left: Part Switcher Minimalist Tabs */}
         <div className="flex items-center gap-6 text-xs font-medium">
           {([1, 2, 3] as const).map((part) => (
             <button
               key={part}
-              onClick={() => setActivePart(part)}
+              onClick={() => {
+                setActivePart(part);
+                if (part !== 2 && timerMode === "drill_432") {
+                  setTimerMode("standard");
+                }
+              }}
               className={cn(
                 "pb-2 pt-1 -mb-[9px] transition-colors border-b-2 cursor-pointer",
                 activePart === part
@@ -653,8 +658,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
           ))}
         </div>
 
-        {/* Right: Timer Mode & Question Controls (Lines & Ghost Actions) */}
-        <div className="flex items-center gap-3 text-xs">
+        {/* Right: Timer Mode Selector & Question Actions */}
+        <div className="flex items-center gap-4 text-xs">
           {/* Timer Modes */}
           <div className="flex items-center gap-2">
             <button
@@ -688,7 +693,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                   className={cn(
                     "py-1 transition-colors cursor-pointer inline-flex items-center gap-1",
                     timerMode === "drill_432"
-                      ? "text-neutral-950 dark:text-white font-semibold"
+                      ? "text-rose-600 dark:text-rose-400 font-semibold"
                       : "text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300 font-normal"
                   )}
                 >
@@ -698,26 +703,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               </>
             )}
           </div>
-
-          {/* 4-3-2 Drill Attempt Underlines */}
-          {timerMode === "drill_432" && (
-            <div className="flex items-center gap-1.5 pl-1 border-l border-neutral-200 dark:border-neutral-800">
-              {([1, 2, 3] as const).map((att) => (
-                <button
-                  key={att}
-                  onClick={() => setDrillAttempt(att)}
-                  className={cn(
-                    "text-[11px] px-1 py-0.5 border-b transition-colors cursor-pointer",
-                    drillAttempt === att
-                      ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100 font-semibold"
-                      : "border-transparent text-neutral-400 hover:text-neutral-700"
-                  )}
-                >
-                  #{att} ({att === 1 ? "2:00" : att === 2 ? "1:30" : "1:00"})
-                </button>
-              ))}
-            </div>
-          )}
 
           <div className="h-3.5 w-[1px] bg-neutral-200 dark:bg-neutral-800" />
 
@@ -742,7 +727,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             className="inline-flex items-center gap-1 text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
           >
             <Search className="w-3.5 h-3.5 text-neutral-400" />
-            <span>Browse</span>
+            <span>Browse Bank</span>
           </button>
         </div>
       </div>
@@ -870,6 +855,57 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       {/* SECTION C: RECORDING & PACING WORKBENCH                  */}
       {/* ======================================================== */}
       <div className="space-y-4">
+        {/* 4-3-2 Fluency Drill Progression Strip (Seamless, Line-Divided) */}
+        {timerMode === "drill_432" && (
+          <div className="py-2.5 border-b border-neutral-200 dark:border-neutral-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <Flame className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                4-3-2 Fluency Drill
+              </span>
+              <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+              <span className="text-neutral-500 hidden sm:inline">
+                Repeat the same answer across 3 rounds with decreasing time limits
+              </span>
+            </div>
+
+            {/* Step rounds: Round 1 (2:00) -> Round 2 (1:30) -> Round 3 (1:00) */}
+            <div className="flex items-center gap-1">
+              {([1, 2, 3] as const).map((round) => {
+                const duration = round === 1 ? "2:00" : round === 2 ? "1:30" : "1:00";
+                const isCurrent = drillAttempt === round;
+                return (
+                  <button
+                    key={round}
+                    onClick={() => {
+                      setDrillAttempt(round);
+                      resetRecording();
+                    }}
+                    className={cn(
+                      "px-2.5 py-1 text-xs transition-colors cursor-pointer border-b-2 flex items-center gap-1.5",
+                      isCurrent
+                        ? "border-neutral-900 dark:border-neutral-100 text-neutral-950 dark:text-neutral-50 font-semibold"
+                        : "border-transparent text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 font-normal"
+                    )}
+                  >
+                    <span>Round {round}</span>
+                    <span
+                      className={cn(
+                        "text-[11px]",
+                        isCurrent
+                          ? "text-neutral-600 dark:text-neutral-400"
+                          : "text-neutral-400"
+                      )}
+                    >
+                      ({duration})
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Part 2 Scratchpad (60s prep + 4-cell bottom-line structure) */}
         {activePart === 2 && (
           <div className="py-3 border-y border-neutral-200 dark:border-neutral-800 space-y-3">
@@ -1093,6 +1129,19 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
             )}
+
+            {timerMode === "drill_432" && audioUrl && !isRecording && drillAttempt < 3 && (
+              <button
+                onClick={() => {
+                  setDrillAttempt((prev) => (prev === 1 ? 2 : 3));
+                  resetRecording();
+                }}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 transition-colors cursor-pointer pl-3 border-l border-neutral-200 dark:border-neutral-800"
+              >
+                <span>Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"})</span>
+                <span>→</span>
+              </button>
+            )}
           </div>
 
           {/* Telemetry Stats Divided by Vertical Lines */}
@@ -1253,6 +1302,21 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
                 >
                   Retry
                 </button>
+
+                {timerMode === "drill_432" && drillAttempt < 3 && (
+                  <>
+                    <span className="text-neutral-300 dark:text-neutral-700 font-light">•</span>
+                    <button
+                      onClick={() => {
+                        setDrillAttempt((prev) => (prev === 1 ? 2 : 3));
+                        resetRecording();
+                      }}
+                      className="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline transition-colors cursor-pointer shrink-0"
+                    >
+                      Next: Round {drillAttempt + 1} ({drillAttempt === 1 ? "1:30" : "1:00"}) →
+                    </button>
+                  </>
+                )}
               </div>
             )}
 
