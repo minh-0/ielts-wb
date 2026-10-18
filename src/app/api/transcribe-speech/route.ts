@@ -7,8 +7,11 @@ import os from 'os';
 
 const execAsync = promisify(exec);
 
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
 const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
-const GEMINI_FALLBACK_MODEL = 'gemini-3.0-flash';
+const GEMINI_FALLBACK_MODEL = 'gemini-3.5-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_PRIMARY_MODEL}:generateContent`;
 const GEMINI_FALLBACK_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_FALLBACK_MODEL}:generateContent`;
 
@@ -95,21 +98,26 @@ export async function POST(req: NextRequest) {
             }
           ],
           generationConfig: {
-            temperature: 0.1
+            temperature: 0.1,
+            thinkingConfig: {
+              thinkingLevel: 'low'
+            }
           }
         });
 
         let res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: payloadBody
+          body: payloadBody,
+          signal: AbortSignal.timeout(20000)
         });
 
         if (!res.ok) {
           res = await fetch(`${GEMINI_FALLBACK_API_URL}?key=${key}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: payloadBody
+            body: payloadBody,
+            signal: AbortSignal.timeout(18000)
           });
         }
 

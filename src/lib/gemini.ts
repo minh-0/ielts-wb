@@ -2,7 +2,7 @@ import { WritingAnalysisResult, SpeakingAnalysisResult, EffectiveFeature, TaskTy
 import { evaluateWritingDynamically, extractCandidateEffectiveFeatures } from './dynamicIeltsExaminer';
 
 const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
-const GEMINI_FALLBACK_MODEL = 'gemini-3.0-flash';
+const GEMINI_FALLBACK_MODEL = 'gemini-3.5-flash';
 
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_PRIMARY_MODEL}:generateContent`;
 const GEMINI_FALLBACK_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_FALLBACK_MODEL}:generateContent`;
@@ -101,14 +101,14 @@ TOPIC RELEVANCE & MANDATORY GROUNDING INSTRUCTION:
        - For Coherence & Cohesion: Analyze the candidate's actual paragraph progression and specific cohesive linkers/referencing used in their essay.
        - For Lexical Resource: Directly quote or reference specific vocabulary and collocations used by the candidate, evaluating their precision for this specific topic.
        - For Grammatical Range: Cite specific sentence structures, clauses, and grammar choices found in the candidate's essay.
-       - DO NOT write generic textbook definitions. The analysis must be 100% about this specific essay and this prompt question.
-     * "keyRecommendations" (Recommend): Provide 2 to 4 concrete, actionable recommendations directly based on what the user wrote and the task question.
+       - DO NOT write generic textbook definitions. The analysis must be 100% about this specific essay and this prompt question. Keep feedback to 2-3 concise, high-impact diagnostic sentences.
+     * "keyRecommendations" (Recommend): Provide 2 to 3 concrete, actionable recommendations directly based on what the user wrote and the task question.
        - Specify exactly what argument, counter-argument, or example to add for this topic.
        - Recommend how to fix specific transitions between the candidate's actual paragraphs.
        - Recommend high-band topic-specific academic vocabulary and collocations to replace candidate's simpler phrases.
        - Recommend specific grammatical structures (e.g. inverted conditionals, cleft sentences, participle clauses) tailored to the candidate's points.
 2. BAND 8–9 ASSESSMENT STANDARDS ("band8Standards"):
-   - Provide an array of exactly 4 pillars showing how THIS candidate's essay can be elevated from Band 7 to Band 8.5–9.0 on THIS prompt question:
+   - If overallBand >= 7.0, provide an array of exactly 4 pillars showing how THIS candidate's essay can be elevated from Band 7 to Band 8.5–9.0 on THIS prompt question:
      [
        {
          "pillarName": "1. Academic Hedging (TR)",
@@ -240,10 +240,10 @@ Analyze this essay and output valid JSON with this exact structure:
   ]
 }
 CRITICAL INSTRUCTION FOR IN-TEXT UNDERLINE & HIGHLIGHTING:
-- In "sentenceFeedbacks": each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, informal contraction, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
-- In "vocabularySuggestions": each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms. Include "higherRatedWordExplanation" and "higherRatedWords" with CEFR levels (C1/C2) and concise explanations.
-- In "effectiveFeatures": identify 2 to 5 EXACT VERBATIM SUBSTRINGS (1 to 6 words) from Candidate Essay showing commendable language: e.g. well-chosen academic vocabulary, idiomatic expressions, natural collocations, or sophisticated grammar structures. Give a brief complimentary rationale explaining why this is effective. IMPORTANT: This is formative praise to highlight candidate strengths and MUST NOT alter or change your objective band score rating.
-- In "modelAnswer": output a high-scoring Band 8.5-9.0 response addressing the EXACT assigned prompt.
+- In "sentenceFeedbacks": provide 3 to 5 high-impact items. Each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, informal contraction, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
+- In "vocabularySuggestions": provide 3 to 5 high-yield items. Each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms. Include "higherRatedWordExplanation" and "higherRatedWords" with CEFR levels (C1/C2) and concise explanations.
+- In "effectiveFeatures": identify 2 to 4 EXACT VERBATIM SUBSTRINGS (1 to 6 words) from Candidate Essay showing commendable language: e.g. well-chosen academic vocabulary, idiomatic expressions, natural collocations, or sophisticated grammar structures. Give a brief complimentary rationale explaining why this is effective. IMPORTANT: This is formative praise to highlight candidate strengths and MUST NOT alter or change your objective band score rating.
+- In "modelAnswer": output a concise, high-scoring Band 8.5-9.0 model paragraph/response (100–140 words) directly demonstrating exemplary execution on the assigned prompt.
 
 Only output the JSON object without markdown fences if possible.
 `;
@@ -280,14 +280,18 @@ Only output the JSON object without markdown fences if possible.
       ],
       generationConfig: {
         responseMimeType: 'application/json',
-        temperature: 0.2
+        temperature: 0.2,
+        thinkingConfig: {
+          thinkingLevel: 'low'
+        }
       }
     });
 
     let res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: payloadBody
+      body: payloadBody,
+      signal: AbortSignal.timeout(28000)
     });
 
     if (!res.ok) {
@@ -295,7 +299,8 @@ Only output the JSON object without markdown fences if possible.
       res = await fetch(`${GEMINI_FALLBACK_API_URL}?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: payloadBody
+        body: payloadBody,
+        signal: AbortSignal.timeout(25000)
       });
     }
 
@@ -331,6 +336,8 @@ Only output the JSON object without markdown fences if possible.
 
     if (parsed.overallBand >= 7.0) {
       parsed.band8Standards = ensureBand8Standards(parsed, essayText, promptText);
+    } else {
+      parsed.band8Standards = undefined;
     }
 
     return parsed;
@@ -543,14 +550,18 @@ Output STRICT valid JSON conforming to the SpeakingAnalysisResult schema.`;
       ],
       generationConfig: {
         responseMimeType: 'application/json',
-        temperature: 0.2
+        temperature: 0.2,
+        thinkingConfig: {
+          thinkingLevel: 'low'
+        }
       }
     });
 
     let res = await fetch(`${GEMINI_API_URL}?key=${key}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: payloadBody
+      body: payloadBody,
+      signal: AbortSignal.timeout(28000)
     });
 
     if (!res.ok) {
@@ -558,7 +569,8 @@ Output STRICT valid JSON conforming to the SpeakingAnalysisResult schema.`;
       res = await fetch(`${GEMINI_FALLBACK_API_URL}?key=${key}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: payloadBody
+        body: payloadBody,
+        signal: AbortSignal.timeout(25000)
       });
     }
 
