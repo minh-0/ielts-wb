@@ -213,7 +213,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
-  - `feat(support): add Support me button in bottom-left footer with rounded VietQR popup modal`
+  - `d5a79fc`: `feat(support): add Support me button in bottom-left footer with rounded VietQR popup modal`
   - `d32d40f`: `refactor(criteria): enforce 100% dynamic criteria breakdown and Band 8-9 standards without any predetermined or canned phrases`
   - `9a939e5`: `fix(gemini): accelerate writing and speaking evaluation with thinkingLevel low, gemini-3.5-flash fallback, maxDuration 60, and dynamic examiner fallback`
   - `986c57b`: `fix(api): enforce dynamic serverless execution for grading routes on Vercel`
