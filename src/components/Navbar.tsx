@@ -20,8 +20,6 @@ interface NavbarProps {
   onSelectPracticeTab: (tab: "writing" | "speaking") => void;
   onSelectLearnTab: (tab: "collocations" | "vocabulary" | "rubric") => void;
   onOpenStartPage: () => void;
-  onOpenApiKeyModal: () => void;
-  hasApiKey: boolean;
 }
 
 export function Navbar({
@@ -31,8 +29,6 @@ export function Navbar({
   onSelectPracticeTab,
   onSelectLearnTab,
   onOpenStartPage,
-  onOpenApiKeyModal,
-  hasApiKey,
 }: NavbarProps) {
   const renderDock = (isMobile = false) => (
     <Dock
@@ -113,27 +109,8 @@ export function Navbar({
           {/* Center Magic UI Dock */}
           <div className="flex-1 flex justify-center">{renderDock(false)}</div>
 
-          {/* Right Actions: AI Engine Status & ThemeToggle */}
+          {/* Right Actions: ThemeToggle */}
           <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={onOpenApiKeyModal}
-              className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
-                hasApiKey
-                  ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
-                  : "border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100"
-              }`}
-              title="Configure Live Gemini AI or use local evaluation engine"
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  hasApiKey ? "bg-emerald-500" : "bg-neutral-400 dark:bg-neutral-600"
-                }`}
-              />
-              <span className="hidden lg:inline">
-                {hasApiKey ? "Live AI" : "AI Engine"}
-              </span>
-            </button>
-
             <ThemeToggle />
           </div>
         </div>
@@ -149,21 +126,6 @@ export function Navbar({
               IELTSpro666
             </button>
             <div className="flex items-center gap-2">
-              <button
-                onClick={onOpenApiKeyModal}
-                className={`flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded-md border ${
-                  hasApiKey
-                    ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
-                    : "border-neutral-200 dark:border-neutral-800 text-neutral-500"
-                }`}
-              >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    hasApiKey ? "bg-emerald-500" : "bg-neutral-400"
-                  }`}
-                />
-                <span>{hasApiKey ? "Live AI" : "AI"}</span>
-              </button>
               <ThemeToggle />
             </div>
           </div>

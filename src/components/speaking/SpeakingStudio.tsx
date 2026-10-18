@@ -34,7 +34,6 @@ import { cn } from "@/lib/utils";
 
 interface SpeakingStudioProps {
   apiKey?: string;
-  onOpenApiKeyModal?: () => void;
 }
 
 type TimerMode = "standard" | "exam" | "drill_432";

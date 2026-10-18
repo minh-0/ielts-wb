@@ -7,7 +7,6 @@ import { SpeakingStudio } from "@/components/speaking/SpeakingStudio";
 import { VocabularyStudio } from "@/components/vocabulary/VocabularyStudio";
 import { CollocationsStudio } from "@/components/collocations/CollocationsStudio";
 import { RubricViewer } from "@/components/rubric/RubricViewer";
-import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
 import { StartPage } from "@/components/start/StartPage";
 import { TaskType } from "@/types/ielts";
@@ -33,7 +32,6 @@ export default function Home() {
   const [practiceTab, setPracticeTab] = useState<"writing" | "speaking">("writing");
   const [learnTab, setLearnTab] = useState<"collocations" | "vocabulary" | "rubric">("collocations");
   const [apiKey, setApiKey] = useState<string>("");
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [writingTaskType, setWritingTaskType] = useState<TaskType>("task2");
 
   useEffect(() => {
@@ -160,8 +158,6 @@ export default function Home() {
           setLearnTab(tab);
         }}
         onOpenStartPage={() => setHasEntered(false)}
-        onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
-        hasApiKey={Boolean(apiKey)}
       />
 
       {/* Minimalist Hero Header with Atmospheric Colored Gradients & Integrated Studio Tabs */}
@@ -261,10 +257,7 @@ export default function Home() {
           <WritingStudio apiKey={apiKey} initialTaskType={writingTaskType} />
         )}
         {category === "practice" && practiceTab === "speaking" && (
-          <SpeakingStudio
-            apiKey={apiKey}
-            onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
-          />
+          <SpeakingStudio apiKey={apiKey} />
         )}
         {category === "learn" && learnTab === "collocations" && <CollocationsStudio />}
         {category === "learn" && learnTab === "vocabulary" && <VocabularyStudio />}
@@ -279,13 +272,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* API Key Modal */}
-      <ApiKeyModal
-        isOpen={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
-        onKeySaved={setApiKey}
-      />
 
       {/* Text Selection Toolbar (Oxford Dictionary + Cursor Highlighter) */}
       <SelectionToolbar />
