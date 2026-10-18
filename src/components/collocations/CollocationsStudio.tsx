@@ -21,7 +21,6 @@ import {
   ChevronRight,
   ChevronDown,
   Shuffle,
-  RotateCw,
   BookOpen,
   Award,
   AlertCircle,
@@ -230,9 +229,11 @@ export function CollocationsStudio() {
       ) {
         e.preventDefault();
         handleNextCard();
-      } else if (e.key === "m" || e.key === "M") {
+      } else if (e.key === "f" || e.key === "F" || e.key === "m" || e.key === "M") {
+        e.preventDefault();
         if (currentCard) toggleMaster(currentCard.id);
       } else if (e.key === "s" || e.key === "S") {
+        e.preventDefault();
         if (currentCard) toggleStar(currentCard.id);
       }
     };
@@ -820,21 +821,13 @@ export function CollocationsStudio() {
               />
 
               {/* Navigation Controls */}
-              <div className="flex items-center justify-center gap-4 pt-1">
+              <div className="flex items-center justify-center gap-6 pt-1">
                 <button
                   onClick={handlePrevCard}
                   className="px-4 py-1.5 text-xs text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Previous</span>
-                </button>
-
-                <button
-                  onClick={() => setIsFlipped(!isFlipped)}
-                  className="px-4 py-1.5 text-xs border border-neutral-200 dark:border-neutral-800 rounded-md text-neutral-800 dark:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <RotateCw className="w-3 h-3 text-neutral-400" />
-                  <span>Flip Card</span>
                 </button>
 
                 <button
@@ -858,6 +851,10 @@ export function CollocationsStudio() {
                 <span>•</span>
                 <span>
                   <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">D</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">→</kbd> Next
+                </span>
+                <span>•</span>
+                <span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">F</kbd> Master
                 </span>
               </div>
             </div>

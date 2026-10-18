@@ -156,9 +156,11 @@ export function VocabularyStudio() {
       ) {
         e.preventDefault();
         handlePrevCard();
-      } else if (e.key === "m" || e.key === "M") {
+      } else if (e.key === "f" || e.key === "F" || e.key === "m" || e.key === "M") {
+        e.preventDefault();
         if (currentCard) toggleMaster(currentCard.id);
       } else if (e.key === "s" || e.key === "S") {
+        e.preventDefault();
         if (currentCard) toggleStar(currentCard.id);
       }
     };
@@ -488,6 +490,10 @@ export function VocabularyStudio() {
                 <span>•</span>
                 <span>
                   <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">D</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">→</kbd> Next
+                </span>
+                <span>•</span>
+                <span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">F</kbd> Master
                 </span>
               </div>
             </>
