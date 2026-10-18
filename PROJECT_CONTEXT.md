@@ -145,8 +145,8 @@
   - **High-Visibility Playback Button**: Prominent "Play Voice" / "Pause Voice" button (`Play` / `Pause` icon) that appears immediately after recording, accompanied by an interactive scrub bar (scrubber slider, elapsed/total timestamps, and 1x/1.25x/1.5x speed toggle).
   - **Responsive Waveform Box**: HTML5 canvas live waveform visualization dynamically adapting to light mode (`bg-neutral-50/80` with emerald stroke `#059669`) and dark mode (`bg-neutral-950` with emerald stroke `#10b981`), eliminating harsh black rectangles in light mode.
 - **Progressive Reveal Workspace**:
-  - **Candidate Spoken Transcript**: Live acoustic speech-to-text transcript card with word count, selection highlight toolbar, and Oxford Dictionary lookup.
-  - **Examiner Rubric Self-Audit**: Collapsible 4-point self-audit checklist (Cambridge FC, LR, GRA, PR).
+  - **Clean Audio Focus (Spoken Transcript Purged)**: Removed the speech-to-text candidate spoken transcript feature to keep practice clean, fast, and focused on voice recording and acoustic self-playback without distracting STT inaccuracies.
+  - **Speaking Assessment Checklist**: Renamed and clarified the self-audit into an intuitive, formal 4-point checklist (evaluating direct answering, fluent pacing without pauses over 2s, natural collocation usage, and complex clause formation) without confusing acronyms or academic jargon.
   - **Authentic Examiner Model Answers**: Collapsible progressive accordion ("Reveal Models" / "Hide Models") to prevent visual clutter. Comparative grid displaying Authentic Band 6.0 Candidate Transcript vs. Authentic Band 9.0 Model with identical typography, examiner critiques, and contextual C1/C2 highlights.
 - **Light Mode Contrast Optimization**:
   - Comprehensive contrast tuning: secondary labels, timestamps, placeholders, borders, and indicators elevated from washed-out gray (`text-neutral-400`) to crisp `text-neutral-600` / `text-neutral-700` (`dark:text-neutral-300` / `dark:text-neutral-400`), meeting WCAG contrast standards.

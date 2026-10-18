@@ -39,24 +39,6 @@ interface SpeakingStudioProps {
 
 type TimerMode = "standard" | "exam" | "drill_432";
 
-const FILLER_WORDS = [
-  "um",
-  "uh",
-  "er",
-  "ah",
-  "like",
-  "you know",
-  "basically",
-  "actually",
-  "sort of",
-  "kinda",
-  "kind of",
-  "so yeah",
-  "i mean",
-];
-
-const FILLER_REGEX = new RegExp(`\\b(${FILLER_WORDS.join("|")})\\b`, "gi");
-
 export function SpeakingStudio({}: SpeakingStudioProps) {
   // Part Selection
   const [activePart, setActivePart] = useState<1 | 2 | 3>(2);
@@ -111,12 +93,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     outcome: "",
   });
 
-  // Recording State & Transcript
+  // Recording State & Collocations
   const [isRecording, setIsRecording] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [liveTranscript, setLiveTranscript] = useState("");
-  const [finalTranscript, setFinalTranscript] = useState("");
   const [manuallyCheckedCollocs, setManuallyCheckedCollocs] = useState<string[]>([]);
 
   // Audio Playback State (Only for user's own recorded voice)
@@ -134,18 +114,15 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     complexClause: false,
   });
 
-  // Web Speech API, MediaRecorder, AudioContext Refs
+  // MediaRecorder, AudioContext Refs
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const speechRecognitionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const isRecordingRef = useRef(false);
-  const finalTranscriptRef = useRef("");
-  const sessionFinalTranscriptRef = useRef("");
 
   // Timer Interval Ref
   const timerIntervalRef = useRef<any>(null);
@@ -161,8 +138,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     setIsPrepping(false);
     setScratchpad({ context: "", core: "", impact: "", outcome: "" });
     setManuallyCheckedCollocs([]);
-    setFinalTranscript("");
-    setLiveTranscript("");
     setShowModelAnswers(false);
     setChecklist({
       answeredDirectly: false,
@@ -209,18 +184,12 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     return segments.length - 1;
   }, [elapsedSeconds, selectedPrompt.pacingSegments]);
 
-  // Active Transcript (combining both finalized and live interim words)
-  const activeTranscriptText = useMemo(() => {
-    return [finalTranscript, liveTranscript].filter(Boolean).join(" ").trim();
-  }, [finalTranscript, liveTranscript]);
-
-  // Target collocations used (detected or manually checked)
+  // Target collocations used (manually checked by candidate)
   const usedCollocations = useMemo(() => {
-    const textLower = activeTranscriptText.toLowerCase();
-    return selectedPrompt.targetCollocations.filter(
-      (c) => textLower.includes(c.phrase.toLowerCase()) || manuallyCheckedCollocs.includes(c.phrase)
+    return selectedPrompt.targetCollocations.filter((c) =>
+      manuallyCheckedCollocs.includes(c.phrase)
     );
-  }, [activeTranscriptText, selectedPrompt.targetCollocations, manuallyCheckedCollocs]);
+  }, [selectedPrompt.targetCollocations, manuallyCheckedCollocs]);
 
   // Toggle Manual Collocation Check
   const toggleCollocationCheck = (phrase: string) => {
@@ -270,68 +239,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       isRecordingRef.current = true;
       setElapsedSeconds(0);
       setAudioUrl(null);
-      setFinalTranscript("");
-      setLiveTranscript("");
-      finalTranscriptRef.current = "";
-      sessionFinalTranscriptRef.current = "";
-
-      // Web Speech API
-      const SpeechRecognition =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        speechRecognitionRef.current = recognition;
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = "en-US";
-
-        recognition.onresult = (event: any) => {
-          let currentSessionFinal = "";
-          let currentSessionInterim = "";
-
-          for (let i = 0; i < event.results.length; i++) {
-            const res = event.results[i];
-            if (res.isFinal) {
-              currentSessionFinal += res[0].transcript + " ";
-            } else {
-              currentSessionInterim += res[0].transcript + " ";
-            }
-          }
-
-          const combinedFinal = [sessionFinalTranscriptRef.current, currentSessionFinal]
-            .filter(Boolean)
-            .join(" ")
-            .replace(/\s+/g, " ")
-            .trim();
-
-          finalTranscriptRef.current = combinedFinal;
-          setFinalTranscript(combinedFinal);
-          setLiveTranscript(currentSessionInterim.trim());
-        };
-
-        recognition.onend = () => {
-          // If the recording is still ongoing, auto-restart recognition seamlessly
-          if (isRecordingRef.current) {
-            sessionFinalTranscriptRef.current = finalTranscriptRef.current;
-            try {
-              recognition.start();
-            } catch (e) {
-              // already starting or active
-            }
-          }
-        };
-
-        recognition.onerror = () => {
-          // silently allow onend to restart if needed
-        };
-
-        try {
-          recognition.start();
-        } catch (e) {
-          // ignore already started error
-        }
-      }
 
       // Timer Interval
       timerIntervalRef.current = setInterval(() => {
@@ -408,12 +315,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       cancelAnimationFrame(animFrameRef.current);
     }
 
-    if (speechRecognitionRef.current) {
-      try {
-        speechRecognitionRef.current.stop();
-      } catch (e) {}
-    }
-
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
@@ -437,12 +338,8 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
   const resetRecording = () => {
     stopRecording();
     isRecordingRef.current = false;
-    finalTranscriptRef.current = "";
-    sessionFinalTranscriptRef.current = "";
     setElapsedSeconds(0);
     setAudioUrl(null);
-    setLiveTranscript("");
-    setFinalTranscript("");
     setIsPlayingAudio(false);
   };
 
@@ -488,66 +385,6 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
     if (audioPlayerRef.current) {
       audioPlayerRef.current.playbackRate = next;
     }
-  };
-
-  // Highlight Candidate Transcript (Fillers in rose, Collocations in emerald)
-  const renderAnnotatedTranscript = (text: string) => {
-    if (!text.trim()) {
-      return (
-        <span className="text-neutral-600 dark:text-neutral-400 italic">
-          (No speech detected yet. Click the record button below to speak your response).
-        </span>
-      );
-    }
-
-    // Build regex that captures target collocations and fillers
-    const collocPhrases = selectedPrompt.targetCollocations.map((c) =>
-      c.phrase.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-    );
-    const fillerPhrases = FILLER_WORDS.map((f) =>
-      f.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-    );
-
-    const pattern = new RegExp(
-      `\\b(${[...collocPhrases, ...fillerPhrases].join("|")})\\b`,
-      "gi"
-    );
-
-    const parts = text.split(pattern);
-
-    return parts.map((part, i) => {
-      const lower = part.toLowerCase();
-      const isColloc = selectedPrompt.targetCollocations.some(
-        (c) => c.phrase.toLowerCase() === lower
-      );
-      const isFiller = FILLER_WORDS.includes(lower);
-
-      if (isColloc) {
-        return (
-          <span
-            key={i}
-            className="text-emerald-700 bg-emerald-50 dark:text-emerald-300/90 dark:bg-emerald-950/40 px-1 py-0.5 rounded font-medium underline decoration-solid decoration-emerald-500/80"
-            title="Target Collocation Used"
-          >
-            {part}
-          </span>
-        );
-      }
-
-      if (isFiller) {
-        return (
-          <span
-            key={i}
-            className="text-rose-700 bg-rose-50 dark:text-rose-300/90 dark:bg-rose-950/40 px-1 py-0.5 rounded font-medium underline decoration-wavy decoration-rose-500/80"
-            title="Spoken Crutch / Filler Word"
-          >
-            {part}
-          </span>
-        );
-      }
-
-      return <span key={i}>{part}</span>;
-    });
   };
 
   // Highlight Target Collocations in Model Answer
@@ -1186,33 +1023,11 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
       </div>
 
       {/* ======================================================== */}
-      {/* SECTION D: TRANSCRIPT & PROGRESSIVE AUDIT / MODELS       */}
+      {/* SECTION D: ASSESSMENT CHECKLIST & MODEL ANSWERS          */}
       {/* ======================================================== */}
       <div className="space-y-4 pt-1">
-        {/* Candidate Transcript (Clean Card) */}
-        {(activeTranscriptText || audioUrl) && (
-          <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-2">
-            <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400 font-medium">
-              <span className="font-semibold uppercase tracking-wider text-[11px]">
-                Spoken Transcript (Live Acoustic Log)
-              </span>
-              <span>
-                {activeTranscriptText.trim().split(/\s+/).filter(Boolean).length} words
-              </span>
-            </div>
-
-            {/* SelectionToolbar & Oxford Modal Contract */}
-            <div
-              data-paragraph="true"
-              className="ielts-paragraph text-sm sm:text-base leading-relaxed text-neutral-900 dark:text-neutral-100 select-text"
-            >
-              {renderAnnotatedTranscript(activeTranscriptText)}
-            </div>
-          </div>
-        )}
-
-        {/* Examiner Rubric Self-Audit (Clean Card) */}
-        {(activeTranscriptText || audioUrl) && (
+        {/* Speaking Assessment Checklist (Clean Card) */}
+        {audioUrl && (
           <div className="p-3.5 sm:p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/80 dark:bg-neutral-900/40 space-y-2">
             <button
               onClick={() => setShowRubricAudit(!showRubricAudit)}
@@ -1220,10 +1035,10 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
             >
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>Examiner Rubric Self-Audit (Cambridge FC, LR, GRA, PR)</span>
+                <span className="text-neutral-900 dark:text-neutral-100 font-semibold">Speaking Assessment Checklist</span>
               </div>
               <div className="flex items-center gap-1 text-[11px] text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-950 dark:group-hover:text-neutral-200">
-                <span>{showRubricAudit ? "Hide" : "Audit"}</span>
+                <span>{showRubricAudit ? "Hide" : "Checklist"}</span>
                 <ChevronDown
                   className={cn(
                     "w-3 h-3 transition-transform duration-200",
