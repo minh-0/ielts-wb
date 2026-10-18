@@ -1,20 +1,20 @@
-# Project Context: IELTSlayer666 (light)
+# Project Context: ieltsworkbench
 
-*Last updated: 2026-10-18 16:17*
+*Last updated: 2026-10-18 16:25*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
 ---
 
 ### 1. Identity & Tech Stack
-- **Project Name**: `IELTSlayer666` (Browser tab title: `light`, repository root: `e:/contest`).
+- **Project Name**: `ieltsworkbench` (Browser tab title: `ieltsworkbench`, repository root: `e:/contest`).
 - **Core Purpose**: High-precision, examiner-grade diagnostic practice suite for IELTS Writing (Task 1 & 2) and Speaking (Parts 1, 2, 3) aligned strictly with official British Council, IDP, and Cambridge band descriptors.
 - **Tech Stack**:
   - **Framework**: Next.js 16.3.8 (App Router, Turbopack enabled)
   - **Language**: TypeScript (strict mode, 0 build/lint errors)
   - **Styling**: Tailwind CSS (dark mode via `class` strategy)
   - **Icons**: `lucide-react`
-  - **AI Engine**: Google Gemini API (`gemini-3.8-flash` primary with fallback to `gemini-2.5-flash`), plus a realistic offline mock diagnostic engine when no API key is provided.
+  - **AI Engine**: Google Gemini API (`gemini-3.8-flash`) powered by the host's default API key (`GEMINI_API_KEY`) or visitors' optional custom keys, with strict live evaluation (offline mock fallback purged).
   - **Audio/Voice**: Browser `MediaRecorder` + Web Speech API for real-time speech recognition.
   - **Exporting**: HTML5 Canvas rendering for 1080x1350 PNG scorecard generation.
 
@@ -209,6 +209,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `d3a1e1f`: `feat: rename project to ieltsworkbench, restore API key modal, and enforce live Gemini evaluation`
   - `c655362`: `style(writing): remove Live Gemini indicator, simplify analyze loading text to Analyzing..., and shorten Apply button`
   - `d6533a8`: `feat(ui): remove API key button and modal to rely entirely on server-side GEMINI_API_KEY`
   - `9cc66e2`: `style(start): show bigger screen recommendation on mobile devices`
