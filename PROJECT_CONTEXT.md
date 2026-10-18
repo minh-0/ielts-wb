@@ -196,7 +196,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
-  - `Pending`: `feat(speaking): expand Speaking Studio bank to 48 authentic real tests from Cambridge 11-19 and examiner masterclasses`
+  - `0569595`: `feat(speaking): expand Speaking Studio bank to 48 authentic real tests from Cambridge 11-19 and examiner masterclasses`
   - `3982fa7`: `feat(writing): add edit mode popup hint, redesign criteria standards without vertical colored lines, and enlarge borderless theme toggle`
   - `e39bea7`: `style(hero): keep classic red accent in light mode while preserving emerald-teal-cyan in dark mode`
   - `7d49507`: `style(hero): harmonize dynamic text and ambient gradient theme to emerald-teal-cyan palette`
