@@ -202,6 +202,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `cd0a17d`: `style(speaking): lighten selected prompt highlight, remove white outlines, and optimize for light mode`
   - `8b5c5ab`: `feat(ui): borderless modal styling, fix filter dropdowns, rename browse button, and soften prompt dividers`
   - `0569595`: `feat(speaking): expand Speaking Studio bank to 48 authentic real tests from Cambridge 11-19 and examiner masterclasses`
   - `3982fa7`: `feat(writing): add edit mode popup hint, redesign criteria standards without vertical colored lines, and enlarge borderless theme toggle`
