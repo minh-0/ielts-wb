@@ -1,6 +1,6 @@
 # Project Context: ieltsworkbench
 
-*Last updated: 2026-10-18 16:25*
+*Last updated: 2026-10-18 16:34*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -99,7 +99,9 @@
   - Highlights grammar errors (red wavy), vocabulary upgrades (violet dashed), and replaced words (emerald solid).
   - Clicking any underlined span displays an interactive popover with examiner rationale, 1-click **"Apply Higher-Rated Word"** or **"Revert"** button, and an **"Ignore"** button (`EyeOff` icon) to dismiss the suggestion.
   - **Edit Mode Popup Hint**: When users rapidly click or double-click on the essay text while in Annotated mode, the studio detects that they may be trying to edit the text and displays a small popover tooltip directly above the "Edit" button ("Click here to edit essay"). Clicking the tooltip or the Edit button immediately switches the view to Edit mode.
-- **Criteria Breakdown & Band 8–9 Assessment Standards Redesign**:
+- **Criteria Breakdown & Band 8–9 Assessment Standards**:
+  - **Grounded Criteria Analysis & Recommendations**: Each criterion (TR/TA, CC, LR, GRA) provides personalized analysis and actionable recommendations grounded directly in what the candidate wrote and the exact task question prompt.
+  - **Dynamic Band 8–9 Standards (7.0+ Only)**: Only appears when the essay scores Band 7.0 or above. Generates dynamic, essay-tailored diagnostic analysis, recommendations, and candidate quote vs Band 8.5+ elevation rewrites across the 4 pillars (Academic Hedging, Thematic Referencing, Inversion & Clefting, Lexical Precision).
   - Balanced lines vs. boxes: removed harsh cage-like vertical column dividers (`xl:border-r`) and header underlines, relying on generous grid spacing (`gap-6`).
   - Encapsulated actionable Recommendations and Band 7.0 vs Band 8.5+ comparison quotes in subtle muted cards (`bg-neutral-50/80 dark:bg-neutral-900/40 rounded-xl p-3`).
   - **Removed Red & Green Vertical Lines**: Replaced harsh `border-l-2` colored vertical bars on Band 7.0 / 8.5+ quotes with subtle contrast badge pills (`[Band 7.0]` and `[Band 8.5+]`) and soft hairline row dividers.
@@ -209,6 +211,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `da6ba22`: `feat: ground criteria analysis and recommendations in candidate text and prompt, make Band 8-9 standards conditional on 7.0+ with dynamic essay elevation`
   - `d3a1e1f`: `feat: rename project to ieltsworkbench, restore API key modal, and enforce live Gemini evaluation`
   - `c655362`: `style(writing): remove Live Gemini indicator, simplify analyze loading text to Analyzing..., and shorten Apply button`
   - `d6533a8`: `feat(ui): remove API key button and modal to rely entirely on server-side GEMINI_API_KEY`
