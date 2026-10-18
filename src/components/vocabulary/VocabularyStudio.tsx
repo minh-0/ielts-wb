@@ -111,33 +111,51 @@ export function VocabularyStudio() {
 
   const currentCard = flashcardPool[cardIndex] || null;
 
+  const handleNextCard = useCallback(() => {
+    if (flashcardPool.length === 0) return;
+    setIsFlipped(false);
+    setCardIndex((prev) => (prev + 1) % flashcardPool.length);
+  }, [flashcardPool.length]);
+
+  const handlePrevCard = useCallback(() => {
+    if (flashcardPool.length === 0) return;
+    setIsFlipped(false);
+    setCardIndex((prev) => (prev - 1 + flashcardPool.length) % flashcardPool.length);
+  }, [flashcardPool.length]);
+
   // Keyboard navigation
   useEffect(() => {
     if (activeMode !== "flashcards") return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement as HTMLElement | null;
+      const target = e.target as HTMLElement | null;
       if (
-        document.activeElement?.tagName === "INPUT" ||
-        document.activeElement?.tagName === "TEXTAREA"
+        (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.isContentEditable)) ||
+        (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable))
       ) {
         return;
       }
 
-      if (e.code === "Space") {
+      if (e.code === "Space" || e.key === " ") {
         e.preventDefault();
         setIsFlipped((f) => !f);
-      } else if (e.code === "ArrowRight") {
+      } else if (
+        e.code === "ArrowRight" ||
+        e.key === "ArrowRight" ||
+        e.key === "d" ||
+        e.key === "D"
+      ) {
         e.preventDefault();
-        if (flashcardPool.length > 0) {
-          setIsFlipped(false);
-          setCardIndex((prev) => (prev + 1) % flashcardPool.length);
-        }
-      } else if (e.code === "ArrowLeft") {
+        handleNextCard();
+      } else if (
+        e.code === "ArrowLeft" ||
+        e.key === "ArrowLeft" ||
+        e.key === "a" ||
+        e.key === "A"
+      ) {
         e.preventDefault();
-        if (flashcardPool.length > 0) {
-          setIsFlipped(false);
-          setCardIndex((prev) => (prev - 1 + flashcardPool.length) % flashcardPool.length);
-        }
+        handlePrevCard();
       } else if (e.key === "m" || e.key === "M") {
         if (currentCard) toggleMaster(currentCard.id);
       } else if (e.key === "s" || e.key === "S") {
@@ -147,19 +165,7 @@ export function VocabularyStudio() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeMode, currentCard, flashcardPool.length, toggleMaster, toggleStar]);
-
-  const handleNextCard = () => {
-    if (flashcardPool.length === 0) return;
-    setIsFlipped(false);
-    setCardIndex((prev) => (prev + 1) % flashcardPool.length);
-  };
-
-  const handlePrevCard = () => {
-    if (flashcardPool.length === 0) return;
-    setIsFlipped(false);
-    setCardIndex((prev) => (prev - 1 + flashcardPool.length) % flashcardPool.length);
-  };
+  }, [activeMode, currentCard, handleNextCard, handlePrevCard, toggleMaster, toggleStar]);
 
   const paginatedExplorerItems = useMemo(() => {
     const start = (explorerPage - 1) * ITEMS_PER_PAGE;
@@ -468,6 +474,21 @@ export function VocabularyStudio() {
                 >
                   Next →
                 </button>
+              </div>
+
+              {/* Keyboard Navigation Hint */}
+              <div className="flex items-center justify-center gap-3 text-[11px] text-neutral-400 dark:text-neutral-500 pt-1 select-none">
+                <span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">Space</kbd> Flip
+                </span>
+                <span>•</span>
+                <span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">A</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">←</kbd> Prev
+                </span>
+                <span>•</span>
+                <span>
+                  <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">D</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-[10px]">→</kbd> Next
+                </span>
               </div>
             </>
           )}
