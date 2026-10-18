@@ -26,6 +26,7 @@ import {
 import { DynamicText, ParticleButton } from "@/components/kokonutui";
 import { ShinyButton } from "@/components/magicui/shiny-button";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
+import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 
 export default function Home() {
   const [hasEntered, setHasEntered] = useState<boolean>(false);
@@ -219,14 +220,12 @@ export default function Home() {
 
             {/* Action Buttons: Condensed to 1 primary on mobile, full set on desktop */}
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-0.5 sm:pt-1">
-              <ParticleButton
+              <InteractiveHoverButton
                 onClick={() => handleStartWriting("task2")}
-                className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-800 hover:from-neutral-800 hover:to-neutral-700 text-white dark:from-white dark:via-neutral-100 dark:to-neutral-200 dark:hover:from-neutral-100 dark:hover:to-white dark:text-neutral-950 text-xs font-medium tracking-tight shadow-sm shadow-black/10 dark:shadow-white/5"
-                icon={<ArrowRight className="w-3.5 h-3.5 opacity-70" />}
+                className="text-xs font-medium cursor-pointer"
               >
-                <PenTool className="w-3.5 h-3.5" />
                 <span>Start Writing</span>
-              </ParticleButton>
+              </InteractiveHoverButton>
 
               <ShinyButton
                 onClick={handleStartSpeaking}
@@ -238,9 +237,9 @@ export default function Home() {
 
               <button
                 onClick={() => handleStartWriting("task1_academic")}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-neutral-200/90 dark:border-neutral-800/90 bg-white/60 dark:bg-neutral-900/50 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs font-medium transition-all shadow-xs cursor-pointer"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-xs font-medium transition-colors cursor-pointer"
               >
-                <BarChart2 className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
+                <BarChart2 className="w-3.5 h-3.5 text-neutral-400" />
                 <AnimatedShinyText shimmerWidth={90} className="text-xs font-medium">
                   50 Task 1 Charts
                 </AnimatedShinyText>
