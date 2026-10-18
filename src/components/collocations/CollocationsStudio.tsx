@@ -242,7 +242,7 @@ export function CollocationsStudio() {
   return (
     <div className="space-y-7 animate-in fade-in duration-200">
       {/* Editorial Header - Cambridge In Use Reference */}
-      <div className="space-y-2 border-b border-neutral-200 dark:border-neutral-800 pb-5">
+      <div className="space-y-2 pb-2">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
@@ -268,14 +268,14 @@ export function CollocationsStudio() {
               </span>
               <span>Collocations</span>
             </div>
-            <div className="h-3 w-px bg-neutral-200 dark:border-neutral-800" />
+            <div className="h-3 w-px bg-neutral-200 dark:bg-neutral-800" />
             <div>
               <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">
                 {starredIds.size}
               </span>
               <span>Starred</span>
             </div>
-            <div className="h-3 w-px bg-neutral-200 dark:border-neutral-800" />
+            <div className="h-3 w-px bg-neutral-200 dark:bg-neutral-800" />
             <div>
               <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">
                 {masteredIds.size}
@@ -286,16 +286,16 @@ export function CollocationsStudio() {
         </div>
       </div>
 
-      {/* Control Navigation Bar: Minimalist Underline Tabs & Clean Controls */}
+      {/* Control Navigation Bar: Minimalist Tabs & Clean Controls (No lines) */}
       <div className="space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-neutral-100 dark:border-neutral-800">
-          {/* Modes: Clean text underline tabs */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-1">
+          {/* Modes: Clean text tabs without underline lines */}
           <div className="flex items-center gap-6 text-xs">
             <button
               onClick={() => setActiveMode("explorer")}
               className={`py-1.5 transition-colors cursor-pointer ${
                 activeMode === "explorer"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold"
                   : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 font-medium"
               }`}
             >
@@ -305,7 +305,7 @@ export function CollocationsStudio() {
               onClick={() => setActiveMode("flashcards")}
               className={`py-1.5 transition-colors cursor-pointer ${
                 activeMode === "flashcards"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold"
                   : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 font-medium"
               }`}
             >
@@ -315,7 +315,7 @@ export function CollocationsStudio() {
               onClick={() => setActiveMode("quiz")}
               className={`py-1.5 transition-colors cursor-pointer ${
                 activeMode === "quiz"
-                  ? "text-neutral-950 dark:text-neutral-50 font-semibold border-b-2 border-neutral-900 dark:border-neutral-100"
+                  ? "text-neutral-950 dark:text-neutral-50 font-semibold"
                   : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 font-medium"
               }`}
             >
@@ -499,11 +499,11 @@ export function CollocationsStudio() {
       {activeMode === "explorer" && (
         <div className="space-y-4">
           {filteredCollocations.length === 0 ? (
-            <div className="py-16 text-center text-xs text-neutral-400 dark:text-neutral-500 border-t border-b border-neutral-100 dark:border-neutral-800">
+            <div className="py-16 text-center text-xs text-neutral-400 dark:text-neutral-500">
               No collocations found matching the current filters.
             </div>
           ) : (
-            <div className="divide-y divide-neutral-200 dark:divide-neutral-800 border-t border-b border-neutral-200 dark:border-neutral-800">
+            <div className="space-y-1">
               {paginatedItems.map((item) => {
                 const isStarred = starredIds.has(item.id);
                 const isMastered = masteredIds.has(item.id);
@@ -512,7 +512,7 @@ export function CollocationsStudio() {
                   <div
                     key={item.id}
                     onClick={() => setInspectedItem(item)}
-                    className="py-4 hover:bg-neutral-50/50 dark:hover:bg-neutral-950/50 transition-colors cursor-pointer flex flex-col md:flex-row md:items-start justify-between gap-4"
+                    className="py-3 px-3.5 rounded-xl hover:bg-neutral-100/70 dark:hover:bg-neutral-900/60 transition-colors cursor-pointer flex flex-col md:flex-row md:items-start justify-between gap-4"
                   >
                     {/* Left: Collocation, Type & Citation */}
                     <div className="md:w-1/3 space-y-1.5">
@@ -640,7 +640,7 @@ export function CollocationsStudio() {
       {activeMode === "flashcards" && (
         <div className="max-w-2xl mx-auto space-y-6">
           {flashcardPool.length === 0 ? (
-            <div className="py-16 text-center text-xs text-neutral-400 border-t border-b border-neutral-100 dark:border-neutral-800">
+            <div className="py-16 text-center text-xs text-neutral-400">
               No collocations in the active pool. Adjust your filter selections.
             </div>
           ) : currentCard ? (
@@ -838,7 +838,7 @@ export function CollocationsStudio() {
           {!completedQuiz && currentQuizQuestion ? (
             <div className="space-y-6">
               {/* Question Header */}
-              <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pb-2 border-b border-neutral-100 dark:border-neutral-800">
+              <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 pb-2">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-neutral-900 dark:text-neutral-100">
                     Question {quizQuestionIndex + 1} of {filteredQuizQuestions.length}
@@ -903,7 +903,7 @@ export function CollocationsStudio() {
 
               {/* Feedback and Explanation */}
               {hasAnswered && (
-                <div className="space-y-3 pt-3 border-t border-neutral-200 dark:border-neutral-800 text-xs animate-in fade-in duration-200">
+                <div className="space-y-3 pt-3 text-xs animate-in fade-in duration-200">
                   <div className="text-neutral-800 dark:text-neutral-200 leading-relaxed">
                     <span className="font-semibold text-neutral-900 dark:text-neutral-100">Explanation: </span>
                     {currentQuizQuestion.explanation}
@@ -928,7 +928,7 @@ export function CollocationsStudio() {
             </div>
           ) : (
             /* Quiz Completed View */
-            <div className="py-12 text-center space-y-4 border-t border-b border-neutral-200 dark:border-neutral-800">
+            <div className="py-12 text-center space-y-4">
               <Award className="w-8 h-8 mx-auto text-neutral-900 dark:text-neutral-100" />
               <div className="space-y-1">
                 <h3 className="font-serif text-2xl text-neutral-900 dark:text-neutral-100">

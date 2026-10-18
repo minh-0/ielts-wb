@@ -166,7 +166,7 @@ export default function Home() {
       />
 
       {/* Minimalist Hero Header with Atmospheric Colored Gradients & Integrated Studio Tabs */}
-      <section className="relative overflow-hidden border-b border-neutral-200/80 dark:border-neutral-800/80 bg-gradient-to-b from-red-50/35 via-white to-neutral-50/60 dark:from-neutral-950 dark:via-neutral-900/40 dark:to-black transition-all duration-300">
+      <section className="relative overflow-hidden bg-gradient-to-b from-red-50/35 via-white to-neutral-50/60 dark:from-neutral-950 dark:via-neutral-900/40 dark:to-black transition-all duration-300">
         <Particles
           className="absolute inset-0 pointer-events-none z-0"
           quantity={65}
