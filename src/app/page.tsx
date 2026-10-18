@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import { DynamicText, ParticleButton } from "@/components/kokonutui";
 import { ShinyButton } from "@/components/magicui/shiny-button";
-import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 
 export default function Home() {
@@ -237,19 +236,17 @@ export default function Home() {
 
               <button
                 onClick={() => handleStartWriting("task1_academic")}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-xs font-medium transition-colors cursor-pointer"
+                className="group hidden sm:inline-flex items-center gap-1.5 px-2.5 py-2 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
               >
-                <BarChart2 className="w-3.5 h-3.5 text-neutral-400" />
-                <AnimatedShinyText shimmerWidth={90} className="text-xs font-medium">
-                  50 Task 1 Charts
-                </AnimatedShinyText>
+                <BarChart2 className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-200 transition-colors" />
+                <span>50 Task 1 Charts</span>
               </button>
 
               <button
                 onClick={() => handleOpenLearn("rubric")}
-                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-2 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
+                className="group hidden sm:inline-flex items-center gap-1.5 px-2.5 py-2 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
               >
-                <BookOpen className="w-3.5 h-3.5 text-neutral-400" />
+                <BookOpen className="w-3.5 h-3.5 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-200 transition-colors" />
                 <span>Public Descriptors</span>
               </button>
             </div>

@@ -691,20 +691,6 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
     setIgnoredIds((prev) => prev.filter((i) => i !== id));
   };
 
-  const handleLoadSampleEssay = () => {
-    if (selectedPrompt.modelEssay) {
-      setEssayContent(cleanRepeatedWords(selectedPrompt.modelEssay));
-    } else {
-      setEssayContent(
-        `In contemporary society, addressing the challenges surrounding this topic requires a balanced, multifaceted approach.\n\nOn one hand, proactive institutional frameworks ensure that structural obstacles are systematically mitigated. By dedicating resources toward targeted initiatives, communities and organizations can foster sustainable progress.\n\nOn the other hand, individual responsibility and informed decision-making remain equally paramount. Empowering citizens through educational opportunities and transparent policies allows them to contribute constructively to lasting solutions.\n\nIn conclusion, achieving long-term success necessitates thoughtful collaboration between governmental authorities and civil society.`
-      );
-    }
-    setViewMode("edit");
-    setReplacedItems([]);
-    setIgnoredIds([]);
-    setAnalysisResult(null);
-    setBaseAnalysisResult(null);
-  };
 
   return (
     <div className="space-y-6">
@@ -762,13 +748,6 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
             >
               {useCustomPrompt ? "Choose from bank" : "+ Custom topic"}
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-700">•</span>
-            <button
-              onClick={handleLoadSampleEssay}
-              className="text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer font-medium"
-            >
-              Load sample
             </button>
           </div>
         </div>
