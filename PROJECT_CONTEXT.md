@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-18 14:09*
+*Last updated: 2026-10-18 14:13*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -209,6 +209,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `11eef0f`: `feat(collocations): remove stats summary, remove flashcard horizontal lines, and convert mark mastered to a big tick`
   - `e4b01b8`: `feat(hero): replace dot and arrow in InteractiveHoverButton with PenTool icon while preserving hover animation`
   - `23bb4fa`: `feat: default collocations to flashcards, reduce mobile bento grid size, and remove small texts`
   - `d80cfed`: `feat: remove Examiner Bench subtitle and rkrh.light watermark`
