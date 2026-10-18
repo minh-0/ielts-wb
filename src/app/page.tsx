@@ -227,19 +227,19 @@ export default function Home() {
               </ParticleButton>
 
               <button
-                onClick={() => handleStartWriting("task1_academic")}
+                onClick={handleStartSpeaking}
                 className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-neutral-200/90 dark:border-neutral-800/90 bg-gradient-to-b from-white to-neutral-50/80 hover:to-neutral-100 dark:from-neutral-900 dark:to-neutral-950 hover:dark:from-neutral-800 hover:dark:to-neutral-900 text-neutral-800 dark:text-neutral-200 text-xs font-medium transition-all shadow-xs cursor-pointer"
               >
-                <BarChart2 className="w-3.5 h-3.5 text-neutral-500" />
-                <span>50 Task 1 Charts</span>
+                <Mic className="w-3.5 h-3.5 text-neutral-500" />
+                <span>Simulate Speaking</span>
               </button>
 
               <button
-                onClick={handleStartSpeaking}
+                onClick={() => handleStartWriting("task1_academic")}
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 font-medium transition-colors cursor-pointer"
               >
-                <Mic className="w-3.5 h-3.5 text-neutral-400" />
-                <span>Simulate Speaking</span>
+                <BarChart2 className="w-3.5 h-3.5 text-neutral-400" />
+                <span>50 Task 1 Charts</span>
               </button>
 
               <button

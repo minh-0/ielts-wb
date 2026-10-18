@@ -1,22 +1,38 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ComponentPropsWithoutRef, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
+  children: ReactNode;
+  className?: string;
+}
+
+interface BentoCardProps extends ComponentPropsWithoutRef<"div"> {
+  name: string;
+  className?: string;
+  background?: ReactNode;
+  Icon?: React.ComponentType<{ className?: string }>;
+  description: string;
+  href?: string;
+  cta?: string;
+  badge?: string;
+  onClick?: () => void;
+}
 
 export const BentoGrid = ({
   children,
   className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) => {
+  ...props
+}: BentoGridProps) => {
   return (
     <div
       className={cn(
-        "grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 auto-rows-auto sm:auto-rows-[14rem]",
-        className,
+        "grid w-full auto-rows-[19rem] sm:auto-rows-[21rem] lg:auto-rows-[22rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4",
+        className
       )}
+      {...props}
     >
       {children}
     </div>
@@ -30,41 +46,59 @@ export const BentoCard = ({
   Icon,
   description,
   href,
-  cta,
+  cta = "Enter",
+  badge,
   onClick,
-}: {
-  name: string;
-  className?: string;
-  background?: ReactNode;
-  Icon?: React.ComponentType<{ className?: string }>;
-  description: string;
-  href?: string;
-  cta?: string;
-  onClick?: () => void;
-}) => {
-  const CardRoot = onClick ? "button" : "div";
-
+  ...props
+}: BentoCardProps) => {
   return (
-    <CardRoot
+    <div
       key={name}
-      type={onClick ? "button" : undefined}
       onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       className={cn(
-        "group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-2xl border transition-all duration-300 text-left w-full",
-        "border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 backdrop-blur-xs hover:border-neutral-400 dark:hover:border-neutral-600 hover:bg-neutral-100/60 dark:hover:bg-neutral-900/60 shadow-2xs",
-        onClick ? "cursor-pointer active:scale-[0.98] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600" : "",
-        className,
+        "group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-2xl select-none text-left w-full",
+        // Magic UI signature light depth
+        "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.04),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.04)]",
+        // Magic UI signature dark depth & inset glow
+        "dark:bg-neutral-900/40 transform-gpu dark:[box-shadow:0_-20px_80px_-20px_#ffffff14_inset] dark:border dark:border-white/10",
+        // Interactive styling
+        onClick ? "cursor-pointer active:scale-[0.99] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 dark:focus-visible:ring-neutral-600" : "",
+        className
       )}
+      {...props}
     >
-      {background && <div className="absolute inset-0 z-0 overflow-hidden">{background}</div>}
+      {/* Background visual layer */}
+      {background && (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {background}
+        </div>
+      )}
 
-      <div className="z-10 flex transform-gpu flex-col gap-2 p-5 sm:p-6 transition-all duration-300 sm:group-hover:-translate-y-3.5">
+      {/* Top right pill badge if supplied */}
+      {badge && (
+        <div className="absolute top-4 right-4 z-20 pointer-events-none">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium tracking-tight bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-300 backdrop-blur-xs">
+            {badge}
+          </span>
+        </div>
+      )}
+
+      {/* Content block: translates upwards on hover on desktop to reveal the action CTA */}
+      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1.5 p-5 sm:p-6 transition-all duration-300 lg:group-hover:-translate-y-7">
         {Icon && (
-          <div className="w-9 h-9 rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 flex items-center justify-center bg-white dark:bg-neutral-900 transition-colors duration-300 group-hover:border-neutral-400 dark:group-hover:border-neutral-600">
-            <Icon className="h-4 w-4 text-neutral-800 dark:text-neutral-200" />
+          <div className="w-10 h-10 rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 flex items-center justify-center bg-white/90 dark:bg-neutral-900/90 shadow-2xs transition-all duration-300 group-hover:scale-90 group-hover:border-neutral-400 dark:group-hover:border-neutral-600">
+            <Icon className="h-4.5 w-4.5 text-neutral-800 dark:text-neutral-200" />
           </div>
         )}
-        <h3 className="text-base sm:text-lg font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100 mt-0.5">
+        <h3 className="text-base sm:text-lg lg:text-xl font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100 mt-1">
           {name}
         </h3>
         <p className="max-w-md text-xs sm:text-[13px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
@@ -72,18 +106,28 @@ export const BentoCard = ({
         </p>
       </div>
 
-      <div
-        className={cn(
-          "z-10 flex w-full flex-row items-center px-5 sm:px-6 pb-4 sm:pb-5 pt-1",
-          "opacity-100 translate-y-0 sm:opacity-0 sm:translate-y-3 sm:group-hover:opacity-100 sm:group-hover:translate-y-0",
-          "transition-all duration-300",
-        )}
-      >
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-900 dark:text-neutral-100">
-          {cta || "Enter"}
+      {/* Mobile persistent CTA */}
+      <div className="pointer-events-none z-10 flex w-full flex-row items-center px-5 pb-4 pt-1 lg:hidden">
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-800 dark:text-neutral-200">
+          {cta}
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
         </span>
       </div>
-    </CardRoot>
+
+      {/* Desktop Sliding Action CTA: hidden at rest, slides up and fades in on hover */}
+      <div
+        className={cn(
+          "pointer-events-none absolute bottom-0 hidden w-full translate-y-10 transform-gpu flex-row items-center px-6 pb-5 pt-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 lg:flex"
+        )}
+      >
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-red-700 dark:group-hover:text-emerald-400 transition-colors">
+          {cta}
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+        </span>
+      </div>
+
+      {/* Subtle hover backdrop wash */}
+      <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[0.02] group-hover:dark:bg-white/[0.03]" />
+    </div>
   );
 };
