@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-17 17:39*
+*Last updated: 2026-10-18 11:08*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -118,7 +118,10 @@
 
 #### B. Speaking Studio (`src/components/speaking/SpeakingStudio.tsx` & `src/lib/speakingAuthenticData.ts`)
 - **Deterministic Architecture (Strictly Zero AI Grading)**: Automated AI speech grading and synthetic band estimation eliminated in favor of active scaffolding, deterministic acoustic telemetry, and authentic human examiner comparison.
-- **Authentic Human Material**: Every question, Band 6.0 candidate transcript, and Band 9.0 model transcript is 100% authentic human material sourced strictly from Simon Corcoran (`ielts-simon.com`), official Cambridge IELTS Practice Books (11–19), and IDP/British Council examiner sample logs with explicit `sourceBadge` attribution.
+- **Authentic Human Material (48 Real Cambridge Tests)**: Every question, Band 6.0 candidate transcript, and Band 9.0 model transcript is 100% authentic human material sourced strictly from official Cambridge IELTS Practice Books (11–19), Simon Corcoran (`ielts-simon.com`), and IDP/British Council examiner sample logs with explicit `sourceBadge` attribution:
+  - **16 Part 1 Real Tests**: Hometown & Living, Reading & Books, Public Transport, Daily Routine, Work & Education, Home & Accommodation, Technology & Apps, Art & Culture, Weather & Climate, Music & Performing Arts, Food & Culinary Habits, Sports & Physical Exercise, Parks & Green Spaces, Languages & Linguistics, Clothing & Fashion, Photography & Digital Media.
+  - **16 Part 2 Real Cue Cards**: Influential People, Important Decisions, Travel & Journeys, Environment & Ecology, History & Heritage, Technology & Gadgets, Life Experiences & Patience, Business & Entrepreneurship, Literature & Philosophy, Ambition & Personal Goals, Interpersonal Relationships, Culture & Festivals, Education & Lifelong Learning, Urban Planning & Community, Memorable Moments, Environmental Legislation.
+  - **16 Part 3 Real Discussion Tests**: Decision-Making & Society, Education & Technology, Heritage & Conservation, Careers & Workplace, History & Cultural Heritage, Technology & Society, Consumer Psychology & Speed, Commerce & Local Economy, Literature & Digital Reading, Philosophy of Success, Organizational Psychology, Globalization & Culture, Employment & Higher Education, Urban Planning & Society, Media & Journalism, Environmental Economics.
 - **Top Studio Bar**:
   - Sentence-case Part Switcher (`Part 1`, `Part 2`, `Part 3`).
   - Timer Mode Toggle:
@@ -193,6 +196,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `Pending`: `feat(speaking): expand Speaking Studio bank to 48 authentic real tests from Cambridge 11-19 and examiner masterclasses`
   - `3982fa7`: `feat(writing): add edit mode popup hint, redesign criteria standards without vertical colored lines, and enlarge borderless theme toggle`
   - `e39bea7`: `style(hero): keep classic red accent in light mode while preserving emerald-teal-cyan in dark mode`
   - `7d49507`: `style(hero): harmonize dynamic text and ambient gradient theme to emerald-teal-cyan palette`
