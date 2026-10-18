@@ -123,7 +123,7 @@ export default function Home() {
         </header>
 
         {/* Main Start Portal */}
-        <main className="relative z-10 flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-8 py-4 sm:py-8">
+        <main className="relative z-10 flex-1 flex flex-col justify-start md:justify-center px-3 sm:px-8 py-4 sm:py-8">
           <StartPage
             onStartWriting={(taskType = "task2") => enterWorkbench("practice", "writing", taskType)}
             onStartSpeaking={() => enterWorkbench("practice", "speaking")}

@@ -29,7 +29,7 @@ export const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[20rem] sm:auto-rows-[22rem] lg:auto-rows-[23rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4",
+        "grid w-full auto-rows-[11.5rem] sm:auto-rows-[14rem] md:auto-rows-[20rem] lg:auto-rows-[22.5rem] grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4",
         className
       )}
       {...props}
@@ -64,7 +64,7 @@ export const BentoCard = ({
         }
       }}
       className={cn(
-        "group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-2xl select-none text-left w-full",
+        "group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl select-none text-left w-full",
         // Magic UI signature light depth
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.04),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.04)]",
         // Magic UI signature dark depth & inset glow
@@ -77,32 +77,32 @@ export const BentoCard = ({
     >
       {/* Background illustration layer at top */}
       {background && (
-        <div className="absolute inset-x-0 top-0 h-[58%] sm:h-[62%] pointer-events-none overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[52%] sm:h-[60%] pointer-events-none overflow-hidden">
           {background}
         </div>
       )}
 
       {/* Top right pill badge if supplied */}
       {badge && (
-        <div className="absolute top-4 right-4 z-20 pointer-events-none">
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium tracking-tight bg-white/90 dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-300 backdrop-blur-xs shadow-2xs">
+        <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-20 pointer-events-none">
+          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium tracking-tight bg-white/90 dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-300 backdrop-blur-xs shadow-2xs">
             {badge}
           </span>
         </div>
       )}
 
       {/* Empty top flex spacer to naturally anchor the text and icon to the bottom */}
-      <div className="pointer-events-none flex-1 min-h-[6rem] sm:min-h-[7rem]" />
+      <div className="pointer-events-none flex-1 min-h-[2.5rem] sm:min-h-[6rem]" />
 
       {/* Bottom Content block: Icon, Title, Description moved down */}
-      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 sm:p-6 transition-all duration-300 lg:group-hover:-translate-y-10">
+      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-0.5 sm:gap-1 p-3 sm:p-5 sm:p-6 transition-all duration-300 lg:group-hover:-translate-y-10">
         {Icon && (
-          <Icon className="h-9 w-9 origin-left transform-gpu text-neutral-800 dark:text-neutral-200 transition-all duration-300 ease-in-out group-hover:scale-75 mb-1" />
+          <Icon className="h-6 w-6 sm:h-9 sm:w-9 origin-left transform-gpu text-neutral-800 dark:text-neutral-200 transition-all duration-300 ease-in-out group-hover:scale-75 mb-0.5 sm:mb-1" />
         )}
-        <h3 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        <h3 className="text-sm sm:text-lg lg:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
           {name}
         </h3>
-        <p className="max-w-md text-xs sm:text-[13px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        <p className="hidden sm:block max-w-md text-xs sm:text-[13px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
           {description}
         </p>
       </div>

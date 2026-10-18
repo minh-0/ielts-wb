@@ -69,37 +69,37 @@ export function StartPage({
       </div>
 
       {/* Magic UI Bento Grid: Background top, Text & Icon bottom */}
-      <BentoGrid className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {/* CARD 1: Writing Studio (spans 2 cols on desktop) */}
+      <BentoGrid className="grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
+        {/* CARD 1: Writing Studio (spans 2 cols on mobile and desktop) */}
         <BentoCard
           name="Writing Studio"
-          className="col-span-1 md:col-span-2 lg:col-span-2"
+          className="col-span-2 md:col-span-2 lg:col-span-2"
           Icon={PenTool}
           description="Task 1 visual charts & Task 2 essays with instant British Council rubric scoring and Band 8.5+ lexical suggestions."
           cta="Launch Writing Workbench"
           badge="Task 1 & Task 2"
           onClick={() => onStartWriting("task2")}
           background={
-            <div className="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 [mask-image:linear-gradient(to_bottom,#000_65%,transparent_100%)] opacity-40 dark:opacity-30 group-hover:opacity-75 dark:group-hover:opacity-65 transition-all duration-500 scale-[0.98] group-hover:scale-100 origin-top">
-              <div className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/90 p-3.5 sm:p-4 shadow-sm space-y-2.5">
+            <div className="absolute top-2.5 left-2.5 right-2.5 sm:top-5 sm:left-5 sm:right-5 [mask-image:linear-gradient(to_bottom,#000_65%,transparent_100%)] opacity-40 dark:opacity-30 group-hover:opacity-75 dark:group-hover:opacity-65 transition-all duration-500 scale-[0.98] group-hover:scale-100 origin-top">
+              <div className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/90 p-2.5 sm:p-4 shadow-sm space-y-1.5 sm:space-y-2.5">
                 {/* Simulated Header Bar */}
-                <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-neutral-800/80 text-[11px]">
+                <div className="flex items-center justify-between pb-1.5 sm:pb-2 border-b border-neutral-100 dark:border-neutral-800/80 text-[10px] sm:text-[11px]">
                   <span className="font-mono text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     284 Words • 38:12 Left
                   </span>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold font-mono text-[10px]">
+                  <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold font-mono text-[9px] sm:text-[10px]">
                     Band 8.5 Predicted
                   </span>
                 </div>
 
-                {/* Simulated Paragraph with lexical upgrades */}
-                <p className="text-xs leading-relaxed text-neutral-700 dark:text-neutral-300 font-serif">
+                {/* Simulated Paragraph with lexical upgrades - hidden on mobile to conserve space */}
+                <p className="hidden sm:block text-xs leading-relaxed text-neutral-700 dark:text-neutral-300 font-serif">
                   The <span className="bg-red-500/15 dark:bg-emerald-400/20 text-red-900 dark:text-emerald-200 px-1 py-0.5 rounded font-mono text-[11px]">unprecedented surge</span> in urban density has necessitated a <span className="bg-red-500/15 dark:bg-emerald-400/20 text-red-900 dark:text-emerald-200 px-1 py-0.5 rounded font-mono text-[11px]">profound re-evaluation</span> of transport networks...
                 </p>
 
                 {/* Score breakdown metrics */}
-                <div className="grid grid-cols-4 gap-2 pt-0.5">
+                <div className="grid grid-cols-4 gap-1.5 sm:gap-2 pt-0.5">
                   {[
                     { label: "TR", score: "8.5" },
                     { label: "CC", score: "8.0" },
@@ -110,8 +110,8 @@ export function StartPage({
                       key={item.label}
                       className="rounded-lg bg-neutral-50 dark:bg-neutral-900/80 p-1 text-center border border-neutral-200/50 dark:border-neutral-800/60"
                     >
-                      <div className="text-[9px] text-neutral-400 font-medium">{item.label}</div>
-                      <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200 font-mono">
+                      <div className="text-[8px] sm:text-[9px] text-neutral-400 font-medium">{item.label}</div>
+                      <div className="text-[11px] sm:text-xs font-semibold text-neutral-800 dark:text-neutral-200 font-mono">
                         {item.score}
                       </div>
                     </div>
@@ -132,25 +132,25 @@ export function StartPage({
           badge="Real Cambridge Tests"
           onClick={onStartSpeaking}
           background={
-            <div className="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 [mask-image:linear-gradient(to_bottom,#000_65%,transparent_100%)] opacity-45 dark:opacity-30 group-hover:opacity-80 dark:group-hover:opacity-70 transition-all duration-500 origin-top">
-              <div className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/90 p-3.5 shadow-sm space-y-2.5">
+            <div className="absolute top-2.5 left-2.5 right-2.5 sm:top-5 sm:left-5 sm:right-5 [mask-image:linear-gradient(to_bottom,#000_65%,transparent_100%)] opacity-45 dark:opacity-30 group-hover:opacity-80 dark:group-hover:opacity-70 transition-all duration-500 origin-top">
+              <div className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/90 p-2.5 sm:p-3.5 shadow-sm space-y-1.5 sm:space-y-2.5">
                 {/* Audio Status Pill */}
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="inline-flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 font-mono text-[10px]">
-                    <Volume2 className="w-3 h-3 text-red-500 dark:text-emerald-400 animate-pulse" />
-                    Part 2 • 2:00 Pacer
+                <div className="flex items-center justify-between text-[10px] sm:text-[11px]">
+                  <span className="inline-flex items-center gap-1 sm:gap-1.5 text-neutral-500 dark:text-neutral-400 font-mono text-[9px] sm:text-[10px]">
+                    <Volume2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-500 dark:text-emerald-400 animate-pulse" />
+                    Part 2 • 2:00
                   </span>
-                  <span className="font-mono text-[10px] text-neutral-400">Band 9 Audio</span>
+                  <span className="font-mono text-[9px] sm:text-[10px] text-neutral-400">Band 9 Audio</span>
                 </div>
 
                 {/* Animated Soundwave Visualizer Bars */}
-                <div className="h-9 flex items-center justify-center gap-1.5 px-2">
+                <div className="h-6 sm:h-9 flex items-center justify-center gap-1 sm:gap-1.5 px-1 sm:px-2">
                   {[24, 38, 18, 44, 28, 12, 34, 46, 22, 36, 16, 40, 26, 14, 32].map((height, idx) => (
                     <span
                       key={idx}
-                      className="w-1 bg-gradient-to-t from-red-600 to-rose-400 dark:from-emerald-500 dark:to-cyan-400 rounded-full animate-soundwave"
+                      className="w-0.5 sm:w-1 bg-gradient-to-t from-red-600 to-rose-400 dark:from-emerald-500 dark:to-cyan-400 rounded-full animate-soundwave"
                       style={{
-                        height: `${height * 0.75}px`,
+                        height: `${height * 0.6}px`,
                         animationDelay: `${idx * 0.08}s`,
                         animationDuration: `${0.9 + (idx % 4) * 0.2}s`,
                       }}
@@ -158,8 +158,8 @@ export function StartPage({
                   ))}
                 </div>
 
-                {/* Shadowing prompt badge */}
-                <div className="text-[10px] text-neutral-500 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-900 rounded-md p-1.5 text-center truncate font-mono">
+                {/* Shadowing prompt badge - hidden on mobile to conserve space */}
+                <div className="hidden sm:block text-[10px] text-neutral-500 dark:text-neutral-400 bg-neutral-50 dark:bg-neutral-900 rounded-md p-1.5 text-center truncate font-mono">
                   &ldquo;Describe an environmental initiative...&rdquo;
                 </div>
               </div>
@@ -275,25 +275,28 @@ export function StartPage({
           badge="Official Rubric"
           onClick={() => onOpenLearn("rubric")}
           background={
-            <div className="absolute top-4 left-4 right-4 sm:top-5 sm:left-5 sm:right-5 [mask-image:linear-gradient(to_bottom,#000_65%,transparent_100%)] opacity-45 dark:opacity-30 group-hover:opacity-80 dark:group-hover:opacity-70 transition-all duration-500 origin-top">
-              <div className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/90 p-3 shadow-sm space-y-2">
-                <div className="flex items-center justify-between text-[10px]">
+            <div className="absolute top-2.5 left-2.5 right-2.5 sm:top-5 sm:left-5 sm:right-5 [mask-image:linear-gradient(to_bottom,#000_65%,transparent_100%)] opacity-45 dark:opacity-30 group-hover:opacity-80 dark:group-hover:opacity-70 transition-all duration-500 origin-top">
+              <div className="rounded-xl border border-neutral-200/90 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/90 p-2 sm:p-3 shadow-sm space-y-1.5 sm:space-y-2">
+                <div className="flex items-center justify-between text-[9px] sm:text-[10px]">
                   <span className="font-mono text-neutral-500 dark:text-neutral-400">Public Descriptors</span>
-                  <span className="font-semibold text-neutral-700 dark:text-neutral-300">Band 7.0 – 9.0</span>
+                  <span className="font-semibold text-neutral-700 dark:text-neutral-300">Band 7.0–9.0</span>
                 </div>
-                <div className="space-y-1.5 text-[10px]">
+                <div className="space-y-1 sm:space-y-1.5 text-[9px] sm:text-[10px]">
                   {[
                     { label: "TR", desc: "Fully addresses all parts of prompt" },
                     { label: "CC", desc: "Sequences information coherently" },
                     { label: "LR", desc: "Wide vocabulary, rare inaccuracies" },
                     { label: "GRA", desc: "Full flexibility & structural range" },
                   ].map((row) => (
-                    <div key={row.label} className="flex items-center gap-2">
-                      <span className="font-mono font-semibold text-[9px] w-6 shrink-0 text-red-700 dark:text-emerald-400">
+                    <div key={row.label} className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="font-mono font-semibold text-[8px] sm:text-[9px] w-5 sm:w-6 shrink-0 text-red-700 dark:text-emerald-400">
                         {row.label}
                       </span>
-                      <span className="truncate text-neutral-500 dark:text-neutral-400 text-[10px]">
+                      <span className="hidden sm:inline truncate text-neutral-500 dark:text-neutral-400 text-[10px]">
                         {row.desc}
+                      </span>
+                      <span className="sm:hidden text-neutral-500 dark:text-neutral-400 text-[8.5px] font-mono">
+                        Band 9 Criteria
                       </span>
                     </div>
                   ))}

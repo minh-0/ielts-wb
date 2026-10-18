@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 
 export function CollocationsStudio() {
   // Navigation modes: Explorer | Cards | Practice
-  const [activeMode, setActiveMode] = useState<"explorer" | "flashcards" | "quiz">("explorer");
+  const [activeMode, setActiveMode] = useState<"explorer" | "flashcards" | "quiz">("flashcards");
 
   // Filters
   const [selectedLevel, setSelectedLevel] = useState<CollocationLevel | "ALL">("ALL");
