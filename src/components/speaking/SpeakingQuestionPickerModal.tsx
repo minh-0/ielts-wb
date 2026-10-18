@@ -237,8 +237,8 @@ export function SpeakingQuestionPickerModal({
                   }}
                   className={`p-3.5 transition-colors cursor-pointer text-left ${
                     isSelected
-                      ? "bg-neutral-100/70 dark:bg-neutral-900/60 border-l-2 border-neutral-900 dark:border-neutral-100 pl-3"
-                      : "hover:bg-neutral-50 dark:hover:bg-neutral-900/30"
+                      ? "bg-neutral-100 dark:bg-neutral-800/80"
+                      : "hover:bg-neutral-50 dark:hover:bg-neutral-900/40"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2 mb-1">
@@ -256,9 +256,17 @@ export function SpeakingQuestionPickerModal({
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[11px] text-neutral-600 dark:text-neutral-400 font-medium shrink-0">
-                      <Clock className="w-3 h-3" />
-                      <span>{p.targetDurationSec}s</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {isSelected && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-neutral-600 dark:text-neutral-300">
+                          <Check className="w-3 h-3 text-neutral-900 dark:text-neutral-100" />
+                          <span>Selected</span>
+                        </span>
+                      )}
+                      <div className="flex items-center gap-1 text-[11px] text-neutral-600 dark:text-neutral-400 font-medium">
+                        <Clock className="w-3 h-3" />
+                        <span>{p.targetDurationSec}s</span>
+                      </div>
                     </div>
                   </div>
 
@@ -267,7 +275,7 @@ export function SpeakingQuestionPickerModal({
                   </p>
 
                   {p.cueCardBullets && p.cueCardBullets.length > 0 && (
-                    <div className="border-l-2 border-neutral-200/60 dark:border-neutral-800/60 pl-3 my-1.5 space-y-0.5">
+                    <div className="border-l-2 border-neutral-300 dark:border-neutral-700/60 pl-3 my-1.5 space-y-0.5">
                       {p.cueCardBullets.map((b, i) => (
                         <div key={i} className="text-[11px] text-neutral-600 dark:text-neutral-400">
                           – {b}

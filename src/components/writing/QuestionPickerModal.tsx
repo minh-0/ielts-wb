@@ -387,7 +387,7 @@ export function QuestionPickerModal({
                   }}
                   className={`p-3 sm:p-3.5 border-b border-neutral-100 dark:border-neutral-800/80 transition-all cursor-pointer group select-none ${
                     isSelected
-                      ? "bg-neutral-50 dark:bg-neutral-900/60"
+                      ? "bg-neutral-100 dark:bg-neutral-800/80"
                       : "hover:bg-neutral-50/70 dark:hover:bg-neutral-900/30"
                   }`}
                 >

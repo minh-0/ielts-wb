@@ -135,6 +135,7 @@
     - Removed box styling around 'All Parts' and 'All Topics' filter buttons; converted them to borderless dropdown toggles.
     - Fixed dropdown clipping bug by resolving `overflow-x-auto` on the filter container.
     - Softened prompt row separators into ultra-subtle hairline dividers (`divide-neutral-200/25 dark:divide-white/5`).
+    - Redesigned selected prompt styling: removed stark white outline (`border-l-2 border-neutral-100`) and replaced it with a sleek, lighter tinted background (`bg-neutral-100 dark:bg-neutral-800/80`) optimized for high-contrast readability in both light and dark modes, paired with a quiet `Selected` check indicator.
 - **Active Scaffolding Strip**: Real-time target C1/C2 collocations (violet to emerald transition upon check/recognition) with manual verification toggle + grammar target formula.
 - **Card-Based Minimalist Architecture (Zero Cluttered Inner Small Boxes)**:
   - **Part 2 Scratchpad**: 60-second prep countdown timer + 4 frameless keyword inputs (`1. Context`, `2. Core Detail`, `3. Impact`, `4. Outcome`) with subtle bottom border indicators (`border-b border-neutral-200 dark:border-neutral-800`).
