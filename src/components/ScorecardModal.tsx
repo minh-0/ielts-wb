@@ -186,7 +186,7 @@ export function ScorecardModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg my-8 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 cursor-default"
+        className="relative w-full max-w-lg my-8 bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 cursor-default"
       >
         <button
           onClick={onClose}

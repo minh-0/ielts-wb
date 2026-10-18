@@ -135,7 +135,7 @@ export function QuestionPickerModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col w-full max-w-3xl h-[82vh] overflow-hidden animate-in zoom-in-95 duration-150">
+      <div className="bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl flex flex-col w-full max-w-3xl h-[82vh] overflow-hidden animate-in zoom-in-95 duration-150">
         {/* Sleek Minimal Header */}
         <div className="flex items-center gap-2 p-3 sm:px-4 sm:py-3 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 relative z-20 shrink-0">
           {/* Search Input */}
@@ -187,7 +187,7 @@ export function QuestionPickerModal({
 
             {/* Popout Dropdown Menu */}
             {isTopicOpen && (
-              <div className="absolute right-0 sm:left-0 sm:right-auto top-full mt-1.5 w-60 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100 max-h-72 overflow-y-auto">
+              <div className="absolute right-0 sm:left-0 sm:right-auto top-full mt-1.5 w-60 rounded-xl bg-white dark:bg-neutral-900 shadow-2xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100 max-h-72 overflow-y-auto">
                 <div className="px-3 py-1.5 text-xs font-medium text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
                   Select Topic
                 </div>
@@ -255,7 +255,7 @@ export function QuestionPickerModal({
 
               {/* Popout Format Dropdown Menu */}
               {isTypeOpen && (
-                <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 top-full mt-1.5 w-52 rounded-xl bg-white dark:bg-neutral-900 shadow-2xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                   <div className="px-3 py-1.5 text-xs font-medium text-neutral-400 border-b border-neutral-100 dark:border-neutral-800/80">
                     Select Format
                   </div>

@@ -54,7 +54,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg p-6 sm:p-7 bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl space-y-5 cursor-default"
+        className="relative w-full max-w-lg p-6 sm:p-7 bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl space-y-5 cursor-default"
       >
         {/* Close Button */}
         <button

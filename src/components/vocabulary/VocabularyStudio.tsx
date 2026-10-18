@@ -573,7 +573,7 @@ export function VocabularyStudio() {
           onClick={() => setInspectedWord(null)}
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 space-y-4 shadow-xl"
+            className="w-full max-w-md rounded-2xl bg-white dark:bg-neutral-950 p-6 space-y-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between">

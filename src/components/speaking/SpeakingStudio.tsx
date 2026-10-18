@@ -685,7 +685,7 @@ export function SpeakingStudio({}: SpeakingStudioProps) {
               className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-neutral-100 transition-colors cursor-pointer py-1"
             >
               <Search className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
-              <span>Browse Bank</span>
+              <span>Browse</span>
             </button>
           </div>
 

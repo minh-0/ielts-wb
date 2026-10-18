@@ -102,11 +102,11 @@ export function SpeakingQuestionPickerModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl bg-white dark:bg-neutral-950 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-150"
+        className="w-full max-w-2xl bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header / Search row */}
-        <div className="p-3 sm:p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-2.5">
+        <div className="p-3 sm:p-4 border-b border-neutral-100 dark:border-neutral-900 flex items-center gap-2.5">
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 dark:text-neutral-400" />
             <input
@@ -137,33 +137,35 @@ export function SpeakingQuestionPickerModal({
         </div>
 
         {/* Filter bar */}
-        <div className="px-3 sm:px-4 py-2 border-b border-neutral-200/80 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center gap-2 overflow-x-auto">
+        <div className="px-3 sm:px-4 py-2 border-b border-neutral-100 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/30 flex items-center gap-3 relative z-20">
           {/* Part Filter */}
           <div className="relative shrink-0" ref={partDropdownRef}>
             <button
+              type="button"
               onClick={() => {
                 setIsPartOpen(!isPartOpen);
                 setIsTopicOpen(false);
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-neutral-100 cursor-pointer py-1 transition-colors"
             >
               <span>{selectedPart === "All" ? "All Parts" : `Part ${selectedPart}`}</span>
-              <ChevronDown className="w-3 h-3 text-neutral-500 dark:text-neutral-400" />
+              <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 transition-transform ${isPartOpen ? "rotate-180" : ""}`} />
             </button>
 
             {isPartOpen && (
-              <div className="absolute top-full left-0 mt-1 w-36 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-1 shadow-lg z-50">
+              <div className="absolute top-full left-0 mt-1.5 w-36 rounded-xl bg-white dark:bg-neutral-900 p-1 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
                 {(["All", 1, 2, 3] as const).map((part) => (
                   <button
                     key={String(part)}
+                    type="button"
                     onClick={() => {
                       setSelectedPart(part);
                       setIsPartOpen(false);
                     }}
                     className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
                       selectedPart === part
-                        ? "bg-neutral-100 dark:bg-neutral-900 font-semibold text-neutral-950 dark:text-neutral-50"
-                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900/50"
+                        ? "bg-neutral-100 dark:bg-neutral-800 font-semibold text-neutral-950 dark:text-neutral-50"
+                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
                     }`}
                   >
                     <span>{part === "All" ? "All Parts" : `Part ${part}`}</span>
@@ -177,29 +179,31 @@ export function SpeakingQuestionPickerModal({
           {/* Topic Filter */}
           <div className="relative shrink-0" ref={topicDropdownRef}>
             <button
+              type="button"
               onClick={() => {
                 setIsTopicOpen(!isTopicOpen);
                 setIsPartOpen(false);
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700 cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-neutral-100 cursor-pointer py-1 transition-colors"
             >
               <span className="truncate max-w-[150px]">{selectedTopic === "All" ? "All Topics" : selectedTopic}</span>
-              <ChevronDown className="w-3 h-3 text-neutral-500 dark:text-neutral-400 shrink-0" />
+              <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 shrink-0 transition-transform ${isTopicOpen ? "rotate-180" : ""}`} />
             </button>
 
             {isTopicOpen && (
-              <div className="absolute top-full left-0 mt-1 w-56 max-h-60 overflow-y-auto rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-1 shadow-lg z-50">
+              <div className="absolute top-full left-0 mt-1.5 w-56 max-h-60 overflow-y-auto rounded-xl bg-white dark:bg-neutral-900 p-1 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
                 {topics.map((t) => (
                   <button
                     key={t}
+                    type="button"
                     onClick={() => {
                       setSelectedTopic(t);
                       setIsTopicOpen(false);
                     }}
                     className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
                       selectedTopic === t
-                        ? "bg-neutral-100 dark:bg-neutral-900 font-semibold text-neutral-950 dark:text-neutral-50"
-                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900/50"
+                        ? "bg-neutral-100 dark:bg-neutral-800 font-semibold text-neutral-950 dark:text-neutral-50"
+                        : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
                     }`}
                   >
                     <span className="truncate">{t}</span>
@@ -216,7 +220,7 @@ export function SpeakingQuestionPickerModal({
         </div>
 
         {/* List of prompts (Clean Hairline Divided, Zero Rounded Card Boxes) */}
-        <div className="flex-1 overflow-y-auto divide-y divide-neutral-200 dark:divide-neutral-800">
+        <div className="flex-1 overflow-y-auto divide-y divide-neutral-200/25 dark:divide-white/5">
           {filteredPrompts.length === 0 ? (
             <div className="py-12 text-center text-xs text-neutral-600 dark:text-neutral-400">
               No matching speaking prompts found. Try another search keyword or clear filters.
@@ -263,7 +267,7 @@ export function SpeakingQuestionPickerModal({
                   </p>
 
                   {p.cueCardBullets && p.cueCardBullets.length > 0 && (
-                    <div className="border-l-2 border-neutral-200 dark:border-neutral-800 pl-3 my-1.5 space-y-0.5">
+                    <div className="border-l-2 border-neutral-200/60 dark:border-neutral-800/60 pl-3 my-1.5 space-y-0.5">
                       {p.cueCardBullets.map((b, i) => (
                         <div key={i} className="text-[11px] text-neutral-600 dark:text-neutral-400">
                           – {b}

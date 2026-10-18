@@ -129,7 +129,12 @@
     - `Exam`: Strict exam conditions with automatic cutoff at duration limit.
     - `4-3-2 Drill`: Fluency automaticity drill across 3 shrinking rounds (2:00 -> 1:30 -> 1:00) requiring the candidate to deliver the same cue card answer in less time, forcing condensation of hesitation, elimination of filler words, and rapid syntactic retrieval.
   - **Dynamic Micro-Explainer**: Minimalist, single-line guide situated directly beneath the mode buttons (`Standard • Open practice without forced cutoff`, `Exam • Strict test conditions with auto-cutoff at time limit`, `4-3-2 Drill • 3 shrinking rounds (2:00 → 1:30 → 1:00) for fluency`), providing instant context without taking vertical space.
-  - **Command-Palette Question Browser Modal (`SpeakingQuestionPickerModal.tsx`)**: High-contrast modal with instant topic/keyword search, popout Part & Topic dropdowns, shuffle button, and scannable prompt rows.
+  - **Command-Palette Question Browser Modal (`SpeakingQuestionPickerModal.tsx`)**:
+    - Renamed launch trigger from "Browse Bank" to sleek "Browse".
+    - Removed harsh outer borders/outlines on popup modals (`border border-neutral-200 dark:border-neutral-800` purged in favor of clean `rounded-2xl shadow-2xl` elevation) across Speaking Browser, Writing Question Picker, Saved Essays, API Key, Oxford Dictionary, and Scorecard modals.
+    - Removed box styling around 'All Parts' and 'All Topics' filter buttons; converted them to borderless dropdown toggles.
+    - Fixed dropdown clipping bug by resolving `overflow-x-auto` on the filter container.
+    - Softened prompt row separators into ultra-subtle hairline dividers (`divide-neutral-200/25 dark:divide-white/5`).
 - **Active Scaffolding Strip**: Real-time target C1/C2 collocations (violet to emerald transition upon check/recognition) with manual verification toggle + grammar target formula.
 - **Card-Based Minimalist Architecture (Zero Cluttered Inner Small Boxes)**:
   - **Part 2 Scratchpad**: 60-second prep countdown timer + 4 frameless keyword inputs (`1. Context`, `2. Core Detail`, `3. Impact`, `4. Outcome`) with subtle bottom border indicators (`border-b border-neutral-200 dark:border-neutral-800`).

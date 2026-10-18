@@ -1614,7 +1614,7 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
             if (e.target === e.currentTarget) setIsWritingModalOpen(false);
           }}
         >
-          <div className="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col w-full h-[94vh] max-w-7xl overflow-hidden animate-in zoom-in-95 duration-150">
+          <div className="bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl flex flex-col w-full h-[94vh] max-w-7xl overflow-hidden animate-in zoom-in-95 duration-150">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/70 dark:bg-neutral-900/50 shrink-0">
               <div className="flex items-center gap-2.5">

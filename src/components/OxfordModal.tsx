@@ -97,7 +97,7 @@ export function OxfordModal({ isOpen, word, onClose }: OxfordModalProps) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg bg-white dark:bg-neutral-950 text-black dark:text-white border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl p-6 sm:p-7 space-y-5 cursor-default max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg bg-white dark:bg-neutral-950 text-black dark:text-white rounded-2xl shadow-2xl p-6 sm:p-7 space-y-5 cursor-default max-h-[90vh] overflow-y-auto"
       >
         {/* Close Button */}
         <button
