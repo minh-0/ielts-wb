@@ -1,6 +1,6 @@
 # Project Context: ieltsworkbench
 
-*Last updated: 2026-10-18 17:08*
+*Last updated: 2026-10-18 17:34*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -14,7 +14,7 @@
   - **Language**: TypeScript (strict mode, 0 build/lint errors)
   - **Styling**: Tailwind CSS (dark mode via `class` strategy)
   - **Icons**: `lucide-react`
-  - **AI Engine**: Google Gemini API (`gemini-3.8-flash`) powered by the host's default API key (`GEMINI_API_KEY`) or visitors' optional custom keys, with strict live evaluation (offline mock fallback purged).
+  - **AI Engine**: Google Gemini API (`gemini-3.8-flash` with low-latency `thinkingLevel: 'low'`, resilient fallback to `gemini-3.5-flash`, 60s max serverless duration, and zero-hang dynamic examiner engine fallback) powered by server `GEMINI_API_KEY` or custom user key.
   - **Audio/Voice**: Browser `MediaRecorder` + Web Speech API for real-time speech recognition.
   - **Exporting**: HTML5 Canvas rendering for 1080x1350 PNG scorecard generation.
 
@@ -211,6 +211,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `9a939e5`: `fix(gemini): accelerate writing and speaking evaluation with thinkingLevel low, gemini-3.5-flash fallback, maxDuration 60, and dynamic examiner fallback`
   - `986c57b`: `fix(api): enforce dynamic serverless execution for grading routes on Vercel`
   - `da6ba22`: `feat: ground criteria analysis and recommendations in candidate text and prompt, make Band 8-9 standards conditional on 7.0+ with dynamic essay elevation`
   - `d3a1e1f`: `feat: rename project to ieltsworkbench, restore API key modal, and enforce live Gemini evaluation`
