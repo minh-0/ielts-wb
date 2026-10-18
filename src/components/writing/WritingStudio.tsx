@@ -970,21 +970,21 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                     <button
                       type="button"
                       onClick={handleRevertAllUpgrades}
-                      className="inline-flex items-center gap-1 text-xs text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer underline underline-offset-2"
+                      className="inline-flex items-center gap-1 text-xs text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
                       title="Revert all alternative words back to original draft"
                     >
                       <RotateCcw className="w-3 h-3" />
-                      <span>Revert alternative words ({replacedItems.length})</span>
+                      <span>Revert ({replacedItems.length})</span>
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={handleApplyAllUpgrades}
-                      className="inline-flex items-center gap-1 text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 font-medium transition-colors cursor-pointer underline underline-offset-2"
+                      className="inline-flex items-center gap-1 text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 font-medium transition-colors cursor-pointer"
                       title="Apply recommended alternative words"
                     >
                       <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                      <span>Apply alternative words</span>
+                      <span>Apply</span>
                     </button>
                   )}
                 </>
@@ -1096,22 +1096,16 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           )}
 
           {/* Submit Action */}
-          <div className={`flex flex-col sm:flex-row items-start sm:items-center ${apiKey ? "justify-between" : "justify-end"} gap-3 pt-1`}>
-            {apiKey && (
-              <span className="text-xs text-neutral-500">
-                Live Gemini evaluation active
-              </span>
-            )}
-
+          <div className="flex items-center justify-end gap-3 pt-1">
             <ParticleButton
               onClick={handleAnalyze}
               disabled={isAnalyzing || !essayContent.trim()}
-              className="px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all shadow-xs"
+              className="px-5 py-2.5 rounded-lg text-xs font-semibold bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 hover:opacity-90 disabled:opacity-30 transition-all shadow-xs cursor-pointer"
             >
               {isAnalyzing ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Analyzing mistakes...</span>
+                  <span>Analyzing...</span>
                 </>
               ) : (
                 <>
