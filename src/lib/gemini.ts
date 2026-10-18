@@ -73,7 +73,9 @@ export async function analyzeWritingWithGemini(
   const key = apiKey || process.env.GEMINI_API_KEY;
 
   if (!key) {
-    return evaluateWritingDynamically(promptText, essayText, taskType as TaskType, imageBase64);
+    throw new Error(
+      "No Gemini API key configured. Please enter your API key in the navbar or set GEMINI_API_KEY in Vercel environment variables."
+    );
   }
 
   const wordCount = essayText.trim().split(/\s+/).filter(Boolean).length;
@@ -240,14 +242,15 @@ Only output the JSON object without markdown fences if possible.
     }
 
     if (!res.ok) {
-      console.warn('Gemini API calls failed, falling back to dynamic examiner', await res.text());
-      return evaluateWritingDynamically(promptText, essayText, taskType as TaskType, imageBase64);
+      const errText = await res.text();
+      console.error('Gemini API calls failed:', errText);
+      throw new Error(`Gemini evaluation failed (${res.status}): ${errText}`);
     }
 
     const data = await res.json();
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!rawText) {
-      return evaluateWritingDynamically(promptText, essayText, taskType as TaskType, imageBase64);
+      throw new Error("Gemini returned an empty evaluation response. Please try again.");
     }
 
     const parsed = JSON.parse(rawText) as WritingAnalysisResult;
@@ -269,9 +272,9 @@ Only output the JSON object without markdown fences if possible.
     }));
 
     return parsed;
-  } catch (err) {
+  } catch (err: any) {
     console.error('Error invoking Gemini for writing:', err);
-    return evaluateWritingDynamically(promptText, essayText, taskType as TaskType, imageBase64);
+    throw err;
   }
 }
 
@@ -292,6 +295,12 @@ export async function analyzeSpeakingWithGemini(
   apiKey?: string
 ): Promise<SpeakingAnalysisResult> {
   const key = apiKey || process.env.GEMINI_API_KEY;
+
+  if (!key) {
+    throw new Error(
+      "No Gemini API key configured. Please enter your API key in the navbar or set GEMINI_API_KEY in Vercel environment variables."
+    );
+  }
 
   let audioData: string | undefined;
   let textTranscript: string = '';
@@ -410,14 +419,15 @@ Output STRICT valid JSON conforming to the SpeakingAnalysisResult schema.`;
     }
 
     if (!res.ok) {
-      console.warn('Gemini speaking call failed, using mock analysis');
-      return generateMockSpeakingAnalysis(promptTopic, textTranscript, durationSeconds, speakingPart);
+      const errText = await res.text();
+      console.error('Gemini speaking call failed:', errText);
+      throw new Error(`Gemini speaking evaluation failed (${res.status}): ${errText}`);
     }
 
     const data = await res.json();
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!rawText) {
-      return generateMockSpeakingAnalysis(promptTopic, textTranscript, durationSeconds, speakingPart);
+      throw new Error("Gemini returned an empty speaking response. Please try again.");
     }
 
     const parsed = JSON.parse(rawText) as SpeakingAnalysisResult;
@@ -426,9 +436,9 @@ Output STRICT valid JSON conforming to the SpeakingAnalysisResult schema.`;
       parsed.transcript = textTranscript || (durationSeconds <= 5 ? 'hello' : 'Spoken response');
     }
     return parsed;
-  } catch (err) {
+  } catch (err: any) {
     console.error('Error invoking Gemini for speaking:', err);
-    return generateMockSpeakingAnalysis(promptTopic, textTranscript, durationSeconds, speakingPart);
+    throw err;
   }
 }
 

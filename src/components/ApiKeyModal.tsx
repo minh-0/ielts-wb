@@ -79,48 +79,45 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
           </div>
         </div>
 
-        {/* Option 1: Free Practice Mode (Active by Default) */}
+        {/* Option 1: Live System Gemini AI (Default) */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Zap className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
+              <Zap className="w-3.5 h-3.5 text-emerald-500" />
               <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                1. Free Practice Engine (Default)
+                1. System Gemini 3.8 Flash (Active by Default)
               </span>
             </div>
             <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-              {keyInput ? "Available" : "Active now"}
+              {keyInput ? "Custom Overridden" : "Active Now"}
             </span>
           </div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-            <strong>No setup or API key needed.</strong> You can practice anytime. Studio comes with
-            realistic Cambridge IELTS scoring, line-by-line grammar mistake underlines,
-            lexical refinements, and speech pacing metrics completely free out of the box.
+            <strong>No setup or API key needed.</strong> The studio evaluates your writing live using our
+            built-in <strong>Google Gemini 3.8 Flash</strong> engine with certified British Council & IDP examiner rubrics.
           </p>
         </div>
 
-        {/* Option 2: Live Google Gemini AI (Optional) */}
+        {/* Option 2: Custom Gemini Key (Optional) */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
               <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                2. Live Google Gemini AI (Optional)
+                2. Use Your Own Gemini Key (Optional)
               </span>
             </div>
             <span className="text-[11px] font-medium text-neutral-400">
-              {keyInput ? "Active" : "Optional"}
+              {keyInput ? "Custom Active" : "Optional"}
             </span>
           </div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-            Want dynamic, live AI evaluations for your own custom essay prompts? You can connect Google&apos;s
-            official <strong>Gemini 3.8 Flash</strong> model. Google provides free Gemini keys with no credit
-            card required.
+            Want to use your personal quota or custom model configurations? Paste your own Google Gemini key below.
           </p>
 
           <div className="space-y-1.5 pt-0.5">
             <label className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300 block">
-              Paste your Google Gemini API key:
+              Custom Google Gemini API key:
             </label>
             <input
               type="password"
@@ -146,7 +143,7 @@ export function ApiKeyModal({ isOpen, onClose, onKeySaved }: ApiKeyModalProps) {
                 onClick={handleClear}
                 className="text-neutral-400 hover:text-red-500 transition-colors cursor-pointer"
               >
-                Clear key & use free mode
+                Reset to default system key
               </button>
             )}
           </div>

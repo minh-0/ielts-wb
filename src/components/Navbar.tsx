@@ -7,6 +7,7 @@ import {
   BookText,
   BookA,
   BarChart2,
+  Key,
 } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Dock, DockIcon } from "@/components/magicui/dock";
@@ -20,6 +21,8 @@ interface NavbarProps {
   onSelectPracticeTab: (tab: "writing" | "speaking") => void;
   onSelectLearnTab: (tab: "collocations" | "vocabulary" | "rubric") => void;
   onOpenStartPage: () => void;
+  onOpenApiKeyModal: () => void;
+  hasCustomKey: boolean;
 }
 
 export function Navbar({
@@ -29,6 +32,8 @@ export function Navbar({
   onSelectPracticeTab,
   onSelectLearnTab,
   onOpenStartPage,
+  onOpenApiKeyModal,
+  hasCustomKey,
 }: NavbarProps) {
   const renderDock = (isMobile = false) => (
     <Dock
@@ -102,15 +107,23 @@ export function Navbar({
             title="Return to Start Page"
           >
             <span className="font-serif font-semibold text-xl tracking-tight text-neutral-900 dark:text-neutral-100 group-hover:opacity-80 transition-opacity">
-              IELTSpro666
+              ieltsworkbench
             </span>
           </button>
 
           {/* Center Magic UI Dock */}
           <div className="flex-1 flex justify-center">{renderDock(false)}</div>
 
-          {/* Right Actions: ThemeToggle */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Right Actions: API Key & ThemeToggle */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            <button
+              onClick={onOpenApiKeyModal}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-lg border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+              title="Custom Gemini API Key (Optional)"
+            >
+              <Key className="w-3 h-3 text-neutral-400" />
+              <span className="hidden lg:inline">{hasCustomKey ? "Custom Key" : "API Key"}</span>
+            </button>
             <ThemeToggle />
           </div>
         </div>
@@ -123,9 +136,17 @@ export function Navbar({
               onClick={onOpenStartPage}
               className="font-serif font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100"
             >
-              IELTSpro666
+              ieltsworkbench
             </button>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={onOpenApiKeyModal}
+                className="flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium rounded-md border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 cursor-pointer"
+                title="Custom Gemini API Key"
+              >
+                <Key className="w-3 h-3 text-neutral-400" />
+                <span>{hasCustomKey ? "Custom" : "Key"}</span>
+              </button>
               <ThemeToggle />
             </div>
           </div>

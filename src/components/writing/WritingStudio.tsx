@@ -508,15 +508,17 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
       });
 
       if (!res.ok) {
-        throw new Error("Grading request failed");
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson?.error || "Grading request failed");
       }
 
       const data: WritingAnalysisResult = await res.json();
       setBaseAnalysisResult(data);
       setAnalysisResult(data);
       setViewMode("annotated"); // Automatically switch to in-text annotated view upon completion
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert(err?.message || "Failed to analyze essay. Please verify your Gemini API key.");
     } finally {
       setIsAnalyzing(false);
     }

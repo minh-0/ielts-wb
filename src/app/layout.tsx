@@ -25,7 +25,7 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "light",
+  title: "ieltsworkbench",
   description:
     "The best IELTS tools for candidates. Practice Writing (Task 1 & 2), Speaking (Parts 1-3), Collocations in Use, and Oxford 3000/5000 vocabulary with official Cambridge & IDP band descriptors.",
 };

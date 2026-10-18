@@ -9,6 +9,7 @@ import { CollocationsStudio } from "@/components/collocations/CollocationsStudio
 import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
 import { StartPage } from "@/components/start/StartPage";
+import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { TaskType } from "@/types/ielts";
 import { Particles } from "@/components/magicui/particles";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -21,6 +22,7 @@ import {
   BarChart2,
   FileText,
   ArrowRight,
+  Key,
 } from "lucide-react";
 import { DynamicText, ParticleButton } from "@/components/kokonutui";
 import { ShinyButton } from "@/components/magicui/shiny-button";
@@ -32,6 +34,7 @@ export default function Home() {
   const [practiceTab, setPracticeTab] = useState<"writing" | "speaking">("writing");
   const [learnTab, setLearnTab] = useState<"collocations" | "vocabulary" | "rubric">("collocations");
   const [apiKey, setApiKey] = useState<string>("");
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
   const [writingTaskType, setWritingTaskType] = useState<TaskType>("task2");
 
   useEffect(() => {
@@ -114,9 +117,19 @@ export default function Home() {
         <header className="relative z-10 w-full shrink-0">
           <div className="max-w-4xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
             <span className="font-serif font-semibold text-base tracking-tight text-neutral-900 dark:text-neutral-100">
-              IELTSpro666
+              ieltsworkbench
             </span>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsApiKeyModalOpen(true)}
+                title="Gemini API Key Settings"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              >
+                <Key className="w-3.5 h-3.5 text-neutral-500" />
+                <span className="hidden sm:inline">{apiKey ? "Custom Key Active" : "API Key"}</span>
+              </button>
+              <ThemeToggle />
+            </div>
           </div>
         </header>
 
@@ -137,6 +150,13 @@ export default function Home() {
             </span>
           </div>
         </footer>
+
+        {/* API Key Modal on Start Screen */}
+        <ApiKeyModal
+          isOpen={isApiKeyModalOpen}
+          onClose={() => setIsApiKeyModalOpen(false)}
+          onKeySaved={setApiKey}
+        />
       </div>
     );
   }
@@ -158,6 +178,8 @@ export default function Home() {
           setLearnTab(tab);
         }}
         onOpenStartPage={() => setHasEntered(false)}
+        onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+        hasCustomKey={Boolean(apiKey)}
       />
 
       {/* Minimalist Hero Header with Atmospheric Colored Gradients & Integrated Studio Tabs */}
@@ -275,6 +297,13 @@ export default function Home() {
 
       {/* Text Selection Toolbar (Oxford Dictionary + Cursor Highlighter) */}
       <SelectionToolbar />
+
+      {/* API Key Modal for workbench view */}
+      <ApiKeyModal
+        isOpen={isApiKeyModalOpen}
+        onClose={() => setIsApiKeyModalOpen(false)}
+        onKeySaved={setApiKey}
+      />
     </div>
   );
 }
