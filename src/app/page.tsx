@@ -10,6 +10,7 @@ import { RubricViewer } from "@/components/rubric/RubricViewer";
 import { SelectionToolbar } from "@/components/SelectionToolbar";
 import { StartPage } from "@/components/start/StartPage";
 import { ApiKeyModal } from "@/components/ApiKeyModal";
+import { SupportModal } from "@/components/SupportModal";
 import { TaskType } from "@/types/ielts";
 import { Particles } from "@/components/magicui/particles";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -23,6 +24,7 @@ import {
   FileText,
   ArrowRight,
   Key,
+  Heart,
 } from "lucide-react";
 import { DynamicText, ParticleButton } from "@/components/kokonutui";
 import { ShinyButton } from "@/components/magicui/shiny-button";
@@ -35,6 +37,7 @@ export default function Home() {
   const [learnTab, setLearnTab] = useState<"collocations" | "vocabulary" | "rubric">("collocations");
   const [apiKey, setApiKey] = useState<string>("");
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState<boolean>(false);
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState<boolean>(false);
   const [writingTaskType, setWritingTaskType] = useState<TaskType>("task2");
 
   useEffect(() => {
@@ -144,7 +147,14 @@ export default function Home() {
 
         {/* Quiet Minimalist Footnote */}
         <footer className="relative z-10 py-5 text-xs text-neutral-400 dark:text-neutral-600">
-          <div className="max-w-4xl mx-auto px-4 sm:px-8 flex items-center justify-end">
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 flex items-center justify-between">
+            <button
+              onClick={() => setIsSupportModalOpen(true)}
+              className="group inline-flex items-center gap-1.5 text-[11px] text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+            >
+              <Heart className="w-3.5 h-3.5 text-rose-500/80 fill-rose-500/20 group-hover:scale-110 transition-transform" />
+              <span>Support me</span>
+            </button>
             <span className="text-[11px] text-neutral-400 dark:text-neutral-600">
               Le Tuan Minh K67 FDA NEU
             </span>
@@ -156,6 +166,12 @@ export default function Home() {
           isOpen={isApiKeyModalOpen}
           onClose={() => setIsApiKeyModalOpen(false)}
           onKeySaved={setApiKey}
+        />
+
+        {/* Support Modal on Start Screen */}
+        <SupportModal
+          isOpen={isSupportModalOpen}
+          onClose={() => setIsSupportModalOpen(false)}
         />
       </div>
     );
@@ -288,7 +304,14 @@ export default function Home() {
 
       {/* Footer: Simple, quiet line */}
       <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-transparent mt-12 text-xs text-neutral-400 dark:text-neutral-600">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-end">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-between">
+          <button
+            onClick={() => setIsSupportModalOpen(true)}
+            className="group inline-flex items-center gap-1.5 text-[11px] text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors cursor-pointer"
+          >
+            <Heart className="w-3.5 h-3.5 text-rose-500/80 fill-rose-500/20 group-hover:scale-110 transition-transform" />
+            <span>Support me</span>
+          </button>
           <div className="text-[11px] text-neutral-500 dark:text-neutral-500">
             Le Tuan Minh K67 FDA NEU
           </div>
@@ -303,6 +326,12 @@ export default function Home() {
         isOpen={isApiKeyModalOpen}
         onClose={() => setIsApiKeyModalOpen(false)}
         onKeySaved={setApiKey}
+      />
+
+      {/* Support Modal for workbench view */}
+      <SupportModal
+        isOpen={isSupportModalOpen}
+        onClose={() => setIsSupportModalOpen(false)}
       />
     </div>
   );

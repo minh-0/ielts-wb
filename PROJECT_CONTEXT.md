@@ -1,6 +1,6 @@
 # Project Context: ieltsworkbench
 
-*Last updated: 2026-10-18 17:46*
+*Last updated: 2026-10-18 19:18*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -200,6 +200,8 @@
 - `src/lib/officialRubricData.ts`: Exact official public descriptor data for all tasks.
 - `src/components/SelectionToolbar.tsx`: Cursor highlight toolbar restricted to paragraphs.
 - `src/components/OxfordModal.tsx`: Oxford Learner's Dictionary popup.
+- `src/components/ApiKeyModal.tsx`: Custom Gemini API key modal with minimalist design and local persistence.
+- `src/components/SupportModal.tsx`: "Support me" modal featuring VietQR MB Bank QR code with rounded edges, copyable account number (0333049007 - LE TUAN MINH), and friendly developer coffee/subscription support message.
 - `src/lib/gemini.ts`: Multi-turn/multimodal Gemini API integration + deterministic offline fallback engine.
 - `src/app/api/grade-writing/route.ts`: API endpoint for text + chart image grading.
 - `src/app/api/grade-speaking/route.ts`: API endpoint for speech transcript & audio evaluation.
@@ -211,6 +213,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `feat(support): add Support me button in bottom-left footer with rounded VietQR popup modal`
   - `d32d40f`: `refactor(criteria): enforce 100% dynamic criteria breakdown and Band 8-9 standards without any predetermined or canned phrases`
   - `9a939e5`: `fix(gemini): accelerate writing and speaking evaluation with thinkingLevel low, gemini-3.5-flash fallback, maxDuration 60, and dynamic examiner fallback`
   - `986c57b`: `fix(api): enforce dynamic serverless execution for grading routes on Vercel`
