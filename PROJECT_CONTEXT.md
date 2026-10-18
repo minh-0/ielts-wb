@@ -177,6 +177,9 @@
 - `src/app/page.tsx`: Root page hosting tab switching (`Writing`, `Speaking`, `Vocabulary`, `Rubric`), minimalist layout, and footer.
 - `src/app/layout.tsx`: Root HTML shell, dark mode theme script, metadata `title: "slayer6767"`.
 - `src/components/Navbar.tsx`: Sticky minimalist navigation with `IELTSlayer666` badge, studio switcher, and AI mode status.
+- `src/components/start/StartPage.tsx`: Welcome portal featuring the official Magic UI Bento Grid, BentoCard, and Marquee components with rich interactive backgrounds for Writing, Speaking, Collocations, Vocabulary, and Band Descriptors.
+- `src/components/magicui/bento-grid.tsx`: Official Magic UI BentoGrid and BentoCard implementation featuring signature light depth shadows, dark inset glow, GPU hover translations, scale animations, and sliding action CTA indicators.
+- `src/components/magicui/marquee.tsx`: Official Magic UI Marquee component for infinite horizontal and vertical scrolling loops with pause-on-hover and reverse support.
 - `src/components/writing/WritingStudio.tsx`: Writing studio core, image upload, essay textarea, timer, save feature, and scorecards.
 - `src/components/writing/SavedEssaysModal.tsx`: Minimalist modal to view, reload, and manage saved essays and estimated scores.
 - `src/components/writing/AnnotatedParagraph.tsx`: Non-overlapping in-text underlines and fix applicator.
@@ -202,6 +205,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `d4173c8`: `feat(ui): remake bento grid with official Magic UI BentoGrid, BentoCard, and Marquee`
   - `23b0d3f`: `feat(speaking): remove live candidate transcript and simplify assessment checklist`
   - `cd0a17d`: `style(speaking): lighten selected prompt highlight, remove white outlines, and optimize for light mode`
   - `8b5c5ab`: `feat(ui): borderless modal styling, fix filter dropdowns, rename browse button, and soften prompt dividers`
