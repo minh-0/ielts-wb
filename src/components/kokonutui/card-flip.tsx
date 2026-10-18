@@ -37,7 +37,7 @@ export function CardFlip({
     >
       <div
         className={cn(
-          "relative h-full w-full min-h-[220px] rounded-xl transition-transform duration-500 [transform-style:preserve-3d]",
+          "relative h-full w-full min-h-[220px] rounded-xl transition-transform duration-200 ease-out [transform-style:preserve-3d]",
           isFlipped ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"
         )}
       >
@@ -161,7 +161,7 @@ export function FlipCard3D({
     >
       <div
         className={cn(
-          "relative h-full w-full rounded-2xl transition-transform duration-500 [transform-style:preserve-3d]",
+          "relative h-full w-full rounded-2xl transition-transform duration-200 ease-out [transform-style:preserve-3d]",
           minHeight,
           isFlipped ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"
         )}
