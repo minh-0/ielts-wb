@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-18 15:44*
+*Last updated: 2026-10-18 15:58*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -209,6 +209,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `d6533a8`: `feat(ui): remove API key button and modal to rely entirely on server-side GEMINI_API_KEY`
   - `9cc66e2`: `style(start): show bigger screen recommendation on mobile devices`
   - `6e3e830`: `perf(flashcards): accelerate 3D card flip animation from 500ms to 200ms ease-out`
   - `965c120`: `feat(flashcards): remove flip card button and bind F key to mark mastered`
