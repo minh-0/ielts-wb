@@ -64,7 +64,8 @@ export function StartPage({
           Welcome.
         </h1>
         <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500">
-          Examiner-calibrated IELTS workbench. Choose a studio to begin.
+          <span className="sm:hidden">Use a bigger screen for the best experience.</span>
+          <span className="hidden sm:inline">Examiner-calibrated IELTS workbench. Choose a studio to begin.</span>
         </p>
       </div>
 
