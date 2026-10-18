@@ -29,7 +29,7 @@ export const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[19rem] sm:auto-rows-[21rem] lg:auto-rows-[22rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4",
+        "grid w-full auto-rows-[20rem] sm:auto-rows-[22rem] lg:auto-rows-[23rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4",
         className
       )}
       {...props}
@@ -75,9 +75,9 @@ export const BentoCard = ({
       )}
       {...props}
     >
-      {/* Background visual layer */}
+      {/* Background illustration layer at top */}
       {background && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-[58%] sm:h-[62%] pointer-events-none overflow-hidden">
           {background}
         </div>
       )}
@@ -85,20 +85,21 @@ export const BentoCard = ({
       {/* Top right pill badge if supplied */}
       {badge && (
         <div className="absolute top-4 right-4 z-20 pointer-events-none">
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium tracking-tight bg-neutral-100/90 dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-300 backdrop-blur-xs">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium tracking-tight bg-white/90 dark:bg-neutral-800/90 border border-neutral-200/80 dark:border-neutral-700/80 text-neutral-600 dark:text-neutral-300 backdrop-blur-xs shadow-2xs">
             {badge}
           </span>
         </div>
       )}
 
-      {/* Content block: translates upwards on hover on desktop to reveal the action CTA */}
-      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1.5 p-5 sm:p-6 transition-all duration-300 lg:group-hover:-translate-y-7">
+      {/* Empty top flex spacer to naturally anchor the text and icon to the bottom */}
+      <div className="pointer-events-none flex-1 min-h-[6rem] sm:min-h-[7rem]" />
+
+      {/* Bottom Content block: Icon, Title, Description moved down */}
+      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 sm:p-6 transition-all duration-300 lg:group-hover:-translate-y-10">
         {Icon && (
-          <div className="w-10 h-10 rounded-xl border border-neutral-200/80 dark:border-neutral-800/80 flex items-center justify-center bg-white/90 dark:bg-neutral-900/90 shadow-2xs transition-all duration-300 group-hover:scale-90 group-hover:border-neutral-400 dark:group-hover:border-neutral-600">
-            <Icon className="h-4.5 w-4.5 text-neutral-800 dark:text-neutral-200" />
-          </div>
+          <Icon className="h-9 w-9 origin-left transform-gpu text-neutral-800 dark:text-neutral-200 transition-all duration-300 ease-in-out group-hover:scale-75 mb-1" />
         )}
-        <h3 className="text-base sm:text-lg lg:text-xl font-serif font-normal tracking-tight text-neutral-900 dark:text-neutral-100 mt-1">
+        <h3 className="text-lg sm:text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
           {name}
         </h3>
         <p className="max-w-md text-xs sm:text-[13px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
@@ -106,15 +107,7 @@ export const BentoCard = ({
         </p>
       </div>
 
-      {/* Mobile persistent CTA */}
-      <div className="pointer-events-none z-10 flex w-full flex-row items-center px-5 pb-4 pt-1 lg:hidden">
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-800 dark:text-neutral-200">
-          {cta}
-          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-        </span>
-      </div>
-
-      {/* Desktop Sliding Action CTA: hidden at rest, slides up and fades in on hover */}
+      {/* Desktop Sliding Action CTA: hidden at rest, slides up and fades in on hover at bottom */}
       <div
         className={cn(
           "pointer-events-none absolute bottom-0 hidden w-full translate-y-10 transform-gpu flex-row items-center px-6 pb-5 pt-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 lg:flex"
