@@ -59,6 +59,14 @@ export interface EffectiveFeature {
   explanation: string;
 }
 
+export interface Band8StandardPillar {
+  pillarName: string;
+  analysis: string;
+  recommendation: string;
+  currentVersion: string;
+  elevatedVersion: string;
+}
+
 export interface WritingAnalysisResult {
   overallBand: number;
   wordCount: number;
@@ -80,6 +88,7 @@ export interface WritingAnalysisResult {
   examinerSummary: string;
   modelAnswer: string;
   primaryBottleneck: string;
+  band8Standards?: Band8StandardPillar[];
 }
 
 export type SpeakingPart = 'part1' | 'part2_cuecard' | 'part3';

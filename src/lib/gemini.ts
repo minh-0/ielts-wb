@@ -1,4 +1,4 @@
-import { WritingAnalysisResult, SpeakingAnalysisResult, EffectiveFeature, TaskType } from '@/types/ielts';
+import { WritingAnalysisResult, SpeakingAnalysisResult, EffectiveFeature, TaskType, Band8StandardPillar } from '@/types/ielts';
 import { evaluateWritingDynamically, extractCandidateEffectiveFeatures } from './dynamicIeltsExaminer';
 
 const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
@@ -16,20 +16,26 @@ CRITICAL EXAMINER PROTOCOLS:
    - Carefully read the specific Exam Prompt and the candidate's actual essay.
    - Every single band score, diagnostic feedback, strength, weakness, recommendation, and vocabulary upgrade MUST be directly grounded in the candidate's actual essay content and how it responds to the assigned prompt.
    - NEVER use generic, canned, or pre-scripted phrases.
-2. TASK ACHIEVEMENT (Task 1) / TASK RESPONSE (Task 2):
+2. CRITERIA BREAKDOWN (ANALYZE & RECOMMEND):
+   - For every criterion (Task Response/Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range):
+     * "feedback" (Analyze): Must directly analyze what the candidate wrote in their essay and how it specifically responds to the assigned prompt question. Quote or reference specific sentences, arguments, omissions, cohesive links, lexical terms, and syntactic structures from their essay.
+     * "keyRecommendations" (Recommend): Provide 2 to 4 concrete, actionable recommendations based directly on what the candidate wrote and the task question.
+3. TASK ACHIEVEMENT (Task 1) / TASK RESPONSE (Task 2):
    - For Task 1 Academic: Verify whether a clear, distinct OVERVIEW is present (without an overview, Task Achievement cannot exceed Band 5.0). Verify whether key features, trends, and data groups shown in the visual prompt/image are accurately reported and compared.
    - For Task 1 General: Verify whether the purpose of the letter is clear, whether all bullet points are addressed, and whether appropriate formal/semi-formal register is maintained throughout.
    - For Task 2: Verify whether ALL parts of the prompt question are addressed, whether a clear, consistent position is presented throughout, and whether main ideas are extended and supported with relevant reasoning/examples.
    - Word count penalty: Task 1 requires >= 150 words. Task 2 requires >= 250 words. If underlength, dock the Task Response / Task Achievement score accordingly.
-3. COHERENCE & COHESION (CC):
+4. COHERENCE & COHESION (CC):
    - Penalize overused, robotic, or mechanical linkers (e.g. "Firstly", "Secondly", "In a nutshell", "Moreover", "Furthermore").
    - Reward natural referencing (pronouns, substitution, ellipsis) and logical paragraph progression with distinct central topics.
-4. LEXICAL RESOURCE (LR):
+5. LEXICAL RESOURCE (LR):
    - Assess range and precision of vocabulary. Identify less common lexical items (C1/C2 level) and natural collocations.
    - Suggest contextual upgrades for weak, informal, or repetitive words actually used in the candidate's essay.
-5. GRAMMATICAL RANGE & ACCURACY (GRA):
+6. GRAMMATICAL RANGE & ACCURACY (GRA):
    - Assess sentence variety (simple, compound, complex structures: relative clauses, conditionals, passive voice, non-finite clauses).
    - Identify actual grammatical errors, punctuation mistakes, and informal contractions.
+7. BAND 8–9 ASSESSMENT STANDARDS (band8Standards):
+   - For essays scored Band 7.0 or above, provide the "band8Standards" array containing 4 pillars (Academic Hedging, Thematic Referencing, Inversion & Clefting, Lexical Precision). Each pillar must analyze what the candidate wrote and recommend how to elevate it on this exact prompt question, providing the candidate's actual sentence alongside a Band 8.5+ rewrite.
 
 Return your response in STRICT valid JSON format conforming to the WritingAnalysisResult schema.
 `;
@@ -87,9 +93,52 @@ ${hasImage ? 'A graph, chart, table, or diagram image has been uploaded for this
 Candidate Essay (Word count: ${wordCount}):
 """${essayText}"""
 
-TOPIC RELEVANCE INSTRUCTION:
-Carefully evaluate how directly and comprehensively the candidate essay addresses the specific question prompt above under official IELTS Task Achievement (Task 1) or Task Response (Task 2) criteria.
-If the essay completely fails to address the prompt or discusses an unrelated subject, reflect this objectively in the Task Achievement/Response score according to official band descriptors (Band 2: answer completely unrelated to task), without using rigid canned strings.
+TOPIC RELEVANCE & MANDATORY GROUNDING INSTRUCTION:
+1. CRITERIA BREAKDOWN ("criteria"):
+   - For EACH criterion (taskAchievement, coherenceCohesion, lexicalResource, grammaticalRange):
+     * "feedback" (Analyze): MUST specifically evaluate the candidate's ACTUAL writing in relation to the specific Exam Prompt.
+       - For Task Achievement / Task Response: Directly assess how fully the candidate answered the exact question prompt. Reference their specific arguments, position, ideas, and any missing perspectives.
+       - For Coherence & Cohesion: Analyze the candidate's actual paragraph progression and specific cohesive linkers/referencing used in their essay.
+       - For Lexical Resource: Directly quote or reference specific vocabulary and collocations used by the candidate, evaluating their precision for this specific topic.
+       - For Grammatical Range: Cite specific sentence structures, clauses, and grammar choices found in the candidate's essay.
+       - DO NOT write generic textbook definitions. The analysis must be 100% about this specific essay and this prompt question.
+     * "keyRecommendations" (Recommend): Provide 2 to 4 concrete, actionable recommendations directly based on what the user wrote and the task question.
+       - Specify exactly what argument, counter-argument, or example to add for this topic.
+       - Recommend how to fix specific transitions between the candidate's actual paragraphs.
+       - Recommend high-band topic-specific academic vocabulary and collocations to replace candidate's simpler phrases.
+       - Recommend specific grammatical structures (e.g. inverted conditionals, cleft sentences, participle clauses) tailored to the candidate's points.
+2. BAND 8–9 ASSESSMENT STANDARDS ("band8Standards"):
+   - Provide an array of exactly 4 pillars showing how THIS candidate's essay can be elevated from Band 7 to Band 8.5–9.0 on THIS prompt question:
+     [
+       {
+         "pillarName": "1. Academic Hedging (TR)",
+         "analysis": "Specific analysis of how the candidate's claims on this prompt can incorporate academic nuance rather than absolute statements.",
+         "recommendation": "Concrete advice on qualifying arguments for this exact topic.",
+         "currentVersion": "An actual claim or sentence from the candidate's essay (or a faithful Band 7.0 representation of their point).",
+         "elevatedVersion": "A Band 8.5+ rewrite of that exact sentence using academic hedging tailored to the prompt."
+       },
+       {
+         "pillarName": "2. Thematic Referencing (CC)",
+         "analysis": "Specific analysis of how the candidate's transitions and linkers can be elevated from mechanical signposts to seamless noun-phrase bridging.",
+         "recommendation": "Concrete advice on connecting the candidate's actual ideas smoothly.",
+         "currentVersion": "A sentence or transition from the candidate's essay showing mechanical linking.",
+         "elevatedVersion": "A Band 8.5+ rewrite using demonstrative noun-phrase bridging relevant to this topic."
+       },
+       {
+         "pillarName": "3. Inversion & Clefting (GRA)",
+         "analysis": "Specific analysis of how the candidate's sentence structures can incorporate natural syntactic inversion or cleft clauses.",
+         "recommendation": "Concrete advice on where to apply advanced syntactic structures in their argument.",
+         "currentVersion": "A standard conditional or complex sentence from the candidate's essay.",
+         "elevatedVersion": "A Band 8.5+ rewrite using inverted syntax (e.g., 'Were...', 'Had...', 'Rarely do...') or clefting ('It is precisely...') applied to their idea."
+       },
+       {
+         "pillarName": "4. Lexical Precision (LR)",
+         "analysis": "Specific analysis of candidate's lexical choices on this prompt topic.",
+         "recommendation": "Concrete C1/C2 collocations and analytical vocabulary directly relevant to this prompt.",
+         "currentVersion": "A sentence or phrase from the candidate's essay with common or slightly vague vocabulary.",
+         "elevatedVersion": "A Band 8.5+ rewrite featuring precise, topic-specific collocations and academic verbs."
+       }
+     ]
 
 Analyze this essay and output valid JSON with this exact structure:
 {
@@ -179,7 +228,16 @@ Analyze this essay and output valid JSON with this exact structure:
   },
   "examinerSummary": string,
   "modelAnswer": string,
-  "primaryBottleneck": string
+  "primaryBottleneck": string,
+  "band8Standards": [
+    {
+      "pillarName": string,
+      "analysis": string,
+      "recommendation": string,
+      "currentVersion": string,
+      "elevatedVersion": string
+    }
+  ]
 }
 CRITICAL INSTRUCTION FOR IN-TEXT UNDERLINE & HIGHLIGHTING:
 - In "sentenceFeedbacks": each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, informal contraction, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
@@ -271,11 +329,97 @@ Only output the JSON object without markdown fences if possible.
       id: f.id || `effective-${idx + 1}`
     }));
 
+    if (parsed.overallBand >= 7.0) {
+      parsed.band8Standards = ensureBand8Standards(parsed, essayText, promptText);
+    }
+
     return parsed;
   } catch (err: any) {
     console.error('Error invoking Gemini for writing:', err);
     throw err;
   }
+}
+
+export function ensureBand8Standards(
+  result: WritingAnalysisResult,
+  essayText: string,
+  promptText: string
+): Band8StandardPillar[] {
+  // If already provided by Gemini and valid (4 pillars with non-empty text)
+  if (Array.isArray(result.band8Standards) && result.band8Standards.length >= 4) {
+    const valid = result.band8Standards.every(
+      (p) => p && p.pillarName && p.analysis && p.recommendation && p.currentVersion && p.elevatedVersion
+    );
+    if (valid) return result.band8Standards;
+  }
+
+  // Extract candidate sentences from essayText
+  const sentences = (essayText || '')
+    .split(/(?<=[.?!])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 20);
+
+  const cleanPrompt = (promptText || '').replace(/\s+/g, ' ').trim();
+  const promptBrief = cleanPrompt.length > 80 ? cleanPrompt.slice(0, 80) + '...' : cleanPrompt;
+
+  // Pillar 1: Academic Hedging (TR)
+  const claimSentence =
+    sentences.find((s) => /\b(will|must|always|never|definitely|impossible|cannot|essential|crucial|lead to|every|all)\b/i.test(s)) ||
+    sentences[0] ||
+    "This phenomenon has direct consequences for the broader community.";
+
+  // Pillar 2: Thematic Referencing (CC)
+  const transitionSentence =
+    sentences.find((s) => /\b(furthermore|moreover|in addition|besides|secondly|firstly|on the other hand|however|therefore)\b/i.test(s)) ||
+    (sentences.length > 2 ? sentences[Math.floor(sentences.length / 2)] : sentences[0]) ||
+    "Furthermore, this trend affects social development in various ways.";
+
+  // Pillar 3: Inversion & Clefting (GRA)
+  const conditionalSentence =
+    sentences.find((s) => /\b(if|when|because|although|unless|while|since)\b/i.test(s)) ||
+    (sentences.length > 1 ? sentences[1] : sentences[0]) ||
+    "If governments invest in local initiatives, citizens will benefit substantially.";
+
+  // Pillar 4: Lexical Precision (LR)
+  const vocabSug = result.vocabularySuggestions?.[0];
+  const vocabSentence =
+    (vocabSug && sentences.find((s) => s.includes(vocabSug.originalPhrase))) ||
+    sentences.find((s) => /\b(good|bad|problem|important|make|have|do|big|small|increase|decrease|positive|negative)\b/i.test(s)) ||
+    sentences[sentences.length - 1] ||
+    "This plays a significant role in improving overall standards.";
+
+  return [
+    {
+      pillarName: "1. Academic Hedging (TR)",
+      analysis: `Evaluates how decisively your claims address "${promptBrief}". Band 7 scripts often state categorical absolutes, whereas Band 8.5+ balances claims with calibrated academic nuance.`,
+      recommendation: `Qualify sweeping assertions in your arguments regarding this prompt. Replace deterministic claims with epistemic modals (e.g. "is arguably poised to", "tends to correspond with").`,
+      currentVersion: claimSentence,
+      elevatedVersion: `While ${claimSentence.replace(/^[A-Z]/, (c) => c.toLowerCase()).replace(/\b(will always|must|will inevitably|always)\b/gi, "is arguably prone to")} under certain conditions, closer examination suggests this dynamic varies significantly across socioeconomic contexts.`
+    },
+    {
+      pillarName: "2. Thematic Referencing (CC)",
+      analysis: `Evaluates cohesive progression between your supporting points. Band 7 candidates often insert mechanical transition markers, whereas Band 8.5+ achieves cohesion effortlessly through demonstrative noun phrases that carry the argument forward.`,
+      recommendation: `Replace isolated mechanical linkers with backward-pointing demonstrative phrases (e.g., "This escalating dilemma", "Such policy divergences") that summarize the preceding thought.`,
+      currentVersion: transitionSentence,
+      elevatedVersion: `This structural friction in turn creates compelling incentives for stakeholders to reassess established conventions, seamlessly bridging the broader discourse.`
+    },
+    {
+      pillarName: "3. Inversion & Clefting (GRA)",
+      analysis: `Examines the syntactic flexibility of your complex sentences. To reach Band 8.5–9.0, advanced structures like inverted conditionals or cleft sentences must be embedded naturally without feeling forced.`,
+      recommendation: `Convert standard hypothetical clauses in your discussion into inverted conditional forms (e.g., "Were [subject] to [verb]") or focus clefts ("It is precisely because... that...") to heighten rhetorical emphasis.`,
+      currentVersion: conditionalSentence,
+      elevatedVersion: `Were regulatory authorities to intervene decisively in this domain, market participants would be markedly more compelled to adopt sustainable practices.`
+    },
+    {
+      pillarName: "4. Lexical Precision (LR)",
+      analysis: `Assesses the idiomatic precision and collocate strength of your vocabulary on this prompt topic. Band 8.5+ avoids broad, generic verbs in favor of precise, domain-specific academic collocations.`,
+      recommendation: `Upgrade common verb-noun pairings in your essay into precise academic collocations directly reflecting the analytical demands of this prompt.`,
+      currentVersion: vocabSug ? `"${vocabSug.originalPhrase}" in: ${vocabSentence}` : vocabSentence,
+      elevatedVersion: vocabSug && vocabSentence.includes(vocabSug.originalPhrase)
+        ? vocabSentence.replace(vocabSug.originalPhrase, vocabSug.suggestedUpgrade)
+        : `This structural shift mitigates systemic vulnerabilities while catalyzing sustainable institutional modernization.`
+    }
+  ];
 }
 
 function isBase64AudioString(str: string): boolean {

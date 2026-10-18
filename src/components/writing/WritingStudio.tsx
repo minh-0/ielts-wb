@@ -24,7 +24,8 @@ import {
   X as XIcon,
 } from "lucide-react";
 import { WRITING_PROMPTS, WritingPrompt } from "@/lib/ieltsPromptBank";
-import { WritingAnalysisResult, TaskType, ReplacedWordItem, SavedEssay } from "@/types/ielts";
+import { WritingAnalysisResult, TaskType, ReplacedWordItem, SavedEssay, Band8StandardPillar } from "@/types/ielts";
+import { ensureBand8Standards } from "@/lib/gemini";
 import { RadarChart } from "../RadarChart";
 import { ScorecardModal } from "../ScorecardModal";
 import { BandScoreEmoji } from "../BandScoreEmoji";
@@ -1249,11 +1250,13 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           {activeTab === "criteria" && (
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-2">
-                {/* Criterion 1: Task Response */}
+                {/* Criterion 1: Task Response / Task Achievement */}
                 <div className="space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">Task Response</span>
+                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                        {selectedTaskType === "task2" ? "Task Response" : "Task Achievement"}
+                      </span>
                       <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center bg-neutral-100 dark:bg-neutral-800/80 px-2 py-0.5 rounded-md">
                         Band&nbsp;
                         <NumberTicker
@@ -1263,9 +1266,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                         />
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                      {analysisResult.criteria.taskAchievement.feedback}
-                    </p>
+                    <div className="space-y-1">
+                      <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Analysis</div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {analysisResult.criteria.taskAchievement.feedback}
+                      </p>
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
@@ -1291,9 +1297,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                         />
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                      {analysisResult.criteria.coherenceCohesion.feedback}
-                    </p>
+                    <div className="space-y-1">
+                      <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Analysis</div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {analysisResult.criteria.coherenceCohesion.feedback}
+                      </p>
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
@@ -1324,9 +1333,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                         />
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                      {analysisResult.criteria.lexicalResource.feedback}
-                    </p>
+                    <div className="space-y-1">
+                      <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Analysis</div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {analysisResult.criteria.lexicalResource.feedback}
+                      </p>
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
@@ -1352,9 +1364,12 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                         />
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                      {analysisResult.criteria.grammaticalRange.feedback}
-                    </p>
+                    <div className="space-y-1">
+                      <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Analysis</div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {analysisResult.criteria.grammaticalRange.feedback}
+                      </p>
+                    </div>
                   </div>
                   <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-1.5 text-neutral-600 dark:text-neutral-400">
                     <div className="font-semibold text-neutral-900 dark:text-neutral-100 text-[11px]">Recommendations</div>
@@ -1367,140 +1382,78 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
                 </div>
               </div>
 
-              {/* Band 8–9 Assessment Standards: Clean section divider line */}
-              <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
-                <div className="space-y-0.5">
-                  <h4 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
-                    <BookOpen className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
-                    Band 8–9 Assessment Standards
-                  </h4>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Linguistic distinctions between Band 7 and Band 9 scripts.
-                  </p>
-                </div>
+              {/* Band 8–9 Assessment Standards: Only appears when essay is 7.0+ */}
+              {analysisResult.overallBand >= 7.0 && (() => {
+                const currentPromptText = useCustomPrompt
+                  ? customPrompt
+                  : `${selectedPrompt.title}: ${selectedPrompt.prompt}`;
+                const band8Pillars = (analysisResult.band8Standards && analysisResult.band8Standards.length >= 4)
+                  ? analysisResult.band8Standards
+                  : ensureBand8Standards(analysisResult, essayContent, currentPromptText);
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-1">
-                  {/* Pillar 1: Academic Hedging (TR) */}
-                  <div className="space-y-3 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        1. Academic Hedging (TR)
-                      </span>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Band 7 scripts often rely on categorical absolutes (e.g., <em>&ldquo;will always lead to&rdquo;</em>). Band 9 responses maintain cautious, qualified claims.
+                return (
+                  <div className="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
+                    <div className="space-y-0.5">
+                      <h4 className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                        <BookOpen className="w-3.5 h-3.5 text-neutral-700 dark:text-neutral-300" />
+                        Band 8–9 Assessment Standards
+                      </h4>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        Targeted analysis and elevation recommendations based on your essay and the task question.
                       </p>
                     </div>
-                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
-                      <div className="space-y-1">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                          Band 7.0
-                        </span>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
-                          &ldquo;AI will inevitably replace all human labor in the foreseeable future.&rdquo;
-                        </p>
-                      </div>
-                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                          Band 8.5+
-                        </span>
-                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
-                          &ldquo;While AI is arguably poised to displace routine clerical roles, it tends to complement high-order analytical occupations.&rdquo;
-                        </p>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Pillar 2: Thematic Referencing (CC) */}
-                  <div className="space-y-3 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        2. Thematic Referencing (CC)
-                      </span>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Band 8+ cohesion attracts no attention. Replace mechanical linkers (<em>&ldquo;Furthermore&rdquo;, &ldquo;In addition&rdquo;</em>) with demonstrative noun-phrase bridging.
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
-                      <div className="space-y-1">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                          Band 7.0
-                        </span>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
-                          &ldquo;Furthermore, the environment is being damaged. In addition, governments must act.&rdquo;
-                        </p>
-                      </div>
-                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                          Band 8.5+
-                        </span>
-                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
-                          &ldquo;This escalating ecological strain in turn necessitates decisive, synchronized state intervention.&rdquo;
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-1">
+                      {band8Pillars.map((pillar, idx) => (
+                        <div key={idx} className="space-y-3 flex flex-col justify-between">
+                          <div className="space-y-2">
+                            <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                              {pillar.pillarName}
+                            </span>
+                            <div className="space-y-1">
+                              <span className="text-[10px] uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">
+                                Analyze
+                              </span>
+                              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                {pillar.analysis}
+                              </p>
+                            </div>
+                          </div>
 
-                  {/* Pillar 3: Syntactic Inversion & Clefting (GRA) */}
-                  <div className="space-y-3 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        3. Inversion & Clefting (GRA)
-                      </span>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Incorporate advanced clause structures naturally, such as inverted conditionals (<em>&ldquo;Were [subject] to [verb]&rdquo;</em>) and cleft constructions.
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
-                      <div className="space-y-1">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                          Band 7.0
-                        </span>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
-                          &ldquo;If authorities subsidize public transport, commuters will stop driving cars.&rdquo;
-                        </p>
-                      </div>
-                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                          Band 8.5+
-                        </span>
-                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
-                          &ldquo;Were authorities to heavily subsidize municipal transit, commuters would be markedly more inclined to forgo private transport.&rdquo;
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pillar 4: Connotative Precision (LR) */}
-                  <div className="space-y-3 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        4. Lexical Precision (LR)
-                      </span>
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                        Band 8.5+ relies on precise collocation rather than generic synonyms. Pair analytical verbs with specific abstract nouns.
-                      </p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
-                      <div className="space-y-1">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                          Band 7.0
-                        </span>
-                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
-                          &ldquo;This will solve the problem and have a positive impact on the economy.&rdquo;
-                        </p>
-                      </div>
-                      <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
-                        <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                          Band 8.5+
-                        </span>
-                        <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
-                          &ldquo;This systematically alleviates underlying structural friction, thereby yielding palpable macroeconomic dividends.&rdquo;
-                        </p>
-                      </div>
+                          <div className="p-3 rounded-xl bg-neutral-50/80 dark:bg-neutral-900/40 text-xs space-y-2.5">
+                            {pillar.recommendation && (
+                              <div className="space-y-0.5 pb-2 border-b border-neutral-200/60 dark:border-neutral-800/60">
+                                <span className="text-[10px] uppercase tracking-wider font-semibold text-neutral-500 dark:text-neutral-400">
+                                  Recommend
+                                </span>
+                                <p className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                                  {pillar.recommendation}
+                                </p>
+                              </div>
+                            )}
+                            <div className="space-y-1">
+                              <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                                Current (Band 7.0)
+                              </span>
+                              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed italic">
+                                &ldquo;{pillar.currentVersion}&rdquo;
+                              </p>
+                            </div>
+                            <div className="space-y-1 pt-2 border-t border-neutral-200/60 dark:border-neutral-800/60">
+                              <span className="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                                Band 8.5+ Elevation
+                              </span>
+                              <p className="text-xs text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
+                                &ldquo;{pillar.elevatedVersion}&rdquo;
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           )}
 
