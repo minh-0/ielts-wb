@@ -366,13 +366,8 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
               ? "Advanced Lexical Resource (Band 7.5–8.0)"
               : "Strong Collocations"
           })`,
-          feedback: `Incorporated ${count} advanced academic collocation(s): ${recentWords}. Lexical precision and stylistic register are heightened.`,
-          keyRecommendations: count >= 2
-            ? [
-                "Lexical Resource is operating at Band 8.0+ standard.",
-                "Ensure precision in complex academic collocations under timed exam conditions."
-              ]
-            : base.criteria.lexicalResource.keyRecommendations,
+          feedback: base.criteria.lexicalResource.feedback,
+          keyRecommendations: base.criteria.lexicalResource.keyRecommendations,
         },
         grammaticalRange: {
           ...base.criteria.grammaticalRange,
@@ -380,9 +375,8 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           bandLabel: `Band ${newGRA.toFixed(1)} (${
             newGRA >= 8.0 ? "Sophisticated Syntactic Variety" : "Complex Structures Controlled"
           })`,
-          feedback: count >= 1
-            ? `Syntactic control is reinforced with elevated clause structures. Error frequency remains minimal.`
-            : base.criteria.grammaticalRange.feedback,
+          feedback: base.criteria.grammaticalRange.feedback,
+          keyRecommendations: base.criteria.grammaticalRange.keyRecommendations,
         },
         coherenceCohesion: {
           ...base.criteria.coherenceCohesion,
@@ -390,9 +384,8 @@ export function WritingStudio({ apiKey, initialTaskType }: WritingStudioProps) {
           bandLabel: `Band ${newCC.toFixed(1)} (${
             newCC >= 8.0 ? "Fluent Organic Progression" : "Coherent & Varied"
           })`,
-          feedback: count >= 2
-            ? `Paragraph cohesion benefits from organic thematic referencing rather than repetitive mechanical connectors.`
-            : base.criteria.coherenceCohesion.feedback,
+          feedback: base.criteria.coherenceCohesion.feedback,
+          keyRecommendations: base.criteria.coherenceCohesion.keyRecommendations,
         },
       },
       examinerSummary: updatedSummary,

@@ -856,75 +856,56 @@ export function evaluateWritingDynamically(
     ? ['Can organize body arguments into two distinctly developed paragraphs.']
     : ['Secondary arguments would benefit from deeper illustrative evidence.'];
 
+  const cleanPromptBrief = promptText.replace(/\s+/g, ' ').trim().slice(0, 70);
+
   const taRecommendations = isPenalty
-    ? [`Expand your ideas with supporting examples to exceed ${targetMin} words.`]
-    : isHighScoring
-    ? [
-        'Qualify assertions with academic hedging ("is arguably contingent upon", "tends to precipitate") to prevent sweeping statements.',
-        'Deepen the concession section with an explicit rebuttal showing why the opposing view is empirically limited.',
-        'In the conclusion, synthesize a forward-looking implication rather than merely summarizing previous sentences.'
-      ]
-    : taskType === 'task1_academic'
-    ? [
-        'Ensure every cited figure directly corresponds to the axes and legends of the visual chart.',
-        'Group minor categories together in body paragraphs to highlight macro contrasts.'
-      ]
+    ? [`Expand your discussion of "${cleanPromptBrief}" with detailed supporting examples to exceed ${targetMin} words.`]
     : [
-        'Ensure each body paragraph begins with an authoritative topic sentence establishing a single central theme.',
-        'Support abstract points with concrete, real-world examples.'
+        `Ensure all core dimensions of "${cleanPromptBrief}" are thoroughly addressed with concrete reasoning.`,
+        paragraphs.length > 1
+          ? `Deepen the specific topic focus of your argument starting with "${paragraphs[1].slice(0, 45)}..." by tying it directly back to the question.`
+          : `Divide your discussion into distinct, well-developed body paragraphs for each main perspective.`
       ];
 
   // Coherence & Cohesion Advice
   const ccFeedback = overusedLinkers.length > 0
     ? `Overall progression is clear. Note that the connector(s) "${overusedLinkers.join(', ')}" were repeated multiple times; aim for more varied participial and pronoun referencing.`
     : isHighScoring
-    ? `Natural discourse flow across ${paragraphs.length} paragraphs. To advance from Band 7.5 to 8.5+, transition away from mechanical additive linkers ("Furthermore", "In addition") toward organic thematic chaining and demonstrative referencing.`
+    ? `Natural discourse flow across ${paragraphs.length} paragraphs. To advance from Band 7.5 to 8.5+, transition away from mechanical additive linkers toward organic thematic chaining and demonstrative referencing.`
     : `Ideas flow coherently across paragraphs with structured transitional markers and logical sequencing.`;
 
-  const ccRecommendations = isHighScoring
-    ? [
-        'Open body paragraphs by echoing the previous paragraph\'s core concept rather than using generic linkers ("Furthermore", "In addition").',
-        'Use non-finite participle clauses (", thereby compounding...", ", while simultaneously fostering...") to blend supporting clauses seamlessly.',
-        'Deploy demonstrative referencing ("this disparity", "such systemic shifts") to maintain thread continuity.'
-      ]
-    : [
-        'Use adverbial participle clauses ("leading to...", "thereby fostering...") to link ideas seamlessly.',
-        'Ensure clear transitional words between opposing arguments ("Conversely", "On the other hand").'
-      ];
+  const ccRecommendations = [
+    overusedLinkers.length > 0
+      ? `Replace repeated linkers (${overusedLinkers.map(l => `"${l}"`).join(', ')}) with organic demonstrative referencing.`
+      : `Deploy backward-pointing demonstrative noun phrases to connect paragraphs seamlessly rather than relying on mechanical transitions.`,
+    `Ensure a seamless logical bridge between your opening thesis and your subsequent paragraph developments.`
+  ];
 
   // Lexical Resource Advice
   const lrFeedback = isHighScoring
     ? `Solid command of academic register and topic vocabulary (TTR: ${(ttr * 100).toFixed(0)}%). To unlock Band 8.5+, replace conventional expressions with native-like collocations that convey subtle distinctions in meaning.`
     : `Employs topic-appropriate terminology with a lexical diversity ratio of ${(ttr * 100).toFixed(0)}%. Incorporating the suggested academic collocations will elevate your Lexical Resource to Band 7.5+.`;
 
-  const lrRecommendations = isHighScoring
-    ? [
-        'Adopt precise academic verb-noun collocations (e.g. "catalyze progress", "alleviate disparities", "formidable impediments").',
-        'Differentiate fine shades of meaning (e.g., "subsidize" vs "underwrite", "mitigate" vs "eradicate") to demonstrate lexical mastery.',
-        'Review the collocation upgrade cards in the inspector and adopt advanced C1/C2 pairings.'
-      ]
-    : [
-        'Review the vocabulary upgrade cards in the inspector and adopt the suggested collocations.',
-        'Avoid informal or casual phrasing ("kids", "a lot of", "very good").'
-      ];
+  const lrRecommendations = [
+    vocabularySuggestions.length > 0
+      ? `In your discussion, upgrade "${vocabularySuggestions[0].originalPhrase}" to "${vocabularySuggestions[0].suggestedUpgrade.split(' / ')[0]}" to heighten academic precision.`
+      : `Incorporate topic-specific academic collocations directly tailored to "${cleanPromptBrief}".`,
+    `Avoid conversational or generalized descriptors, deploying high-band C1/C2 terms.`
+  ];
 
   // Grammatical Range Advice
   const graFeedback = sentenceFeedbacks.length > 0
     ? `Syntactic control across ${sentenceList.length} sentences. Found ${sentenceFeedbacks.length} sentence(s) with register, contraction, or structural points that can be refined.`
     : isHighScoring
-    ? `High percentage of error-free sentences with strong complex clause control. Band 8.5+ requires active showcase of advanced syntax: conditional inversions ("Were governments to..."), cleft focus sentences, and non-finite participle clauses.`
+    ? `High percentage of error-free sentences with strong complex clause control. Band 8.5+ requires active showcase of advanced syntax: conditional inversions, cleft focus sentences, and non-finite participle clauses.`
     : `Good syntactic control across complex and compound sentence forms.`;
 
-  const graRecommendations = isHighScoring
-    ? [
-        'Convert standard conditional sentences into inverted conditionals ("Were authorities to intervene..." rather than "If authorities intervened...").',
-        'Utilize wh-cleft or it-cleft structures ("What is of paramount significance is...") to create natural rhetorical emphasis.',
-        'Ensure absolute accuracy in complex punctuation (semicolons separating independent clauses, non-restrictive relative clauses).'
-      ]
-    : [
-        'Practice non-contracted academic forms and incorporate more conditional or non-finite clauses.',
-        'Vary sentence length between concise declarations and multi-clause analytical sentences.'
-      ];
+  const graRecommendations = [
+    sentenceFeedbacks.length > 0
+      ? `Refine candidate sentence ("${sentenceFeedbacks[0].original.slice(0, 50)}...") using formal non-contracted syntax.`
+      : `Convert conditional clauses in your essay into inverted conditionals ("Were this trend to continue...") for emphasis.`,
+    `Vary your sentence openings by deploying adverbial phrases and non-finite participle clauses.`
+  ];
 
   // Look up model answer from question bank matching this prompt
   const matchingBankPrompt = WRITING_PROMPTS.find(

@@ -12,14 +12,14 @@ You are a senior, certified British Council and IDP IELTS Examiner with over 15 
 Evaluate the candidate's IELTS Writing submission with uncompromising examiner rigor strictly aligned with the Official IELTS Writing Band Descriptors (Task 1 & Task 2).
 
 CRITICAL EXAMINER PROTOCOLS:
-1. DYNAMIC EVALUATION GROUNDED IN THE ASSIGNED PROMPT & CANDIDATE TEXT:
+1. 100% DYNAMIC EVALUATION (ZERO PREDETERMINED / CANNED PHRASES):
    - Carefully read the specific Exam Prompt and the candidate's actual essay.
-   - Every single band score, diagnostic feedback, strength, weakness, recommendation, and vocabulary upgrade MUST be directly grounded in the candidate's actual essay content and how it responds to the assigned prompt.
-   - NEVER use generic, canned, or pre-scripted phrases.
+   - Every single band score, diagnostic feedback, strength, weakness, recommendation, and vocabulary upgrade MUST be completely dynamic and depend entirely on what the candidate wrote in their essay and the specific task prompt.
+   - ABSOLUTELY NEVER use predetermined, fixed, boilerplate, or canned statements.
 2. CRITERIA BREAKDOWN (ANALYZE & RECOMMEND):
    - For every criterion (Task Response/Achievement, Coherence & Cohesion, Lexical Resource, Grammatical Range):
-     * "feedback" (Analyze): Must directly analyze what the candidate wrote in their essay and how it specifically responds to the assigned prompt question. Quote or reference specific sentences, arguments, omissions, cohesive links, lexical terms, and syntactic structures from their essay.
-     * "keyRecommendations" (Recommend): Provide 2 to 4 concrete, actionable recommendations based directly on what the candidate wrote and the task question.
+     * "feedback" (Analyze): Must uniquely analyze what the candidate wrote in their essay and how it specifically responds to the assigned prompt question. Directly cite or reference specific sentences, arguments, omissions, cohesive links, lexical terms, and syntactic structures from their essay.
+     * "keyRecommendations" (Recommend): Provide concrete, actionable recommendations that depend entirely on what the candidate wrote and the task question. Give specific, custom advice on how to develop their actual arguments, improve their actual transitions, upgrade their actual vocabulary, and vary their actual grammatical structures for this exact topic.
 3. TASK ACHIEVEMENT (Task 1) / TASK RESPONSE (Task 2):
    - For Task 1 Academic: Verify whether a clear, distinct OVERVIEW is present (without an overview, Task Achievement cannot exceed Band 5.0). Verify whether key features, trends, and data groups shown in the visual prompt/image are accurately reported and compared.
    - For Task 1 General: Verify whether the purpose of the letter is clear, whether all bullet points are addressed, and whether appropriate formal/semi-formal register is maintained throughout.
@@ -96,17 +96,19 @@ Candidate Essay (Word count: ${wordCount}):
 TOPIC RELEVANCE & MANDATORY GROUNDING INSTRUCTION:
 1. CRITERIA BREAKDOWN ("criteria"):
    - For EACH criterion (taskAchievement, coherenceCohesion, lexicalResource, grammaticalRange):
-     * "feedback" (Analyze): MUST specifically evaluate the candidate's ACTUAL writing in relation to the specific Exam Prompt.
-       - For Task Achievement / Task Response: Directly assess how fully the candidate answered the exact question prompt. Reference their specific arguments, position, ideas, and any missing perspectives.
+     * "feedback" (Analyze): Must uniquely analyze what the candidate wrote and how it specifically responds to the assigned prompt question.
+       - ZERO predetermined or canned text: Every sentence must be uniquely derived from what the candidate actually wrote and the task prompt.
+       - For Task Achievement / Task Response: Directly assess how fully the candidate answered the exact question prompt. Reference their specific arguments, position, ideas, and any missing perspectives from their actual essay.
        - For Coherence & Cohesion: Analyze the candidate's actual paragraph progression and specific cohesive linkers/referencing used in their essay.
        - For Lexical Resource: Directly quote or reference specific vocabulary and collocations used by the candidate, evaluating their precision for this specific topic.
        - For Grammatical Range: Cite specific sentence structures, clauses, and grammar choices found in the candidate's essay.
-       - DO NOT write generic textbook definitions. The analysis must be 100% about this specific essay and this prompt question. Keep feedback to 2-3 concise, high-impact diagnostic sentences.
-     * "keyRecommendations" (Recommend): Provide 2 to 3 concrete, actionable recommendations directly based on what the user wrote and the task question.
+     * "keyRecommendations" (Recommend): Provide concrete, actionable recommendations derived entirely from what the candidate wrote and the task question.
+       - ZERO predetermined or boilerplate bullet points: Must NOT use pre-scripted advice like "use more linkers" or "practice complex structures".
        - Specify exactly what argument, counter-argument, or example to add for this topic.
        - Recommend how to fix specific transitions between the candidate's actual paragraphs.
        - Recommend high-band topic-specific academic vocabulary and collocations to replace candidate's simpler phrases.
        - Recommend specific grammatical structures (e.g. inverted conditionals, cleft sentences, participle clauses) tailored to the candidate's points.
+       - Every recommendation must depend entirely on what the candidate wrote and the task question.
 2. BAND 8–9 ASSESSMENT STANDARDS ("band8Standards"):
    - If overallBand >= 7.0, provide an array of exactly 4 pillars showing how THIS candidate's essay can be elevated from Band 7 to Band 8.5–9.0 on THIS prompt question:
      [
@@ -405,26 +407,32 @@ export function ensureBand8Standards(
     },
     {
       pillarName: "2. Thematic Referencing (CC)",
-      analysis: `Evaluates cohesive progression between your supporting points. Band 7 candidates often insert mechanical transition markers, whereas Band 8.5+ achieves cohesion effortlessly through demonstrative noun phrases that carry the argument forward.`,
-      recommendation: `Replace isolated mechanical linkers with backward-pointing demonstrative phrases (e.g., "This escalating dilemma", "Such policy divergences") that summarize the preceding thought.`,
+      analysis: `Evaluates cohesive progression between your supporting points on "${promptBrief}". Band 7 candidates often insert mechanical transition markers, whereas Band 8.5+ achieves cohesion effortlessly through demonstrative noun phrases that carry the argument forward.`,
+      recommendation: `Replace isolated mechanical linkers with backward-pointing demonstrative phrases that directly summarize the preceding thought in your essay.`,
       currentVersion: transitionSentence,
-      elevatedVersion: `This structural friction in turn creates compelling incentives for stakeholders to reassess established conventions, seamlessly bridging the broader discourse.`
+      elevatedVersion: transitionSentence.replace(/^\s*(furthermore|moreover|in addition|besides|secondly|firstly|on the other hand|however|therefore),?\s*/i, 'This underlying trend in turn demonstrates that ')
     },
     {
       pillarName: "3. Inversion & Clefting (GRA)",
-      analysis: `Examines the syntactic flexibility of your complex sentences. To reach Band 8.5–9.0, advanced structures like inverted conditionals or cleft sentences must be embedded naturally without feeling forced.`,
+      analysis: `Examines the syntactic flexibility of your complex sentences on "${promptBrief}". To reach Band 8.5–9.0, advanced structures like inverted conditionals or cleft sentences must be embedded naturally without feeling forced.`,
       recommendation: `Convert standard hypothetical clauses in your discussion into inverted conditional forms (e.g., "Were [subject] to [verb]") or focus clefts ("It is precisely because... that...") to heighten rhetorical emphasis.`,
       currentVersion: conditionalSentence,
-      elevatedVersion: `Were regulatory authorities to intervene decisively in this domain, market participants would be markedly more compelled to adopt sustainable practices.`
+      elevatedVersion: (() => {
+        const transformed = conditionalSentence.replace(/^\s*if\s+([^,]+),\s*(.*)/i, (_, cond, res) => {
+          return `Were ${cond.trim()} to occur, ${res.trim().replace(/\bwill\b/gi, 'would')}`;
+        });
+        if (transformed !== conditionalSentence) return transformed;
+        return `It is precisely in relation to this argument that ${conditionalSentence.replace(/^[A-Z]/, (c) => c.toLowerCase()).replace(/\.$/, '')} becomes paramount.`;
+      })()
     },
     {
       pillarName: "4. Lexical Precision (LR)",
-      analysis: `Assesses the idiomatic precision and collocate strength of your vocabulary on this prompt topic. Band 8.5+ avoids broad, generic verbs in favor of precise, domain-specific academic collocations.`,
+      analysis: `Assesses the idiomatic precision and collocate strength of your vocabulary on "${promptBrief}". Band 8.5+ avoids broad, generic verbs in favor of precise, domain-specific academic collocations.`,
       recommendation: `Upgrade common verb-noun pairings in your essay into precise academic collocations directly reflecting the analytical demands of this prompt.`,
       currentVersion: vocabSug ? `"${vocabSug.originalPhrase}" in: ${vocabSentence}` : vocabSentence,
-      elevatedVersion: vocabSug && vocabSentence.includes(vocabSug.originalPhrase)
-        ? vocabSentence.replace(vocabSug.originalPhrase, vocabSug.suggestedUpgrade)
-        : `This structural shift mitigates systemic vulnerabilities while catalyzing sustainable institutional modernization.`
+      elevatedVersion: vocabSug && vocabSentence.toLowerCase().includes(vocabSug.originalPhrase.toLowerCase())
+        ? vocabSentence.replace(new RegExp(`\\b${vocabSug.originalPhrase}\\b`, 'i'), vocabSug.suggestedUpgrade.split(' / ')[0])
+        : vocabSentence.replace(/\b(good|important|problem|make|big|bad)\b/i, (m) => m.toLowerCase() === 'important' ? 'of paramount significance' : m.toLowerCase() === 'problem' ? 'a pressing dilemma' : 'catalyze')
     }
   ];
 }
