@@ -209,6 +209,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `b5a59c6`: `style(collocations): remove horizontal divider lines from hero, header, tabs, and quiz views`
   - `4cbf741`: `style(bento): move text and unboxed icon to bottom of bento cards with top-aligned visual previews`
   - `d9136e6`: `feat(hero): swap Simulate Speaking and 50 Task 1 Charts and integrate Magic UI ShinyButton and AnimatedShinyText`
   - `d4173c8`: `feat(ui): remake bento grid with official Magic UI BentoGrid, BentoCard, and Marquee`
