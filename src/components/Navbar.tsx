@@ -108,9 +108,6 @@ export function Navbar({
             <span className="font-serif font-semibold text-xl tracking-tight text-neutral-900 dark:text-neutral-100 group-hover:opacity-80 transition-opacity">
               IELTSpro666
             </span>
-            <span className="hidden md:inline text-[11px] text-neutral-400 dark:text-neutral-500 font-sans">
-              Examiner Bench
-            </span>
           </button>
 
           {/* Center Magic UI Dock */}

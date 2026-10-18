@@ -133,8 +133,7 @@ export default function Home() {
 
         {/* Quiet Minimalist Footnote */}
         <footer className="relative z-10 py-5 text-xs text-neutral-400 dark:text-neutral-600">
-          <div className="max-w-4xl mx-auto px-4 sm:px-8 flex items-center justify-between">
-            <span className="text-[11px] text-neutral-400 dark:text-neutral-600">rkrh • light</span>
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 flex items-center justify-end">
             <span className="text-[11px] text-neutral-400 dark:text-neutral-600">
               Le Tuan Minh K67 FDA NEU
             </span>
@@ -274,11 +273,7 @@ export default function Home() {
 
       {/* Footer: Simple, quiet line */}
       <footer className="border-t border-neutral-200 dark:border-neutral-800 py-6 bg-transparent mt-12 text-xs text-neutral-400 dark:text-neutral-600">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
-            <span className="text-[11px] text-neutral-600 dark:text-neutral-400">rkrh • light</span>
-          </div>
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 xl:px-12 flex items-center justify-end">
           <div className="text-[11px] text-neutral-500 dark:text-neutral-500">
             Le Tuan Minh K67 FDA NEU
           </div>
