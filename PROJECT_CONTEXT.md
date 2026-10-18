@@ -180,6 +180,10 @@
 - `src/components/start/StartPage.tsx`: Welcome portal featuring the official Magic UI Bento Grid, BentoCard, and Marquee components with rich interactive backgrounds for Writing, Speaking, Collocations, Vocabulary, and Band Descriptors.
 - `src/components/magicui/bento-grid.tsx`: Official Magic UI BentoGrid and BentoCard implementation featuring signature light depth shadows, dark inset glow, GPU hover translations, scale animations, and sliding action CTA indicators.
 - `src/components/magicui/marquee.tsx`: Official Magic UI Marquee component for infinite horizontal and vertical scrolling loops with pause-on-hover and reverse support.
+- `src/components/magicui/shiny-button.tsx`: Official Magic UI ShinyButton with motion-driven glossy light sweep across border and text, supporting light and dark modes.
+- `src/components/magicui/shimmer-button.tsx`: Official Magic UI ShimmerButton with rotating perimeter conic gradient beam.
+- `src/components/magicui/interactive-hover-button.tsx`: Official Magic UI InteractiveHoverButton with expanding background bubble and directional arrow sliding.
+- `src/components/magicui/animated-shiny-text.tsx`: Official Magic UI AnimatedShinyText with specular light glare panning across text.
 - `src/components/writing/WritingStudio.tsx`: Writing studio core, image upload, essay textarea, timer, save feature, and scorecards.
 - `src/components/writing/SavedEssaysModal.tsx`: Minimalist modal to view, reload, and manage saved essays and estimated scores.
 - `src/components/writing/AnnotatedParagraph.tsx`: Non-overlapping in-text underlines and fix applicator.
@@ -205,6 +209,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `d9136e6`: `feat(hero): swap Simulate Speaking and 50 Task 1 Charts and integrate Magic UI ShinyButton and AnimatedShinyText`
   - `d4173c8`: `feat(ui): remake bento grid with official Magic UI BentoGrid, BentoCard, and Marquee`
   - `23b0d3f`: `feat(speaking): remove live candidate transcript and simplify assessment checklist`
   - `cd0a17d`: `style(speaking): lighten selected prompt highlight, remove white outlines, and optimize for light mode`
