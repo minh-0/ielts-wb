@@ -1,6 +1,6 @@
 # Project Context: IELTSlayer666 (light)
 
-*Last updated: 2026-10-18 14:21*
+*Last updated: 2026-10-18 14:25*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -209,6 +209,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `965c120`: `feat(flashcards): remove flip card button and bind F key to mark mastered`
   - `02da527`: `feat(flashcards): add keyboard shortcuts for flipping (Space) and navigation (Arrows, A/D)`
   - `290f74f`: `style(api-modal): remove highlighted callout boxes and adopt minimalist typography and layout`
   - `11eef0f`: `feat(collocations): remove stats summary, remove flashcard horizontal lines, and convert mark mastered to a big tick`
