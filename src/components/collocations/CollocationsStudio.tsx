@@ -243,46 +243,20 @@ export function CollocationsStudio() {
     <div className="space-y-7 animate-in fade-in duration-200">
       {/* Editorial Header - Cambridge In Use Reference */}
       <div className="space-y-2 pb-2">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100" />
-              <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                Cambridge University Press • Michael McCarthy & Felicity O&apos;Dell
-              </span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-neutral-950 dark:text-neutral-50">
-              English Collocations in Use
-            </h1>
-            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
-              Master natural word partnerships directly from the official Cambridge Intermediate & Advanced
-              reference books. Essential for overcoming Band 6.5 lexical plateaus and achieving Band 8.0+ in IELTS writing.
-            </p>
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-neutral-900 dark:bg-neutral-100" />
+            <span className="text-xs text-neutral-500 dark:text-neutral-400">
+              Cambridge University Press • Michael McCarthy & Felicity O&apos;Dell
+            </span>
           </div>
-
-          {/* Minimalist Stats Summary (Quiet numbers, no boxes) */}
-          <div className="flex items-center gap-5 text-xs text-neutral-500 dark:text-neutral-400 pt-1 md:pt-0">
-            <div>
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">
-                {COLLOCATIONS_DATASET.length}
-              </span>
-              <span>Collocations</span>
-            </div>
-            <div className="h-3 w-px bg-neutral-200 dark:bg-neutral-800" />
-            <div>
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">
-                {starredIds.size}
-              </span>
-              <span>Starred</span>
-            </div>
-            <div className="h-3 w-px bg-neutral-200 dark:bg-neutral-800" />
-            <div>
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100 mr-1.5">
-                {masteredIds.size}
-              </span>
-              <span>Mastered</span>
-            </div>
-          </div>
+          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-neutral-950 dark:text-neutral-50">
+            English Collocations in Use
+          </h1>
+          <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed">
+            Master natural word partnerships directly from the official Cambridge Intermediate & Advanced
+            reference books. Essential for overcoming Band 6.5 lexical plateaus and achieving Band 8.0+ in IELTS writing.
+          </p>
         </div>
       </div>
 
@@ -720,7 +694,7 @@ export function CollocationsStudio() {
                     </div>
 
                     {/* Bottom Card Footer */}
-                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-3">
                       <span className="text-[11px]">Tap to flip</span>
                       <ParticleButton
                         type="button"
@@ -728,14 +702,15 @@ export function CollocationsStudio() {
                           e.stopPropagation();
                           toggleMaster(currentCard.id, e);
                         }}
-                        className={`flex items-center gap-1 transition-colors px-2 py-0.5 rounded ${
+                        className={`p-2 rounded-full transition-all cursor-pointer ${
                           masteredIds.has(currentCard.id)
-                            ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                            : "text-neutral-400 hover:text-emerald-600"
+                            ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40 shadow-xs"
+                            : "text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800"
                         }`}
+                        title={masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}
+                        aria-label={masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}
                       >
-                        <Check className="w-3 h-3" />
-                        <span>{masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}</span>
+                        <Check className="w-5 h-5" strokeWidth={2.5} />
                       </ParticleButton>
                     </div>
                   </>
@@ -764,7 +739,7 @@ export function CollocationsStudio() {
                         </p>
                       </div>
 
-                      <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                      <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                         <div className="text-[11px] text-neutral-500 dark:text-neutral-400">
                           {currentCard.commonMistake}
                         </div>
@@ -777,7 +752,7 @@ export function CollocationsStudio() {
                     </div>
 
                     {/* Bottom Card Footer */}
-                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-3">
                       <span className="text-[11px]">Showing answers & advice</span>
                       <ParticleButton
                         type="button"
@@ -785,14 +760,15 @@ export function CollocationsStudio() {
                           e.stopPropagation();
                           toggleMaster(currentCard.id, e);
                         }}
-                        className={`flex items-center gap-1 transition-colors px-2 py-0.5 rounded ${
+                        className={`p-2 rounded-full transition-all cursor-pointer ${
                           masteredIds.has(currentCard.id)
-                            ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                            : "text-neutral-400 hover:text-emerald-600"
+                            ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40 shadow-xs"
+                            : "text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800"
                         }`}
+                        title={masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}
+                        aria-label={masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}
                       >
-                        <Check className="w-3 h-3" />
-                        <span>{masteredIds.has(currentCard.id) ? "Mastered" : "Mark Mastered"}</span>
+                        <Check className="w-5 h-5" strokeWidth={2.5} />
                       </ParticleButton>
                     </div>
                   </>
