@@ -213,7 +213,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
-  - `fix(engine): remove offline fallback, enforce 100% live AI evaluation across full band scale (Bands 1.0-9.0)`
+  - `c52d637`: `fix(engine): remove offline fallback, enforce 100% live AI evaluation across full band scale (Bands 1.0-9.0)`
   - `b8ba84a`: `chore(assets): strip all metadata and profiles from support-qr.jpg`
   - `a4c44f5`: `style(support): simplify SupportModal copy, remove pill and QR subtext, shorten copy button`
   - `d5a79fc`: `feat(support): add Support me button in bottom-left footer with rounded VietQR popup modal`
