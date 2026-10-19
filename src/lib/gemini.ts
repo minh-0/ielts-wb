@@ -1,5 +1,4 @@
 import { WritingAnalysisResult, SpeakingAnalysisResult, EffectiveFeature, TaskType, Band8StandardPillar } from '@/types/ielts';
-import { evaluateWritingDynamically, extractCandidateEffectiveFeatures } from './dynamicIeltsExaminer';
 
 const GEMINI_PRIMARY_MODEL = 'gemini-3.8-flash';
 const GEMINI_FALLBACK_MODEL = 'gemini-3.5-flash';
@@ -36,6 +35,15 @@ CRITICAL EXAMINER PROTOCOLS:
    - Identify actual grammatical errors, punctuation mistakes, and informal contractions.
 7. BAND 8–9 ASSESSMENT STANDARDS (band8Standards):
    - For essays scored Band 7.0 or above, provide the "band8Standards" array containing 4 pillars (Academic Hedging, Thematic Referencing, Inversion & Clefting, Lexical Precision). Each pillar must analyze what the candidate wrote and recommend how to elevate it on this exact prompt question, providing the candidate's actual sentence alongside a Band 8.5+ rewrite.
+8. ACCURACY ACROSS THE FULL IELTS BAND SCALE (BANDS 1.0 TO 9.0) & OBJECTIVE EVALUATION OF KEYBOARD SMASHES / OFF-TOPIC / MINIMAL TEXT:
+   - Apply the official IELTS Writing Band Descriptors with complete examiner fidelity across all levels from Band 1.0 to Band 9.0 based strictly on what the candidate wrote and the task question.
+   - If the candidate inputs random keyboard smashes (e.g. "jbnuguyh", "qweasdzxc"), isolated characters, uncommunicative strings, or totally unintelligible text:
+     * Under official Cambridge/IDP criteria, this falls under Band 1.0 ("Essentially no communicable language / completely fails to address the prompt").
+     * Award each criterion Band 1.0 (Task Response: 1.0, Coherence & Cohesion: 1.0, Lexical Resource: 1.0, Grammatical Range & Accuracy: 1.0 -> Overall: Band 1.0).
+     * NEVER award Band 6+ or average scores to meaningless keyboard smashes or isolated characters.
+     * In the criteria feedback, evaluate what was entered: state clearly that the submission consists of an uncommunicative keyboard smash or unintelligible characters that fails to transmit any message or address the exam prompt.
+     * In keyRecommendations, provide actionable instructions on how to structure a real essay addressing the specific question asked in the prompt.
+     * Return [] (empty array) for "sentenceFeedbacks", "vocabularySuggestions", and "effectiveFeatures" because there is no meaningful English text to quote.
 
 Return your response in STRICT valid JSON format conforming to the WritingAnalysisResult schema.
 `;
@@ -242,9 +250,9 @@ Analyze this essay and output valid JSON with this exact structure:
   ]
 }
 CRITICAL INSTRUCTION FOR IN-TEXT UNDERLINE & HIGHLIGHTING:
-- In "sentenceFeedbacks": provide 3 to 5 high-impact items. Each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, informal contraction, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
-- In "vocabularySuggestions": provide 3 to 5 high-yield items. Each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms. Include "higherRatedWordExplanation" and "higherRatedWords" with CEFR levels (C1/C2) and concise explanations.
-- In "effectiveFeatures": identify 2 to 4 EXACT VERBATIM SUBSTRINGS (1 to 6 words) from Candidate Essay showing commendable language: e.g. well-chosen academic vocabulary, idiomatic expressions, natural collocations, or sophisticated grammar structures. Give a brief complimentary rationale explaining why this is effective. IMPORTANT: This is formative praise to highlight candidate strengths and MUST NOT alter or change your objective band score rating.
+- In "sentenceFeedbacks": provide up to 3 to 5 high-impact items if sufficient text exists (or [] if the text is too brief, fragmented, or unintelligible). Each "original" MUST be an EXACT VERBATIM SUBSTRING from Candidate Essay (a clause or full sentence with a grammatical mistake, punctuation error, informal contraction, or cohesion issue). Do not alter capitalization or punctuation of "original". Include "higherRatedWordExplanation" explaining why the rewritten words score higher.
+- In "vocabularySuggestions": provide up to 3 to 5 high-yield items if sufficient text exists (or [] if the text is too brief, fragmented, or unintelligible). Each "originalPhrase" MUST be an EXACT VERBATIM SUBSTRING of 1 to 5 words directly found in Candidate Essay that can be upgraded with high-band academic vocabulary, C1/C2 terms, or natural idioms. Include "higherRatedWordExplanation" and "higherRatedWords" with CEFR levels (C1/C2) and concise explanations.
+- In "effectiveFeatures": identify 2 to 4 EXACT VERBATIM SUBSTRINGS (1 to 6 words) from Candidate Essay showing commendable language (or [] if the text is poor, underlength, or unintelligible). Give a brief complimentary rationale explaining why this is effective. IMPORTANT: This is formative praise to highlight candidate strengths and MUST NOT alter or change your objective band score rating.
 - In "modelAnswer": output a concise, high-scoring Band 8.5-9.0 model paragraph/response (100–140 words) directly demonstrating exemplary execution on the assigned prompt.
 
 Only output the JSON object without markdown fences if possible.
@@ -328,10 +336,7 @@ Only output the JSON object without markdown fences if possible.
       id: v.id || `sug-${idx + 1}`
     }));
 
-    const effectiveList = (parsed.effectiveFeatures && parsed.effectiveFeatures.length > 0)
-      ? parsed.effectiveFeatures
-      : extractCandidateEffectiveFeatures(essayText);
-    parsed.effectiveFeatures = effectiveList.map((f, idx) => ({
+    parsed.effectiveFeatures = (parsed.effectiveFeatures || []).map((f, idx) => ({
       ...f,
       id: f.id || `effective-${idx + 1}`
     }));
@@ -368,34 +373,34 @@ export function ensureBand8Standards(
     .map((s) => s.trim())
     .filter((s) => s.length > 20);
 
+  if (sentences.length === 0) {
+    return [];
+  }
+
   const cleanPrompt = (promptText || '').replace(/\s+/g, ' ').trim();
   const promptBrief = cleanPrompt.length > 80 ? cleanPrompt.slice(0, 80) + '...' : cleanPrompt;
 
   // Pillar 1: Academic Hedging (TR)
   const claimSentence =
     sentences.find((s) => /\b(will|must|always|never|definitely|impossible|cannot|essential|crucial|lead to|every|all)\b/i.test(s)) ||
-    sentences[0] ||
-    "This phenomenon has direct consequences for the broader community.";
+    sentences[0];
 
   // Pillar 2: Thematic Referencing (CC)
   const transitionSentence =
     sentences.find((s) => /\b(furthermore|moreover|in addition|besides|secondly|firstly|on the other hand|however|therefore)\b/i.test(s)) ||
-    (sentences.length > 2 ? sentences[Math.floor(sentences.length / 2)] : sentences[0]) ||
-    "Furthermore, this trend affects social development in various ways.";
+    (sentences.length > 2 ? sentences[Math.floor(sentences.length / 2)] : sentences[0]);
 
   // Pillar 3: Inversion & Clefting (GRA)
   const conditionalSentence =
     sentences.find((s) => /\b(if|when|because|although|unless|while|since)\b/i.test(s)) ||
-    (sentences.length > 1 ? sentences[1] : sentences[0]) ||
-    "If governments invest in local initiatives, citizens will benefit substantially.";
+    (sentences.length > 1 ? sentences[1] : sentences[0]);
 
   // Pillar 4: Lexical Precision (LR)
   const vocabSug = result.vocabularySuggestions?.[0];
   const vocabSentence =
     (vocabSug && sentences.find((s) => s.includes(vocabSug.originalPhrase))) ||
     sentences.find((s) => /\b(good|bad|problem|important|make|have|do|big|small|increase|decrease|positive|negative)\b/i.test(s)) ||
-    sentences[sentences.length - 1] ||
-    "This plays a significant role in improving overall standards.";
+    sentences[sentences.length - 1];
 
   return [
     {
@@ -605,10 +610,6 @@ Output STRICT valid JSON conforming to the SpeakingAnalysisResult schema.`;
     throw err;
   }
 }
-
-
-export const extractEffectiveFeatures = extractCandidateEffectiveFeatures;
-
 
 function getModelResponseForTopic(topic: string, part: string): string {
   const t = (topic || '').toLowerCase();

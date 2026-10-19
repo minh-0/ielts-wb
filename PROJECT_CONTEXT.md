@@ -1,6 +1,6 @@
 # Project Context: ieltsworkbench
 
-*Last updated: 2026-10-18 19:45*
+*Last updated: 2026-10-19 23:56*
 
 > **MANDATORY MAINTENANCE DIRECTIVE**: Update this `PROJECT_CONTEXT.md` document after EVERY code modification, feature addition, refactoring, or UI redesign. Keep architecture, component maps, design standards, and git commit history strictly current.
 
@@ -14,7 +14,7 @@
   - **Language**: TypeScript (strict mode, 0 build/lint errors)
   - **Styling**: Tailwind CSS (dark mode via `class` strategy)
   - **Icons**: `lucide-react`
-  - **AI Engine**: Google Gemini API (`gemini-3.8-flash` with low-latency `thinkingLevel: 'low'`, resilient fallback to `gemini-3.5-flash`, 60s max serverless duration, and zero-hang dynamic examiner engine fallback) powered by server `GEMINI_API_KEY` or custom user key.
+  - **AI Engine**: 100% Live Google Gemini API (`gemini-3.8-flash` with low-latency `thinkingLevel: 'low'`, resilient fallback model `gemini-3.5-flash`, 60s max serverless duration, zero offline/predetermined fallbacks) powered by server `GEMINI_API_KEY` or custom user key. Fully dynamic evaluation across the entire band scale (Bands 1.0 to 9.0).
   - **Audio/Voice**: Browser `MediaRecorder` + Web Speech API for real-time speech recognition.
   - **Exporting**: HTML5 Canvas rendering for 1080x1350 PNG scorecard generation.
 
@@ -213,6 +213,7 @@
 - **Branch**: `main`
 - **Build Status**: `npm run build` passes with 0 errors on Next.js 16.3.8 (Turbopack).
 - **Recent Commits**:
+  - `fix(engine): remove offline fallback, enforce 100% live AI evaluation across full band scale (Bands 1.0-9.0)`
   - `b8ba84a`: `chore(assets): strip all metadata and profiles from support-qr.jpg`
   - `a4c44f5`: `style(support): simplify SupportModal copy, remove pill and QR subtext, shorten copy button`
   - `d5a79fc`: `feat(support): add Support me button in bottom-left footer with rounded VietQR popup modal`

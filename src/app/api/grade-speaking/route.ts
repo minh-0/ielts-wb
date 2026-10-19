@@ -1,33 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { analyzeSpeakingWithGemini, generateMockSpeakingAnalysis } from '@/lib/gemini';
+import { analyzeSpeakingWithGemini } from '@/lib/gemini';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  let promptTopic = 'IELTS Speaking';
-  let transcript = '';
-  let durationSeconds = 30;
-  let speakingPart: any = 'part2_cuecard';
-
   try {
     const body = await req.json();
     const {
-      promptTopic: topic,
+      promptTopic,
       audioData,
-      transcript: text,
-      durationSeconds: duration,
-      speakingPart: part,
+      transcript,
+      durationSeconds,
+      speakingPart,
       mimeType,
       apiKey
     } = body;
 
-    promptTopic = topic || 'IELTS Speaking Practice';
-    transcript = text || '';
-    durationSeconds = typeof duration === 'number' ? duration : 30;
-    speakingPart = part || 'part2_cuecard';
-
-    if (!audioData && !transcript && durationSeconds < 3) {
+    if (!audioData && !transcript && (typeof durationSeconds !== 'number' || durationSeconds < 3)) {
       return NextResponse.json(
         { error: 'Either recorded audio or a spoken transcript must be provided.' },
         { status: 400 }
@@ -35,33 +25,23 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await analyzeSpeakingWithGemini(
-      promptTopic,
+      promptTopic || 'IELTS Speaking Practice',
       {
         audioData: audioData || undefined,
         transcript: transcript || undefined,
-        durationSeconds: durationSeconds,
+        durationSeconds: typeof durationSeconds === 'number' ? durationSeconds : 30,
         mimeType: mimeType || 'audio/webm'
       },
-      speakingPart,
+      speakingPart || 'part2_cuecard',
       apiKey
     );
 
     return NextResponse.json(result);
   } catch (error: any) {
-    console.error('API Error in /api/grade-speaking, using examiner fallback:', error);
-    try {
-      const fallbackResult = generateMockSpeakingAnalysis(
-        promptTopic,
-        transcript,
-        durationSeconds,
-        speakingPart
-      );
-      return NextResponse.json(fallbackResult);
-    } catch (fallbackError: any) {
-      return NextResponse.json(
-        { error: error?.message || 'Failed to analyze speaking response' },
-        { status: 500 }
-      );
-    }
+    console.error('API Error in /api/grade-speaking:', error);
+    return NextResponse.json(
+      { error: error?.message || 'Failed to analyze speaking response with live AI examiner.' },
+      { status: 500 }
+    );
   }
 }
